@@ -2,7 +2,7 @@ import os, sys, subprocess, atexit
 from setuptools import setup
 from setuptools.command.install import install
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
@@ -51,7 +51,7 @@ class CustomInstall(install):
         install.run(self)
 
 setup(
-    name='sci',
+    name='motuz',
     version=__version__,
     description='a web based infrastructure for large scale data movements between on-premise and cloud ',
     long_description=open('README.rst', 'r').read(),
@@ -61,7 +61,7 @@ setup(
     #    ],
     author = 'Dirk Petersen',
     author_email = 'dp@nowhere.com',
-    url = 'https://github.com/FredHutch/sci-package',
+    url = 'https://github.com/FredHutch/motuz',
     download_url = 'https://github.com/FredHutch/motuz/tarball/%s' % __version__,
     keywords = ['hpc', 'scientific computing'], # arbitrary keywords
     classifiers = CLASSIFIERS,
