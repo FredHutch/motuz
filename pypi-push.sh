@@ -1,6 +1,6 @@
 #! /bin/bash
 
-ml Python
+ml Python/3.6.7-foss-2016b-fh2
 
 version=$(grep ^__version__ setup.py | cut -d'"' -f2)
 
@@ -19,7 +19,7 @@ echo "git tag 1.2.3 -d"
 echo "git push origin :refs/tags/1.2.3"
 
 echo "to test from pypi test use:"
-echo "$(which pip3) install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple --no-cache-dir --upgrade sci"
+echo "$(which pip3) install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple --no-cache-dir --upgrade motuz"
 echo "or"
-echo "pip3 install --user --upgrade sci"
+echo "pip3 install --user --upgrade motuz"
 
