@@ -1,6 +1,6 @@
 #! /bin/bash
 
-ml Python/3.6.7-foss-2016b-fh2
+ml Python/3.6.4-foss-2016b-fh2
 
 version=$(grep ^__version__ setup.py | cut -d'"' -f2)
 
