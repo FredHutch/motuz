@@ -31,6 +31,14 @@ Technology stack: Flask, flask-restplus, celery, rclone
 
 Technology stack: React JS
 
+## UI requirements 
+
+* if on-prem posix file system is the source it must be possible to either select individual files or a directory for a copy job
+* if cloud storage is the source it must be possible to browse through virtual folders of a bucket and select individual object or virtual folders 
+
+
+
+
 
 
 

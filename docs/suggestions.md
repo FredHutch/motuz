@@ -43,6 +43,9 @@ ideally it would just print the objects in the directory (no subdirectories) pas
 ]  
 ```
 
+## file system browser 
+
+here is someone who implemented a flask based file system browser https://github.com/ergoithz/browsepy ... the code base is surprisingly large 
 
 
 
