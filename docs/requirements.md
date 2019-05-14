@@ -38,7 +38,15 @@ Technology stack: React JS
 
 
 
+## V2 requirements
 
+### Tagging
+
+For storage systems that support it (such as S3) we should have the ability to tag files that we are copying, via an attached CSV file where the first column is the object name and subsequent columns represent key value pairs.
+
+Also having APIs for retrieving existing tags would be convenient so the user would not have to switch to a different tool to see an object's tags. 
+
+We have a small but enthusiastic group of people for whom tagging is central to their workflow, and they are spreading the word, so there could be more users who would make use of this feature. 
 
 
 
