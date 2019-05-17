@@ -17,9 +17,10 @@ def create_app(config_name='dev'):
     bp = Blueprint('api', __name__, url_prefix='/api')
 
     api = Api(bp,
-        title='Flask Restplus Api Boiler-plate with JWT',
-        description='A boilerplate for Flask-RESTplus web service',
-        version='1.0',
+        title='Motuz',
+        description='Motuz a web based infrastructure for large scale data movements '
+            'between on-premise and cloud',
+        version='0.0.2',
         security='Bearer Auth',
         authorizations={
             'Bearer Auth': {
@@ -28,8 +29,10 @@ def create_app(config_name='dev'):
                 'name': 'Authorization'
             },
         },
+        ordered=True,
+        terms_url='https://github.com/FredHutch/motuz',
         license='MIT',
-        license_url='https://opensource.org/licenses/MIT',
+        license_url='https://github.com/FredHutch/motuz/blob/master/LICENSE',
     )
 
     from .views.user_views import api as user_ns
