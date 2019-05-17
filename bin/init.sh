@@ -8,6 +8,6 @@ cd ..
 
 source venv/bin/activate
 
-FLASK_ENV=development python manage.py db init
-FLASK_ENV=development python manage.py db migrate
-FLASK_ENV=development python manage.py db upgrade
+FLASK_ENV=development python src/backend/manage.py init
+FLASK_ENV=development python src/backend/manage.py migrate
+FLASK_ENV=development python src/backend/manage.py upgrade
