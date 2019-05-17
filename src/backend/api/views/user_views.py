@@ -9,6 +9,14 @@ from ..managers.auth_manager import token_required
 api = UserSerializer.api
 dto = UserSerializer.dto
 
+"""
+POST   /api/users UserProfileAdd (one profile per user, are global settings required ?)
+PATCH  /api/users/$id UserProfileModify
+DELETE /api/users/$id UserProfileDelete
+GET    /api/users/$id UserProfileDetails
+"""
+
+
 
 @api.route('/')
 class UserList(Resource):
@@ -16,6 +24,7 @@ class UserList(Resource):
     def get(self):
         """List all registered Users"""
         return user_manager.get_all_users()
+
 
     @api.response(201, 'User successfully created.')
     @api.expect(dto, validate=True)
@@ -25,12 +34,33 @@ class UserList(Resource):
         return user_manager.save_new_user(data=data)
 
 
+
 @api.route('/<public_id>')
 @api.param('public_id', 'The User identifier')
 @api.response(404, 'User not found.')
 class User(Resource):
     @api.marshal_with(dto, code=200)
     def get(self, public_id):
+        """Get a specific user"""
+        user = user_manager.get_a_user(public_id)
+        if not user:
+            api.abort(404)
+        else:
+            return user
+
+
+    @api.marshal_with(dto, code=200)
+    def patch(self, public_id):
+        """Get a specific user"""
+        user = user_manager.get_a_user(public_id)
+        if not user:
+            api.abort(404)
+        else:
+            return user
+
+
+    @api.marshal_with(dto, code=200)
+    def delete(self, public_id):
         """Get a specific user"""
         user = user_manager.get_a_user(public_id)
         if not user:
