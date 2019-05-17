@@ -1,23 +1,25 @@
 import storage from 'redux-persist/es/storage';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
-import { routerMiddleware, connectRouter } from 'connected-react-router';
-import rootReducer from 'reducers/reducers.jsx';
+import { routerMiddleware } from 'connected-react-router';
+import getRootReducer from 'reducers/reducers.jsx';
 
 export default (history) => {
+    const rootReducer = getRootReducer(history)
+
     const persistedReducer = persistReducer({
         key: 'polls',
         storage: storage,
         // whitelist: ['nameOfAReducer'],
     }, rootReducer);
 
-    const routerReducer = connectRouter(history)(persistedReducer)
-
     const store = createStore(
-        routerReducer,
+        persistedReducer,
         {},
-        applyMiddleware(
-            routerMiddleware(history)
+        compose(
+            applyMiddleware(
+                routerMiddleware(history)
+            )
         )
     );
 
