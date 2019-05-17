@@ -1,7 +1,7 @@
 {
   "name": "motuz",
   "version": "0.0.2",
-  "description": "Motuz a web based infrastructure for large scale data movements between on-premise and cloud",
+  "description": "A web based infrastructure for large scale data movements between on-premise and cloud",
   "main": "src/frontend/js/main.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
