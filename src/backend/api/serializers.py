@@ -47,4 +47,5 @@ class ConnectionSerializer:
 class SystemSerializer:
     api = Namespace('system', description='System related operations')
     dto = api.model('system', {
+        'uri': fields.String(required=True),
     })

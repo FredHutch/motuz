@@ -10,19 +10,20 @@ api = SystemSerializer.api
 dto = SystemSerializer.dto
 
 """
-GET /api/uid UidGet (this might go under GET /api/users/$id, but not sure yet)
-
 GET /api/files DirList
+
+GET /api/uid UidGet (this might go under GET /api/users/$id, but not sure yet)
 """
 
 
 
 @api.route('/files')
-@api.param('uri', 'URI where to read files tree from')
 class SystemFiles(Resource):
-    def get(self, uri):
+    @api.expect(dto, validate=True)
+    def post(self):
         """List all files available to the user for a particular URI"""
-        return system_manager.get_files()
+        data = request.json
+        return system_manager.get_files(data['uri'])
 
 
 
