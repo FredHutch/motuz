@@ -18,7 +18,7 @@ def create_app(config_name='dev'):
 
     api = Api(bp,
         title='Motuz',
-        description='Motuz a web based infrastructure for large scale data movements '
+        description='A web based infrastructure for large scale data movements '
             'between on-premise and cloud',
         version='0.0.2',
         security='Bearer Auth',

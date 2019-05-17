@@ -105,3 +105,7 @@ venv.bak/
 
 # Databases
 *.sqlite3
+
+# Javascript
+node_modules/
+package-lock.json
