@@ -8,7 +8,7 @@ const isProd = nodeEnv === 'production';
 
 module.exports = {
     entry: {
-        app: './src/js/main.jsx',
+        app: './src/frontend/js/main.jsx',
     },
 
     output: {
@@ -45,7 +45,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             filename: './index.html',
-            template: './src/index.html',
+            template: './src/frontend/index.html',
             title: 'WebApp',
             minify: true,
             meta: {
@@ -59,9 +59,9 @@ module.exports = {
 
     resolve: {
         modules: [
-            path.resolve('./src/js'),
-            path.resolve('./src/css'),
-            path.resolve('./src/img'),
+            path.resolve('./src/frontend/js'),
+            path.resolve('./src/frontend/css'),
+            path.resolve('./src/frontend/img'),
             path.resolve('./node_modules')
         ]
     },
