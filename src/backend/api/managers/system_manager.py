@@ -1,8 +1,11 @@
 import datetime
-
+import os
 
 def get_uid():
-    return 1
+    uid = os.getuid()
+    return {
+        "uid": uid,
+    }
 
 def get_files():
     return [
