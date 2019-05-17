@@ -17,11 +17,10 @@ export default class Navbar extends React.Component {
                     <Link className="navbar-brand" to="/">Motuz</Link>
                 </div>
 
-                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul className="nav navbar-nav">
-                        <NavbarItem link="/app" title="App"></NavbarItem>
-                    </ul>
-                </div>
+                <ul className="nav navbar-nav">
+                    <NavbarItem link="/" title="App"></NavbarItem>
+                    <NavbarItem link="/template" title="Template"></NavbarItem>
+                </ul>
             </div>
         </nav>
     }

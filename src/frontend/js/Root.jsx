@@ -23,5 +23,4 @@ export default class Root extends React.Component {
             </div>
         </Router>
     }
-                // <Route path="/" component={Navbar}/>
 }
