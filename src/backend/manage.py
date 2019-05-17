@@ -4,8 +4,8 @@ import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-from src.backend import create_app, db
-from src.backend.models import * # To ensure that all models are tracked
+from api import create_app, db
+from api.models import * # To ensure that all models are tracked
 
 app = create_app(os.getenv('PYTHON_ENVIRONMENT') or 'dev')
 
@@ -24,7 +24,7 @@ def run():
 @manager.command
 def test():
     """Runs the unit tests."""
-    tests = unittest.TestLoader().discover('test/backend', pattern='test*.py')
+    tests = unittest.TestLoader().discover('../../test/backend', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0

@@ -8,4 +8,4 @@ cd ..
 
 source venv/bin/activate
 
-FLASK_ENV=development python manage.py run
+FLASK_ENV=development python src/backend/manage.py run

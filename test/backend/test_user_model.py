@@ -1,8 +1,8 @@
 import unittest
 import datetime
 
-from src.backend import db
-from src.backend.models import User
+from api import db
+from api.models import User
 
 from base import BaseTestCase
 
