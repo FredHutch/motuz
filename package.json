@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "watch": "NODE_ENV=development webpack-dev-server --config webpack.dev.js"
+    "watch": "NODE_ENV=development webpack-dev-server --config webpack.dev.js",
+    "start": "npm run watch"
   },
   "repository": {
     "type": "git",
