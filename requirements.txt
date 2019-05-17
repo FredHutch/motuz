@@ -7,6 +7,7 @@ Flask-Migrate==2.4.0
 flask-restplus==0.12.1
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.4.0
+Flask-Testing==0.7.1
 itsdangerous==1.1.0
 Jinja2==2.10.1
 jsonschema==3.0.1
