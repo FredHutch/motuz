@@ -31,7 +31,6 @@
 
 #zone-right-pane {
     grid-area: rightPane;
-    /*background-color: #f6dc16;*/
 }
 
 #zone-job-progress {
@@ -91,6 +90,7 @@
 }
 
 /* Utilities */
+
 .middle {
     display: flex;
     align-items: center;
