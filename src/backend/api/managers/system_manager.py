@@ -2,6 +2,7 @@ import datetime
 import os
 from urllib.parse import urlparse
 from os import path
+import pwd
 
 def get_uid():
     uid = os.getuid()
@@ -27,18 +28,35 @@ def get_files(uri):
 def _get_local_files(url):
     result = []
 
-    for resource in os.scandir(url):
-        if resource.is_dir():
-            type = "dir"
-        elif resource.is_file():
-            type = "file"
-        elif resource.is_symlink():
-            type = "symlink"
+    try:
+        for resource in os.scandir(url):
+            if resource.is_dir():
+                type = "dir"
+            elif resource.is_file():
+                type = "file"
+            elif resource.is_symlink():
+                type = "symlink"
 
 
-        result.append({
-            "name": resource.name,
-            "type": type,
-        })
+            result.append({
+                "name": resource.name,
+                "type": type,
+            })
+
+    except FileNotFoundError:
+        return {
+            'error': 'Path not found on local disk {}'.format(url)
+        }, 404
+
+    except PermissionError:
+        uid = os.getuid()
+        return {
+            'error': "User {user}({uid}) does not have privilege for path '{path}'".format(
+                user=pwd.getpwuid(uid).pw_name,
+                uid=uid,
+                path=url,
+            )
+        }, 403
+
 
     return result
