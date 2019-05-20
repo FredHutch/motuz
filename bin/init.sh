@@ -6,8 +6,12 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ..
 
+set +x
+
 source venv/bin/activate
 
-FLASK_ENV=development python src/backend/manage.py init
-FLASK_ENV=development python src/backend/manage.py migrate
-FLASK_ENV=development python src/backend/manage.py upgrade
+cd src/backend
+
+FLASK_ENV=development python manage.py db init
+FLASK_ENV=development python manage.py db migrate
+FLASK_ENV=development python manage.py db upgrade

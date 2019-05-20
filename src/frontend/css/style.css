@@ -31,7 +31,6 @@
 
 #zone-right-pane {
     grid-area: rightPane;
-    /*background-color: #f6dc16;*/
 }
 
 #zone-job-progress {
@@ -60,6 +59,8 @@
 
 .zone-pane {
     border: 1px solid #e1e2e3;
+    user-select: none;
+
 }
 
 .grid-files {
@@ -82,6 +83,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     font-size: 12px;
+    user-select: none;
 }
 
 /* Status Bar */
@@ -91,6 +93,7 @@
 }
 
 /* Utilities */
+
 .middle {
     display: flex;
     align-items: center;

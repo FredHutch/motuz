@@ -8,8 +8,6 @@ class JobProgress extends React.Component {
     }
 
     render() {
-        console.log(this.props.jobs)
-
         const headers = [
             'id',
             'description',
@@ -19,7 +17,6 @@ class JobProgress extends React.Component {
             // 'to_uri',
             'status',
             'progress',
-
         ]
 
         const tableHeaders = headers.map((header, j) => {

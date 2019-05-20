@@ -11,7 +11,7 @@ class LeftCommandBar extends React.Component {
         return (
             <CommandBar
                 isLeft={true}
-                isActive={true}
+                active={this.props.active}
             />
         );
     }
@@ -22,12 +22,13 @@ class LeftCommandBar extends React.Component {
 }
 
 LeftCommandBar.defaultProps = {
-
+    active: false,
 }
 
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
+    active: state.pane.focusPaneLeft,
 });
 
 const mapDispatchToProps = dispatch => ({

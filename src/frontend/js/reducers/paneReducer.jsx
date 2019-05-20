@@ -1,6 +1,14 @@
-import * as template from 'actions/templateAction.jsx';
+import * as pane from 'actions/paneActions.jsx';
 
-const MAX_HISTORY_SIZE = 20;
+import {
+    getSide,
+    getOtherSide,
+    getCurrentPane,
+    setCurrentPane,
+    getCurrentFiles,
+    setCurrentFiles,
+} from 'managers/paneManager.jsx';
+
 
 const INITIAL_PANE = {
     host: 'localhost',
@@ -43,7 +51,7 @@ const DUMMY_FILES = [
 const initialState = {
     homeDir: '~',
     showHiddenFiles: false,
-    focusPaneLeft: false,
+    focusPaneLeft: true,
     indexes: {
         left: 0,
         right: 0,
@@ -60,6 +68,21 @@ const initialState = {
 
 export default (state=initialState, action) => {
     switch(action.type) {
+    case pane.FILE_FOCUS_INDEX: {
+        const index = action.payload.index;
+        const side = action.payload.side || getSide(state);
+        const focusPaneLeft = side === 'left';
+        return {
+            ...state,
+            focusPaneLeft,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...getCurrentPane(state, side),
+                    fileFocusIndex: index,
+                }, side)
+            }
+        }
+    }
     default:
         return state;
     }
