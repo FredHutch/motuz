@@ -8,7 +8,7 @@ class TemplateComponent extends React.Component {
     render() {
         return (
             <div>
-                TemplateComponent
+                &copy; Fred Hutchinson Cancer Research Center
             </div>
         );
     }

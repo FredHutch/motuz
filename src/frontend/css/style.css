@@ -1,0 +1,50 @@
+#grid-container {
+    display: grid;
+    grid-template-areas:
+        "leftCommands rightCommands"
+        "leftPane rightPane"
+        "jobProgress jobProgress"
+        "statusBar statusBar"
+        ;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-columns: 1fr 1fr;
+    width: 100vw;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+#zone-left-commands {
+    grid-area: leftCommands;
+    background-color: red;
+    height: 33px;
+}
+
+#zone-right-commands {
+    grid-area: rightCommands;
+    background-color: blue;
+    height: 33px;
+}
+
+#zone-left-pane {
+    grid-area: leftPane;
+    background-color: green;
+}
+
+#zone-right-pane {
+    grid-area: rightPane;
+    background-color: yellow;
+}
+
+#zone-job-progress {
+    grid-area: jobProgress;
+    background-color: cyan;
+    height: 50px;
+}
+
+#zone-status-bar {
+    grid-area: statusBar;
+    font-size: 8px;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 5px;
+}

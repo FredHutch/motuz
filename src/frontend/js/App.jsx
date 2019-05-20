@@ -14,7 +14,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="grid-container">
+            <div id="grid-container">
                 <div id="zone-left-commands">
                     <LeftCommands />
                 </div>
