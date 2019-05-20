@@ -1,6 +1,9 @@
 import strftime from 'strftime';
 
 export default function formatDate(d) {
+    if (d == null) {
+        return '';
+    }
     if (! d instanceof Date) {
         console.error("Could not format date", d)
         return '';
