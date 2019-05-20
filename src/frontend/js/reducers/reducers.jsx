@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 
-import templateReducer from 'reducers/templateReducer.jsx'
+import paneReducer from 'reducers/paneReducer.jsx'
+import copyJobReducer from 'reducers/copyJobReducer.jsx'
 
 export default (history) => combineReducers({
-    rawData: templateReducer,
+    pane: paneReducer,
+    pane: copyJobReducer,
 });
