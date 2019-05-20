@@ -4,6 +4,7 @@ import * as template from 'actions/templateAction.jsx';
 const DUMMY_JOBS = [
     {
         'id': 10,
+        'description': 'Copy Job number 10',
         'start_time': new Date(new Date() - 100000000),
         'finish_time': null,
         'from_uri': 'localhost:~/tmp',
@@ -13,6 +14,7 @@ const DUMMY_JOBS = [
     },
     {
         'id': 11,
+        'description': 'Copy Job number 11',
         'start_time': new Date(new Date() - 100000000),
         'finish_time': null,
         'from_uri': 'localhost:~/tmp',
@@ -22,6 +24,7 @@ const DUMMY_JOBS = [
     },
     {
         'id': 12,
+        'description': 'Copy Job number 12',
         'start_time': new Date(new Date() - 100000000),
         'finish_time': null,
         'from_uri': 'localhost:~/tmp',
@@ -31,6 +34,7 @@ const DUMMY_JOBS = [
     },
     {
         'id': 13,
+        'description': 'Copy Job number 13',
         'start_time': new Date(new Date() - 100000000),
         'finish_time': new Date(),
         'from_uri': 'localhost:~/tmp',

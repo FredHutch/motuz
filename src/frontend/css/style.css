@@ -19,12 +19,10 @@
 
 #zone-left-commands {
     grid-area: leftCommands;
-    height: 100px;
 }
 
 #zone-right-commands {
     grid-area: rightCommands;
-    height: 100px;
 }
 
 #zone-left-pane {
@@ -39,7 +37,7 @@
 #zone-job-progress {
     grid-area: jobProgress;
     background-color: cyan;
-    height: 50px;
+    height: 150px;
 }
 
 #zone-status-bar {
@@ -54,7 +52,7 @@
 /* Commands */
 
 .zone-command-bar {
-    padding: 5px 10px 0 10px;
+    padding: 5px 10px 5px 10px;
     border: 1px solid #e1e2e3;
 }
 
