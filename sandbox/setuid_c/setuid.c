@@ -1,6 +1,10 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+
+extern int errno;
 
 int ls(const char * path) {
     DIR *d;
@@ -11,6 +15,9 @@ int ls(const char * path) {
             printf("%s\n", dir->d_name);
         }
         closedir(d);
+    } else {
+        printf("Permission denied");
+        exit(1);
     }
     return(0);
 }
@@ -18,11 +25,27 @@ int ls(const char * path) {
 
 
 int main(int argc, char ** argv) {
-    if (argc != 2) {
-        printf("Error: Invoke as ./setuid path/to/folder");
+    if (argc != 3) {
+        printf("Error: Invoke as \n./setuid path/to/folder uid");
         exit(1);
     }
 
-    ls(argv[1]);
+    const char * path = argv[1];
+    int desired_uid = atoi(argv[2]);
+
+    uid_t uid, euid;
+
+    uid = getuid();
+    euid = geteuid();
+    printf("uid: %d | euid: %d\n", uid, euid);
+
+    setuid(desired_uid);
+    if (errno != 0) {
+        printf("Error %d while executing setuid", errno);
+        exit(0);
+    }
+
+    ls(path);
+
     return 0;
 }
