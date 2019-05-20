@@ -9,7 +9,10 @@ class RightCommandBar extends React.Component {
 
     render() {
         return (
-            <CommandBar></CommandBar>
+            <CommandBar
+                isLeft={false}
+                isActive={false}
+            />
         );
     }
 
