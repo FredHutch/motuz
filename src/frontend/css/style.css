@@ -1,3 +1,7 @@
+/* TODO: split into multiple files */
+
+/* App */
+
 #grid-container {
     display: grid;
     grid-template-areas:
@@ -48,3 +52,6 @@
     line-height: 20px;
     padding-left: 5px;
 }
+
+
+/* Commands */

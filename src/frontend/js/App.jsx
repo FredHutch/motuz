@@ -1,7 +1,7 @@
 import React from 'react';
 
-import LeftCommands from 'views/LeftCommands.jsx';
-import RightCommands from 'views/RightCommands.jsx';
+import LeftCommandBar from 'views/LeftCommandBar.jsx';
+import RightCommandBar from 'views/RightCommandBar.jsx';
 import LeftPane from 'views/LeftPane.jsx';
 import RightPane from 'views/RightPane.jsx';
 import JobProgress from 'views/JobProgress.jsx';
@@ -16,10 +16,10 @@ class App extends React.Component {
         return (
             <div id="grid-container">
                 <div id="zone-left-commands">
-                    <LeftCommands />
+                    <LeftCommandBar />
                 </div>
                 <div id="zone-right-commands">
-                    <RightCommands />
+                    <RightCommandBar />
                 </div>
                 <div id="zone-left-pane">
                     <LeftPane />
