@@ -59,6 +59,8 @@
 
 .zone-pane {
     border: 1px solid #e1e2e3;
+    user-select: none;
+
 }
 
 .grid-files {
@@ -81,6 +83,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     font-size: 12px;
+    user-select: none;
 }
 
 /* Status Bar */
