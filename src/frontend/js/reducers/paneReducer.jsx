@@ -43,7 +43,7 @@ const DUMMY_FILES = [
 const initialState = {
     homeDir: '~',
     showHiddenFiles: false,
-    focusPaneLeft: false,
+    focusPaneLeft: true,
     indexes: {
         left: 0,
         right: 0,

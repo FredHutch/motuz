@@ -10,37 +10,39 @@ class CommandBar extends React.Component {
     }
 
     render() {
-        const buttonLeft = (
+        console.log(this.props.active)
+
+        const buttonArrowLeft = (
             <div className="col-2 middle">
                 <button
                     className={classnames({
                         'btn': true,
-                        'btn-primary': this.props.isActive,
-                        'btn-secondary': !this.props.isActive,
+                        'btn-primary': this.props.active,
+                        'btn-secondary': !this.props.active,
                         'btn-lg': true,
                     })}
-                    disabled={!this.props.isActive}
+                    disabled={!this.props.active}
                 > <b> &lt; </b> </button>
             </div>
         )
 
-        const buttonRight = (
+        const buttonArrowRight = (
             <div className="col-2 middle">
                 <button
                     className={classnames({
                         'btn': true,
-                        'btn-primary': this.props.isActive,
-                        'btn-secondary': !this.props.isActive,
+                        'btn-primary': this.props.active,
+                        'btn-secondary': !this.props.active,
                         'btn-lg': true,
                     })}
-                    disabled={!this.props.isActive}
+                    disabled={!this.props.active}
                 > <b> &gt; </b> </button>
             </div>
         );
 
         return (
             <div className='row'>
-                {!this.props.isLeft && buttonLeft}
+                {!this.props.isLeft && buttonArrowLeft}
                 <div className="col-10">
                     <div className="row mb-1">
                         <label className="col-2 col-form-label">Host</label>
@@ -55,7 +57,7 @@ class CommandBar extends React.Component {
                         </div>
                     </div>
                 </div>
-                {this.props.isLeft && buttonRight}
+                {this.props.isLeft && buttonArrowRight}
             </div>
         );
     }
@@ -67,7 +69,7 @@ class CommandBar extends React.Component {
 
 CommandBar.defaultProps = {
     isLeft: true,
-    isActive: true,
+    active: true,
 }
 
 import {connect} from 'react-redux';
