@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Pane from 'views/Pane/Pane.jsx';
+
 class TemplateComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -7,9 +9,7 @@ class TemplateComponent extends React.Component {
 
     render() {
         return (
-            <div>
-                TemplateComponent
-            </div>
+            <Pane></Pane>
         );
     }
 
