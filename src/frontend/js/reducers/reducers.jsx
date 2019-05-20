@@ -5,5 +5,5 @@ import copyJobReducer from 'reducers/copyJobReducer.jsx'
 
 export default (history) => combineReducers({
     pane: paneReducer,
-    pane: copyJobReducer,
+    copyJob: copyJobReducer,
 });
