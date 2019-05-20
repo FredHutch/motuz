@@ -5,7 +5,7 @@ const DUMMY_JOBS = [
     {
         'id': 10,
         'start_time': new Date(new Date() - 100000000),
-        'finish_time': null,,
+        'finish_time': null,
         'from_uri': 'localhost:~/tmp',
         'to_uri': 'localhost:~/dev/usr/bin',
         'status': 'PROGRESS',
@@ -14,7 +14,7 @@ const DUMMY_JOBS = [
     {
         'id': 11,
         'start_time': new Date(new Date() - 100000000),
-        'finish_time': null,,
+        'finish_time': null,
         'from_uri': 'localhost:~/tmp',
         'to_uri': 'localhost:~/dev/usr/bin',
         'status': 'PROGRESS',
@@ -23,7 +23,7 @@ const DUMMY_JOBS = [
     {
         'id': 12,
         'start_time': new Date(new Date() - 100000000),
-        'finish_time': null,,
+        'finish_time': null,
         'from_uri': 'localhost:~/tmp',
         'to_uri': 'localhost:~/dev/usr/bin',
         'status': 'PROGRESS',
