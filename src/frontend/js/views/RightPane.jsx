@@ -9,7 +9,9 @@ class RightPane extends React.Component {
 
     render() {
         return (
-            <Pane></Pane>
+            <Pane
+                files={this.props.files}
+            />
         );
     }
 
@@ -19,12 +21,13 @@ class RightPane extends React.Component {
 }
 
 RightPane.defaultProps = {
-
+    files: [],
 }
 
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
+    files: state.pane.files.right,
 });
 
 const mapDispatchToProps = dispatch => ({

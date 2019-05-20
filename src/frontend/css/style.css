@@ -29,7 +29,6 @@
 
 #zone-left-pane {
     grid-area: leftPane;
-    background-color: green;
 }
 
 #zone-right-pane {
@@ -56,6 +55,13 @@
 
 .zone-command-bar {
     padding: 5px 10px 0 10px;
+    border: 1px solid #e1e2e3;
+}
+
+
+/* Panes */
+
+.zone-pane {
     border: 1px solid #e1e2e3;
 }
 

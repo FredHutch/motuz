@@ -1,19 +1,14 @@
 import React from 'react';
 
-import PaneFile from 'views/Pane/PaneFile.jsx'
-import PaneItem from 'views/Pane/PaneItem.jsx'
-
-class Pane extends React.Component {
+class PaneFile extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        // console.log(this.props.files)
-
         return (
             <div>
-                Pane
+                PaneFile
             </div>
         );
     }
@@ -23,8 +18,8 @@ class Pane extends React.Component {
     }
 }
 
-Pane.defaultProps = {
-    files: []
+PaneFile.defaultProps = {
+
 }
 
 import {connect} from 'react-redux';
@@ -35,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Pane);
+export default connect(mapStateToProps, mapDispatchToProps)(PaneFile);

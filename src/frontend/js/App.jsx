@@ -21,10 +21,10 @@ class App extends React.Component {
                 <div id="zone-right-commands" className='zone-command-bar'>
                     <RightCommandBar />
                 </div>
-                <div id="zone-left-pane">
+                <div id="zone-left-pane" className='zone-pane'>
                     <LeftPane />
                 </div>
-                <div id="zone-right-pane">
+                <div id="zone-right-pane" className='zone-pane'>
                     <RightPane />
                 </div>
                 <div id="zone-job-progress">
