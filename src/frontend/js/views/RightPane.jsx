@@ -13,6 +13,7 @@ class RightPane extends React.Component {
                 files={this.props.files}
                 fileFocusIndex={this.props.fileFocusIndex}
                 active={this.props.active}
+                side='right'
             />
         );
     }
@@ -32,7 +33,7 @@ import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
     files: state.pane.files.right,
-    fileFocusIndex: state.pane.panes.left.fileFocusIndex,
+    fileFocusIndex: state.pane.panes.right[0].fileFocusIndex,
     active: !state.pane.focusPaneLeft,
 });
 

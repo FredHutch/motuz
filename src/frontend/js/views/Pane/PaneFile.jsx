@@ -22,6 +22,7 @@ class PaneFile extends React.Component {
                         'pl-2': true,
                     })}
                     onClick={event => this.props.onClick(event)}
+                    onMouseDown={event => this.props.onMouseDown(event)}
                 >
                     <Icon
                         name={type === 'dir' ? 'file-directory' : 'file'}
@@ -37,6 +38,7 @@ class PaneFile extends React.Component {
                         'pr-2': true,
                     })}
                     onClick={event => this.props.onClick(event)}
+                    onMouseDown={event => this.props.onMouseDown(event)}
                 >
                     <em>
                         {type === 'dir' ? 'Folder' : formatBytes(size)}
@@ -56,6 +58,7 @@ PaneFile.defaultProps = {
     name: '',
     size: 0,
     onClick: event => {},
+    onMouseDown: event => {},
 }
 
 import {connect} from 'react-redux';
