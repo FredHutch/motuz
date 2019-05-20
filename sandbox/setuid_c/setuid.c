@@ -19,7 +19,7 @@ int ls(const char * path) {
 
 int main(int argc, char ** argv) {
     if (argc != 2) {
-        printf("Error This should take exctly one argument - the name of the path to read");
+        printf("Error: Invoke as ./setuid path/to/folder");
         exit(1);
     }
 
