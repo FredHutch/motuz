@@ -1,0 +1,98 @@
+/* TODO: split into multiple files */
+
+/* App */
+
+#grid-container {
+    display: grid;
+    grid-template-areas:
+        "leftCommands rightCommands"
+        "leftPane rightPane"
+        "jobProgress jobProgress"
+        "statusBar statusBar"
+        ;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-columns: 1fr 1fr;
+    width: 100vw;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+#zone-left-commands {
+    grid-area: leftCommands;
+}
+
+#zone-right-commands {
+    grid-area: rightCommands;
+}
+
+#zone-left-pane {
+    grid-area: leftPane;
+}
+
+#zone-right-pane {
+    grid-area: rightPane;
+    /*background-color: #f6dc16;*/
+}
+
+#zone-job-progress {
+    grid-area: jobProgress;
+    height: 150px;
+}
+
+#zone-status-bar {
+    grid-area: statusBar;
+    font-size: 8px;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 5px;
+}
+
+
+/* Commands */
+
+.zone-command-bar {
+    padding: 5px 10px 5px 10px;
+    border: 1px solid #e1e2e3;
+}
+
+
+/* Panes */
+
+.zone-pane {
+    border: 1px solid #e1e2e3;
+}
+
+.grid-files {
+    display: grid;
+    grid-template-rows: 25px;
+    grid-auto-rows: 25px;
+    grid-template-columns: 1fr 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.grid-file-row.active {
+    background-color: #D4E3F2;
+}
+
+
+/* Job Progress */
+
+#zone-job-progress {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 12px;
+}
+
+/* Status Bar */
+
+#zone-status-bar {
+    border: 1px solid #e1e2e3;
+}
+
+/* Utilities */
+.middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

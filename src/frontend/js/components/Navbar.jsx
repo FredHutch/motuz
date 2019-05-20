@@ -1,27 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom"
+import { Navbar, Nav, NavDropdown, Form } from 'react-bootstrap'
 
-import NavbarItem from 'components/NavbarItem.jsx'
 
-export default class Navbar extends React.Component {
+export default class _Navbar extends React.Component {
     render() {
-        return <nav className="navbar navbar-inverse navbar-static-top">
-            <div className="container-fluid">
-                <div className="navbar-header">
-                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span className="sr-only">Toggle navigation</span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                    </button>
-                    <Link className="navbar-brand" to="/">Motuz</Link>
-                </div>
-
-                <ul className="nav navbar-nav">
-                    <NavbarItem link="/" title="App"></NavbarItem>
-                    <NavbarItem link="/template" title="Template"></NavbarItem>
-                </ul>
-            </div>
-        </nav>
+        return (
+            <Navbar bg="light" expand="sm">
+                <Navbar.Brand href="#home">Motuz</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link href="#home">Dashboard</Nav.Link>
+                        <Nav.Link href="#link" disabled={true}>Copy Jobs</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        );
     }
 }

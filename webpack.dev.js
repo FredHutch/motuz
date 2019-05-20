@@ -15,6 +15,7 @@ module.exports = merge(common, {
         disableHostCheck: true, // DO NOT LET THIS IN
         proxy: {
             "/api": "http://localhost:5000/",
+            "/swaggerui": "http://localhost:5000/",
         },
     },
 

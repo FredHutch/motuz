@@ -10,8 +10,11 @@ export default (history) => {
     const persistedReducer = persistReducer({
         key: 'polls',
         storage: storage,
-        // whitelist: ['nameOfAReducer'],
+        whitelist: [],
     }, rootReducer);
+
+    // const persistedReducer = rootReducer;
+
 
     const store = createStore(
         persistedReducer,

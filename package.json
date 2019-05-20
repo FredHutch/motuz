@@ -20,11 +20,12 @@
   },
   "homepage": "https://github.com/FredHutch/motuz#readme",
   "dependencies": {
+    "@githubprimer/octicons-react": "8.5.0",
     "bootstrap": "4.3.1",
     "connected-react-router": "6.4.0",
     "jquery": "3.4.1",
-    "popper.js": "1.15.0",
     "react": "16.8.6",
+    "react-bootstrap": "1.0.0-beta.8",
     "react-dom": "16.8.6",
     "react-redux": "7.0.3",
     "react-router": "5.0.0",
@@ -32,7 +33,8 @@
     "redux": "4.0.1",
     "redux-persist": "5.10.0",
     "redux-persist-transform-filter": "0.0.18",
-    "redux-thunk": "2.3.0"
+    "redux-thunk": "2.3.0",
+    "strftime": "0.10.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.4",

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class TemplateComponent extends React.Component {
+class PaneHeader extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -8,7 +8,7 @@ class TemplateComponent extends React.Component {
     render() {
         return (
             <div>
-                TemplateComponent
+                PaneHeader
             </div>
         );
     }
@@ -18,7 +18,7 @@ class TemplateComponent extends React.Component {
     }
 }
 
-TemplateComponent.defaultProps = {
+PaneHeader.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TemplateComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(PaneHeader);

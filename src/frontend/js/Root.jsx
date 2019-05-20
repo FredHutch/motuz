@@ -5,7 +5,7 @@ import Navbar from 'components/Navbar.jsx'
 import PageNotFound from 'views/PageNotFound.jsx'
 import App from 'App.jsx'
 
-import 'bootstrap/dist/js/bootstrap.min.js';
+// import 'bootstrap/dist/js/bootstrap.min.js';
 
 import 'style.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,13 +14,16 @@ import 'favicon.ico';
 
 export default class Root extends React.Component {
     render() {
-        return <Router>
-            <div>
-                <Switch>
-                    <Route exact path="/" component={App}/>
-                    <Route component={PageNotFound}/>
-                </Switch>
-            </div>
-        </Router>
+        return (
+            <Router>
+                <div>
+                    <Navbar></Navbar>
+                    <Switch>
+                        <Route exact path="/" component={App}/>
+                        <Route component={PageNotFound}/>
+                    </Switch>
+                </div>
+            </Router>
+        );
     }
 }
