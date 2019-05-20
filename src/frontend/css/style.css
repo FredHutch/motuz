@@ -19,14 +19,12 @@
 
 #zone-left-commands {
     grid-area: leftCommands;
-    background-color: red;
-    height: 33px;
+    height: 100px;
 }
 
 #zone-right-commands {
     grid-area: rightCommands;
-    background-color: blue;
-    height: 33px;
+    height: 100px;
 }
 
 #zone-left-pane {
@@ -55,3 +53,8 @@
 
 
 /* Commands */
+
+.zone-command-bar {
+    padding: 5px 10px;
+    border: 1px solid #e1e2e3;
+}
