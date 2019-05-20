@@ -14,28 +14,28 @@ const INITIAL_PANE = {
 
 const DUMMY_FILES = [
     {
-        'Name': '..',
-        'Size': 'Folder',
+        'name': '..',
+        'size': 'Folder',
         'type': 'dir',
     },
     {
-        'Name': 'gridstore',
-        'Size': 'Folder',
+        'name': 'gridstore',
+        'size': 'Folder',
         'type': 'dir',
     },
     {
-        'Name': 'scratch',
-        'Size': 'Folder',
+        'name': 'scratch',
+        'size': 'Folder',
         'type': 'dir',
     },
     {
-        'Name': 'SFU-find-utils.tar.gz',
-        'Size': 628110,
+        'name': 'SFU-find-utils.tar.gz',
+        'size': 628110,
         'type': 'file',
     },
     {
-        'Name': 'test.iso',
-        'Size': 4050000000,
+        'name': 'test.iso',
+        'size': 4050000000,
         'type': 'file',
     },
 ]

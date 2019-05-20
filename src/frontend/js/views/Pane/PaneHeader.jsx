@@ -1,6 +1,6 @@
 import React from 'react';
 
-class PaneItem extends React.Component {
+class PaneHeader extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -8,7 +8,7 @@ class PaneItem extends React.Component {
     render() {
         return (
             <div>
-                PaneItem
+                PaneHeader
             </div>
         );
     }
@@ -18,7 +18,7 @@ class PaneItem extends React.Component {
     }
 }
 
-PaneItem.defaultProps = {
+PaneHeader.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaneItem);
+export default connect(mapStateToProps, mapDispatchToProps)(PaneHeader);

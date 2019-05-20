@@ -1,15 +1,21 @@
 import React from 'react';
 
+import formatBytes from 'utils/formatBytes.jsx'
+
 class PaneFile extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
+        const {type, name, size} = this.props;
+
         return (
-            <div>
-                PaneFile
-            </div>
+            <React.Fragment>
+                <div>.</div>
+                <div>{name}</div>
+                <div>{formatBytes(size)}</div>
+            </React.Fragment>
         );
     }
 
@@ -19,7 +25,9 @@ class PaneFile extends React.Component {
 }
 
 PaneFile.defaultProps = {
-
+    type: 'dir',
+    name: '',
+    size: 0,
 }
 
 import {connect} from 'react-redux';

@@ -65,6 +65,15 @@
     border: 1px solid #e1e2e3;
 }
 
+.grid-files {
+    display: grid;
+    grid-template-rows: 25px;
+    grid-auto-rows: 25px;
+    grid-template-columns: 1fr 2fr 1fr;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 
 /* Utilities */
 .middle {

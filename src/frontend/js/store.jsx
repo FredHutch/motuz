@@ -7,11 +7,14 @@ import getRootReducer from 'reducers/reducers.jsx';
 export default (history) => {
     const rootReducer = getRootReducer(history)
 
-    const persistedReducer = persistReducer({
-        key: 'polls',
-        storage: storage,
-        // whitelist: ['nameOfAReducer'],
-    }, rootReducer);
+    // const persistedReducer = persistReducer({
+    //     key: 'polls',
+    //     storage: storage,
+    //     whitelist: [],
+    // }, rootReducer);
+
+    const persistedReducer = rootReducer;
+
 
     const store = createStore(
         persistedReducer,

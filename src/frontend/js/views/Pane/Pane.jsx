@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PaneFile from 'views/Pane/PaneFile.jsx'
-import PaneItem from 'views/Pane/PaneItem.jsx'
+import PaneHeader from 'views/Pane/PaneHeader.jsx'
 
 class Pane extends React.Component {
     constructor(props) {
@@ -9,11 +9,22 @@ class Pane extends React.Component {
     }
 
     render() {
-        // console.log(this.props.files)
+        console.log(this.props.files)
+
+
+
+        const paneFiles = this.props.files.map((file, i) => (
+            <PaneFile
+                key={i}
+                type={file.type}
+                name={file.name}
+                size={file.size}
+            />
+        ))
 
         return (
-            <div>
-                Pane
+            <div className='grid-files'>
+                {paneFiles}
             </div>
         );
     }
