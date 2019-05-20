@@ -1,6 +1,26 @@
 # Setuid experiment
 
-The following
+I prepared a proof of concept in the form of `setuid.c`. The idea behind the experiment is that we want to impersonate any user and execute a `ls` command in a specific folder. The API for that is
+
+```bash
+./setuid path/to/folder uid_to_impersonate
+```
+
+## Explanation
+
+> Problem 1: As a casual user we cannot impersonate other users
+
+We can circumvent that by setting the uid sticky bit and changing the ownership of the executable to root.
+
+> Problem 2: Now that we run as root, we need to drop permissions right away
+
+We do that by running `setuid()` and `setgid()` respectively
+
+> Problem 3: This needs to only be ran by the flask user
+
+We fix that by keeping the permission root:flask. This way only those in the flask group and the root user can execute the file
+
+The experiment follows
 
 ## Setup the paths
 

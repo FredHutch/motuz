@@ -1,3 +1,8 @@
+/**
+ * Invoke as
+ * ./setuid path/to/folder uid_to_impersonate
+ */
+
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
