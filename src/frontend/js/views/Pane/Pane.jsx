@@ -16,6 +16,7 @@ class Pane extends React.Component {
                 name={file.name}
                 size={file.size}
                 active={this.props.active && i === this.props.fileFocusIndex}
+                onClick={() => console.log(i)}
             />
         ))
 

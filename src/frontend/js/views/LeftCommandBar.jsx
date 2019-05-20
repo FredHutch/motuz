@@ -8,7 +8,6 @@ class LeftCommandBar extends React.Component {
     }
 
     render() {
-        console.log(this.props.active)
         return (
             <CommandBar
                 isLeft={true}

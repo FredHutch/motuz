@@ -15,11 +15,13 @@ class PaneFile extends React.Component {
 
         return (
             <React.Fragment>
-                <div className={classnames({
+                <div
+                    className={classnames({
                         'grid-file-row': true,
                         'active': this.props.active,
                         'pl-2': true,
                     })}
+                    onClick={event => this.props.onClick(event)}
                 >
                     <Icon
                         name={type === 'dir' ? 'file-directory' : 'file'}
@@ -27,12 +29,14 @@ class PaneFile extends React.Component {
                     />
                     {name}
                 </div>
-                <div className={classnames({
+                <div
+                    className={classnames({
                         'text-right': true,
                         'grid-file-row': true,
                         'active': this.props.active,
                         'pr-2': true,
                     })}
+                    onClick={event => this.props.onClick(event)}
                 >
                     <em>
                         {type === 'dir' ? 'Folder' : formatBytes(size)}
@@ -51,6 +55,7 @@ PaneFile.defaultProps = {
     type: 'dir',
     name: '',
     size: 0,
+    onClick: event => {},
 }
 
 import {connect} from 'react-redux';

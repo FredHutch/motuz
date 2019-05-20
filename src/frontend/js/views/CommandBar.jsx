@@ -10,8 +10,6 @@ class CommandBar extends React.Component {
     }
 
     render() {
-        console.log(this.props.active)
-
         const buttonArrowLeft = (
             <div className="col-2 middle">
                 <button
