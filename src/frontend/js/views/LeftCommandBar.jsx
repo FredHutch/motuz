@@ -1,15 +1,15 @@
 import React from 'react';
 
-class TemplateComponent extends React.Component {
+import CommandBar from 'views/CommandBar.jsx'
+
+class LeftCommandBar extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
         return (
-            <div>
-                TemplateComponent
-            </div>
+            <CommandBar></CommandBar>
         );
     }
 
@@ -18,7 +18,7 @@ class TemplateComponent extends React.Component {
     }
 }
 
-TemplateComponent.defaultProps = {
+LeftCommandBar.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TemplateComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(LeftCommandBar);

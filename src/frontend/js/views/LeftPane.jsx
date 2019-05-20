@@ -2,7 +2,7 @@ import React from 'react';
 
 import Pane from 'views/Pane/Pane.jsx';
 
-class TemplateComponent extends React.Component {
+class LeftPane extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -18,7 +18,7 @@ class TemplateComponent extends React.Component {
     }
 }
 
-TemplateComponent.defaultProps = {
+LeftPane.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TemplateComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(LeftPane);

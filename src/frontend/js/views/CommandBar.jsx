@@ -1,6 +1,6 @@
 import React from 'react';
 
-class JobProgress extends React.Component {
+class CommandBar extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -8,7 +8,7 @@ class JobProgress extends React.Component {
     render() {
         return (
             <div>
-                JobProgress
+                CommandBar
             </div>
         );
     }
@@ -18,7 +18,7 @@ class JobProgress extends React.Component {
     }
 }
 
-JobProgress.defaultProps = {
+CommandBar.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
+export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

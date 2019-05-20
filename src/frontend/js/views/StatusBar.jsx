@@ -1,6 +1,6 @@
 import React from 'react';
 
-class TemplateComponent extends React.Component {
+class StatusBar extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -18,7 +18,7 @@ class TemplateComponent extends React.Component {
     }
 }
 
-TemplateComponent.defaultProps = {
+StatusBar.defaultProps = {
 
 }
 
@@ -30,4 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TemplateComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(StatusBar);
