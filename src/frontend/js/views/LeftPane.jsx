@@ -11,6 +11,8 @@ class LeftPane extends React.Component {
         return (
             <Pane
                 files={this.props.files}
+                fileFocusIndex={0}
+                active={true}
             />
         );
     }

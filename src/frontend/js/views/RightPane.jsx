@@ -11,6 +11,9 @@ class RightPane extends React.Component {
         return (
             <Pane
                 files={this.props.files}
+                fileFocusIndex={1}
+                active={false}
+
             />
         );
     }

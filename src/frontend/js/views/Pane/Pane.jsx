@@ -9,16 +9,13 @@ class Pane extends React.Component {
     }
 
     render() {
-        console.log(this.props.files)
-
-
-
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
                 key={i}
                 type={file.type}
                 name={file.name}
                 size={file.size}
+                active={this.props.active && i === this.props.fileFocusIndex}
             />
         ))
 
@@ -35,7 +32,9 @@ class Pane extends React.Component {
 }
 
 Pane.defaultProps = {
-    files: []
+    files: [],
+    fileFocusIndex: 0,
+    active: false,
 }
 
 import {connect} from 'react-redux';

@@ -12,7 +12,7 @@ export default class _Navbar extends React.Component {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link href="#home">Dashboard</Nav.Link>
-                        <Nav.Link href="#link">Copy Jobs</Nav.Link>
+                        <Nav.Link href="#link" disabled={true}>Copy Jobs</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

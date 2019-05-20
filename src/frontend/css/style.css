@@ -33,7 +33,7 @@
 
 #zone-right-pane {
     grid-area: rightPane;
-    background-color: yellow;
+    /*background-color: #f6dc16;*/
 }
 
 #zone-job-progress {
@@ -69,9 +69,13 @@
     display: grid;
     grid-template-rows: 25px;
     grid-auto-rows: 25px;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 100px;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+.grid-file-row.active {
+    background-color: #D4E3F2;
 }
 
 

@@ -1,6 +1,9 @@
 import React from 'react';
+import classnames from 'classnames';
 
+import Icon from 'components/Icon.jsx'
 import formatBytes from 'utils/formatBytes.jsx'
+
 
 class PaneFile extends React.Component {
     constructor(props) {
@@ -12,9 +15,29 @@ class PaneFile extends React.Component {
 
         return (
             <React.Fragment>
-                <div>.</div>
-                <div>{name}</div>
-                <div>{formatBytes(size)}</div>
+                <div className={classnames({
+                        'grid-file-row': true,
+                        'active': this.props.active,
+                        'pl-2': true,
+                    })}
+                >
+                    <Icon
+                        name={type === 'dir' ? 'file-directory' : 'file'}
+                        className='mr-2'
+                    />
+                    {name}
+                </div>
+                <div className={classnames({
+                        'text-right': true,
+                        'grid-file-row': true,
+                        'active': this.props.active,
+                        'pr-2': true,
+                    })}
+                >
+                    <em>
+                        {type === 'dir' ? 'Folder' : formatBytes(size)}
+                    </em>
+                </div>
             </React.Fragment>
         );
     }

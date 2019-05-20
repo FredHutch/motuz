@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/FredHutch/motuz#readme",
   "dependencies": {
+    "@githubprimer/octicons-react": "8.5.0",
     "bootstrap": "4.3.1",
     "connected-react-router": "6.4.0",
     "jquery": "3.4.1",
