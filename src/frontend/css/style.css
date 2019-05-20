@@ -36,7 +36,6 @@
 
 #zone-job-progress {
     grid-area: jobProgress;
-    background-color: cyan;
     height: 150px;
 }
 
@@ -76,6 +75,20 @@
     background-color: #D4E3F2;
 }
 
+
+/* Job Progress */
+
+#zone-job-progress {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 12px;
+}
+
+/* Status Bar */
+
+#zone-status-bar {
+    border: 1px solid #e1e2e3;
+}
 
 /* Utilities */
 .middle {
