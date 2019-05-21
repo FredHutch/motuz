@@ -27,9 +27,7 @@ class App extends React.Component {
                 <div id="zone-right-pane" className='zone-pane'>
                     <RightPane />
                 </div>
-                <div id="zone-job-progress">
-                    <JobProgress />
-                </div>
+                <JobProgress id="zone-job-progress"/>
                 <div id="zone-status-bar">
                     <StatusBar />
                 </div>
