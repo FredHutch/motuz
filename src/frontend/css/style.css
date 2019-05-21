@@ -27,10 +27,12 @@
 
 #zone-left-pane {
     grid-area: leftPane;
+    overflow-y: auto;
 }
 
 #zone-right-pane {
     grid-area: rightPane;
+    overflow-y: auto;
 }
 
 #zone-job-progress {
