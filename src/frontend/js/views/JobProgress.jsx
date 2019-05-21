@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ResizableDivider from 'components/ResizableDivider.jsx'
 import formatDate from 'utils/formatDate.jsx'
 
 class JobProgress extends React.Component {
@@ -50,6 +51,8 @@ class JobProgress extends React.Component {
 
         return (
             <div>
+                <ResizableDivider
+                />
                 <table className='table table-sm table-striped text-center'>
                     <thead>
                         <tr>{tableHeaders}</tr>
