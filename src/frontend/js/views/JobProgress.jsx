@@ -6,6 +6,8 @@ import formatDate from 'utils/formatDate.jsx'
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
+        this.t = new Date();
+        this.container = React.createRef();
     }
 
     render() {
@@ -50,8 +52,13 @@ class JobProgress extends React.Component {
         })
 
         return (
-            <div>
+            <div
+                id={this.props.id}
+                ref={this.container}
+                style={{position: 'relative'}}
+            >
                 <ResizableDivider
+                    onResize={event => this.onResize(event)}
                 />
                 <table className='table table-sm table-striped text-center'>
                     <thead>
@@ -66,11 +73,34 @@ class JobProgress extends React.Component {
     }
 
     componentDidMount() {
+    }
+
+    onResize(event) {
+        const container = this.container.current
+
+        const newTop = event.pageY;
+        const oldTop = container.offsetTop;
+
+        const oldHeight = container.offsetHeight;
+        const newHeight = oldHeight + oldTop - newTop;
+
+        container.style.height = `${newHeight}px`
+    }
+
+    debounce(event) {
+        const date = new Date();
+        if (date - this.t < 1000) {
+            return;
+        }
+        this.t = date;
+        console.log(event)
 
     }
+
 }
 
 JobProgress.defaultProps = {
+    id: '',
     jobs: [],
 }
 
