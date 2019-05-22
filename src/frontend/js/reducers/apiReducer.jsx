@@ -1,4 +1,4 @@
-import * as template from 'actions/templateAction.jsx';
+import * as api from 'actions/apiActions.jsx';
 
 
 const DUMMY_JOBS = [
@@ -45,6 +45,7 @@ const DUMMY_JOBS = [
 ]
 
 const initialState = {
+    clouds: [],
     jobs: [...DUMMY_JOBS],
 };
 

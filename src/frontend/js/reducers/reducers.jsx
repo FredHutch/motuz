@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 
 import authReducer, * as fromAuth from 'reducers/authReducer.jsx';
+import apiReducer from 'reducers/apiReducer.jsx'
+import dialogReducer from 'reducers/dialogReducer.jsx'
 import paneReducer from 'reducers/paneReducer.jsx'
-import copyJobReducer from 'reducers/copyJobReducer.jsx'
 
 export default (history) => combineReducers({
-    pane: paneReducer,
-    copyJob: copyJobReducer,
     auth: authReducer,
+    api: apiReducer,
+    dialog: dialogReducer,
+    pane: paneReducer,
 });
 
 

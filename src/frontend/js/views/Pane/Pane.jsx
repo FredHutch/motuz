@@ -39,7 +39,7 @@ class Pane extends React.Component {
         const currPath = this.props.pane.path;
         const directoryToEnter = this.props.files[index]
         if (directoryToEnter.type !== 'dir') {
-            return;
+            return; // We do not open files
         }
 
         const path = upath.join(currPath, directoryToEnter.name)

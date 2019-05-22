@@ -6,6 +6,7 @@ import LeftPane from 'views/LeftPane.jsx';
 import RightPane from 'views/RightPane.jsx';
 import JobProgress from 'views/JobProgress.jsx';
 import StatusBar from 'views/StatusBar.jsx';
+import Dialogs from 'views/Dialogs.jsx';
 
 class App extends React.Component {
     constructor(props) {
@@ -14,24 +15,27 @@ class App extends React.Component {
 
     render() {
         return (
-            <div id="grid-container">
-                <div id="zone-left-commands" className='zone-command-bar'>
-                    <LeftCommandBar />
+            <React.Fragment>
+                <div id="grid-container">
+                    <div id="zone-left-commands" className='zone-command-bar'>
+                        <LeftCommandBar />
+                    </div>
+                    <div id="zone-right-commands" className='zone-command-bar'>
+                        <RightCommandBar />
+                    </div>
+                    <div id="zone-left-pane" className='zone-pane'>
+                        <LeftPane />
+                    </div>
+                    <div id="zone-right-pane" className='zone-pane'>
+                        <RightPane />
+                    </div>
+                    <JobProgress id="zone-job-progress"/>
+                    <div id="zone-status-bar">
+                        <StatusBar />
+                    </div>
                 </div>
-                <div id="zone-right-commands" className='zone-command-bar'>
-                    <RightCommandBar />
-                </div>
-                <div id="zone-left-pane" className='zone-pane'>
-                    <LeftPane />
-                </div>
-                <div id="zone-right-pane" className='zone-pane'>
-                    <RightPane />
-                </div>
-                <JobProgress id="zone-job-progress"/>
-                <div id="zone-status-bar">
-                    <StatusBar />
-                </div>
-            </div>
+                <Dialogs />
+            </React.Fragment>
         );
     }
 
