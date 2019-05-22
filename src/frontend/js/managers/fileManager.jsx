@@ -1,6 +1,3 @@
-import { getCurrentPane } from 'managers/paneManager.jsx';
-
-const UNIT_SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
 
 /**
  * files: {
@@ -11,11 +8,6 @@ const UNIT_SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
  */
 export function sortFiles(files) {
     files = _sortFiles(files, nameSortFunctor, true)
-    files.unshift({
-        'name': '..',
-        'size': 'Folder',
-        'type': 'dir',
-    })
 
     return files;
 }

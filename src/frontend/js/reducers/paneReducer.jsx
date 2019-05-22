@@ -106,17 +106,20 @@ export default (state=initialState, action) => {
     }
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
-        const { side } = action.meta;
-        // console.log(action)
-        // console.log('file list success')
+        const { side, path } = action.meta;
+
+        const files = sortFiles(payload);
+        if (path !== '/') {
+            files.unshift({
+                'name': '..',
+                'size': 'Folder',
+                'type': 'dir',
+            })
+        }
         return {
             ...state,
             files: {
-                ...setCurrentFiles(
-                    state,
-                    sortFiles(payload),
-                    side,
-                ),
+                ...setCurrentFiles(state, files, side),
             },
         }
     }

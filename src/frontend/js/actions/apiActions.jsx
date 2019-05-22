@@ -16,15 +16,15 @@ export const listFiles = (side, path) => ({
         types: [
             {
                 type: LIST_FILES_REQUEST,
-                meta: {side},
+                meta: {side, path},
             },
             {
                 type: LIST_FILES_SUCCESS,
-                meta: {side},
+                meta: {side, path},
             },
             {
                 type: LIST_FILES_FAILURE,
-                meta: {side},
+                meta: {side, path},
             },
         ]
     }
