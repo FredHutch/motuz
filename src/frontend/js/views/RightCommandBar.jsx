@@ -12,6 +12,8 @@ class RightCommandBar extends React.Component {
             <CommandBar
                 isLeft={false}
                 active={this.props.active}
+                host={this.props.host}
+                path={this.props.path}
             />
         );
     }
@@ -23,12 +25,16 @@ class RightCommandBar extends React.Component {
 
 RightCommandBar.defaultProps = {
     active: false,
+    host: 'ERROR',
+    path: 'ERROR',
 }
 
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
     active: !state.pane.focusPaneLeft,
+    host: state.pane.panes.right[0].host,
+    path: state.pane.panes.right[0].path,
 });
 
 const mapDispatchToProps = dispatch => ({

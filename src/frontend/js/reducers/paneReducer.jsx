@@ -1,5 +1,7 @@
 import * as pane from 'actions/paneActions.jsx';
+import * as api from 'actions/apiActions.jsx';
 
+import { sortFiles } from 'managers/fileManager.jsx'
 import {
     getSide,
     getOtherSide,
@@ -11,9 +13,9 @@ import {
 
 
 const INITIAL_PANE = {
-    host: 'localhost',
-    path: '~',
-    sortingColumn: 'Name',
+    host: '127.0.0.1',
+    path: '/',
+    sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,
     history: [],
@@ -61,8 +63,8 @@ const initialState = {
         right: [INITIAL_PANE],
     },
     files: {
-        left: [...DUMMY_FILES],
-        right: [...DUMMY_FILES],
+        left: [],
+        right: [],
     },
 };
 
@@ -83,6 +85,74 @@ export default (state=initialState, action) => {
             }
         }
     }
+    case pane.DIRECTORY_CHANGE: {
+        const { side, path } = action.payload;
+
+        return {
+            ...state,
+                panes: {
+                    ...setCurrentPane(state, {
+                        ...getCurrentPane(state, side),
+                        fileFocusIndex: 0,
+                        path,
+                    }, side)
+                },
+                files: {
+                    ...setCurrentFiles(
+                        state,
+                        [
+                            {name: '..', type: 'dir'},
+                            {name: "Loading..."},
+                        ],
+                        side
+                    )
+                }
+        }
+    }
+
+    case api.LIST_FILES_REQUEST: {
+        return {
+            ...state,
+        }
+    }
+    case api.LIST_FILES_SUCCESS: {
+        const { payload } = action;
+        const { side, path } = action.meta;
+
+        const files = sortFiles(payload);
+        if (path !== '/') {
+            files.unshift({
+                'name': '..',
+                'size': 'Folder',
+                'type': 'dir',
+            })
+        }
+        return {
+            ...state,
+            files: {
+                ...setCurrentFiles(state, files, side),
+            },
+        }
+    }
+    case api.LIST_FILES_FAILURE: {
+        const { payload } = action;
+        const { side } = action.meta;
+
+        return {
+            ...state,
+            files: {
+                ...setCurrentFiles(
+                    state,
+                    [
+                        {name: '..', type: 'dir'},
+                        {name: "ERROR - CHECK THE CONSOLE"},
+                    ],
+                    side,
+                ),
+            },
+        }
+    }
+
     default:
         return state;
     }

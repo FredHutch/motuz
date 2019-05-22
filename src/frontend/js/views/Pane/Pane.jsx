@@ -1,4 +1,5 @@
 import React from 'react';
+import upath from 'upath';
 
 import PaneFile from 'views/Pane/PaneFile.jsx'
 import PaneHeader from 'views/Pane/PaneHeader.jsx'
@@ -9,14 +10,17 @@ class Pane extends React.Component {
     }
 
     render() {
+        const {pane} = this.props;
+
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
                 key={i}
                 type={file.type}
                 name={file.name}
                 size={file.size}
-                active={this.props.active && i === this.props.fileFocusIndex}
+                active={this.props.active && i === pane.fileFocusIndex}
                 onMouseDown={() => this.props.onSelect(this.props.side, i)}
+                onDoubleClick={() => this.onEnter(this.props.side, i)}
             />
         ))
 
@@ -30,24 +34,36 @@ class Pane extends React.Component {
     componentDidMount() {
 
     }
+
+    onEnter(side, index) {
+        const currPath = this.props.pane.path;
+        const directoryToEnter = this.props.files[index]
+        if (directoryToEnter.type !== 'dir') {
+            return;
+        }
+
+        const path = upath.join(currPath, directoryToEnter.name)
+        this.props.onDirectoryChange(side, path)
+    }
 }
 
 Pane.defaultProps = {
     side: 'left',
     files: [],
-    fileFocusIndex: 0,
+    pane: {},
     active: false,
     onSelect: (side, index) => {},
 }
 
 import {connect} from 'react-redux';
-import {fileFocusIndex} from 'actions/paneActions.jsx';
+import {fileFocusIndex, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
+    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pane);

@@ -36,20 +36,26 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-
+        this.props.onMount();
     }
 }
 
 App.defaultProps = {
-
+    onMount: () => {},
 }
 
 import {connect} from 'react-redux';
+import {directoryChange} from 'actions/paneActions.jsx'
+import {listFiles} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    onMount: () => {
+        dispatch(directoryChange('left', '/'));
+        dispatch(directoryChange('right', '/'));
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

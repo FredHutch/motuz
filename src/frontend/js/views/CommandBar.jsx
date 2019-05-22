@@ -45,13 +45,23 @@ class CommandBar extends React.Component {
                     <div className="row mb-1">
                         <label className="col-2 col-form-label">Host</label>
                         <div className="col-10">
-                            <input type="text" className="form-control input-sm" value='localhost' onChange={()=> {}} />
+                            <input
+                                type="text"
+                                className="form-control input-sm"
+                                value={this.props.host}
+                                onChange={()=> {}}
+                            />
                         </div>
                     </div>
                     <div className="row">
                         <label className="col-2 col-form-label">Path</label>
                         <div className="col-10">
-                            <input type="text" className="form-control input-sm" value="~" onChange={()=> {}} />
+                            <input
+                                type="text"
+                                className="form-control input-sm"
+                                value={this.props.path}
+                                onChange={()=> {}}
+                            />
                         </div>
                     </div>
                 </div>
@@ -68,6 +78,8 @@ class CommandBar extends React.Component {
 CommandBar.defaultProps = {
     isLeft: true,
     active: true,
+    host: '127.0.0.1',
+    path: '/',
 }
 
 import {connect} from 'react-redux';

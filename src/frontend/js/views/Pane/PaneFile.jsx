@@ -22,6 +22,7 @@ class PaneFile extends React.Component {
                         'pl-2': true,
                     })}
                     onClick={event => this.props.onClick(event)}
+                    onDoubleClick={event => this.props.onDoubleClick(event)}
                     onMouseDown={event => this.props.onMouseDown(event)}
                 >
                     <Icon
@@ -38,6 +39,7 @@ class PaneFile extends React.Component {
                         'pr-2': true,
                     })}
                     onClick={event => this.props.onClick(event)}
+                    onDoubleClick={event => this.props.onDoubleClick(event)}
                     onMouseDown={event => this.props.onMouseDown(event)}
                 >
                     <em>
@@ -58,6 +60,7 @@ PaneFile.defaultProps = {
     name: '',
     size: 0,
     onClick: event => {},
+    onDoubleClick: event => {},
     onMouseDown: event => {},
 }
 

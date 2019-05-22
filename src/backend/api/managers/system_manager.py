@@ -41,12 +41,13 @@ def _get_local_files(url):
             result.append({
                 "name": resource.name,
                 "type": type,
+                "size": resource.stat().st_size,
             })
 
     except FileNotFoundError:
         return {
             'error': 'Path not found on local disk {}'.format(url)
-        }, 404
+        }, 400
 
     except PermissionError:
         uid = os.getuid()

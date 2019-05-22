@@ -74,6 +74,12 @@
     overflow-y: auto;
 }
 
+.grid-file-row {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .grid-file-row.active {
     background-color: #D4E3F2;
 }

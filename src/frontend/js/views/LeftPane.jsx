@@ -11,7 +11,7 @@ class LeftPane extends React.Component {
         return (
             <Pane
                 files={this.props.files}
-                fileFocusIndex={this.props.fileFocusIndex}
+                pane={this.props.pane}
                 active={this.props.active}
                 side='left'
             />
@@ -26,15 +26,15 @@ class LeftPane extends React.Component {
 LeftPane.defaultProps = {
     files: [],
     active: false,
-    fileFocusIndex: 1,
+    pane: {},
 }
 
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
     files: state.pane.files.left,
-    fileFocusIndex: state.pane.panes.left[0].fileFocusIndex,
     active: state.pane.focusPaneLeft,
+    pane: state.pane.panes.left[0],
 });
 
 const mapDispatchToProps = dispatch => ({
