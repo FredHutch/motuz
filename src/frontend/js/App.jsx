@@ -53,7 +53,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => {
-        dispatch(directoryChange('left', '/foo'));
+        dispatch(directoryChange('left', '/'));
         dispatch(directoryChange('right', '/'));
     }
 });
