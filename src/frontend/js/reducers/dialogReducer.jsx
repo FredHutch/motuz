@@ -9,7 +9,7 @@ const DESTINATION_CLOUD = {
 }
 
 const initialState = {
-    displayCopyJobDialog: true,
+    displayCopyJobDialog: false,
     copyJobDialogData: {
         source_cloud: SOURCE_CLOUD,
         source_resource: '/Users/aicioara/tmp',
@@ -25,6 +25,10 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayCopyJobDialog: true,
+            copyJobDialogData: {
+                ...state.copyJobDialogData,
+                ...action.payload.data,
+            }
         }
     }
     case dialog.HIDE_COPY_JOB_DIALOG: {

@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * Usage:
- * <ResizableDivider onResize={() => { console.log(resized) }}/>
+ * <ResizableDivider onResize={() => { console.info(resized) }}/>
  */
 
 class ResizableDivider extends React.PureComponent {

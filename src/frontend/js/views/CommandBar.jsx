@@ -77,7 +77,6 @@ class CommandBar extends React.Component {
     }
 
     displayCopyJobDialog() {
-        console.log('a')
         this.props.onDisplayCopyJobDialog()
     }
 }
