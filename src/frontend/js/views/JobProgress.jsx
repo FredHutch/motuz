@@ -95,7 +95,7 @@ JobProgress.defaultProps = {
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
-    jobs: state.copyJob.jobs,
+    jobs: state.api.jobs,
 });
 
 const mapDispatchToProps = dispatch => ({
