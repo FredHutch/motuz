@@ -93,8 +93,19 @@ export default (state=initialState, action) => {
                 panes: {
                     ...setCurrentPane(state, {
                         ...getCurrentPane(state, side),
+                        fileFocusIndex: 0,
                         path,
                     }, side)
+                },
+                files: {
+                    ...setCurrentFiles(
+                        state,
+                        [
+                            {name: '..', type: 'dir'},
+                            {name: "Loading..."},
+                        ],
+                        side
+                    )
                 }
         }
     }
@@ -132,7 +143,10 @@ export default (state=initialState, action) => {
             files: {
                 ...setCurrentFiles(
                     state,
-                    [{name: "ERROR - CHECK THE CONSOLE"}],
+                    [
+                        {name: '..', type: 'dir'},
+                        {name: "ERROR - CHECK THE CONSOLE"},
+                    ],
                     side,
                 ),
             },
