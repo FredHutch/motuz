@@ -7,6 +7,7 @@ import copyJobReducer from 'reducers/copyJobReducer.jsx'
 export default (history) => combineReducers({
     pane: paneReducer,
     copyJob: copyJobReducer,
+    auth: authReducer,
 });
 
 
@@ -14,9 +15,10 @@ export default (history) => combineReducers({
 export function withAuth(headers={}) {
     return (state) => {
         const ret = {...headers};
-        if (accessToken(state)) {
-            ret['Authorization'] = `Bearer ${accessToken(state)}`;
-        }
+        // TODO: Add back when we have this endpoint on the backend
+        // if (accessToken(state)) {
+        //     ret['Authorization'] = `Bearer ${accessToken(state)}`;
+        // }
         return ret;
     };
 }

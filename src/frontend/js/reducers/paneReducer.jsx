@@ -1,4 +1,5 @@
 import * as pane from 'actions/paneActions.jsx';
+import * as api from 'actions/apiActions.jsx';
 
 import {
     getSide,
@@ -83,6 +84,39 @@ export default (state=initialState, action) => {
             }
         }
     }
+    case pane.DIRECTORY_CHANGE: {
+        const { side, path } = action.payload;
+
+        return {
+            ...state,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...getCurrentPane(state, side),
+                    path,
+                }, side)
+            }
+        }
+    }
+
+    case api.LIST_FILES_REQUEST: {
+        console.log('file list request')
+        return {
+            ...state,
+        }
+    }
+    case api.LIST_FILES_SUCCESS: {
+        console.log('file list success')
+        return {
+            ...state,
+        }
+    }
+    case api.LIST_FILES_FAILURE: {
+        console.log('file list failure')
+        return {
+            ...state,
+        }
+    }
+
     default:
         return state;
     }

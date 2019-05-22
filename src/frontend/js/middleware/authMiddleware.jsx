@@ -25,8 +25,8 @@ function createAuthMiddleware() {
             };
 
             if(isRSAA(action)) {
-                const state = getState(),
-                    token = refreshToken(state);
+                const state = getState()
+                const token = refreshToken(state);
 
                 if(token && isAccessTokenExpired(state)) {
                     postponedRSAAs.push(action);
