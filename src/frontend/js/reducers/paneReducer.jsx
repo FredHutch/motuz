@@ -11,9 +11,9 @@ import {
 
 
 const INITIAL_PANE = {
-    host: 'localhost',
-    path: '~',
-    sortingColumn: 'Name',
+    host: '127.0.0.1',
+    path: '/',
+    sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,
     history: [],

@@ -6,7 +6,6 @@ import formatDate from 'utils/formatDate.jsx'
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
-        this.t = new Date();
         this.container = React.createRef();
     }
 
@@ -86,17 +85,6 @@ class JobProgress extends React.Component {
 
         container.style.height = `${newHeight}px`
     }
-
-    debounce(event) {
-        const date = new Date();
-        if (date - this.t < 1000) {
-            return;
-        }
-        this.t = date;
-        console.log(event)
-
-    }
-
 }
 
 JobProgress.defaultProps = {

@@ -46,7 +46,7 @@ def _get_local_files(url):
     except FileNotFoundError:
         return {
             'error': 'Path not found on local disk {}'.format(url)
-        }, 404
+        }, 400
 
     except PermissionError:
         uid = os.getuid()
