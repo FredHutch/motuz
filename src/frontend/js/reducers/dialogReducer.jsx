@@ -1,7 +1,7 @@
 import * as dialog from 'actions/dialogActions.jsx';
 
 const initialState = {
-    displayCopyJobDialog: true,
+    displayCopyJobDialog: false,
 };
 
 export default (state=initialState, action) => {

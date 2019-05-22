@@ -10,8 +10,7 @@ class Dialogs extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <CopyJobDialog
-                />
+                {this.props.dialogs.displayCopyJobDialog && <CopyJobDialog />}
             </React.Fragment>
         );
     }
@@ -22,11 +21,13 @@ class Dialogs extends React.Component {
 }
 
 Dialogs.defaultProps = {
+    dialogs: {},
 }
 
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
+    dialogs: state.dialog,
 });
 
 const mapDispatchToProps = dispatch => ({

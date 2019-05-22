@@ -20,6 +20,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
+                    onClick={() => this.displayCopyJobDialog()}
                 > <b> &lt; </b> </button>
             </div>
         )
@@ -34,6 +35,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
+                    onClick={() => this.displayCopyJobDialog()}
                 > <b> &gt; </b> </button>
             </div>
         );
@@ -73,6 +75,11 @@ class CommandBar extends React.Component {
     componentDidMount() {
 
     }
+
+    displayCopyJobDialog() {
+        console.log('a')
+        this.props.onDisplayCopyJobDialog()
+    }
 }
 
 CommandBar.defaultProps = {
@@ -80,14 +87,17 @@ CommandBar.defaultProps = {
     active: true,
     host: '127.0.0.1',
     path: '/',
+    onDisplayCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
+import {showCopyJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);
