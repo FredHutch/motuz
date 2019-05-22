@@ -1,6 +1,7 @@
 import * as pane from 'actions/paneActions.jsx';
 import * as api from 'actions/apiActions.jsx';
 
+import { sortFiles } from 'managers/fileManager.jsx'
 import {
     getSide,
     getOtherSide,
@@ -62,8 +63,8 @@ const initialState = {
         right: [INITIAL_PANE],
     },
     files: {
-        left: [...DUMMY_FILES],
-        right: [...DUMMY_FILES],
+        left: [],
+        right: [],
     },
 };
 
@@ -89,31 +90,49 @@ export default (state=initialState, action) => {
 
         return {
             ...state,
-            panes: {
-                ...setCurrentPane(state, {
-                    ...getCurrentPane(state, side),
-                    path,
-                }, side)
-            }
+                panes: {
+                    ...setCurrentPane(state, {
+                        ...getCurrentPane(state, side),
+                        path,
+                    }, side)
+                }
         }
     }
 
     case api.LIST_FILES_REQUEST: {
-        console.log('file list request')
         return {
             ...state,
         }
     }
     case api.LIST_FILES_SUCCESS: {
-        console.log('file list success')
+        const { payload } = action;
+        const { side } = action.meta;
+        // console.log(action)
+        // console.log('file list success')
         return {
             ...state,
+            files: {
+                ...setCurrentFiles(
+                    state,
+                    sortFiles(payload),
+                    side,
+                ),
+            },
         }
     }
     case api.LIST_FILES_FAILURE: {
-        console.log('file list failure')
+        const { payload } = action;
+        const { side } = action.meta;
+
         return {
             ...state,
+            files: {
+                ...setCurrentFiles(
+                    state,
+                    [{name: "ERROR - CHECK THE CONSOLE"}],
+                    side,
+                ),
+            },
         }
     }
 

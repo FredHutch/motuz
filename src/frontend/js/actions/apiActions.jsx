@@ -11,10 +11,21 @@ export const listFiles = (side, path) => ({
     [RSAA]: {
         endpoint: '/api/system/files',
         method: 'POST',
-        body: JSON.stringify({path}),
+        body: JSON.stringify({uri: `file:///${path}`}),
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [
-            LIST_FILES_REQUEST, LIST_FILES_SUCCESS, LIST_FILES_FAILURE
+            {
+                type: LIST_FILES_REQUEST,
+                meta: {side},
+            },
+            {
+                type: LIST_FILES_SUCCESS,
+                meta: {side},
+            },
+            {
+                type: LIST_FILES_FAILURE,
+                meta: {side},
+            },
         ]
     }
 });

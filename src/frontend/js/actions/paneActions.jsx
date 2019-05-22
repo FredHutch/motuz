@@ -16,6 +16,6 @@ export const directoryChange = (side=null, path) => {
             type: DIRECTORY_CHANGE,
             payload: {side, path}
         })
-        dispatch(api.listFiles(path));
+        dispatch(api.listFiles(side, path));
     }
 }

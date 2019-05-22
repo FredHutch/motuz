@@ -36,13 +36,6 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        // const _fetch = window.fetch
-        // window.fetch = (a, b, c, d) => {
-        //     console.log('called fetch', arguments)
-        //     const ret = _fetch(a, b, c, d);
-        //     console.log('ret', ret)
-        //     return ret;
-        // }
         this.props.onMount();
     }
 }
@@ -60,9 +53,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => {
-        dispatch(listFiles('left', '/'));
-        // dispatch(directoryChange('left', '/foo'));
-        // dispatch(directoryChange('right', '/'));
+        dispatch(directoryChange('left', '/foo'));
+        dispatch(directoryChange('right', '/'));
     }
 });
 

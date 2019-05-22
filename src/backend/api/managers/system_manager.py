@@ -41,6 +41,7 @@ def _get_local_files(url):
             result.append({
                 "name": resource.name,
                 "type": type,
+                "size": resource.stat().st_size,
             })
 
     except FileNotFoundError:
