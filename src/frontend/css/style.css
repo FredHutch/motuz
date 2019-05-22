@@ -118,3 +118,10 @@
     margin-top: -5px;
     z-index: 300;
 }
+
+/* Dialogs */
+
+.modal-dialog h5 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

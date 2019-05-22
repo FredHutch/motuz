@@ -45,7 +45,7 @@ class CommandBar extends React.Component {
                 {!this.props.isLeft && buttonArrowLeft}
                 <div className="col-10">
                     <div className="row mb-1">
-                        <label className="col-2 col-form-label">Host</label>
+                        <label className="col-2 col-form-label">Cloud</label>
                         <div className="col-10">
                             <input
                                 type="text"

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Button} from 'react-bootstrap'
+import { Modal, Button } from 'react-bootstrap'
 
 class CopyJobDialog extends React.Component {
     constructor(props) {
@@ -8,18 +8,70 @@ class CopyJobDialog extends React.Component {
 
     render() {
         return (
-            <div>
-                <Modal show={true} onHide={() => this.handleClose()}>
+            <div className='dialog-copy-job'>
+                <Modal
+                    show={true}
+                    size="lg"
+                    onHide={() => this.handleClose()}
+                >
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>New Copy Job</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                    <Modal.Body>
+                        <form>
+                            <div className="container">
+                                <h5 className="text-primary">Source</h5>
+
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Cloud</b>
+                                    </div>
+                                    <div className="col-7">{'localhost'}</div>
+                                    <div className="col-1"></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Resource</b>
+                                    </div>
+                                    <div className="col-7">{'/'}</div>
+                                    <div className="col-1"></div>
+                                </div>
+
+                                <h5 className="text-primary">Destination</h5>
+
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Cloud</b>
+                                    </div>
+                                    <div className="col-7">{'localhost'}</div>
+                                    <div className="col-1"></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Path</b>
+                                    </div>
+                                    <div className="col-7">{'/'}</div>
+                                    <div className="col-1"></div>
+                                </div>
+
+                                <h5 className='text-primary'>Permissions</h5>
+
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Owner</b>
+                                    </div>
+                                    <div className="col-7">{'Unknown'}</div>
+                                    <div className="col-1"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.handleClose()}>
-                            Close
+                            Cancel
                         </Button>
                         <Button variant="primary" onClick={() => this.handleClose()}>
-                            Save Changes
+                            Submit Copy Job
                         </Button>
                     </Modal.Footer>
                 </Modal>
