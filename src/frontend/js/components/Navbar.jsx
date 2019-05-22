@@ -1,21 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom"
-import { Navbar, Nav, NavDropdown, Form } from 'react-bootstrap'
 
 
-export default class _Navbar extends React.Component {
+export default class Navbar extends React.Component {
     render() {
         return (
-            <Navbar bg="light" expand="sm">
-                <Navbar.Brand>Motuz</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link>Operations</Nav.Link>
-                        <Nav.Link disabled={true}>Copy Jobs</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+            <nav className="navbar navbar-expand-sm navbar-light bg-light">
+                <Link to='/'>
+                    <span className="navbar-brand">Motuz</span>
+                </Link>
+                <button aria-controls="basic-navbar-nav" type="button" aria-label="Toggle navigation" className="navbar-toggler">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="navbar-collapse collapse" id="basic-navbar-nav">
+                    <div className="mr-auto navbar-nav">
+                        <Link to="/" className="nav-link">Operations</Link>
+                        <Link to="clouds" className="nav-link">Cloud Connections</Link>
+                        <Link to="/copy-jobs" className="nav-link disabled">Copy Jobs</Link>
+                    </div>
+                </div>
+            </nav>
         );
     }
 }
