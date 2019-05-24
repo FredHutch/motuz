@@ -29,6 +29,12 @@ sudo apt-get install python3.5
 ./bin/frontend_start.sh
 ```
 
+5. Start microservices
+
+```bash
+docker run --hostname 0.0.0.0 -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
+
 ## Folder structure
 
 
