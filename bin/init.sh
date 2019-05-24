@@ -6,12 +6,15 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ..
 
-set +x
 
-source venv/bin/activate
+echo "Installing backend dependencies"
+./bin/backend_install.sh
+echo "DONE - Installing backend dependencies"
 
-cd src/backend
+echo "Initializing backend..."
+./bin/backend_init.sh
+echo "DONE - Initializing backend"
 
-FLASK_ENV=development python manage.py db init
-FLASK_ENV=development python manage.py db migrate
-FLASK_ENV=development python manage.py db upgrade
+echo "Installing frontend dependencies..."
+./bin/frontend_install.sh
+echo "DONE - Installing frontend dependencies"
