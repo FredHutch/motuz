@@ -81,6 +81,6 @@ Additional temporary folders - ignore and do not commit
 
 | Folder | Description |
 | --- | --- |
-| `\_\_pycache\_\_/` | Python Bytecode |
+| `__pycache__/` | Python Bytecode |
 | `node_modules/` | JavaScript dependencies |
 | `venv/` | Python dependencies |
