@@ -5,8 +5,8 @@
   "main": "src/frontend/js/main.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "watch": "NODE_ENV=development webpack-dev-server --config webpack.dev.js",
+    "build": "NODE_ENV=production webpack --config src/frontend/webpack/webpack.prod.js",
+    "watch": "NODE_ENV=development webpack-dev-server --config src/frontend/webpack/webpack.dev.js",
     "start": "npm run watch"
   },
   "repository": {
