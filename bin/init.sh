@@ -8,13 +8,13 @@ cd ..
 
 
 echo "Installing backend dependencies"
-./bin/backend_install.sh
+./bin/utils/backend_install.sh
 echo "DONE - Installing backend dependencies"
 
 echo "Initializing backend..."
-./bin/backend_init.sh
+./bin/utils/backend_init.sh
 echo "DONE - Initializing backend"
 
 echo "Installing frontend dependencies..."
-./bin/frontend_install.sh
+./bin/utils/frontend_install.sh
 echo "DONE - Installing frontend dependencies"
