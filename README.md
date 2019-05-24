@@ -61,6 +61,7 @@ sudo apt-get install python3.5
 | `js/reducers/` | Redux Reducers |
 | `js/utils/` | Independent JavaScript Utilities |
 | `js/views/` | Motuz-Specific view and business logic |
+| `webpack/` | Webpack configurations (For JS bundling) |
 
 
 ### Backend folder structure (inside /src/backend)
