@@ -68,9 +68,9 @@ sudo apt-get install python3.5
 | Folder | Description |
 | --- | --- |
 | api/ | Code for the API (Swagger) Module |
-| api/managers | Utilities that the views call to perform actions (Also called services in Flask) |
-| api/models | Database Models |
-| api/views | API Endpoints for Swagger |
+| api/managers/ | Utilities that the views call to perform actions (Also called services in Flask) |
+| api/models/ | Database Models |
+| api/views/ | API Endpoints for Swagger |
 | api/serializers.py | DTOs - They define the Data Input expectations for Swagger |
 | migrations/ | Database Migrations |
 
@@ -81,6 +81,6 @@ Additional temporary folders - ignore and do not commit
 
 | Folder | Description |
 | --- | --- |
-| __pycache__/ | Python Bytecode |
+| \_\_pycache\_\_/ | Python Bytecode |
 | node_modules/ | JavaScript dependencies |
 | venv/ | Python dependencies |
