@@ -4,6 +4,7 @@ from flask_restplus import Resource
 from ..managers.auth_manager import token_required
 from ..serializers import CopyJobSerializer
 from ..managers import copy_job_manager
+from ..tasks import my_sleep
 
 
 api = CopyJobSerializer.api
@@ -31,6 +32,7 @@ class CopyJobList(Resource):
     def post(self):
         """Create a new Copy Job"""
         data = request.json
+        my_sleep.delay("Hello")
         return copy_job_manager.create(data=data)
 
 
