@@ -57,4 +57,3 @@ def create_app(config_name='dev'):
     app.celery = tasks.make_celery(app)
 
     return app
-

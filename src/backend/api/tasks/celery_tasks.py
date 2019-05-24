@@ -1,4 +1,5 @@
 import time
+import random
 
 import celery
 
@@ -11,4 +12,17 @@ def my_sleep(message, seconds=1):
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
 def copy_job(self):
-    pass
+    for i in range(0, 101, 10):
+        self.update_state(
+            state="PROGRESS",
+            meta={
+                "current": i,
+                "total": 100,
+            },
+        )
+        time.sleep(random.randint(0, 10))
+    return {
+        "current": 100,
+        "total": 100,
+    }
+
