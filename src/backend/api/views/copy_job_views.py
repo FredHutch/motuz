@@ -81,11 +81,14 @@ class CopyJob(Resource):
         """
         Start the Copy Job
         """
-        result = copy_job_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        try:
+            response = copy_job_manager.retrieve(id)
+        except HTTP_404_NOT_FOUND as e:
+            return {
+                "detail": "CopyJob {} not found".format(id),
+            }, e.code
+
+        return response, 202
 
 
 
@@ -99,8 +102,11 @@ class CopyJob(Resource):
         """
         Pause the Copy Job
         """
-        result = copy_job_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        try:
+            response = copy_job_manager.retrieve(id)
+        except HTTP_404_NOT_FOUND as e:
+            return {
+                "detail": "CopyJob {} not found".format(id),
+            }, e.code
+
+        return response, 202
