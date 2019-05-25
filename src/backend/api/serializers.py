@@ -3,7 +3,7 @@ from flask_restplus import Namespace, fields
 
 
 class UserSerializer:
-    api = Namespace('users', description='user related operations')
+    api = Namespace('users', description='User related operations')
     dto = api.model('user', {
         'email': fields.String(required=True, description='User email address'),
         'username': fields.String(required=True, description='User username'),
@@ -21,15 +21,24 @@ class AuthSerializer:
     })
 
 
+
 class CopyJobSerializer:
     api = Namespace('copy-jobs', description='CopyJob related operations')
     dto = api.model('copy-job', {
+        'id': fields.Integer(readonly=True),
         'description': fields.String(required=True),
         'src_cloud': fields.String(required=True),
         'src_resource': fields.String(required=True),
         'dst_cloud': fields.String(required=True),
         'dst_path': fields.String(required=True),
         'owner': fields.String(required=True),
+        'progress': fields.Nested(api.model('copy-job-progress', {
+            'state': fields.String(),
+            'current': fields.Integer(),
+            'total': fields.Integer(),
+            'status': fields.String(),
+            'error': fields.String(),
+        }), readonly=True),
     })
 
 

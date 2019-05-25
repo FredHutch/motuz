@@ -34,18 +34,15 @@ class CopyJobList(Resource):
         return copy_job_manager.list()
 
 
-    @api.response(201, 'User successfully created.')
     @api.expect(dto, validate=True)
+    @api.marshal_with(dto, code=201)
     def post(self):
         """
         Create a new Copy Job
         """
         data = request.json
-
         response = copy_job_manager.create(data)
         return response, 201
-
-        copy_job = copy_job_manager.create(data)
 
 
 
