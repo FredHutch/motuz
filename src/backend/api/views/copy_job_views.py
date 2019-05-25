@@ -24,10 +24,12 @@ CopyJobReSync - not sure what a resync is
 
 @api.route('/')
 class CopyJobList(Resource):
-    @api.marshal_list_with(dto)
+
+    # @api.marshal_list_with(dto)
     def get(self):
         """List all Copy Jobs"""
         return copy_job_manager.list()
+
 
     @api.response(201, 'User successfully created.')
     @api.expect(dto, validate=True)
@@ -45,7 +47,9 @@ class CopyJobList(Resource):
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
-    @api.marshal_with(dto, code=200)
+
+
+    # @api.marshal_with(dto, code=200)
     def get(self, id):
         """Get a specific Copy Job"""
 
@@ -89,6 +93,8 @@ class CopyJob(Resource):
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
+
+
     @api.marshal_with(dto, code=202)
     def put(self, id):
         """Start the Copy Job"""
@@ -103,6 +109,8 @@ class CopyJob(Resource):
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
+
+
     @api.marshal_with(dto, code=202)
     def put(self, id):
         """Pause the Copy Job"""

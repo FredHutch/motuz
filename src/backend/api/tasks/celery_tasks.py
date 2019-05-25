@@ -1,7 +1,9 @@
 import time
 import random
 
-import celery
+from .. import celery
+
+
 
 @celery.task(name='motuz.api.tasks.my_sleep')
 def my_sleep(message, seconds=1):
