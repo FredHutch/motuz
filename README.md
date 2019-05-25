@@ -8,6 +8,8 @@ A web based infrastructure for large scale data movements between on-premise and
 
 ```bash
 sudo apt-get install python3.5
+sudo apt-get install docker
+
 # Work in progres... unsure what else is needed on a blank system. Might use docker soon
 ```
 
@@ -17,22 +19,30 @@ sudo apt-get install python3.5
 ./bin/init.sh
 ```
 
-3. Start Backend
+---
+
+3. Start RabbitMQ
+
+```bash
+./bin/rabbitmq_start.sh
+```
+
+4. Start Celery
+
+```bash
+./bin/celery_start.sh
+```
+
+5. Start Backend
 
 ```bash
 ./bin/backend_start.sh
 ```
 
-4. Start frontend
+6. Start Frontend
 
 ```bash
 ./bin/frontend_start.sh
-```
-
-5. Start microservices
-
-```bash
-docker run --hostname 0.0.0.0 -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
 ## Folder structure
