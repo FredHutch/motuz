@@ -1,3 +1,3 @@
 from .invalid_token import InvalidToken
 from .user import User
-from .copy_job import CopyJob
+from .copy_job import CopyJob, CopyJobSerializer

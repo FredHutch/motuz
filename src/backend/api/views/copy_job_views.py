@@ -4,8 +4,7 @@ import random
 from flask import request
 from flask_restplus import Resource
 
-from ..managers.auth_manager import token_required
-from ..serializers import CopyJobSerializer
+from ..models import CopyJobSerializer
 from ..managers import copy_job_manager
 from .. import tasks
 from ..exceptions import *

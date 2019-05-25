@@ -22,26 +22,6 @@ class AuthSerializer:
 
 
 
-class CopyJobSerializer:
-    api = Namespace('copy-jobs', description='CopyJob related operations')
-    dto = api.model('copy-job', {
-        'id': fields.Integer(readonly=True, example=1234),
-        'description': fields.String(required=True, example='Task Description'),
-        'src_cloud': fields.String(required=True, example='localhost'),
-        'src_resource': fields.String(required=True, example='/tmp'),
-        'dst_cloud': fields.String(required=True, example='localhost'),
-        'dst_path': fields.String(required=True, example='/trash'),
-        'owner': fields.String(required=True, example='owner'),
-        'progress': fields.Nested(api.model('copy-job-progress', {
-            'state': fields.String(example='PENDING'),
-            'current': fields.Integer(example=45),
-            'total': fields.Integer(example=100),
-            'status': fields.String(),
-            'error': fields.String(),
-        }), readonly=True),
-    })
-
-
 class ConnectionSerializer:
     api = Namespace('connections', description='Connection related operations')
     dto = api.model('connection', {

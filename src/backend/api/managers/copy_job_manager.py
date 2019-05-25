@@ -6,7 +6,6 @@ from ..application import db
 from ..models import CopyJob
 from .. import tasks
 from ..exceptions import *
-from ..utils.alchemy_encoder import AlchemyEncoder
 
 
 
