@@ -14,7 +14,7 @@ class UserSerializer:
 
 
 class AuthSerializer:
-    api = Namespace('auth', description='authentication related operations')
+    api = Namespace('auth', description='Authentication related operations')
     dto = api.model('auth', {
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password'),
@@ -24,13 +24,12 @@ class AuthSerializer:
 class CopyJobSerializer:
     api = Namespace('copy-jobs', description='CopyJob related operations')
     dto = api.model('copy-job', {
-        'id': fields.Integer(),
-        'start_time': fields.DateTime(),
-        'finish_time': fields.DateTime(),
-        'from_uri': fields.String(required=True),
-        'to_uri': fields.String(required=True),
-        'status': fields.String(),
-        'progress': fields.Integer(),
+        'description': fields.String(required=True),
+        'src_cloud': fields.String(required=True),
+        'src_resource': fields.String(required=True),
+        'dst_cloud': fields.String(required=True),
+        'dst_path': fields.String(required=True),
+        'owner': fields.String(required=True),
     })
 
 
