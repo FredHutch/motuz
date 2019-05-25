@@ -1,4 +1,5 @@
 import logging
+import random
 
 from flask import request
 from flask_restplus import Resource
@@ -36,7 +37,11 @@ class CopyJobList(Resource):
     def post(self):
         """Create a new Copy Job"""
         data = request.json
-        task = tasks.copy_job.apply_async()
+
+        task_id = str(random.randint(0, 10000))
+
+        task = tasks.copy_job.apply_async(task_id=task_id)
+
         return {
             "id": task.id
         }
@@ -47,7 +52,6 @@ class CopyJobList(Resource):
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
-
 
     # @api.marshal_with(dto, code=200)
     def get(self, id):
@@ -94,7 +98,6 @@ class CopyJob(Resource):
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
 
-
     @api.marshal_with(dto, code=202)
     def put(self, id):
         """Start the Copy Job"""
@@ -103,6 +106,7 @@ class CopyJob(Resource):
             api.abort(404)
         else:
             return result
+
 
 
 @api.route('/<id>/pause')

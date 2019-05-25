@@ -8,6 +8,6 @@ cd ..
 
 source venv/bin/activate
 
-cd src/backend/api
+cd src/backend
 
-celery -A tasks worker -l info
+celery -A api.tasks worker -l info
