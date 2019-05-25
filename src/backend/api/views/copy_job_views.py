@@ -30,7 +30,9 @@ class CopyJobList(Resource):
 
     # @api.marshal_list_with(dto)
     def get(self):
-        """List all Copy Jobs"""
+        """
+        List all Copy Jobs
+        """
         return copy_job_manager.list()
 
 
@@ -51,7 +53,7 @@ class CopyJobList(Resource):
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
 
-    # @api.marshal_with(dto, code=200)
+    @api.marshal_with(dto, code=200)
     def get(self, id):
         """
         Get a specific Copy Job
@@ -75,7 +77,9 @@ class CopyJob(Resource):
 
     @api.marshal_with(dto, code=202)
     def put(self, id):
-        """Start the Copy Job"""
+        """
+        Start the Copy Job
+        """
         result = copy_job_manager.retrieve(id)
         if not result:
             api.abort(404)
@@ -89,10 +93,11 @@ class CopyJob(Resource):
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
 
-
     @api.marshal_with(dto, code=202)
     def put(self, id):
-        """Pause the Copy Job"""
+        """
+        Pause the Copy Job
+        """
         result = copy_job_manager.retrieve(id)
         if not result:
             api.abort(404)
