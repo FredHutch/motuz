@@ -28,12 +28,13 @@ CopyJobReSync - not sure what a resync is
 @api.route('/')
 class CopyJobList(Resource):
 
-    # @api.marshal_list_with(dto)
+    @api.marshal_list_with(dto)
     def get(self):
         """
         List all Copy Jobs
         """
-        return copy_job_manager.list()
+        response = copy_job_manager.list()
+        return response, 200
 
 
     @api.expect(dto, validate=True)

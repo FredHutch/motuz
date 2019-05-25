@@ -9,6 +9,7 @@ class CopyJob(db.Model):
     __tablename__ = "copy_job"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     src_cloud = db.Column(db.String)
     src_resource = db.Column(db.String)
@@ -18,6 +19,7 @@ class CopyJob(db.Model):
 
     status = db.Column(db.String, nullable=True)
     completed_at = db.Column(db.DateTime, nullable=True)
+
 
     def __repr__(self):
         return "<Copy Job {}>".format(self.id)

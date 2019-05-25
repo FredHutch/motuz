@@ -9,36 +9,27 @@ from ..exceptions import *
 from ..utils.alchemy_encoder import AlchemyEncoder
 
 
-def list():
-    jobs = CopyJob.query.all()
 
-    result = []
-    for job in jobs:
-        task = tasks.copy_job.AsyncResult(str(job.id))
-        result.append({
-            "id": job.id,
-            "progress": get_progress_info(task)
-        })
-    return result
+def list():
+    copy_jobs = CopyJob.query.all()
+
+    for copy_job in copy_jobs:
+        task = tasks.copy_job.AsyncResult(str(copy_job.id))
+        setattr(copy_job, 'progress', _get_progress(task))
+
+    return copy_jobs
+
 
 
 def create(data):
-    copy_job = CopyJob(
-        # public_id=str(uuid.uuid4()),
-        # email=data['email'],
-        # username=data['username'],
-        # password=data['password'],
-        # registered_on=datetime.datetime.utcnow()
-    )
-    save_changes(copy_job)
+    # TODO: validate that this data does not have additional fields
+    copy_job = CopyJob(**data)
+    _save_changes(copy_job)
 
     task = tasks.copy_job.apply_async(task_id=str(copy_job.id))
-    progress_info = get_progress_info(task)
+    setattr(copy_job, 'progress', _get_progress(task))
 
-    return {
-        "id": copy_job.id,
-        "progress": progress_info,
-    }
+    return copy_job
 
 
 
@@ -50,20 +41,20 @@ def retrieve(id):
 
 
     task = tasks.copy_job.AsyncResult(id)
-    progress_info = get_progress_info(task)
+    progress_info = _get_progress(task)
+    setattr(copy_job, 'progress', progress_info)
 
-    return {
-        "id": copy_job.id,
-        "progress": progress_info,
-    }
+    return copy_job
 
 
-def save_changes(data):
+
+def _save_changes(data):
     db.session.add(data)
     db.session.commit()
 
 
-def get_progress_info(task):
+
+def _get_progress(task):
     state = getattr(task, 'state', 'PENDING')
 
     if state == 'PENDING': # job did not start yet
