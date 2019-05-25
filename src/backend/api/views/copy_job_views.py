@@ -16,14 +16,6 @@ api = CopyJobSerializer.api
 dto = CopyJobSerializer.dto
 
 
-"""
-POST /api/jobs/$id/start CopyJobStart
-POST /api/jobs/$id/pause CopyJobPause
-GET  /api/jobs/$id CopyJobStatus
-GET  /api/jobs CopyJobListAll (to display in the UI)
-POST /api/jobs CopyJobSave (there should be no PATCH/PUT, jobs should be immutable)
-CopyJobReSync - not sure what a resync is
-"""
 
 @api.route('/')
 class CopyJobList(Resource):
