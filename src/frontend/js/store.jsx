@@ -19,6 +19,11 @@ export default (history) => {
     // const persistedReducer = rootReducer;
 
 
+    let devTools = a => a;
+    if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+        devTools = window.__REDUX_DEVTOOLS_EXTENSION__();
+    }
+
     const store = createStore(
         persistedReducer,
         {},
@@ -27,7 +32,7 @@ export default (history) => {
                 authMiddleware,
                 thunkMiddleware,
             ),
-            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+            devTools,
         )
     );
 
