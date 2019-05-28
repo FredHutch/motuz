@@ -21,7 +21,7 @@ export const CREATE_COPY_JOB_FAILURE = '@@api/CREATE_COPY_JOB_FAILURE';
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
-        endpoint: '/api/system/files',
+        endpoint: '/api/system/files/',
         method: 'POST',
         body: JSON.stringify({uri: `file:///${path}`}),
         headers: withAuth({ 'Content-Type': 'application/json' }),
@@ -45,7 +45,7 @@ export const listFiles = (side, path) => ({
 
 export const listCopyJobs = () => ({
     [RSAA]: {
-        endpoint: `/api/copy-jobs`,
+        endpoint: `/api/copy-jobs/`,
         method: 'GET',
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ LIST_COPY_JOBS_REQUEST, LIST_COPY_JOBS_SUCCESS, LIST_COPY_JOBS_FAILURE ],
@@ -55,7 +55,7 @@ export const listCopyJobs = () => ({
 
 export const retrieveCopyJob = (id) => ({
     [RSAA]: {
-        endpoint: `/api/copy-jobs/${id}`,
+        endpoint: `/api/copy-jobs/${id}/`,
         method: 'GET',
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ RETRIEVE_COPY_JOB_REQUEST, RETRIEVE_COPY_JOB_SUCCESS, RETRIEVE_COPY_JOB_FAILURE ],
