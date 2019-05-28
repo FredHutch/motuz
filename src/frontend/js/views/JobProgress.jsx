@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ResizableDivider from 'components/ResizableDivider.jsx'
-import formatDate from 'utils/formatDate.jsx'
 
 class JobProgress extends React.Component {
     constructor(props) {
@@ -13,11 +12,11 @@ class JobProgress extends React.Component {
         const headers = [
             'id',
             'description',
-            'start_time',
-            'finish_time',
-            // 'from_uri',
-            // 'to_uri',
-            'status',
+            'src_cloud',
+            'src_resource',
+            'dst_cloud',
+            'dst_path',
+            'state',
             'progress',
         ]
 
@@ -30,11 +29,12 @@ class JobProgress extends React.Component {
         })
 
         const tableRows = this.props.jobs.map((job, i) => {
+            const progress = Math.round(job.progress.current / job.progress.total * 100);
+
             job = {
                 ...job,
-                'start_time': formatDate(job['start_time']),
-                'finish_time': formatDate(job['finish_time']),
-                'progress': `${job['progress']}%`,
+                'state': job.progress.state,
+                'progress': `${progress}%`,
             }
             return (
                 <tr key={i}>
@@ -72,6 +72,7 @@ class JobProgress extends React.Component {
     }
 
     componentDidMount() {
+        this.props.onMount();
     }
 
     onResize(event) {
@@ -90,15 +91,18 @@ class JobProgress extends React.Component {
 JobProgress.defaultProps = {
     id: '',
     jobs: [],
+    onMount: () => {},
 }
 
 import {connect} from 'react-redux';
+import { listCopyJobs } from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
 });
 
 const mapDispatchToProps = dispatch => ({
+    onMount: () => { dispatch(listCopyJobs()) }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);

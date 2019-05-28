@@ -1,4 +1,5 @@
 import * as dialog from 'actions/dialogActions.jsx';
+import * as api from 'actions/apiActions.jsx';
 
 const SOURCE_CLOUD = {
     name: 'localhost',
@@ -32,6 +33,12 @@ export default (state=initialState, action) => {
         }
     }
     case dialog.HIDE_COPY_JOB_DIALOG: {
+        return {
+            ...state,
+            displayCopyJobDialog: false,
+        }
+    }
+    case api.CREATE_COPY_JOB_SUCCESS: {
         return {
             ...state,
             displayCopyJobDialog: false,

@@ -14,6 +14,10 @@ export const RETRIEVE_COPY_JOB_REQUEST = '@@api/RETRIEVE_COPY_JOB_REQUEST';
 export const RETRIEVE_COPY_JOB_SUCCESS = '@@api/RETRIEVE_COPY_JOB_SUCCESS';
 export const RETRIEVE_COPY_JOB_FAILURE = '@@api/RETRIEVE_COPY_JOB_FAILURE';
 
+export const CREATE_COPY_JOB_REQUEST = '@@api/CREATE_COPY_JOB_REQUEST';
+export const CREATE_COPY_JOB_SUCCESS = '@@api/CREATE_COPY_JOB_SUCCESS';
+export const CREATE_COPY_JOB_FAILURE = '@@api/CREATE_COPY_JOB_FAILURE';
+
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
@@ -55,5 +59,16 @@ export const retrieveCopyJob = (id) => ({
         method: 'GET',
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ RETRIEVE_COPY_JOB_REQUEST, RETRIEVE_COPY_JOB_SUCCESS, RETRIEVE_COPY_JOB_FAILURE ],
+    }
+});
+
+
+export const createCopyJob = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/copy-jobs/`, // TODO: Why is there a trailing slash here?
+        method: 'POST',
+        body: JSON.stringify({...data}),
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ CREATE_COPY_JOB_REQUEST, CREATE_COPY_JOB_SUCCESS, CREATE_COPY_JOB_FAILURE ],
     }
 });
