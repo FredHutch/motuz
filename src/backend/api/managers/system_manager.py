@@ -19,9 +19,13 @@ def get_files(uri):
     if scheme == 'file':
         url = parts.path
         return _get_local_files(url)
+    elif scheme == '':
+        return {
+            'error': 'No scheme found for URI. Use `file:///` for local files',
+        }, 400
     else:
         return {
-            'error': 'Unknown scheme `{}`'.format(scheme)
+            'error': 'Unknown scheme `{}`'.format(scheme),
         }, 400
 
 
