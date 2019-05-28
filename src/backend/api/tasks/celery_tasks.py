@@ -14,7 +14,7 @@ def my_sleep(message, seconds=1):
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
 def copy_job(self):
-    for i in range(0, 101, 10):
+    for i in range(0, 101, 1):
         self.update_state(
             state="PROGRESS",
             meta={
@@ -22,7 +22,7 @@ def copy_job(self):
                 "total": 100,
             },
         )
-        time.sleep(random.randint(0, 10))
+        time.sleep(random.randint(0, 3) / 10)
     return {
         "current": 100,
         "total": 100,
