@@ -1,4 +1,5 @@
 import React from 'react';
+import {ProgressBar} from 'react-bootstrap';
 
 import ResizableDivider from 'components/ResizableDivider.jsx'
 
@@ -34,11 +35,22 @@ class JobProgress extends React.Component {
             job = {
                 ...job,
                 'state': job.progress.state,
-                'progress': `${progress}%`,
+                'progress': progress,
             }
             return (
                 <tr key={i}>
                     {headers.map((header, j) => {
+                        if (header === 'progress') {
+                            return (
+                                <td key={j}>
+                                    <ProgressBar
+                                        now={job[header]}
+                                        label={`${job[header]}%`}
+                                        variant='success'
+                                    />
+                                </td>
+                            )
+                        }
                         const item = job[header]
                         return (
                             <td key={j}>
@@ -73,6 +85,9 @@ class JobProgress extends React.Component {
 
     componentDidMount() {
         this.props.onMount();
+        setInterval(() => {
+            this.props.onMount();
+        }, 1000)
     }
 
     onResize(event) {
