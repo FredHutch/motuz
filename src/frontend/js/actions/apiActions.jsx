@@ -6,6 +6,14 @@ export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
 export const LIST_FILES_FAILURE = '@@api/LIST_FILES_FAILURE';
 
+export const LIST_COPY_JOBS_REQUEST = '@@api/LIST_COPY_JOBS_REQUEST';
+export const LIST_COPY_JOBS_SUCCESS = '@@api/LIST_COPY_JOBS_SUCCESS';
+export const LIST_COPY_JOBS_FAILURE = '@@api/LIST_COPY_JOBS_FAILURE';
+
+export const RETRIEVE_COPY_JOB_REQUEST = '@@api/RETRIEVE_COPY_JOB_REQUEST';
+export const RETRIEVE_COPY_JOB_SUCCESS = '@@api/RETRIEVE_COPY_JOB_SUCCESS';
+export const RETRIEVE_COPY_JOB_FAILURE = '@@api/RETRIEVE_COPY_JOB_FAILURE';
+
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
@@ -27,5 +35,25 @@ export const listFiles = (side, path) => ({
                 meta: {side, path},
             },
         ]
+    }
+});
+
+
+export const listCopyJobs = () => ({
+    [RSAA]: {
+        endpoint: `/api/copy-jobs`,
+        method: 'GET',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ LIST_COPY_JOBS_REQUEST, LIST_COPY_JOBS_SUCCESS, LIST_COPY_JOBS_FAILURE ],
+    }
+});
+
+
+export const retrieveCopyJob = (id) => ({
+    [RSAA]: {
+        endpoint: `/api/copy-jobs/${id}`,
+        method: 'GET',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ RETRIEVE_COPY_JOB_REQUEST, RETRIEVE_COPY_JOB_SUCCESS, RETRIEVE_COPY_JOB_FAILURE ],
     }
 });

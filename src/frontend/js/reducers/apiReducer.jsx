@@ -46,11 +46,31 @@ const DUMMY_JOBS = [
 
 const initialState = {
     clouds: [],
-    jobs: [...DUMMY_JOBS],
+    jobs: [],
 };
+
 
 export default (state=initialState, action) => {
     switch(action.type) {
+    case api.LIST_COPY_JOBS_REQUEST: {
+        console.log(action.payload)
+        return state;
+    }
+    case api.LIST_COPY_JOBS_SUCCESS: {
+        return state;
+    }
+    case api.LIST_COPY_JOBS_FAILURE: {
+        return state;
+    }
+    case api.RETRIEVE_COPY_JOB_REQUEST: {
+        return state;
+    }
+    case api.RETRIEVE_COPY_JOB_SUCCESS: {
+        return state;
+    }
+    case api.RETRIEVE_COPY_JOB_FAILURE: {
+        return state;
+    }
     default:
         return state;
     }
