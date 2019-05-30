@@ -7,6 +7,7 @@ class JobProgress extends React.Component {
     constructor(props) {
         super(props);
         this.container = React.createRef();
+        this.timeout = null;
     }
 
     render() {
@@ -62,6 +63,11 @@ class JobProgress extends React.Component {
             );
         })
 
+        const shouldRefresh = this.props.jobs.some(d => d.progress.state === 'PROGRESS');
+        if (shouldRefresh) {
+            this.scheduleRefresh();
+        }
+
         return (
             <div
                 id={this.props.id}
@@ -84,7 +90,19 @@ class JobProgress extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onMount();
+        this.props.fetchData();
+    }
+
+    componentWillUnmount() {
+        this._clearTimeout();
+    }
+
+    scheduleRefresh() {
+        const refreshDelay = 1000; // 1s
+        this._clearTimeout();
+        this.timeout = setTimeout(() => {
+            this.props.fetchData();
+        }, refreshDelay)
     }
 
     onResize(event) {
@@ -98,12 +116,19 @@ class JobProgress extends React.Component {
 
         container.style.height = `${newHeight}px`
     }
+
+    _clearTimeout() {
+        if (this.timeout) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    }
 }
 
 JobProgress.defaultProps = {
     id: '',
     jobs: [],
-    onMount: () => {},
+    fetchData: () => {},
 }
 
 import {connect} from 'react-redux';
@@ -114,7 +139,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onMount: () => { dispatch(listCopyJobs()) }
+    fetchData: () => { dispatch(listCopyJobs()) }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);

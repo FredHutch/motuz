@@ -56,7 +56,17 @@ def _save_changes(data):
 
 
 def _get_progress(task):
-    print(task.state)
+    _e = None
+    for _ in range(3):
+        try:
+            return __get_progress(task)
+        except Exception as e:
+            _e = e
+            continue
+    else:
+        raise e
+
+def __get_progress(task):
     state = getattr(task, 'state', 'PENDING')
 
     if state == 'PENDING': # job did not start yet
