@@ -27,7 +27,11 @@ def create(data):
 
     tasks.copy_job.apply_async(task_id=str(copy_job.id))
     task = tasks.copy_job.AsyncResult(str(copy_job.id))
-    setattr(copy_job, 'progress', _get_progress(task))
+    setattr(copy_job, 'progress', { # TODO: Hack for starting the refresh process
+        'state': 'PROGRESS',
+        'current': 0,
+        'total': 100,
+    })
 
     return copy_job
 
