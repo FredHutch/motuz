@@ -17,7 +17,7 @@ GET /api/uid UidGet (this might go under GET /api/users/$id, but not sure yet)
 
 
 
-@api.route('/files')
+@api.route('/files/')
 class SystemFiles(Resource):
     @api.expect(dto, validate=True)
     def post(self):
@@ -27,7 +27,7 @@ class SystemFiles(Resource):
 
 
 
-@api.route('/uid')
+@api.route('/uid/')
 class SystemUid(Resource):
     def get(self):
         """Get the `uid` of the currently logged in user"""

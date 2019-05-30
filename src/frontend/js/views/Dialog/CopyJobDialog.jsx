@@ -70,7 +70,7 @@ class CopyJobDialog extends React.Component {
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={() => this.handleClose()}>
+                        <Button variant="primary" onClick={() => this.handleSubmit()}>
                             Submit Copy Job
                         </Button>
                     </Modal.Footer>
@@ -83,6 +83,20 @@ class CopyJobDialog extends React.Component {
         this.props.onClose();
     }
 
+    handleSubmit() {
+        const formData = this.props.data;
+
+        const data = {
+            "description": `Task ${Math.floor(Math.random() * 100)}`,
+            "src_cloud": formData['source_cloud'].name,
+            "src_resource": formData['source_resource'],
+            "dst_cloud": formData['destination_cloud'].name,
+            "dst_path": formData['destination_path'],
+            "owner": "owner"
+        }
+        this.props.onSubmit(data);
+    }
+
     componentDidMount() {
 
     }
@@ -91,10 +105,12 @@ class CopyJobDialog extends React.Component {
 CopyJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
+    onSubmit: (data) => {},
 }
 
 import {connect} from 'react-redux';
 import {hideCopyJobDialog} from 'actions/dialogActions.jsx'
+import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.copyJobDialogData,
@@ -102,6 +118,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideCopyJobDialog()),
+    onSubmit: data => dispatch(createCopyJob(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CopyJobDialog);

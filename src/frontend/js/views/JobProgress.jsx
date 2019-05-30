@@ -1,23 +1,24 @@
 import React from 'react';
+import {ProgressBar} from 'react-bootstrap';
 
 import ResizableDivider from 'components/ResizableDivider.jsx'
-import formatDate from 'utils/formatDate.jsx'
 
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
         this.container = React.createRef();
+        this.timeout = null;
     }
 
     render() {
         const headers = [
             'id',
             'description',
-            'start_time',
-            'finish_time',
-            // 'from_uri',
-            // 'to_uri',
-            'status',
+            'src_cloud',
+            'src_resource',
+            'dst_cloud',
+            'dst_path',
+            'state',
             'progress',
         ]
 
@@ -30,15 +31,27 @@ class JobProgress extends React.Component {
         })
 
         const tableRows = this.props.jobs.map((job, i) => {
+            const progress = Math.round(job.progress.current / job.progress.total * 100);
+
             job = {
                 ...job,
-                'start_time': formatDate(job['start_time']),
-                'finish_time': formatDate(job['finish_time']),
-                'progress': `${job['progress']}%`,
+                'state': job.progress.state,
+                'progress': progress,
             }
             return (
-                <tr key={i}>
+                <tr key={job.id}>
                     {headers.map((header, j) => {
+                        if (header === 'progress') {
+                            return (
+                                <td key={j}>
+                                    <ProgressBar
+                                        now={job[header]}
+                                        label={`${job[header]}%`}
+                                        variant='success'
+                                    />
+                                </td>
+                            )
+                        }
                         const item = job[header]
                         return (
                             <td key={j}>
@@ -49,6 +62,11 @@ class JobProgress extends React.Component {
                 </tr>
             );
         })
+
+        const shouldRefresh = this.props.jobs.some(d => d.progress.state === 'PROGRESS');
+        if (shouldRefresh) {
+            this.scheduleRefresh();
+        }
 
         return (
             <div
@@ -72,6 +90,19 @@ class JobProgress extends React.Component {
     }
 
     componentDidMount() {
+        this.props.fetchData();
+    }
+
+    componentWillUnmount() {
+        this._clearTimeout();
+    }
+
+    scheduleRefresh() {
+        const refreshDelay = 1000; // 1s
+        this._clearTimeout();
+        this.timeout = setTimeout(() => {
+            this.props.fetchData();
+        }, refreshDelay)
     }
 
     onResize(event) {
@@ -85,20 +116,30 @@ class JobProgress extends React.Component {
 
         container.style.height = `${newHeight}px`
     }
+
+    _clearTimeout() {
+        if (this.timeout) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    }
 }
 
 JobProgress.defaultProps = {
     id: '',
     jobs: [],
+    fetchData: () => {},
 }
 
 import {connect} from 'react-redux';
+import { listCopyJobs } from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
 });
 
 const mapDispatchToProps = dispatch => ({
+    fetchData: () => { dispatch(listCopyJobs()) }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);

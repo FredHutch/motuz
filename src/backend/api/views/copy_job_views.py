@@ -4,48 +4,40 @@ import random
 from flask import request
 from flask_restplus import Resource
 
-from ..managers.auth_manager import token_required
-from ..serializers import CopyJobSerializer
+from ..models import CopyJobSerializer
 from ..managers import copy_job_manager
 from .. import tasks
+from ..exceptions import *
+
 
 
 api = CopyJobSerializer.api
 dto = CopyJobSerializer.dto
 
 
-"""
-POST /api/jobs/$id/start CopyJobStart
-POST /api/jobs/$id/pause CopyJobPause
-GET  /api/jobs/$id CopyJobStatus
-GET  /api/jobs CopyJobListAll (to display in the UI)
-POST /api/jobs CopyJobSave (there should be no PATCH/PUT, jobs should be immutable)
-CopyJobReSync - not sure what a resync is
-"""
 
 @api.route('/')
 class CopyJobList(Resource):
 
-    # @api.marshal_list_with(dto)
+    @api.marshal_list_with(dto)
     def get(self):
-        """List all Copy Jobs"""
-        return copy_job_manager.list()
+        """
+        List all Copy Jobs
+        """
+        response = copy_job_manager.list()
+        return response, 200
 
 
-    @api.response(201, 'User successfully created.')
     @api.expect(dto, validate=True)
+    @api.marshal_with(dto, code=201)
     def post(self):
-        """Create a new Copy Job"""
+        """
+        Create a new Copy Job
+        """
         data = request.json
+        response = copy_job_manager.create(data)
+        return response, 201
 
-        task_id = str(random.randint(0, 10000))
-
-        task = tasks.copy_job.apply_async(task_id=task_id)
-
-        return {
-            "id": task.id
-        }
-        # return copy_job_manager.create(data=data)
 
 
 @api.route('/<id>')
@@ -53,44 +45,21 @@ class CopyJobList(Resource):
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
 
-    # @api.marshal_with(dto, code=200)
+    @api.marshal_with(dto, code=200)
     def get(self, id):
-        """Get a specific Copy Job"""
+        """
+        Get a specific Copy Job
+        """
 
-        id = str(id)
-        logging.warning(id)
+        try:
+            response = copy_job_manager.retrieve(id)
+        except HTTP_404_NOT_FOUND as e:
+            return {
+                "detail": "CopyJob {} not found".format(id),
+            }, e.code
 
-        task = tasks.copy_job.AsyncResult(id)
+        return response, 200
 
-        state = getattr(task, 'state', 'PENDING')
-
-        if state == 'PENDING':
-            # job did not start yet
-            response = {
-                'state': state,
-                'current': 0,
-                'total': 100,
-                'status': 'Pending...'
-            }
-        elif state != 'FAILURE':
-            response = {
-                'state': state,
-                'current': task.info.get('current', 0),
-                'total': task.info.get('total', 1),
-                'status': task.info.get('status', '')
-            }
-            if 'result' in task.info:
-                response['result'] = task.info['result']
-        else:
-            # something went wrong in the background job
-            response = {
-                'state': state,
-                'current': 1,
-                'total': 1,
-                'status': str(task.info),  # this is the exception raised
-            }
-
-        return response
 
 
 @api.route('/<id>/start')
@@ -100,12 +69,17 @@ class CopyJob(Resource):
 
     @api.marshal_with(dto, code=202)
     def put(self, id):
-        """Start the Copy Job"""
-        result = copy_job_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        """
+        Start the Copy Job
+        """
+        try:
+            response = copy_job_manager.retrieve(id)
+        except HTTP_404_NOT_FOUND as e:
+            return {
+                "detail": "CopyJob {} not found".format(id),
+            }, e.code
+
+        return response, 202
 
 
 
@@ -114,12 +88,16 @@ class CopyJob(Resource):
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
 
-
     @api.marshal_with(dto, code=202)
     def put(self, id):
-        """Pause the Copy Job"""
-        result = copy_job_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        """
+        Pause the Copy Job
+        """
+        try:
+            response = copy_job_manager.retrieve(id)
+        except HTTP_404_NOT_FOUND as e:
+            return {
+                "detail": "CopyJob {} not found".format(id),
+            }, e.code
+
+        return response, 202
