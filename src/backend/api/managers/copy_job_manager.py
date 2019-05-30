@@ -54,19 +54,26 @@ def _save_changes(data):
 
 
 def _get_progress(task):
+    print(task.state)
     state = getattr(task, 'state', 'PENDING')
 
     if state == 'PENDING': # job did not start yet
         response = {
             'state': state,
-            'current': 0,
+            'current': 100,
             'total': 100,
         }
-    elif state != 'FAILURE': # SUCCESS
+    elif state == 'PROGRESS':
         response = {
             'state': state,
-            'current': task.info.get('current', 0),
-            'total': task.info.get('total', 100),
+            'current': task.info and task.info.get('current', 0),
+            'total': task.info and task.info.get('total', 100),
+        }
+    elif state == 'SUCCESS': # SUCCESS
+        response = {
+            'state': state,
+            'current': task.info and task.info.get('current', 0),
+            'total': task.info and task.info.get('total', 100),
         }
         if 'result' in task.info:
             response['result'] = task.info['result']

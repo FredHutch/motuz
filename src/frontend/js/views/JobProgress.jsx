@@ -85,9 +85,6 @@ class JobProgress extends React.Component {
 
     componentDidMount() {
         this.props.onMount();
-        setInterval(() => {
-            this.props.onMount();
-        }, 1000)
     }
 
     onResize(event) {
