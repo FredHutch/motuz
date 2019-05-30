@@ -39,7 +39,7 @@ class JobProgress extends React.Component {
                 'progress': progress,
             }
             return (
-                <tr key={i}>
+                <tr key={job.id}>
                     {headers.map((header, j) => {
                         if (header === 'progress') {
                             return (

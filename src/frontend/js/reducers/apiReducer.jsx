@@ -1,5 +1,5 @@
 import * as api from 'actions/apiActions.jsx';
-
+import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
     clouds: [],
@@ -13,9 +13,10 @@ export default (state=initialState, action) => {
         return state;
     }
     case api.LIST_COPY_JOBS_SUCCESS: {
+        const jobs = action.payload;
         return {
             ...state,
-            jobs: action.payload,
+            jobs: reverseArray(jobs),
         }
     }
     case api.LIST_COPY_JOBS_FAILURE: {
@@ -39,8 +40,8 @@ export default (state=initialState, action) => {
         return {
             ...state,
             jobs: [
-                ...state.jobs,
                 newJob,
+                ...state.jobs,
             ],
         }
     }
