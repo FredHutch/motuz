@@ -10,12 +10,13 @@ module.exports = merge(common, {
 
     devServer: {
         port: 8080,
+        host: '0.0.0.0',
         contentBase: '.',
         historyApiFallback: true, // For ReactRouter
         disableHostCheck: true, // DO NOT LET THIS IN
         proxy: {
-            "/api": "http://localhost:5000/",
-            "/swaggerui": "http://localhost:5000/",
+            "/api": "http://0.0.0.0:5000/",
+            "/swaggerui": "http://0.0.0.0:5000/",
         },
     },
 
