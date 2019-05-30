@@ -25,7 +25,8 @@ def create(data):
     copy_job = CopyJob(**data)
     _save_changes(copy_job)
 
-    task = tasks.copy_job.apply_async(task_id=str(copy_job.id))
+    tasks.copy_job.apply_async(task_id=str(copy_job.id))
+    task = tasks.copy_job.AsyncResult(str(copy_job.id))
     setattr(copy_job, 'progress', _get_progress(task))
 
     return copy_job
@@ -40,6 +41,7 @@ def retrieve(id):
 
 
     task = tasks.copy_job.AsyncResult(id)
+
     progress_info = _get_progress(task)
     setattr(copy_job, 'progress', progress_info)
 
