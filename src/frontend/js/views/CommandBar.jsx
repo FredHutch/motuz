@@ -1,7 +1,7 @@
 import React from 'react';
-import {Form} from 'react-bootstrap'
-
 import classnames from 'classnames';
+
+import Select from 'components/Select.jsx';
 
 
 class CommandBar extends React.Component {
@@ -10,6 +10,20 @@ class CommandBar extends React.Component {
     }
 
     render() {
+        const clouds = [
+            {
+                id: 0,
+                name: '127.0.0.1',
+                type: 'localhost',
+            },
+            ...this.props.clouds
+        ];
+
+        const cloudLabels = clouds.map(d => ({
+            label: `${d.name} (${d.type})`,
+            value: d.id,
+        }))
+
         const buttonArrowLeft = (
             <div className="col-2 middle">
                 <button
@@ -47,11 +61,11 @@ class CommandBar extends React.Component {
                     <div className="row mb-1">
                         <label className="col-2 col-form-label">Cloud</label>
                         <div className="col-10">
-                            <input
-                                type="text"
+                            <Select
                                 className="form-control input-sm"
                                 value={this.props.host}
                                 onChange={()=> {}}
+                                options={cloudLabels}
                             />
                         </div>
                     </div>
@@ -86,6 +100,7 @@ CommandBar.defaultProps = {
     active: true,
     host: '127.0.0.1',
     path: '/',
+    clouds: [],
     onDisplayCopyJobDialog: () => {},
 }
 
@@ -93,6 +108,7 @@ import {connect} from 'react-redux';
 import {showCopyJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
