@@ -19,7 +19,7 @@ const initialState = {
         owner: 'aicioara',
     },
 
-    displayCloudConnectionDialog: false,
+    displayCloudConnectionDialog: true,
     cloudConnectionDialogData: {
 
     }

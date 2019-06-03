@@ -21,49 +21,65 @@ class CloudConnectionDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="container">
-                            <h5 className="text-primary mb-2">Source</h5>
+                            <h5 className="text-primary mb-2">Details</h5>
 
-                            <div className="row">
+                            <div className="row form-group">
                                 <div className="col-4 text-right">
-                                    <b>Cloud</b>
+                                    <b>Type</b>
                                 </div>
-                                <div className="col-7">{data['source_cloud'].name}</div>
-                                <div className="col-1"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Resource</b>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
                                 </div>
-                                <div className="col-7">{data['source_resource']}</div>
-                                <div className="col-1"></div>
                             </div>
 
-                            <h5 className="text-primary mt-5 mb-2">Destination</h5>
-
-                            <div className="row">
+                            <div className="row form-group">
                                 <div className="col-4 text-right">
-                                    <b>Cloud</b>
+                                    <b>Name</b>
                                 </div>
-                                <div className="col-7">{data['destination_cloud'].name}</div>
-                                <div className="col-1"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Path</b>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
                                 </div>
-                                <div className="col-7">{data['destination_path']}</div>
-                                <div className="col-1"></div>
                             </div>
 
-                            <h5 className='text-primary mt-5 mb-2'>Permissions</h5>
-
-                            <div className="row">
+                            <div className="row form-group">
                                 <div className="col-4 text-right">
-                                    <b>Owner</b>
+                                    <b>Bucket</b>
                                 </div>
-                                <div className="col-7">{data['owner']}</div>
-                                <div className="col-1"></div>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
+                                </div>
                             </div>
+
+                            <div className="row form-group">
+                                <div className="col-4 text-right">
+                                    <b>Region</b>
+                                </div>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
+                                </div>
+                            </div>
+
+
+                            <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                            <div className="row form-group">
+                                <div className="col-4 text-right">
+                                    <b>access_key_id</b>
+                                </div>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
+                                </div>
+                            </div>
+
+                            <div className="row form-group">
+                                <div className="col-4 text-right">
+                                    <b>access_key_secret</b>
+                                </div>
+                                <div className="col-8">
+                                    <input type="text" className='form-control'/>
+                                </div>
+                            </div>
+
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
@@ -71,7 +87,7 @@ class CloudConnectionDialog extends React.Component {
                             Cancel
                         </Button>
                         <Button variant="primary" onClick={() => this.handleSubmit()}>
-                            Submit Copy Job
+                            Create Cloud Connection
                         </Button>
                     </Modal.Footer>
                 </Modal>
