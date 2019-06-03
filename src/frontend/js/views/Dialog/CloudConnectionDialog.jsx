@@ -4,7 +4,9 @@ import { Modal, Button } from 'react-bootstrap'
 import serializeForm from 'utils/serializeForm.jsx';
 
 const CONNECTION_TYPES = [
-    'S3',
+    'Amazon Simple Storage Service (S3)',
+    'Azure Blob Storage',
+    'Google Cloud Bucket'
 ]
 
 
