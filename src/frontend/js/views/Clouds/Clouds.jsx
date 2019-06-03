@@ -40,7 +40,9 @@ class Clouds extends React.Component {
             <div className="container-fluid mt-4">
                 <div className="row">
                     <div className="col-12">
-                        <button className="btn btn-success">New Connection</button>
+                        <button className="btn btn-success" onClick={(event) => this.props.onNewConnection()}>
+                            New Connection
+                        </button>
                     </div>
                     <div className="col-12 mt-4">
                         <table className="table">
@@ -66,14 +68,17 @@ class Clouds extends React.Component {
 
 Clouds.defaultProps = {
     clouds: [],
+    onNewConnection: () => {},
 }
 
 import {connect} from 'react-redux';
+import {showCloudConnectionDialog} from 'actions/dialogActions.jsx';
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    onNewConnection: () => dispatch(showCloudConnectionDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clouds);

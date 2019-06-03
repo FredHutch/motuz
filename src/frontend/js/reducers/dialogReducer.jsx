@@ -20,7 +20,7 @@ const initialState = {
     },
 
     displayCloudConnectionDialog: false,
-    cloudConnectionDialog: {
+    cloudConnectionDialogData: {
 
     }
 };
@@ -54,10 +54,6 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayCloudConnectionDialog: true,
-            cloudConnectionDialogData: {
-                ...state.cloudConnectionDialogData,
-                ...action.payload.data,
-            }
         }
     }
     case dialog.HIDE_CLOUD_CONNECTION_DIALOG: {

@@ -55,9 +55,9 @@ export const hideCopyJobDialog = () => ({
 
 
 export const showCloudConnectionDialog = () => ({
-    type: SHOW_COPY_JOB_DIALOG,
+    type: SHOW_CLOUD_CONNECTION_DIALOG,
 });
 
 export const hideCloudConnectionDialog = () => ({
-    type: HIDE_COPY_JOB_DIALOG,
+    type: HIDE_CLOUD_CONNECTION_DIALOG,
 });

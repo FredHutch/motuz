@@ -17,7 +17,7 @@ class CloudConnectionDialog extends React.Component {
                     onHide={() => this.handleClose()}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>New Copy Job</Modal.Title>
+                        <Modal.Title>New Cloud Connection</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="container">
@@ -109,7 +109,7 @@ CloudConnectionDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hideCloudConnectionDialog} from 'actions/dialogActions.jsx'
 import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
@@ -117,7 +117,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideCopyJobDialog()),
+    onClose: () => dispatch(hideCloudConnectionDialog()),
     onSubmit: data => dispatch(createCopyJob(data)),
 });
 
