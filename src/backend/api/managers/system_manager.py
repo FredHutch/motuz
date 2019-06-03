@@ -33,21 +33,7 @@ def _get_local_files(url):
     result = []
 
     try:
-        for resource in os.scandir(url):
-            if resource.is_dir():
-                type = "dir"
-            elif resource.is_file():
-                type = "file"
-            elif resource.is_symlink():
-                type = "symlink"
-
-
-            result.append({
-                "name": resource.name,
-                "type": type,
-                "size": resource.stat().st_size,
-            })
-
+        resources = os.scandir(url)
     except FileNotFoundError:
         return {
             'error': 'Path not found on local disk {}'.format(url)
@@ -62,6 +48,34 @@ def _get_local_files(url):
                 path=url,
             )
         }, 403
+
+
+    try:
+        for resource in resources:
+            if resource.is_dir():
+                type = "dir"
+            elif resource.is_file():
+                type = "file"
+            elif resource.is_symlink():
+                type = "symlink"
+
+            size = -1
+            try:
+                size = resource.stat().st_size
+            except Exception:
+                pass # Cannot stat for some reason
+
+
+            result.append({
+                "name": resource.name,
+                "type": type,
+                "size": size,
+            })
+    except Exception as e:
+        return {
+            'error': 'Unknown Error {}'.format(e)
+        }, 400
+
 
 
     return result
