@@ -2,12 +2,12 @@ from flask import request
 from flask_restplus import Resource
 
 from ..managers.auth_manager import token_required
-from ..serializers import ConnectionSerializer
-from ..managers import copy_job_manager
+from ..serializers import CloudConnectionSerializer
+from ..managers import cloud_connection_manager
 
 
-api = ConnectionSerializer.api
-dto = ConnectionSerializer.dto
+api = CloudConnectionSerializer.api
+dto = CloudConnectionSerializer.dto
 
 
 """
@@ -22,7 +22,7 @@ class ConnectionList(Resource):
     @api.marshal_list_with(dto)
     def get(self):
         """List all Connections"""
-        return copy_job_manager.list()
+        return cloud_connection_manager.list()
 
 
     @api.response(201, 'User successfully created.')
@@ -30,7 +30,7 @@ class ConnectionList(Resource):
     def post(self):
         """Create a new Connection"""
         data = request.json
-        return copy_job_manager.create(data=data)
+        return cloud_connection_manager.create(data=data)
 
 
 
@@ -41,7 +41,7 @@ class Connection(Resource):
     @api.marshal_with(dto, code=200)
     def get(self, id):
         """Get a specific Connection"""
-        result = copy_job_manager.retrieve(id)
+        result = cloud_connection_manager.retrieve(id)
         if not result:
             api.abort(404)
         else:
@@ -50,7 +50,7 @@ class Connection(Resource):
     @api.marshal_with(dto, code=200)
     def patch(self, id):
         """Edit a specific Connection"""
-        result = copy_job_manager.retrieve(id)
+        result = cloud_connection_manager.retrieve(id)
         if not result:
             api.abort(404)
         else:
@@ -59,7 +59,7 @@ class Connection(Resource):
     @api.marshal_with(dto, code=200)
     def delete(self, id):
         """Delete a specific Connection"""
-        result = copy_job_manager.retrieve(id)
+        result = cloud_connection_manager.retrieve(id)
         if not result:
             api.abort(404)
         else:

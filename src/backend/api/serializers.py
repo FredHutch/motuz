@@ -22,7 +22,7 @@ class AuthSerializer:
 
 
 
-class ConnectionSerializer:
+class CloudConnectionSerializer:
     api = Namespace('connections', description='Connection related operations')
     dto = api.model('connection', {
         'id': fields.Integer(readonly=True, example=1),
