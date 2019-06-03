@@ -7,7 +7,7 @@ const headers = [
     "name",
     "bucket",
     "region",
-    "key_id",
+    "access_key_id",
     "key_secret",
 ];
 
@@ -18,14 +18,16 @@ class Clouds extends React.Component {
     }
 
     render() {
-
         const connectionRows = this.props.clouds.map((cloud, i) => {
-            items = headers.map((header, j) => {
-                <td key={j}>
-                    {header}
-                </td>
-            })
+            cloud['key_secret'] = '***'
 
+            const items = headers.map((header, j) => {
+                return (
+                    <td key={j}>
+                        {cloud[header]}
+                    </td>
+                );
+            })
 
             return (
                 <tr key={cloud.id}>
@@ -40,12 +42,15 @@ class Clouds extends React.Component {
             <div className="container-fluid mt-4">
                 <div className="row">
                     <div className="col-12">
-                        <button className="btn btn-success" onClick={(event) => this.props.onNewConnection()}>
+                        <button
+                            className="btn btn-success"
+                            onClick={(event) => this.props.onShowNewConnectionDialog()}
+                        >
                             New Connection
                         </button>
                     </div>
                     <div className="col-12 mt-4">
-                        <table className="table">
+                        <table className="table text-center">
                             <thead>
                                 <tr>
                                     {headers.map(header => <th key={header}>{header}</th>)}
@@ -62,23 +67,27 @@ class Clouds extends React.Component {
     }
 
     componentDidMount() {
-
+        this.props.onMount();
     }
 }
 
 Clouds.defaultProps = {
     clouds: [],
-    onNewConnection: () => {},
+    onMount: () => {},
+    onShowNewConnectionDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {showCloudConnectionDialog} from 'actions/dialogActions.jsx';
+import {listCloudConnections} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onNewConnection: () => dispatch(showCloudConnectionDialog()),
+    onMount: () => dispatch(listCloudConnections()),
+    onShowNewConnectionDialog: () => dispatch(showCloudConnectionDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clouds);

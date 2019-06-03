@@ -19,7 +19,7 @@ const initialState = {
         owner: 'aicioara',
     },
 
-    displayCloudConnectionDialog: true,
+    displayCloudConnectionDialog: false,
     cloudConnectionDialogData: {
 
     }
@@ -57,6 +57,12 @@ export default (state=initialState, action) => {
         }
     }
     case dialog.HIDE_CLOUD_CONNECTION_DIALOG: {
+        return {
+            ...state,
+            displayCloudConnectionDialog: false,
+        }
+    }
+    case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
             displayCloudConnectionDialog: false,
