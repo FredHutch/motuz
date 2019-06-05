@@ -19,7 +19,7 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def run():
-    app.run(host='0.0.0.0')
+    app.run(host=os.getenv('MOTUZ_HOST', 'localhost'))
 
 @manager.command
 def test():
