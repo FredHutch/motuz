@@ -6,7 +6,11 @@
  *     type
  * }
  */
-export function sortFiles(files) {
+export function sortFiles(files, showHiddenFiles=true) {
+    if (!showHiddenFiles) {
+        files = files.filter(d => !d.name.startsWith('.'))
+    }
+
     files = _sortFiles(files, nameSortFunctor, true)
 
     return files;

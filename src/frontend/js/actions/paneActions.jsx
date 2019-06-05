@@ -2,6 +2,7 @@ import * as api from 'actions/apiActions.jsx';
 
 export const FILE_FOCUS_INDEX = '@@pane/FILE_FOCUS_INDEX';
 export const DIRECTORY_CHANGE = '@@pane/DIRECTORY_CHANGE';
+export const TOGGLE_SHOW_HIDDEN_FILES = '@@pane/TOGGLE_SHOW_HIDDEN_FILES';
 
 
 export const fileFocusIndex = (side, index) => ({
@@ -17,5 +18,11 @@ export const directoryChange = (side=null, path) => {
             payload: {side, path}
         })
         dispatch(api.listFiles(side, path));
+    }
+}
+
+export const toggleShowHiddenFiles = () => {
+    return {
+        type: TOGGLE_SHOW_HIDDEN_FILES,
     }
 }
