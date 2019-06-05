@@ -45,6 +45,15 @@ sudo apt-get install docker
 ./bin/frontend_start.sh
 ```
 
+## Development Options
+
+1. Changing the host
+
+```bash
+MOTUZ_HOST='0.0.0.0' ./bin/frontend_start.sh
+MOTUZ_HOST='0.0.0.0' ./bin/backend_start.sh
+```
+
 ## Folder structure
 
 
