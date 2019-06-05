@@ -17,7 +17,7 @@ export const directoryChange = (side=null, path) => {
             type: DIRECTORY_CHANGE,
             payload: {side, path}
         })
-        dispatch(api.listFiles(side, path));
+        return await dispatch(api.listFiles(side, path));
     }
 }
 
@@ -27,6 +27,19 @@ export const refreshPanes = () => {
 
         const pathLeft = state.pane.panes.left[0].path;
         const pathRight = state.pane.panes.right[0].path;
+
+        if (pathLeft === pathRight) { // optimization
+            const dirLeft = await dispatch(directoryChange('left', pathLeft));
+            const dirRight = {
+                ...dirLeft,
+                meta: {
+                    ...dirLeft.meta,
+                    side: 'right',
+                }
+            }
+            dispatch(dirRight)
+            return;
+        }
 
         await Promise.all([
             dispatch(directoryChange('left', pathLeft)),
