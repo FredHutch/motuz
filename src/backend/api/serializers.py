@@ -41,5 +41,5 @@ class CloudConnectionSerializer:
 class SystemSerializer:
     api = Namespace('system', description='System related operations')
     dto = api.model('system', {
-        'uri': fields.String(required=True),
+        'uri': fields.String(required=True, example='file:///usr/bin/'),
     })

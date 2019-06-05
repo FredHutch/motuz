@@ -4,7 +4,7 @@ from flask_restplus import Resource
 from ..managers.auth_manager import token_required
 from ..serializers import CloudConnectionSerializer
 from ..managers import cloud_connection_manager
-
+from ..exceptions import HTTP_EXCEPTION
 
 api = CloudConnectionSerializer.api
 dto = CloudConnectionSerializer.dto
@@ -18,7 +18,10 @@ class ConnectionList(Resource):
         """
         List all Connections
         """
-        return cloud_connection_manager.list()
+        try:
+            return cloud_connection_manager.list(), 200
+        except HTTP_EXCEPTION as e:
+            return e.payload, e.code
 
 
     @api.expect(dto, validate=True)
@@ -28,8 +31,11 @@ class ConnectionList(Resource):
         Create a new Connection
         """
         data = request.json
-        response = cloud_connection_manager.create(data=data)
-        return response, 201
+
+        try:
+            return cloud_connection_manager.create(data=data), 201
+        except HTTP_EXCEPTION as e:
+            return e.payload, e.code
 
 
 
@@ -37,36 +43,37 @@ class ConnectionList(Resource):
 @api.param('id', 'The Connection Identifier')
 @api.response(404, 'Connection not found.')
 class Connection(Resource):
+
     @api.marshal_with(dto, code=200)
     def get(self, id):
         """
-        Get a specific Connection
+        Retrieve a specific Connection
         """
-        result = cloud_connection_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        try:
+            return cloud_connection_manager.retrieve(id), 200
+        except HTTP_EXCEPTION as e:
+            return e.payload, e.code
+
 
     @api.marshal_with(dto, code=200)
     def patch(self, id):
         """
-        Edit a specific Connection
+        Update a specific Connection
         """
-        result = cloud_connection_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+        try:
+            return cloud_connection_manager.retrieve(id), 200
+        except HTTP_EXCEPTION as e:
+            return e.payload, e.code
+
 
     @api.marshal_with(dto, code=200)
     def delete(self, id):
         """
         Delete a specific Connection
         """
-        result = cloud_connection_manager.retrieve(id)
-        if not result:
-            api.abort(404)
-        else:
-            return result
+
+        try:
+            return cloud_connection_manager.delete(id), 200
+        except HTTP_EXCEPTION as e:
+            return e.payload, e.code
 

@@ -14,7 +14,6 @@ export default class Navbar extends React.Component {
                 </button>
                 <div className="navbar-collapse collapse" id="basic-navbar-nav">
                     <div className="mr-auto navbar-nav">
-                        <Link to="/" className="nav-link">Operations</Link>
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
                     </div>
                 </div>
