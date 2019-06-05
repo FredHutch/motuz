@@ -21,7 +21,7 @@ class ConnectionList(Resource):
         try:
             return cloud_connection_manager.list(), 200
         except HTTP_EXCEPTION as e:
-            return e.payload, e.code
+            api.abort(e.code, e.payload)
 
 
     @api.expect(dto, validate=True)
@@ -35,7 +35,7 @@ class ConnectionList(Resource):
         try:
             return cloud_connection_manager.create(data=data), 201
         except HTTP_EXCEPTION as e:
-            return e.payload, e.code
+            api.abort(e.code, e.payload)
 
 
 
@@ -52,18 +52,21 @@ class Connection(Resource):
         try:
             return cloud_connection_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
-            return e.payload, e.code
+            api.abort(e.code, e.payload)
 
 
+    @api.expect(dto, validate=True)
     @api.marshal_with(dto, code=200)
     def patch(self, id):
         """
         Update a specific Connection
         """
+        data = request.json
+
         try:
-            return cloud_connection_manager.retrieve(id), 200
+            return cloud_connection_manager.update(id, data), 200
         except HTTP_EXCEPTION as e:
-            return e.payload, e.code
+            api.abort(e.code, e.payload)
 
 
     @api.marshal_with(dto, code=200)
@@ -75,5 +78,5 @@ class Connection(Resource):
         try:
             return cloud_connection_manager.delete(id), 200
         except HTTP_EXCEPTION as e:
-            return e.payload, e.code
+            api.abort(e.code, e.payload)
 

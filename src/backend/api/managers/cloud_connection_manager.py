@@ -28,14 +28,18 @@ def retrieve(id):
     cloud_connection = CloudConnection.query.get(id)
 
     if cloud_connection is None:
-        raise HTTP_404_NOT_FOUND({'error': 'Cloud Connection with id {} not found'.format(id)})
+        raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(id))
 
     return cloud_connection
 
 
-def update(id):
+def update(id, data):
     cloud_connection = retrieve(id)
 
+    for key, value in data.items():
+        setattr(cloud_connection, key, value)
+
+    db.session.commit()
     return cloud_connection
 
 
