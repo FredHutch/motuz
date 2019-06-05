@@ -1,8 +1,9 @@
 import datetime
+import logging
 import os
-from urllib.parse import urlparse
-from os import path
 import pwd
+from os import path
+from urllib.parse import urlparse
 
 def get_uid():
     uid = os.getuid()
@@ -20,12 +21,16 @@ def get_files(uri):
         url = parts.path
         return _get_local_files(url)
     elif scheme == '':
+        message = 'No scheme found for URI. Use `file:///` for local files'
+        logging.error(message)
         return {
-            'error': 'No scheme found for URI. Use `file:///` for local files',
+            'error': message,
         }, 400
     else:
+        message = 'Unknown scheme `{}`'.format(scheme)
+        logging.error(message)
         return {
-            'error': 'Unknown scheme `{}`'.format(scheme),
+            'error': message,
         }, 400
 
 

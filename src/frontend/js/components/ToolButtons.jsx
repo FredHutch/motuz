@@ -16,7 +16,7 @@ class ToolButtons extends React.Component {
                     onClick={event => this.props.onToggleShowHiddenFiles()}
                 >
                     <Icon
-                        name={this.props.showHiddenFiles ? 'eye-closed' : 'eye'}
+                        name={this.props.showHiddenFiles ? 'eye' : 'eye-closed'}
                     />
                 </button>
             </React.Fragment>

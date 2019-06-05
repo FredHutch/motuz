@@ -21,8 +21,26 @@ export const directoryChange = (side=null, path) => {
     }
 }
 
+export const refreshPanes = () => {
+    return async (dispatch, getState) => {
+        const state = getState();
+
+        const pathLeft = state.pane.panes.left[0].path;
+        const pathRight = state.pane.panes.right[0].path;
+
+        await Promise.all([
+            dispatch(directoryChange('left', pathLeft)),
+            dispatch(directoryChange('right', pathRight)),
+        ]);
+    }
+}
+
 export const toggleShowHiddenFiles = () => {
-    return {
-        type: TOGGLE_SHOW_HIDDEN_FILES,
+    return async (dispatch, getState) => {
+        dispatch({
+            type: TOGGLE_SHOW_HIDDEN_FILES,
+        })
+
+        dispatch(refreshPanes());
     }
 }
