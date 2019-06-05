@@ -18,6 +18,11 @@ const initialState = {
         destination_path: '/tmp',
         owner: 'aicioara',
     },
+
+    displayCloudConnectionDialog: false,
+    cloudConnectionDialogData: {
+
+    }
 };
 
 export default (state=initialState, action) => {
@@ -42,6 +47,25 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayCopyJobDialog: false,
+        }
+    }
+
+    case dialog.SHOW_CLOUD_CONNECTION_DIALOG: {
+        return {
+            ...state,
+            displayCloudConnectionDialog: true,
+        }
+    }
+    case dialog.HIDE_CLOUD_CONNECTION_DIALOG: {
+        return {
+            ...state,
+            displayCloudConnectionDialog: false,
+        }
+    }
+    case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
+        return {
+            ...state,
+            displayCloudConnectionDialog: false,
         }
     }
     default:

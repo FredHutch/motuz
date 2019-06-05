@@ -6,7 +6,6 @@ import LeftPane from 'views/LeftPane.jsx';
 import RightPane from 'views/RightPane.jsx';
 import JobProgress from 'views/JobProgress.jsx';
 import StatusBar from 'views/StatusBar.jsx';
-import Dialogs from 'views/Dialogs.jsx';
 
 class App extends React.Component {
     constructor(props) {
@@ -34,7 +33,6 @@ class App extends React.Component {
                         <StatusBar />
                     </div>
                 </div>
-                <Dialogs />
             </React.Fragment>
         );
     }
@@ -50,7 +48,7 @@ App.defaultProps = {
 
 import {connect} from 'react-redux';
 import {directoryChange} from 'actions/paneActions.jsx'
-import {listFiles} from 'actions/apiActions.jsx'
+import {listFiles, listCloudConnections} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
 });
@@ -59,6 +57,7 @@ const mapDispatchToProps = dispatch => ({
     onMount: () => {
         dispatch(directoryChange('left', '/'));
         dispatch(directoryChange('right', '/'));
+        dispatch(listCloudConnections());
     }
 });
 

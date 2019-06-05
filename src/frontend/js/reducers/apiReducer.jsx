@@ -48,6 +48,42 @@ export default (state=initialState, action) => {
     case api.CREATE_COPY_JOB_FAILURE: {
         return state;
     }
+
+
+
+
+    case api.LIST_CLOUD_CONNECTIONS_REQUEST: {
+        return state;
+    }
+    case api.LIST_CLOUD_CONNECTIONS_SUCCESS: {
+        const clouds = action.payload;
+        return {
+            ...state,
+            clouds,
+        }
+    }
+    case api.LIST_CLOUD_CONNECTIONS_FAILURE: {
+        return state;
+    }
+    case api.CREATE_CLOUD_CONNECTION_REQUEST: {
+        return state;
+    }
+    case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
+        const newCloudConnection = action.payload;
+
+        return {
+            ...state,
+            clouds: [
+                ...state.clouds,
+                newCloudConnection,
+            ],
+        }
+    }
+    case api.CREATE_CLOUD_CONNECTION_FAILURE: {
+        return state;
+    }
+
+
     default:
         return state;
     }

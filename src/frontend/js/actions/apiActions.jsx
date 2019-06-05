@@ -18,6 +18,14 @@ export const CREATE_COPY_JOB_REQUEST = '@@api/CREATE_COPY_JOB_REQUEST';
 export const CREATE_COPY_JOB_SUCCESS = '@@api/CREATE_COPY_JOB_SUCCESS';
 export const CREATE_COPY_JOB_FAILURE = '@@api/CREATE_COPY_JOB_FAILURE';
 
+export const LIST_CLOUD_CONNECTIONS_REQUEST = '@@api/LIST_CLOUD_CONNECTIONS_REQUEST';
+export const LIST_CLOUD_CONNECTIONS_SUCCESS = '@@api/LIST_CLOUD_CONNECTIONS_SUCCESS';
+export const LIST_CLOUD_CONNECTIONS_FAILURE = '@@api/LIST_CLOUD_CONNECTIONS_FAILURE';
+
+export const CREATE_CLOUD_CONNECTION_REQUEST = '@@api/CREATE_CLOUD_CONNECTION_REQUEST';
+export const CREATE_CLOUD_CONNECTION_SUCCESS = '@@api/CREATE_CLOUD_CONNECTION_SUCCESS';
+export const CREATE_CLOUD_CONNECTION_FAILURE = '@@api/CREATE_CLOUD_CONNECTION_FAILURE';
+
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
@@ -72,3 +80,25 @@ export const createCopyJob = (data) => ({
         types: [ CREATE_COPY_JOB_REQUEST, CREATE_COPY_JOB_SUCCESS, CREATE_COPY_JOB_FAILURE ],
     }
 });
+
+
+
+export const listCloudConnections = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
+        method: 'GET',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ LIST_CLOUD_CONNECTIONS_REQUEST, LIST_CLOUD_CONNECTIONS_SUCCESS, LIST_CLOUD_CONNECTIONS_FAILURE ],
+    }
+});
+
+export const createCloudConnection = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
+        method: 'POST',
+        body: JSON.stringify({...data}),
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ CREATE_CLOUD_CONNECTION_REQUEST, CREATE_CLOUD_CONNECTION_SUCCESS, CREATE_CLOUD_CONNECTION_FAILURE ],
+    }
+});
+

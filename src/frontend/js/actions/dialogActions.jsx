@@ -12,6 +12,9 @@ import {
 export const SHOW_COPY_JOB_DIALOG = '@@dialog/SHOW_COPY_JOB_DIALOG';
 export const HIDE_COPY_JOB_DIALOG = '@@dialog/HIDE_COPY_JOB_DIALOG';
 
+export const SHOW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_CLOUD_CONNECTION_DIALOG';
+export const HIDE_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_CLOUD_CONNECTION_DIALOG';
+
 
 export const showCopyJobDialog = () => {
     return async (dispatch, getState) => {
@@ -48,4 +51,13 @@ export const showCopyJobDialog = () => {
 
 export const hideCopyJobDialog = () => ({
     type: HIDE_COPY_JOB_DIALOG,
+});
+
+
+export const showCloudConnectionDialog = () => ({
+    type: SHOW_CLOUD_CONNECTION_DIALOG,
+});
+
+export const hideCloudConnectionDialog = () => ({
+    type: HIDE_CLOUD_CONNECTION_DIALOG,
 });

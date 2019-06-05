@@ -23,7 +23,8 @@ def list():
 def create(data):
     # TODO: validate that this data does not have additional fields
     copy_job = CopyJob(**data)
-    _save_changes(copy_job)
+    db.session.add(copy_job)
+    db.session.commit()
 
     tasks.copy_job.apply_async(task_id=str(copy_job.id))
     task = tasks.copy_job.AsyncResult(str(copy_job.id))
@@ -41,7 +42,7 @@ def retrieve(id):
     copy_job = CopyJob.query.get(id)
 
     if copy_job is None:
-        raise HTTP_404_NOT_FOUND()
+        raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
 
     task = tasks.copy_job.AsyncResult(id)
@@ -52,10 +53,6 @@ def retrieve(id):
     return copy_job
 
 
-
-def _save_changes(data):
-    db.session.add(data)
-    db.session.commit()
 
 
 

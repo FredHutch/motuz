@@ -7,7 +7,7 @@ from flask_restplus import Resource
 from ..models import CopyJobSerializer
 from ..managers import copy_job_manager
 from .. import tasks
-from ..exceptions import *
+from ..exceptions import HTTP_EXCEPTION
 
 
 
@@ -24,8 +24,10 @@ class CopyJobList(Resource):
         """
         List all Copy Jobs
         """
-        response = copy_job_manager.list()
-        return response, 200
+        try:
+            return copy_job_manager.list()
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
 
 
     @api.expect(dto, validate=True)
@@ -35,8 +37,10 @@ class CopyJobList(Resource):
         Create a new Copy Job
         """
         data = request.json
-        response = copy_job_manager.create(data)
-        return response, 201
+        try:
+            return copy_job_manager.create(data), 201
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
 
 
 
@@ -50,15 +54,10 @@ class CopyJob(Resource):
         """
         Get a specific Copy Job
         """
-
         try:
-            response = copy_job_manager.retrieve(id)
-        except HTTP_404_NOT_FOUND as e:
-            return {
-                "detail": "CopyJob {} not found".format(id),
-            }, e.code
-
-        return response, 200
+            return copy_job_manager.retrieve(id), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
 
 
 
@@ -73,13 +72,9 @@ class CopyJob(Resource):
         Start the Copy Job
         """
         try:
-            response = copy_job_manager.retrieve(id)
-        except HTTP_404_NOT_FOUND as e:
-            return {
-                "detail": "CopyJob {} not found".format(id),
-            }, e.code
-
-        return response, 202
+            return copy_job_manager.retrieve(id), 202
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
 
 
 
@@ -94,10 +89,6 @@ class CopyJob(Resource):
         Pause the Copy Job
         """
         try:
-            response = copy_job_manager.retrieve(id)
-        except HTTP_404_NOT_FOUND as e:
-            return {
-                "detail": "CopyJob {} not found".format(id),
-            }, e.code
-
-        return response, 202
+            return copy_job_manager.retrieve(id), 202
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
