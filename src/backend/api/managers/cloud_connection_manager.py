@@ -13,7 +13,6 @@ def list():
     return cloud_connections
 
 
-
 def create(data):
     cloud_connection = CloudConnection(**data)
 
@@ -21,7 +20,6 @@ def create(data):
     db.session.commit()
 
     return cloud_connection
-
 
 
 def retrieve(id):
