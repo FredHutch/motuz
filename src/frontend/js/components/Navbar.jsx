@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"
 
+import ToolButtons from 'components/ToolButtons.jsx'
 
 export default class Navbar extends React.Component {
     render() {
@@ -17,6 +18,7 @@ export default class Navbar extends React.Component {
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
                     </div>
                 </div>
+                <ToolButtons/>
             </nav>
         );
     }

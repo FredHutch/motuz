@@ -22,34 +22,6 @@ const INITIAL_PANE = {
     fileSelectedIndexes: {},
 }
 
-const DUMMY_FILES = [
-    {
-        'name': '..',
-        'size': 'Folder',
-        'type': 'dir',
-    },
-    {
-        'name': 'gridstore',
-        'size': 'Folder',
-        'type': 'dir',
-    },
-    {
-        'name': 'scratch',
-        'size': 'Folder',
-        'type': 'dir',
-    },
-    {
-        'name': 'SFU-find-utils.tar.gz',
-        'size': 628110,
-        'type': 'file',
-    },
-    {
-        'name': 'test.iso',
-        'size': 4050000000,
-        'type': 'file',
-    },
-]
-
 const initialState = {
     homeDir: '~',
     showHiddenFiles: false,
@@ -90,23 +62,31 @@ export default (state=initialState, action) => {
 
         return {
             ...state,
-                panes: {
-                    ...setCurrentPane(state, {
-                        ...getCurrentPane(state, side),
-                        fileFocusIndex: 0,
-                        path,
-                    }, side)
-                },
-                files: {
-                    ...setCurrentFiles(
-                        state,
-                        [
-                            {name: '..', type: 'dir'},
-                            {name: "Loading..."},
-                        ],
-                        side
-                    )
-                }
+            panes: {
+                ...setCurrentPane(state, {
+                    ...getCurrentPane(state, side),
+                    fileFocusIndex: 0,
+                    path,
+                }, side)
+            },
+            files: {
+                ...setCurrentFiles(
+                    state,
+                    [
+                        {name: '..', type: 'dir'},
+                        {name: "Loading..."},
+                    ],
+                    side
+                )
+            }
+        }
+    }
+
+
+    case pane.TOGGLE_SHOW_HIDDEN_FILES: {
+        return {
+            ...state,
+            showHiddenFiles: !state.showHiddenFiles,
         }
     }
 
@@ -119,7 +99,9 @@ export default (state=initialState, action) => {
         const { payload } = action;
         const { side, path } = action.meta;
 
-        const files = sortFiles(payload);
+        const { showHiddenFiles } = state;
+
+        const files = sortFiles(payload, showHiddenFiles);
         if (path !== '/') {
             files.unshift({
                 'name': '..',

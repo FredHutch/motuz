@@ -47,7 +47,7 @@ App.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {directoryChange} from 'actions/paneActions.jsx'
+import {refreshPanes} from 'actions/paneActions.jsx'
 import {listFiles, listCloudConnections} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
@@ -55,8 +55,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => {
-        dispatch(directoryChange('left', '/'));
-        dispatch(directoryChange('right', '/'));
+        dispatch(refreshPanes()),
         dispatch(listCloudConnections());
     }
 });
