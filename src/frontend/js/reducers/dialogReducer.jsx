@@ -74,7 +74,8 @@ export default (state=initialState, action) => {
         }
     }
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
-    case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
+    case api.UPDATE_CLOUD_CONNECTION_SUCCESS:
+    case api.DELETE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
             displayEditCloudConnectionDialog: false,

@@ -100,15 +100,19 @@ export const listCloudConnections = (data) => ({
     }
 });
 
-export const createCloudConnection = (data) => ({
-    [RSAA]: {
-        endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: withAuth({ 'Content-Type': 'application/json' }),
-        types: [ CREATE_CLOUD_CONNECTION_REQUEST, CREATE_CLOUD_CONNECTION_SUCCESS, CREATE_CLOUD_CONNECTION_FAILURE ],
+export const createCloudConnection = (data) => {
+    delete data.id;
+
+    return {
+        [RSAA]: {
+            endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: withAuth({ 'Content-Type': 'application/json' }),
+            types: [ CREATE_CLOUD_CONNECTION_REQUEST, CREATE_CLOUD_CONNECTION_SUCCESS, CREATE_CLOUD_CONNECTION_FAILURE ],
+        }
     }
-});
+};
 
 export const updateCloudConnection = (data) => {
     const id = data.id;

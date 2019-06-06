@@ -31,7 +31,7 @@ class EditCloudConnectionDialog extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-danger mr-auto" onClick={() => this.handleClose()}>
+                    <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
                         Delete
                     </Button>
                     <Button variant="secondary" onClick={() => this.handleClose()}>
@@ -56,6 +56,13 @@ class EditCloudConnectionDialog extends React.Component {
         this.props.onSubmit(data);
     }
 
+    handleDelete() {
+        const form = this.formRef.current;
+        const data = serializeForm(form)
+
+        this.props.onDelete(data);
+    }
+
     componentDidMount() {
 
     }
@@ -65,11 +72,12 @@ EditCloudConnectionDialog.defaultProps = {
     data: {},
     onClose: () => {},
     onSubmit: (data) => {},
+    onDelete: (data) => {},
 }
 
 import {connect} from 'react-redux';
 import {hideEditCloudConnectionDialog} from 'actions/dialogActions.jsx'
-import {updateCloudConnection} from 'actions/apiActions.jsx'
+import {updateCloudConnection, deleteCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.editCloudConnectionDialogData,
@@ -78,6 +86,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideEditCloudConnectionDialog()),
     onSubmit: data => dispatch(updateCloudConnection(data)),
+    onDelete: data => dispatch(deleteCloudConnection(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCloudConnectionDialog);
