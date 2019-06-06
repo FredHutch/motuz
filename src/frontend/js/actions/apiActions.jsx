@@ -26,6 +26,10 @@ export const CREATE_CLOUD_CONNECTION_REQUEST = '@@api/CREATE_CLOUD_CONNECTION_RE
 export const CREATE_CLOUD_CONNECTION_SUCCESS = '@@api/CREATE_CLOUD_CONNECTION_SUCCESS';
 export const CREATE_CLOUD_CONNECTION_FAILURE = '@@api/CREATE_CLOUD_CONNECTION_FAILURE';
 
+export const UPDATE_CLOUD_CONNECTION_REQUEST = '@@api/UPDATE_CLOUD_CONNECTION_REQUEST';
+export const UPDATE_CLOUD_CONNECTION_SUCCESS = '@@api/UPDATE_CLOUD_CONNECTION_SUCCESS';
+export const UPDATE_CLOUD_CONNECTION_FAILURE = '@@api/UPDATE_CLOUD_CONNECTION_FAILURE';
+
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
@@ -102,3 +106,12 @@ export const createCloudConnection = (data) => ({
     }
 });
 
+export const updateCloudConnection = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/connections/${data.id}`, // TODO: Why is there a trailing slash here?
+        method: 'PUT',
+        body: JSON.stringify({...data}),
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ UPDATE_CLOUD_CONNECTION_REQUEST, UPDATE_CLOUD_CONNECTION_SUCCESS, UPDATE_CLOUD_CONNECTION_FAILURE ],
+    }
+});

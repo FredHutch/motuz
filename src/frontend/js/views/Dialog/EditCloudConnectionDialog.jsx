@@ -1,13 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap'
 
+import CloudConnectionDialogFields from 'views/Dialog/CloudConnectionDialogFields.jsx';
 import serializeForm from 'utils/serializeForm.jsx';
-
-const CONNECTION_TYPES = [
-    'Amazon Simple Storage Service (S3)',
-    'Azure Blob Storage',
-    'Google Cloud Bucket'
-]
 
 
 class EditCloudConnectionDialog extends React.Component {
@@ -20,118 +15,35 @@ class EditCloudConnectionDialog extends React.Component {
         const { data } = this.props;
 
         return (
-            <div className='dialog-copy-job'>
-                <Modal
-                    show={true}
-                    size="lg"
-                    onHide={() => this.handleClose()}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>New Cloud Connection</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <form
-                            action="#"
-                            onSubmit={event => event.preventDefault()}
-                            ref={this.formRef}
-                        >
-                            <div className="container">
-                                <h5 className="text-primary mb-2">Details</h5>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>Type</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <select
-                                            className="form-control"
-                                            name="type"
-                                        >
-                                            {CONNECTION_TYPES.map(d => <option key={d} value={d}>{d}</option>)}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>Name</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <input
-                                            type="text"
-                                            className='form-control'
-                                            name='name'
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>Bucket</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <input
-                                            type="text"
-                                            className='form-control'
-                                            name='bucket'
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>Region</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <input
-                                            type="text"
-                                            className='form-control'
-                                            name='region'
-                                        />
-                                    </div>
-                                </div>
-
-
-                                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>access_key_id</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <input
-                                            type="text"
-                                            className='form-control'
-                                            name='access_key_id'
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="row form-group">
-                                    <div className="col-4 text-right">
-                                        <b>access_key_secret</b>
-                                    </div>
-                                    <div className="col-8">
-                                        <input
-                                            type="text"
-                                            className='form-control'
-                                            name='access_key_secret'
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.handleClose()}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={() => this.handleSubmit()}>
-                            Create Cloud Connection
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </div>
+            <Modal
+                show={true}
+                size="lg"
+                onHide={() => this.handleClose()}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Cloud Connection</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form
+                        action="#"
+                        onSubmit={event => event.preventDefault()}
+                        ref={this.formRef}
+                    >
+                        <CloudConnectionDialogFields data={data} />
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={() => this.handleClose()}>
+                        Delete
+                    </Button>
+                    <Button variant="secondary" onClick={() => this.handleClose()}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={() => this.handleSubmit()}>
+                        Create Cloud Connection
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 
@@ -158,16 +70,16 @@ EditCloudConnectionDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideCloudConnectionDialog} from 'actions/dialogActions.jsx'
-import {createCloudConnection} from 'actions/apiActions.jsx'
+import {hideEditCloudConnectionDialog} from 'actions/dialogActions.jsx'
+import {updateCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.copyJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideNewCloudConnectionDialog()),
-    onSubmit: data => dispatch(createCloudConnection(data)),
+    onClose: () => dispatch(hideEditCloudConnectionDialog()),
+    onSubmit: data => dispatch(updateCloudConnection(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCloudConnectionDialog);

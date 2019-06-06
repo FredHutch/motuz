@@ -82,7 +82,7 @@ Clouds.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {showNewCloudConnectionDialog} from 'actions/dialogActions.jsx';
+import {showNewCloudConnectionDialog, showEditCloudConnectionDialog} from 'actions/dialogActions.jsx';
 import {listCloudConnections} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
@@ -92,6 +92,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onMount: () => dispatch(listCloudConnections()),
     onShowNewConnectionDialog: () => dispatch(showNewCloudConnectionDialog()),
+    onShowEditConnectionDialog: (data) => dispatch(showEditCloudConnectionDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clouds);

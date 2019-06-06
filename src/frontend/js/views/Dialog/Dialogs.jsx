@@ -2,6 +2,7 @@ import React from 'react';
 
 import CopyJobDialog from 'views/Dialog/CopyJobDialog.jsx';
 import NewCloudConnectionDialog from 'views/Dialog/NewCloudConnectionDialog.jsx';
+import EditCloudConnectionDialog from 'views/Dialog/EditCloudConnectionDialog.jsx';
 
 class Dialogs extends React.Component {
     constructor(props) {
