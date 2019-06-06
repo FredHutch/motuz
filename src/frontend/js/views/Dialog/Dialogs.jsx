@@ -1,7 +1,8 @@
 import React from 'react';
 
 import CopyJobDialog from 'views/Dialog/CopyJobDialog.jsx';
-import CloudConnectionDialog from 'views/Dialog/CloudConnectionDialog.jsx';
+import NewCloudConnectionDialog from 'views/Dialog/NewCloudConnectionDialog.jsx';
+import EditCloudConnectionDialog from 'views/Dialog/EditCloudConnectionDialog.jsx';
 
 class Dialogs extends React.Component {
     constructor(props) {
@@ -12,7 +13,8 @@ class Dialogs extends React.Component {
         return (
             <React.Fragment>
                 {this.props.dialogs.displayCopyJobDialog && <CopyJobDialog />}
-                {this.props.dialogs.displayCloudConnectionDialog && <CloudConnectionDialog />}
+                {this.props.dialogs.displayNewCloudConnectionDialog && <NewCloudConnectionDialog />}
+                {this.props.dialogs.displayEditCloudConnectionDialog && <EditCloudConnectionDialog />}
             </React.Fragment>
         );
     }

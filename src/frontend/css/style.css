@@ -1,5 +1,11 @@
 /* TODO: split into multiple files */
 
+/* Bootstrap addons */
+
+.table-hover td {
+    cursor: pointer;
+}
+
 /* App */
 
 #grid-container {

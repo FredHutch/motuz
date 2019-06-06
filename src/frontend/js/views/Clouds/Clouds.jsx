@@ -8,7 +8,6 @@ const headers = [
     "bucket",
     "region",
     "access_key_id",
-    "key_secret",
 ];
 
 
@@ -19,11 +18,12 @@ class Clouds extends React.Component {
 
     render() {
         const connectionRows = this.props.clouds.map((cloud, i) => {
-            cloud['key_secret'] = '***'
-
             const items = headers.map((header, j) => {
                 return (
-                    <td key={j}>
+                    <td
+                        key={j}
+                        onClick={() => this.props.onShowEditConnectionDialog(cloud)}
+                    >
                         {cloud[header]}
                     </td>
                 );
@@ -50,7 +50,7 @@ class Clouds extends React.Component {
                         </button>
                     </div>
                     <div className="col-12 mt-4">
-                        <table className="table text-center">
+                        <table className="table text-center table-hover">
                             <thead>
                                 <tr>
                                     {headers.map(header => <th key={header}>{header}</th>)}
@@ -74,11 +74,12 @@ class Clouds extends React.Component {
 Clouds.defaultProps = {
     clouds: [],
     onMount: () => {},
+    onShowEditConnectionDialog: data => console.log(data),
     onShowNewConnectionDialog: () => {},
 }
 
 import {connect} from 'react-redux';
-import {showCloudConnectionDialog} from 'actions/dialogActions.jsx';
+import {showNewCloudConnectionDialog, showEditCloudConnectionDialog} from 'actions/dialogActions.jsx';
 import {listCloudConnections} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
@@ -87,7 +88,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => dispatch(listCloudConnections()),
-    onShowNewConnectionDialog: () => dispatch(showCloudConnectionDialog()),
+    onShowNewConnectionDialog: () => dispatch(showNewCloudConnectionDialog()),
+    onShowEditConnectionDialog: (data) => dispatch(showEditCloudConnectionDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clouds);
