@@ -30,6 +30,10 @@ export const UPDATE_CLOUD_CONNECTION_REQUEST = '@@api/UPDATE_CLOUD_CONNECTION_RE
 export const UPDATE_CLOUD_CONNECTION_SUCCESS = '@@api/UPDATE_CLOUD_CONNECTION_SUCCESS';
 export const UPDATE_CLOUD_CONNECTION_FAILURE = '@@api/UPDATE_CLOUD_CONNECTION_FAILURE';
 
+export const DELETE_CLOUD_CONNECTION_REQUEST = '@@api/DELETE_CLOUD_CONNECTION_REQUEST';
+export const DELETE_CLOUD_CONNECTION_SUCCESS = '@@api/DELETE_CLOUD_CONNECTION_SUCCESS';
+export const DELETE_CLOUD_CONNECTION_FAILURE = '@@api/DELETE_CLOUD_CONNECTION_FAILURE';
+
 
 export const listFiles = (side, path) => ({
     [RSAA]: {
@@ -79,7 +83,7 @@ export const createCopyJob = (data) => ({
     [RSAA]: {
         endpoint: `/api/copy-jobs/`, // TODO: Why is there a trailing slash here?
         method: 'POST',
-        body: JSON.stringify({...data}),
+        body: JSON.stringify(data),
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ CREATE_COPY_JOB_REQUEST, CREATE_COPY_JOB_SUCCESS, CREATE_COPY_JOB_FAILURE ],
     }
@@ -100,18 +104,34 @@ export const createCloudConnection = (data) => ({
     [RSAA]: {
         endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
         method: 'POST',
-        body: JSON.stringify({...data}),
+        body: JSON.stringify(data),
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ CREATE_CLOUD_CONNECTION_REQUEST, CREATE_CLOUD_CONNECTION_SUCCESS, CREATE_CLOUD_CONNECTION_FAILURE ],
     }
 });
 
-export const updateCloudConnection = (data) => ({
-    [RSAA]: {
-        endpoint: `/api/connections/${data.id}`, // TODO: Why is there a trailing slash here?
-        method: 'PATCH',
-        body: JSON.stringify({...data}),
-        headers: withAuth({ 'Content-Type': 'application/json' }),
-        types: [ UPDATE_CLOUD_CONNECTION_REQUEST, UPDATE_CLOUD_CONNECTION_SUCCESS, UPDATE_CLOUD_CONNECTION_FAILURE ],
+export const updateCloudConnection = (data) => {
+    const id = data.id;
+    delete data.id;
+
+    return {
+        [RSAA]: {
+            endpoint: `/api/connections/${id}`, // TODO: Why is there a trailing slash here?
+            method: 'PATCH',
+            body: JSON.stringify(data),
+            headers: withAuth({ 'Content-Type': 'application/json' }),
+            types: [ UPDATE_CLOUD_CONNECTION_REQUEST, UPDATE_CLOUD_CONNECTION_SUCCESS, UPDATE_CLOUD_CONNECTION_FAILURE ],
+        }
     }
-});
+};
+
+export const deleteCloudConnection = (data) => {
+    return {
+        [RSAA]: {
+            endpoint: `/api/connections/${data.id}`, // TODO: Why is there a trailing slash here?
+            method: 'DELETE',
+            headers: withAuth({ 'Content-Type': 'application/json' }),
+            types: [ DELETE_CLOUD_CONNECTION_REQUEST, DELETE_CLOUD_CONNECTION_SUCCESS, DELETE_CLOUD_CONNECTION_FAILURE ],
+        }
+    }
+};

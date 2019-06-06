@@ -65,6 +65,7 @@ export default (state=initialState, action) => {
     case api.LIST_CLOUD_CONNECTIONS_FAILURE: {
         return state;
     }
+
     case api.CREATE_CLOUD_CONNECTION_REQUEST: {
         return state;
     }
@@ -80,6 +81,42 @@ export default (state=initialState, action) => {
         }
     }
     case api.CREATE_CLOUD_CONNECTION_FAILURE: {
+        return state;
+    }
+
+    case api.UPDATE_CLOUD_CONNECTION_REQUEST: {
+        return state;
+    }
+    case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
+        const cloudConnection = action.payload;
+        const clouds = [...state.clouds]
+        const index = clouds.findIndex(d => d.id === cloudConnection.id)
+        clouds[index] = cloudConnection;
+
+        return {
+            ...state,
+            clouds,
+        }
+    }
+    case api.UPDATE_CLOUD_CONNECTION_FAILURE: {
+        return state;
+    }
+
+    case api.DELETE_CLOUD_CONNECTION_REQUEST: {
+        return state;
+    }
+    case api.DELETE_CLOUD_CONNECTION_SUCCESS: {
+        const newCloudConnection = action.payload;
+
+        return {
+            ...state,
+            clouds: [
+                ...state.clouds,
+                newCloudConnection,
+            ],
+        }
+    }
+    case api.DELETE_CLOUD_CONNECTION_FAILURE: {
         return state;
     }
 
