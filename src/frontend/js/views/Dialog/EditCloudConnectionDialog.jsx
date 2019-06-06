@@ -24,7 +24,7 @@ class EditCloudConnectionDialog extends React.Component {
                 <Modal.Body>
                     <form
                         action="#"
-                        onSubmit={event => event.preventDefault()}
+                        onSubmit={event => this.handleSubmit()}
                         ref={this.formRef}
                     >
                         <CloudConnectionDialogFields data={this.props.data} />
