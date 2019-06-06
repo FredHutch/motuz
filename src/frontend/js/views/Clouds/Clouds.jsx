@@ -8,7 +8,6 @@ const headers = [
     "bucket",
     "region",
     "access_key_id",
-    "key_secret",
 ];
 
 
@@ -19,8 +18,6 @@ class Clouds extends React.Component {
 
     render() {
         const connectionRows = this.props.clouds.map((cloud, i) => {
-            cloud['key_secret'] = '***'
-
             const items = headers.map((header, j) => {
                 return (
                     <td
