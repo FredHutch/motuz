@@ -23,6 +23,8 @@ class CloudConnectionDialogFields extends React.PureComponent {
             <div className="container">
                 <h5 className="text-primary mb-2">Details</h5>
 
+                <input type="hidden" name='id' value={data.id}/>
+
                 <div className="row form-group">
                     <div className="col-4 text-right">
                         <b>Type</b>

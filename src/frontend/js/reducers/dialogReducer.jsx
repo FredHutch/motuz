@@ -56,12 +56,7 @@ export default (state=initialState, action) => {
             displayNewCloudConnectionDialog: true,
         }
     }
-    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG: {
-        return {
-            ...state,
-            displayNewCloudConnectionDialog: false,
-        }
-    }
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
@@ -78,7 +73,8 @@ export default (state=initialState, action) => {
             },
         }
     }
-    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG: {
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
             displayEditCloudConnectionDialog: false,

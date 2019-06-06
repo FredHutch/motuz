@@ -109,7 +109,7 @@ export const createCloudConnection = (data) => ({
 export const updateCloudConnection = (data) => ({
     [RSAA]: {
         endpoint: `/api/connections/${data.id}`, // TODO: Why is there a trailing slash here?
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify({...data}),
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ UPDATE_CLOUD_CONNECTION_REQUEST, UPDATE_CLOUD_CONNECTION_SUCCESS, UPDATE_CLOUD_CONNECTION_FAILURE ],
