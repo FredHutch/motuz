@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Navbar from 'components/Navbar.jsx'
+
 class PageNotFound extends React.Component {
     constructor(props) {
         super(props);
@@ -7,9 +9,10 @@ class PageNotFound extends React.Component {
 
     render() {
         return (
-            <h1>
-                Page Not Found
-            </h1>
+            <React.Fragment>
+                <Navbar />
+                <h1> Page Not Found </h1>
+            </React.Fragment>
         );
     }
 

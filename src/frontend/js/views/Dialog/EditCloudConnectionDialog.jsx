@@ -32,13 +32,13 @@ class EditCloudConnectionDialog extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
-                        Delete
+                        Delete Connection
                     </Button>
                     <Button variant="secondary" onClick={() => this.handleClose()}>
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={() => this.handleSubmit()}>
-                        Update Cloud Connection
+                        Update Connection
                     </Button>
                 </Modal.Footer>
             </Modal>
