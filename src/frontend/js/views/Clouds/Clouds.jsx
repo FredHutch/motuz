@@ -50,7 +50,7 @@ class Clouds extends React.Component {
                         </button>
                     </div>
                     <div className="col-12 mt-4">
-                        <table className="table text-center">
+                        <table className="table text-center table-hover">
                             <thead>
                                 <tr>
                                     {headers.map(header => <th key={header}>{header}</th>)}
