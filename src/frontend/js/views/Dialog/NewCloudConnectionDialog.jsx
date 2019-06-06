@@ -4,12 +4,6 @@ import { Modal, Button } from 'react-bootstrap'
 import CloudConnectionDialogFields from 'views/Dialog/CloudConnectionDialogFields.jsx';
 import serializeForm from 'utils/serializeForm.jsx';
 
-const CONNECTION_TYPES = [
-    'Amazon Simple Storage Service (S3)',
-    'Azure Blob Storage',
-    'Google Cloud Bucket'
-]
-
 
 class NewCloudConnectionDialog extends React.Component {
     constructor(props) {
@@ -18,8 +12,6 @@ class NewCloudConnectionDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
-
         return (
             <Modal
                 show={true}
@@ -35,7 +27,7 @@ class NewCloudConnectionDialog extends React.Component {
                         onSubmit={event => event.preventDefault()}
                         ref={this.formRef}
                     >
-                        <CloudConnectionDialogFields data={data} />
+                        <CloudConnectionDialogFields data={{}} />
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -67,7 +59,6 @@ class NewCloudConnectionDialog extends React.Component {
 }
 
 NewCloudConnectionDialog.defaultProps = {
-    data: {},
     onClose: () => {},
     onSubmit: (data) => {},
 }
@@ -77,7 +68,6 @@ import {hideNewCloudConnectionDialog} from 'actions/dialogActions.jsx'
 import {createCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.copyJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({

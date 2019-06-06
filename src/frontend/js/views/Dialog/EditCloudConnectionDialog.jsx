@@ -12,8 +12,6 @@ class EditCloudConnectionDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
-
         return (
             <Modal
                 show={true}
@@ -29,18 +27,18 @@ class EditCloudConnectionDialog extends React.Component {
                         onSubmit={event => event.preventDefault()}
                         ref={this.formRef}
                     >
-                        <CloudConnectionDialogFields data={data} />
+                        <CloudConnectionDialogFields data={this.props.data} />
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => this.handleClose()}>
+                    <Button variant="outline-danger mr-auto" onClick={() => this.handleClose()}>
                         Delete
                     </Button>
                     <Button variant="secondary" onClick={() => this.handleClose()}>
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={() => this.handleSubmit()}>
-                        Create Cloud Connection
+                        Update Cloud Connection
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -74,7 +72,7 @@ import {hideEditCloudConnectionDialog} from 'actions/dialogActions.jsx'
 import {updateCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.copyJobDialogData,
+    data: state.dialog.editCloudConnectionDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({

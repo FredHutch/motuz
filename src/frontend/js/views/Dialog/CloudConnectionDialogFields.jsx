@@ -10,7 +10,7 @@ const CONNECTION_TYPES = [
 ]
 
 
-class CloudConnectionDialogFields extends React.Component {
+class CloudConnectionDialogFields extends React.PureComponent {
     constructor(props) {
         super(props);
         this.formRef = React.createRef();
@@ -46,6 +46,7 @@ class CloudConnectionDialogFields extends React.Component {
                             type="text"
                             className='form-control'
                             name='name'
+                            defaultValue={data.name}
                         />
                     </div>
                 </div>
@@ -59,6 +60,7 @@ class CloudConnectionDialogFields extends React.Component {
                             type="text"
                             className='form-control'
                             name='bucket'
+                            defaultValue={data.bucket}
                         />
                     </div>
                 </div>
@@ -72,6 +74,7 @@ class CloudConnectionDialogFields extends React.Component {
                             type="text"
                             className='form-control'
                             name='region'
+                            defaultValue={data.region}
                         />
                     </div>
                 </div>
@@ -88,6 +91,7 @@ class CloudConnectionDialogFields extends React.Component {
                             type="text"
                             className='form-control'
                             name='access_key_id'
+                            defaultValue={data.access_key_id}
                         />
                     </div>
                 </div>
@@ -101,6 +105,7 @@ class CloudConnectionDialogFields extends React.Component {
                             type="text"
                             className='form-control'
                             name='access_key_secret'
+                            defaultValue={data.access_key_secret}
                         />
                     </div>
                 </div>
@@ -117,12 +122,4 @@ CloudConnectionDialogFields.defaultProps = {
     data: {},
 }
 
-import {connect} from 'react-redux';
-
-const mapStateToProps = state => ({
-});
-
-const mapDispatchToProps = dispatch => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CloudConnectionDialogFields);
+export default CloudConnectionDialogFields;

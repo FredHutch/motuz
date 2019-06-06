@@ -65,8 +65,9 @@ export const hideNewCloudConnectionDialog = () => ({
     type: HIDE_NEW_CLOUD_CONNECTION_DIALOG,
 });
 
-export const showEditCloudConnectionDialog = () => ({
+export const showEditCloudConnectionDialog = (data) => ({
     type: SHOW_EDIT_CLOUD_CONNECTION_DIALOG,
+    payload: data,
 });
 
 export const hideEditCloudConnectionDialog = () => ({
