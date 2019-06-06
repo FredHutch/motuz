@@ -53,7 +53,7 @@ export default (state=initialState, action) => {
     case dialog.SHOW_NEW_CLOUD_CONNECTION_DIALOG: {
         return {
             ...state,
-            displayCloudConnectionDialog: true,
+            displayNewCloudConnectionDialog: true,
         }
     }
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG: {
@@ -68,6 +68,7 @@ export default (state=initialState, action) => {
             displayNewCloudConnectionDialog: false,
         }
     }
+
     case dialog.SHOW_EDIT_CLOUD_CONNECTION_DIALOG: {
         return {
             ...state,

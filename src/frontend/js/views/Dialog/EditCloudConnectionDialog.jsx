@@ -10,7 +10,7 @@ const CONNECTION_TYPES = [
 ]
 
 
-class CloudConnectionDialog extends React.Component {
+class EditCloudConnectionDialog extends React.Component {
     constructor(props) {
         super(props);
         this.formRef = React.createRef();
@@ -32,7 +32,7 @@ class CloudConnectionDialog extends React.Component {
                     <Modal.Body>
                         <form
                             action="#"
-                            onSubmit={event => evnet.preventDefault}
+                            onSubmit={event => event.preventDefault()}
                             ref={this.formRef}
                         >
                             <div className="container">
@@ -151,7 +151,7 @@ class CloudConnectionDialog extends React.Component {
     }
 }
 
-CloudConnectionDialog.defaultProps = {
+EditCloudConnectionDialog.defaultProps = {
     data: {},
     onClose: () => {},
     onSubmit: (data) => {},
@@ -170,4 +170,4 @@ const mapDispatchToProps = dispatch => ({
     onSubmit: data => dispatch(createCloudConnection(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CloudConnectionDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditCloudConnectionDialog);
