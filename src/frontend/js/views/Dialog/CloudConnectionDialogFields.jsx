@@ -4,9 +4,18 @@ import { Modal, Button } from 'react-bootstrap'
 import serializeForm from 'utils/serializeForm.jsx';
 
 const CONNECTION_TYPES = [
-    'Amazon Simple Storage Service (S3)',
-    'Azure Blob Storage',
-    'Google Cloud Bucket'
+    {
+        label: 'Amazon Simple Storage Service (S3)',
+        value: 'S3',
+    },
+    {
+        label: 'Azure Blob Storage',
+        value: 'azure',
+    },
+    {
+        label: 'Google Cloud Bucket',
+        value: 'google',
+    },
 ]
 
 
@@ -33,8 +42,14 @@ class CloudConnectionDialogFields extends React.PureComponent {
                         <select
                             className="form-control"
                             name="type"
+                            defaultValue={data.type}
                         >
-                            {CONNECTION_TYPES.map(d => <option key={d} value={d}>{d}</option>)}
+                            {CONNECTION_TYPES.map(d => (
+                                <option
+                                    key={d.value}
+                                    value={d.value}
+                                >{d.label}</option>
+                            ))}
                         </select>
                     </div>
                 </div>

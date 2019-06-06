@@ -106,14 +106,11 @@ export default (state=initialState, action) => {
         return state;
     }
     case api.DELETE_CLOUD_CONNECTION_SUCCESS: {
-        const newCloudConnection = action.payload;
+        const deletedCloudConnection = action.payload;
 
         return {
             ...state,
-            clouds: [
-                ...state.clouds,
-                newCloudConnection,
-            ],
+            clouds: state.clouds.filter(d => d.id !== deletedCloudConnection.id),
         }
     }
     case api.DELETE_CLOUD_CONNECTION_FAILURE: {
