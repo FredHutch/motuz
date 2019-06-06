@@ -19,9 +19,9 @@ const initialState = {
         owner: 'aicioara',
     },
 
-    displayCloudConnectionDialog: false,
+    displayNewCloudConnectionDialog: false,
+    displayEditCloudConnectionDialog: false,
     cloudConnectionDialogData: {
-
     }
 };
 
@@ -50,22 +50,34 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_CLOUD_CONNECTION_DIALOG: {
+    case dialog.SHOW_NEW_CLOUD_CONNECTION_DIALOG: {
         return {
             ...state,
             displayCloudConnectionDialog: true,
         }
     }
-    case dialog.HIDE_CLOUD_CONNECTION_DIALOG: {
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG: {
         return {
             ...state,
-            displayCloudConnectionDialog: false,
+            displayNewCloudConnectionDialog: false,
         }
     }
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
-            displayCloudConnectionDialog: false,
+            displayNewCloudConnectionDialog: false,
+        }
+    }
+    case dialog.SHOW_EDIT_CLOUD_CONNECTION_DIALOG: {
+        return {
+            ...state,
+            displayEditCloudConnectionDialog: true,
+        }
+    }
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG: {
+        return {
+            ...state,
+            displayEditCloudConnectionDialog: false,
         }
     }
     default:

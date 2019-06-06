@@ -166,7 +166,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideCloudConnectionDialog()),
+    onClose: () => dispatch(hideNewCloudConnectionDialog()),
     onSubmit: data => dispatch(createCloudConnection(data)),
 });
 

@@ -23,7 +23,10 @@ class Clouds extends React.Component {
 
             const items = headers.map((header, j) => {
                 return (
-                    <td key={j}>
+                    <td
+                        key={j}
+                        onClick={() => this.props.onShowEditConnectionDialog(cloud)}
+                    >
                         {cloud[header]}
                     </td>
                 );
@@ -74,6 +77,7 @@ class Clouds extends React.Component {
 Clouds.defaultProps = {
     clouds: [],
     onMount: () => {},
+    onShowEditConnectionDialog: data => console.log(data),
     onShowNewConnectionDialog: () => {},
 }
 
@@ -87,7 +91,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => dispatch(listCloudConnections()),
-    onShowNewConnectionDialog: () => dispatch(showCloudConnectionDialog()),
+    onShowNewConnectionDialog: () => dispatch(showNewCloudConnectionDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clouds);

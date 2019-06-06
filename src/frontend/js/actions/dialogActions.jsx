@@ -12,8 +12,11 @@ import {
 export const SHOW_COPY_JOB_DIALOG = '@@dialog/SHOW_COPY_JOB_DIALOG';
 export const HIDE_COPY_JOB_DIALOG = '@@dialog/HIDE_COPY_JOB_DIALOG';
 
-export const SHOW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_CLOUD_CONNECTION_DIALOG';
-export const HIDE_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_CLOUD_CONNECTION_DIALOG';
+export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
+export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
+
+export const SHOW_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_EDIT_CLOUD_CONNECTION_DIALOG';
+export const HIDE_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_EDIT_CLOUD_CONNECTION_DIALOG';
 
 
 export const showCopyJobDialog = () => {
@@ -54,10 +57,18 @@ export const hideCopyJobDialog = () => ({
 });
 
 
-export const showCloudConnectionDialog = () => ({
-    type: SHOW_CLOUD_CONNECTION_DIALOG,
+export const showNewCloudConnectionDialog = () => ({
+    type: SHOW_NEW_CLOUD_CONNECTION_DIALOG,
 });
 
-export const hideCloudConnectionDialog = () => ({
-    type: HIDE_CLOUD_CONNECTION_DIALOG,
+export const hideNewCloudConnectionDialog = () => ({
+    type: HIDE_NEW_CLOUD_CONNECTION_DIALOG,
+});
+
+export const showEditCloudConnectionDialog = () => ({
+    type: SHOW_EDIT_CLOUD_CONNECTION_DIALOG,
+});
+
+export const hideEditCloudConnectionDialog = () => ({
+    type: HIDE_EDIT_CLOUD_CONNECTION_DIALOG,
 });
