@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Navbar from 'components/Navbar.jsx'
+
 
 const headers = [
     "id",
@@ -39,30 +41,33 @@ class Clouds extends React.Component {
 
 
         return (
-            <div className="container-fluid mt-4">
-                <div className="row">
-                    <div className="col-12">
-                        <button
-                            className="btn btn-success"
-                            onClick={(event) => this.props.onShowNewConnectionDialog()}
-                        >
-                            New Connection
-                        </button>
-                    </div>
-                    <div className="col-12 mt-4">
-                        <table className="table text-center table-hover">
-                            <thead>
-                                <tr>
-                                    {headers.map(header => <th key={header}>{header}</th>)}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {connectionRows}
-                            </tbody>
-                        </table>
+            <React.Fragment>
+                <Navbar />
+                <div className="container-fluid mt-4">
+                    <div className="row">
+                        <div className="col-12">
+                            <button
+                                className="btn btn-success"
+                                onClick={(event) => this.props.onShowNewConnectionDialog()}
+                            >
+                                New Connection
+                            </button>
+                        </div>
+                        <div className="col-12 mt-4">
+                            <table className="table text-center table-hover">
+                                <thead>
+                                    <tr>
+                                        {headers.map(header => <th key={header}>{header}</th>)}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {connectionRows}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 
@@ -74,7 +79,7 @@ class Clouds extends React.Component {
 Clouds.defaultProps = {
     clouds: [],
     onMount: () => {},
-    onShowEditConnectionDialog: data => console.log(data),
+    onShowEditConnectionDialog: data => {},
     onShowNewConnectionDialog: () => {},
 }
 

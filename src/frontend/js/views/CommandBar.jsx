@@ -59,12 +59,12 @@ class CommandBar extends React.Component {
                 {!this.props.isLeft && buttonArrowLeft}
                 <div className="col-10">
                     <div className="row mb-1">
-                        <label className="col-2 col-form-label">Cloud</label>
+                        <label className="col-2 col-form-label">Host</label>
                         <div className="col-10">
                             <Select
                                 className="form-control input-sm"
-                                value={this.props.host}
-                                onChange={()=> {}}
+                                value={this.props.host.id}
+                                onChange={(event)=> this.onHostChange(event.target.value)}
                                 options={cloudLabels}
                             />
                         </div>
@@ -75,9 +75,14 @@ class CommandBar extends React.Component {
                             <input
                                 type="text"
                                 className="form-control input-sm"
+                                list={`path_box_${this.props.isLeft ? 'left' : 'right'}`}
                                 value={this.props.path}
-                                onChange={()=> {}}
+                                onChange={() => {}}
                             />
+                            <datalist id={`path_box_${this.props.isLeft ? 'left' : 'right'}`}>
+                                <option>/usr/bin</option>
+                                <option>/usr/etc</option>
+                            </datalist>
                         </div>
                     </div>
                 </div>
@@ -93,19 +98,41 @@ class CommandBar extends React.Component {
     displayCopyJobDialog() {
         this.props.onDisplayCopyJobDialog()
     }
+
+    onHostChange(hostId) {
+        hostId = parseInt(hostId)
+
+        // TODO: Add this to the database
+        const clouds = [
+            {
+                id: 0,
+                name: '127.0.0.1',
+                type: 'localhost',
+            },
+            ...this.props.clouds
+        ];
+
+        const host = clouds.find(d => d.id === hostId)
+        this.props.onHostChange(this.props.isLeft ? 'left' : 'right', host)
+    }
 }
 
 CommandBar.defaultProps = {
     isLeft: true,
     active: true,
-    host: '127.0.0.1',
+    host: {
+        name: '127.0.0.1',
+        type: 'localhost',
+    },
     path: '/',
     clouds: [],
+    onHostChange: (side, host) => {},
     onDisplayCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {showCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hostChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     clouds: state.api.clouds,
@@ -113,6 +140,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
+    onHostChange: (side, host) => dispatch(hostChange(side, host)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

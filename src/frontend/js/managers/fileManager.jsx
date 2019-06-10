@@ -1,3 +1,33 @@
+export default {
+    convertLocalFilesToMotuz,
+    convertRcloneFilesToMotuz,
+    filterFiles,
+    sortFiles,
+}
+
+export function convertLocalFilesToMotuz(files) {
+    return files;
+}
+
+
+export function convertRcloneFilesToMotuz(files) {
+    return files.map(d => ({
+        name: d.Name,
+        type: d.IsDir ? 'dir' : 'file',
+        size: d.Size,
+    }))
+    return files;
+}
+
+export function filterFiles(files, options) {
+    const { showHiddenFiles } = options
+
+    if (!showHiddenFiles) {
+        files = files.filter(d => !d.name.startsWith('.'))
+    }
+    return files;
+}
+
 
 /**
  * files: {
@@ -6,14 +36,8 @@
  *     type
  * }
  */
-export function sortFiles(files, showHiddenFiles=true) {
-    if (!showHiddenFiles) {
-        files = files.filter(d => !d.name.startsWith('.'))
-    }
-
-    files = _sortFiles(files, nameSortFunctor, true)
-
-    return files;
+export function sortFiles(files) {
+    return _sortFiles(files, nameSortFunctor, true)
 }
 
 function _sortFiles(files, sortFunctor, sortingAsc) {

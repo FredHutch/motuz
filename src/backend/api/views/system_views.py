@@ -18,7 +18,7 @@ class SystemFiles(Resource):
         List all files for a particular URI.
         """
         data = request.json
-        return system_manager.get_files(data['uri'])
+        return system_manager.get_files(data)
 
 
 

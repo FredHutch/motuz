@@ -1,9 +1,11 @@
 import datetime
+import json
 import logging
 import os
 import pwd
-from os import path
-from urllib.parse import urlparse
+import subprocess
+
+from ..exceptions import *
 
 def get_uid():
     uid = os.getuid()
@@ -12,47 +14,32 @@ def get_uid():
     }
 
 
-def get_files(uri):
-    parts = urlparse(uri)
-
-    scheme = parts.scheme
-
-    if scheme == 'file':
-        url = parts.path
-        return _get_local_files(url)
-    elif scheme == '':
-        message = 'No scheme found for URI. Use `file:///` for local files'
-        logging.error(message)
-        return {
-            'error': message,
-        }, 400
+def get_files(data):
+    if data['type'] in ('file', 'localhost'):
+        return _get_local_files(data)
+    elif data['type'] == 's3':
+        return _get_rclone_files(data)
     else:
-        message = 'Unknown scheme `{}`'.format(scheme)
-        logging.error(message)
-        return {
-            'error': message,
-        }, 400
+        raise HTTP_400_BAD_REQUEST('Unknown type `{}`'.format(data['type']))
 
 
-def _get_local_files(url):
+def _get_local_files(data):
+    path = data['path']
+
     result = []
 
     try:
-        resources = os.scandir(url)
+        resources = os.scandir(path)
     except FileNotFoundError:
-        return {
-            'error': 'Path not found on local disk {}'.format(url)
-        }, 400
+        raise HTTP_400_BAD_REQUEST('Path not found on local disk {}'.format(path))
 
     except PermissionError:
         uid = os.getuid()
-        return {
-            'error': "User {user}({uid}) does not have privilege for path '{path}'".format(
-                user=pwd.getpwuid(uid).pw_name,
-                uid=uid,
-                path=url,
-            )
-        }, 403
+        raise HTTP_403_FORBIDDEN("User {user}({uid}) does not have privilege for path '{path}'".format(
+            user=pwd.getpwuid(uid).pw_name,
+            uid=uid,
+            path=path,
+        ))
 
 
     try:
@@ -77,10 +64,45 @@ def _get_local_files(url):
                 "size": size,
             })
     except Exception as e:
-        return {
-            'error': 'Unknown Error {}'.format(e)
-        }, 400
-
-
+        raise HTTP_400_BAD_REQUEST('Unknown Error {}'.format(e))
 
     return result
+
+
+def _get_rclone_files(data):
+    path = data['path']
+    region = data.get('region', None)
+    access_key_id = data.get('access_key_id', None)
+    access_key_secret = data.get('access_key_secret', None)
+
+    if region is None:
+        raise HTTP_400_BAD_REQUEST('Missing region')
+
+    if access_key_id is None:
+        raise HTTP_400_BAD_REQUEST('Missing access_key_id')
+
+    if access_key_secret is None:
+        raise HTTP_400_BAD_REQUEST('Missing access_key_secret')
+
+
+    command = (
+        'RCLONE_CONFIG_CURRENT_TYPE=s3 '
+        'RCLONE_CONFIG_CURRENT_REGION={region} '
+        'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
+        'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={access_key_secret} '
+        'rclone lsjson current:{path}'
+    ).format(
+        path=path,
+        region=region,
+        access_key_id=access_key_id,
+        access_key_secret=access_key_secret,
+    )
+
+    try:
+        byteOutput = subprocess.check_output(command, shell=True)
+        output = byteOutput.decode('UTF-8').rstrip()
+        result = json.loads(output)
+        return result
+    except subprocess.CalledProcessError as e:
+        logging.error("Error in rclone", e.output)
+        return []

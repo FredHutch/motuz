@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 import ToolButtons from 'components/ToolButtons.jsx'
 
-export default class Navbar extends React.Component {
+export default class Navbar extends React.PureComponent {
     render() {
         return (
             <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -18,7 +18,7 @@ export default class Navbar extends React.Component {
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
                     </div>
                 </div>
-                <ToolButtons/>
+                {window.location.pathname === '/' && <ToolButtons/>}
             </nav>
         );
     }

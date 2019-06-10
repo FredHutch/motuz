@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Navbar from 'components/Navbar.jsx'
 import LeftCommandBar from 'views/LeftCommandBar.jsx';
 import RightCommandBar from 'views/RightCommandBar.jsx';
 import LeftPane from 'views/LeftPane.jsx';
@@ -15,6 +16,7 @@ class App extends React.Component {
     render() {
         return (
             <React.Fragment>
+                <Navbar />
                 <div id="grid-container">
                     <div id="zone-left-commands" className='zone-command-bar'>
                         <LeftCommandBar />

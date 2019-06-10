@@ -35,24 +35,24 @@ export const DELETE_CLOUD_CONNECTION_SUCCESS = '@@api/DELETE_CLOUD_CONNECTION_SU
 export const DELETE_CLOUD_CONNECTION_FAILURE = '@@api/DELETE_CLOUD_CONNECTION_FAILURE';
 
 
-export const listFiles = (side, path) => ({
+export const listFiles = (side, data) => ({
     [RSAA]: {
         endpoint: '/api/system/files/',
         method: 'POST',
-        body: JSON.stringify({uri: `file:///${path}`}),
+        body: JSON.stringify(data),
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [
             {
                 type: LIST_FILES_REQUEST,
-                meta: {side, path},
+                meta: {side, data},
             },
             {
                 type: LIST_FILES_SUCCESS,
-                meta: {side, path},
+                meta: {side, data},
             },
             {
                 type: LIST_FILES_FAILURE,
-                meta: {side, path},
+                meta: {side, data},
             },
         ]
     }

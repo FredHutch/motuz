@@ -5,8 +5,8 @@ import serializeForm from 'utils/serializeForm.jsx';
 
 const CONNECTION_TYPES = [
     {
-        label: 'Amazon Simple Storage Service (S3)',
-        value: 'S3',
+        label: 'Amazon Simple Storage Service (s3)',
+        value: 's3',
     },
     {
         label: 'Azure Blob Storage',
