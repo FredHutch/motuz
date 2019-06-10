@@ -34,13 +34,9 @@ export const showCopyJobDialog = () => {
 
 
         const data = {
-            source_cloud: {
-                name: srcPane.host,
-            },
+            source_cloud: srcPane.host,
             source_resource: srcResources,
-            destination_cloud: {
-                name: dstPane.host
-            },
+            destination_cloud: dstPane.host,
             destination_path: dstPane.path,
             owner: 'aicioara',
         }
