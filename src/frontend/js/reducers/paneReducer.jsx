@@ -76,7 +76,7 @@ export default (state=initialState, action) => {
                         {name: '..', type: 'dir'},
                         {name: "Loading..."},
                     ],
-                    side
+                    side,
                 )
             }
         }
@@ -97,7 +97,8 @@ export default (state=initialState, action) => {
     }
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
-        const { side, path } = action.meta;
+        const { side, data } = action.meta;
+        const { path } = data;
 
         const { showHiddenFiles } = state;
 

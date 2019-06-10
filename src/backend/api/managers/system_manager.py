@@ -15,7 +15,7 @@ def get_uid():
 
 
 def get_files(data):
-    if data['type'] == 'file':
+    if data['type'] in ('file', 'localhost'):
         return _get_local_files(data)
     elif data['type'] == 's3':
         return _get_rclone_files(data)
@@ -23,7 +23,7 @@ def get_files(data):
         raise HTTP_400_BAD_REQUEST('Unknown type `{}`'.format(data['type']))
 
 
-def _get_local_files(path):
+def _get_local_files(data):
     path = data['path']
 
     result = []
