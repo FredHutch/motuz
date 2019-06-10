@@ -13,9 +13,14 @@ export const fileFocusIndex = (side, index) => ({
 
 
 export const hostChange = (side=null, host) => {
-    return {
-        type: HOST_CHANGE,
-        payload: {side, host},
+    return async (dispatch, getState) => {
+        await dispatch({
+            type: HOST_CHANGE,
+            payload: {side, host},
+        })
+
+        // TODO: Change this
+        return await dispatch(api.listFiles(side, {type: 'localhost', path: '/'}))
     }
 }
 
