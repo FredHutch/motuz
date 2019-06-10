@@ -1,9 +1,9 @@
 import datetime
+import json
 import logging
 import os
 import pwd
-from os import path
-from urllib.parse import urlparse
+import subprocess
 
 from ..exceptions import *
 
@@ -86,7 +86,7 @@ def _get_rclone_files(data):
     if secret_access_key is None:
         raise HTTP_400_BAD_REQUEST('Missing secret_access_key')
 
-    request = (
+    command = (
         'RCLONE_CONFIG_CURRENT_TYPE=s3 '
         'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
         'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
@@ -97,5 +97,11 @@ def _get_rclone_files(data):
         secret_access_key=secret_access_key,
     )
 
-    print(request)
-    return []
+    try:
+        byteOutput = subprocess.check_output(command, shell=True)
+        output = byteOutput.decode('UTF-8').rstrip()
+        result = json.loads(output)
+        return result
+    except subprocess.CalledProcessError as e:
+        logging.error("Error in ls -a:\n", e.output)
+        return []
