@@ -75,9 +75,14 @@ class CommandBar extends React.Component {
                             <input
                                 type="text"
                                 className="form-control input-sm"
-                                value={this.props.path}
-                                onChange={()=> {}}
+                                list={`path_box_${this.props.isLeft ? 'left' : 'right'}`}
                             />
+                            <datalist id={`path_box_${this.props.isLeft ? 'left' : 'right'}`}>
+                                <option>Volvo</option>
+                                <option>Saab</option>
+                                <option>Mercedes</option>
+                                <option>Audi</option>
+                            </datalist>
                         </div>
                     </div>
                 </div>

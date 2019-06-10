@@ -41,5 +41,9 @@ class CloudConnectionSerializer:
 class SystemSerializer:
     api = Namespace('system', description='System related operations')
     dto = api.model('system', {
-        'uri': fields.String(required=True, example='file:///usr/bin/'),
+        'type': fields.String(required=True, example='file'),
+        'path': fields.String(required=True, example='/usr/bin/'),
+        'access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
+        'secret_access_key': fields.String(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
+        # access_key examples above have the correct length, but characters are made up
     })
