@@ -31,19 +31,15 @@ def _get_local_files(data):
     try:
         resources = os.scandir(path)
     except FileNotFoundError:
-        return {
-            'error': 'Path not found on local disk {}'.format(path)
-        }, 400
+        raise HTTP_400_BAD_REQUEST('Path not found on local disk {}'.format(path))
 
     except PermissionError:
         uid = os.getuid()
-        return {
-            'error': "User {user}({uid}) does not have privilege for path '{path}'".format(
-                user=pwd.getpwuid(uid).pw_name,
-                uid=uid,
-                path=path,
-            )
-        }, 403
+        raise HTTP_403_FORBIDDEN("User {user}({uid}) does not have privilege for path '{path}'".format(
+            user=pwd.getpwuid(uid).pw_name,
+            uid=uid,
+            path=path,
+        ))
 
 
     try:
@@ -68,9 +64,7 @@ def _get_local_files(data):
                 "size": size,
             })
     except Exception as e:
-        return {
-            'error': 'Unknown Error {}'.format(e)
-        }, 400
+        raise HTTP_400_BAD_REQUEST('Unknown Error {}'.format(e))
 
     return result
 
