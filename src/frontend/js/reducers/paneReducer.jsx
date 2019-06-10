@@ -1,7 +1,7 @@
 import * as pane from 'actions/paneActions.jsx';
 import * as api from 'actions/apiActions.jsx';
 
-import { sortFiles } from 'managers/fileManager.jsx'
+import fileManager from 'managers/fileManager.jsx'
 import {
     getSide,
     getOtherSide,
@@ -130,11 +130,27 @@ export default (state=initialState, action) => {
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
-        const { path } = data;
+        const { type, path } = data;
 
         const { showHiddenFiles } = state;
 
-        const files = sortFiles(payload, showHiddenFiles);
+        let files = action.payload;
+
+        if (type === 'localhost') {
+            files = fileManager.convertLocalFilesToMotuz(files)
+        } else if (type === 's3') {
+            files = fileManager.convertRcloneFilesToMotuz(files)
+        } else {
+            console.error(`Unknown payload type ${type}`);
+        }
+
+        files = fileManager.filterFiles(files, {
+            showHiddenFiles: state.showHiddenFiles,
+        })
+        files = fileManager.sortFiles(files);
+
+        // Convert `rclone` files to `motuz`
+
         if (path !== '/') {
             files.unshift({
                 'name': '..',
