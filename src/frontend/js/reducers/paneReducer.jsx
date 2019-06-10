@@ -82,6 +82,32 @@ export default (state=initialState, action) => {
         }
     }
 
+    case pane.HOST_CHANGE: {
+        const {side, host} = action.payload;
+
+        return {
+            ...state,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...getCurrentPane(state, side),
+                    fileFocusIndex: 0,
+                    path: '/',
+                    host,
+                }, side)
+            },
+            files: {
+                ...setCurrentFiles(
+                    state,
+                    [
+                        {name: '..', type: 'dir'},
+                        {name: "Loading..."},
+                    ],
+                    side,
+                )
+            }
+        }
+    }
+
 
     case pane.TOGGLE_SHOW_HIDDEN_FILES: {
         return {

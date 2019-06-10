@@ -21,7 +21,7 @@ class CommandBar extends React.Component {
 
         const cloudLabels = clouds.map(d => ({
             label: `${d.name} (${d.type})`,
-            value: d.id,
+            value: d.name,
         }))
 
         const buttonArrowLeft = (
@@ -64,7 +64,7 @@ class CommandBar extends React.Component {
                             <Select
                                 className="form-control input-sm"
                                 value={this.props.host}
-                                onChange={()=> {}}
+                                onChange={(event)=> this.onHostChange(event.target.value)}
                                 options={cloudLabels}
                             />
                         </div>
@@ -78,10 +78,8 @@ class CommandBar extends React.Component {
                                 list={`path_box_${this.props.isLeft ? 'left' : 'right'}`}
                             />
                             <datalist id={`path_box_${this.props.isLeft ? 'left' : 'right'}`}>
-                                <option>Volvo</option>
-                                <option>Saab</option>
-                                <option>Mercedes</option>
-                                <option>Audi</option>
+                                <option>/usr/bin</option>
+                                <option>/usr/etc</option>
                             </datalist>
                         </div>
                     </div>
@@ -98,6 +96,10 @@ class CommandBar extends React.Component {
     displayCopyJobDialog() {
         this.props.onDisplayCopyJobDialog()
     }
+
+    onHostChange(value) {
+        this.props.onHostChange(this.props.isLeft ? 'left' : 'right', value)
+    }
 }
 
 CommandBar.defaultProps = {
@@ -106,11 +108,13 @@ CommandBar.defaultProps = {
     host: '127.0.0.1',
     path: '/',
     clouds: [],
+    onHostChange: (side, host) => {},
     onDisplayCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {showCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hostChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     clouds: state.api.clouds,
@@ -118,6 +122,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
+    onHostChange: (side, host) => dispatch(hostChange(side, host)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);
