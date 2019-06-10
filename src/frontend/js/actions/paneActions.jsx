@@ -19,8 +19,15 @@ export const hostChange = (side=null, host) => {
             payload: {side, host},
         })
 
+        const payload = {
+            type: host.type,
+            path: '/',
+            access_key_id: host.access_key_id,
+            access_key_secret: host.access_key_secret,
+        }
+
         // TODO: Change this
-        return await dispatch(api.listFiles(side, {type: 'localhost', path: '/'}))
+        return await dispatch(api.listFiles(side, payload))
     }
 }
 

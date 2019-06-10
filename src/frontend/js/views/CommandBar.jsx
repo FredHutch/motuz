@@ -21,7 +21,7 @@ class CommandBar extends React.Component {
 
         const cloudLabels = clouds.map(d => ({
             label: `${d.name} (${d.type})`,
-            value: d.name,
+            value: d.id,
         }))
 
         const buttonArrowLeft = (
@@ -59,11 +59,11 @@ class CommandBar extends React.Component {
                 {!this.props.isLeft && buttonArrowLeft}
                 <div className="col-10">
                     <div className="row mb-1">
-                        <label className="col-2 col-form-label">Cloud</label>
+                        <label className="col-2 col-form-label">Host</label>
                         <div className="col-10">
                             <Select
                                 className="form-control input-sm"
-                                value={this.props.host}
+                                value={this.props.host.id}
                                 onChange={(event)=> this.onHostChange(event.target.value)}
                                 options={cloudLabels}
                             />
@@ -97,15 +97,31 @@ class CommandBar extends React.Component {
         this.props.onDisplayCopyJobDialog()
     }
 
-    onHostChange(value) {
-        this.props.onHostChange(this.props.isLeft ? 'left' : 'right', value)
+    onHostChange(hostId) {
+        hostId = parseInt(hostId)
+
+        // TODO: Add this to the database
+        const clouds = [
+            {
+                id: 0,
+                name: '127.0.0.1',
+                type: 'localhost',
+            },
+            ...this.props.clouds
+        ];
+
+        const host = clouds.find(d => d.id === hostId)
+        this.props.onHostChange(this.props.isLeft ? 'left' : 'right', host)
     }
 }
 
 CommandBar.defaultProps = {
     isLeft: true,
     active: true,
-    host: '127.0.0.1',
+    host: {
+        name: '127.0.0.1',
+        type: 'localhost',
+    },
     path: '/',
     clouds: [],
     onHostChange: (side, host) => {},

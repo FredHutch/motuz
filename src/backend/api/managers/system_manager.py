@@ -72,23 +72,23 @@ def _get_local_files(data):
 def _get_rclone_files(data):
     path = data['path']
     access_key_id = data.get('access_key_id', None)
-    secret_access_key = data.get('secret_access_key', None)
+    access_key_secret = data.get('access_key_secret', None)
 
     if access_key_id is None:
         raise HTTP_400_BAD_REQUEST('Missing access_key_id')
 
-    if secret_access_key is None:
-        raise HTTP_400_BAD_REQUEST('Missing secret_access_key')
+    if access_key_secret is None:
+        raise HTTP_400_BAD_REQUEST('Missing access_key_secret')
 
     command = (
         'RCLONE_CONFIG_CURRENT_TYPE=s3 '
         'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
-        'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
+        'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={access_key_secret} '
         'rclone lsjson current:{path}'
     ).format(
         path=path,
         access_key_id=access_key_id,
-        secret_access_key=secret_access_key,
+        access_key_secret=access_key_secret,
     )
 
     try:

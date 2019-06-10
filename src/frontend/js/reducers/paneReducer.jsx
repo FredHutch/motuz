@@ -13,7 +13,13 @@ import {
 
 
 const INITIAL_PANE = {
-    host: 'localhost',
+    host: {
+        id: 0,
+        name: '127.0.0.1',
+        type: 'localhost',
+        access_key_id: '',
+        secret_access_key: '',
+    },
     path: '/',
     sortingColumn: 'name',
     sortingAsc: true,
