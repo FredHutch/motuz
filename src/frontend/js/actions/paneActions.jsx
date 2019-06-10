@@ -1,4 +1,5 @@
 import * as api from 'actions/apiActions.jsx';
+import { getCurrentPane } from 'managers/paneManager.jsx'
 
 export const FILE_FOCUS_INDEX = '@@pane/FILE_FOCUS_INDEX';
 export const DIRECTORY_CHANGE = '@@pane/DIRECTORY_CHANGE';
@@ -14,7 +15,7 @@ export const fileFocusIndex = (side, index) => ({
 
 export const hostChange = (side=null, host) => {
     return async (dispatch, getState) => {
-        await dispatch({
+        dispatch({
             type: HOST_CHANGE,
             payload: {side, host},
         })
@@ -25,6 +26,7 @@ export const hostChange = (side=null, host) => {
             path: '/',
             access_key_id: host.access_key_id,
             access_key_secret: host.access_key_secret,
+            region: host.region,
         }))
     }
 }
@@ -35,7 +37,18 @@ export const directoryChange = (side=null, path) => {
             type: DIRECTORY_CHANGE,
             payload: {side, path}
         })
-        return await dispatch(api.listFiles(side, {type: 'localhost', path}));
+
+        const state = getState();
+        const pane = getCurrentPane(state.pane, side);
+        const host = pane.host;
+
+        return await dispatch(api.listFiles(side, {
+            type: host.type,
+            path,
+            access_key_id: host.access_key_id,
+            access_key_secret: host.access_key_secret,
+            region: host.region,
+        }));
     }
 }
 

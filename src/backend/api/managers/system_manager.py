@@ -71,8 +71,12 @@ def _get_local_files(data):
 
 def _get_rclone_files(data):
     path = data['path']
+    region = data.get('region', None)
     access_key_id = data.get('access_key_id', None)
     access_key_secret = data.get('access_key_secret', None)
+
+    if region is None:
+        raise HTTP_400_BAD_REQUEST('Missing region')
 
     if access_key_id is None:
         raise HTTP_400_BAD_REQUEST('Missing access_key_id')
@@ -80,13 +84,16 @@ def _get_rclone_files(data):
     if access_key_secret is None:
         raise HTTP_400_BAD_REQUEST('Missing access_key_secret')
 
+
     command = (
         'RCLONE_CONFIG_CURRENT_TYPE=s3 '
+        'RCLONE_CONFIG_CURRENT_REGION={region} '
         'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
         'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={access_key_secret} '
         'rclone lsjson current:{path}'
     ).format(
         path=path,
+        region=region,
         access_key_id=access_key_id,
         access_key_secret=access_key_secret,
     )
@@ -97,5 +104,5 @@ def _get_rclone_files(data):
         result = json.loads(output)
         return result
     except subprocess.CalledProcessError as e:
-        logging.error("Error in ls -a:\n", e.output)
+        logging.error("Error in rclone", e.output)
         return []

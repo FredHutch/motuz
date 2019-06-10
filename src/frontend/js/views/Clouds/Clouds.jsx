@@ -79,7 +79,7 @@ class Clouds extends React.Component {
 Clouds.defaultProps = {
     clouds: [],
     onMount: () => {},
-    onShowEditConnectionDialog: data => console.log(data),
+    onShowEditConnectionDialog: data => {},
     onShowNewConnectionDialog: () => {},
 }
 
