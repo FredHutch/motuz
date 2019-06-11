@@ -39,10 +39,9 @@ class CopyJobSerializer:
         'dst_cloud': fields.String(required=True, example='localhost'),
         'dst_path': fields.String(required=True, example='/trash'),
         'owner': fields.String(required=True, example='owner'),
-        'progress': fields.Nested(api.model('copy-job-progress', {
-            'state': fields.String(example='PENDING'),
-            'current': fields.Integer(example=45),
-            'total': fields.Integer(example=100),
-            'error': fields.String(),
-        }), readonly=True),
+
+        'progress_state': fields.String(example='PENDING'),
+        'progress_current': fields.Integer(example=45),
+        'progress_total': fields.Integer(example=100),
+        'progress_error': fields.String(),
     })

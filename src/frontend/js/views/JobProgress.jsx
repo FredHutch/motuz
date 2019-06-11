@@ -31,11 +31,11 @@ class JobProgress extends React.Component {
         })
 
         const tableRows = this.props.jobs.map((job, i) => {
-            const progress = Math.round(job.progress.current / job.progress.total * 100);
+            const progress = Math.round(job.progress_current / job.progress_total * 100);
 
             job = {
                 ...job,
-                'state': job.progress.state,
+                'state': job.progress_state,
                 'progress': progress,
             }
             return (
@@ -63,7 +63,7 @@ class JobProgress extends React.Component {
             );
         })
 
-        const shouldRefresh = this.props.jobs.some(d => d.progress.state === 'PROGRESS');
+        const shouldRefresh = this.props.jobs.some(d => d.progress_state === 'PROGRESS');
         if (shouldRefresh) {
             this.scheduleRefresh();
         }
