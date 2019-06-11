@@ -27,8 +27,10 @@ def create(data):
     db.session.commit()
 
     task_id = copy_job.id
-    tasks.copy_job.apply_async(task_id=str(task_id), kwargs={'task_id': task_id})
-    task = tasks.copy_job.AsyncResult(str(copy_job.id))
+    tasks.copy_job.apply_async(task_id=str(task_id), kwargs={
+        'task_id': task_id,
+    })
+
     setattr(copy_job, 'progress', { # TODO: Hack for starting the refresh process
         'state': 'PROGRESS',
         'current': 0,

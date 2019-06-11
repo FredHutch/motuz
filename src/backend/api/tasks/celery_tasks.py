@@ -3,6 +3,7 @@ import random
 import logging
 
 from .. import celery
+from ..models import CopyJob
 from ..application import db
 
 
@@ -16,13 +17,14 @@ def my_sleep(message, seconds=1):
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
 def copy_job(self, task_id=None):
-    # copy_job = CopyJob.query.get(task_id)
+    copy_job = CopyJob.query.get(task_id)
+    copy_job.progress_state = 'PENDING'
+    db.session.commit()
 
     for i in range(0, 101, 1):
-        # copy_job.progress_state = 'PENDING'
-        # copy_job.progress_current = i
-        # copy_job.progress_total = 100
-        # db.session.commit()
+        copy_job.progress_current = i
+        copy_job.progress_total = 100
+        db.session.commit()
 
         self.update_state(
             state="PROGRESS",
@@ -33,10 +35,10 @@ def copy_job(self, task_id=None):
         )
         time.sleep(random.randint(0, 3) / 10)
 
-    # copy_job.progress_state = 'SUCCESS'
-    # copy_job.progress_current = 100
-    # copy_job.progress_total = 100
-    # db.session.commit()
+    copy_job.progress_state = 'SUCCESS'
+    copy_job.progress_current = 100
+    copy_job.progress_total = 100
+    db.session.commit()
 
     return {
         "current": 100,

@@ -21,7 +21,7 @@ const INITIAL_PANE = {
         access_key_secret: '',
         region: '',
     },
-    path: '/',
+    path: '/tmp/motuz',
     sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,

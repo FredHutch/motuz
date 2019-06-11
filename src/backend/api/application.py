@@ -8,25 +8,27 @@ from .config import config_by_name, Config
 
 db = SQLAlchemy()
 
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_object(config_by_name['dev'])
+db.init_app(app)
+
 celery = Celery(
     __name__,
     backend=Config.CELERY_RESULT_BACKEND,
     broker=Config.CELERY_BROKER_URL,
 )
+celery.conf.update(app.config)
+class ContextTask(celery.Task):
+    def __call__(self, *args, **kwargs):
+        with app.app_context():
+            return self.run(*args, **kwargs)
+
+celery.Task = ContextTask
 
 
 def create_app(config_name='dev'):
-    app = Flask(__name__, instance_relative_config=True)
+    global app
     app.config.from_object(config_by_name[config_name])
-
-    db.init_app(app)
-
-    celery.conf.update(app.config)
-    class ContextTask(celery.Task):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-    celery.Task = ContextTask
 
     bp = Blueprint('api', __name__, url_prefix='/api')
 
