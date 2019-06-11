@@ -3,24 +3,25 @@ import datetime
 from flask_restplus import Namespace, fields
 
 from ..application import db
+from ..mixins.timestamp_mixin import TimestampMixin
 
 
-
-class CopyJob(db.Model):
+class CopyJob(db.Model, TimestampMixin):
     """ User Model for storing user related details """
     __tablename__ = "copy_job"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     src_cloud = db.Column(db.String)
     src_resource = db.Column(db.String)
     dst_cloud = db.Column(db.String)
     dst_path = db.Column(db.String)
     owner = db.Column(db.String)
 
-    status = db.Column(db.String, nullable=True)
-    completed_at = db.Column(db.DateTime, nullable=True)
+    progress_state = db.Column(db.String, nullable=True)
+    progress_current = db.Column(db.Integer, nullable=True)
+    progress_total = db.Column(db.Integer, nullable=True)
+    progress_error = db.Column(db.String, nullable=True)
 
 
     def __repr__(self):
@@ -42,7 +43,6 @@ class CopyJobSerializer:
             'state': fields.String(example='PENDING'),
             'current': fields.Integer(example=45),
             'total': fields.Integer(example=100),
-            'status': fields.String(),
             'error': fields.String(),
         }), readonly=True),
     })
