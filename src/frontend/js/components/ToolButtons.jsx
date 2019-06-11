@@ -14,6 +14,7 @@ class ToolButtons extends React.Component {
                 <button
                     className="btn btn-outline-primary my-2 my-sm-0"
                     onClick={event => this.props.onToggleShowHiddenFiles()}
+                    alt='Press to toggle hidden files'
                 >
                     <Icon
                         name={this.props.showHiddenFiles ? 'eye' : 'eye-closed'}
