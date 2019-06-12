@@ -1,8 +1,5 @@
-import os
 import subprocess
-import sys
 import threading
-import time
 
 
 class RcloneConnection:
@@ -118,8 +115,10 @@ class RcloneConnection:
 
 
 
+def main():
+    import time
+    import os
 
-if __name__ == '__main__':
     conection = RcloneConnection(
         type='s3',
         region=os.environ['MOTUZ_REGION'],
@@ -136,3 +135,7 @@ if __name__ == '__main__':
     connection.copy_stop(job_id)
 
     time.sleep(1)
+
+
+if __name__ == '__main__':
+    main()
