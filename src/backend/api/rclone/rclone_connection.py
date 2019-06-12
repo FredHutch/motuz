@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import threading
 
@@ -51,6 +52,8 @@ class RcloneConnection:
             dst=dst,
         )
 
+        logging.info(command)
+
         job_id = self.get_next_job_id()
         self._job_status[job_id] = ''
         self._stop_events[job_id] = threading.Event()
@@ -64,6 +67,9 @@ class RcloneConnection:
 
     def copy_stop(self, job_id):
         self._stop_events[job_id].set()
+
+    def copy_finished(self, job_id):
+        return self._stop_events[job_id].is_set()
 
 
     def get_next_job_id(self):
@@ -100,11 +106,21 @@ class RcloneConnection:
         start_sequence = ''.join(chr(d) for d in (91, 50, 75, 27, 91, 48, 71))
 
         start = process.stdout.read(1).decode('utf-8')
-        assert(start == first_start_sequence)
+        if not start == first_start_sequence:
+            logging.error("Start character chr({}) is not as expected chr({}) ".format(
+                ord(start), ord(first_start_sequence))
+            )
+            stop_event.set()
 
         while not stop_event.is_set():
             start = process.stdout.read(len(start_sequence)).decode('utf-8')
-            assert(start == start_sequence)
+            if not start == start_sequence:
+                logging.error("Start sequence chr({}) is not as expected chr({}) ".format(
+                    map(ord, start), map(ord, first_start_sequence)
+                ))
+                stop_event.set()
+                continue
+
             line = ''
             while True:
                 cc = process.stdout.read(1).decode("utf-8")
@@ -112,6 +128,8 @@ class RcloneConnection:
                     break
                 line += cc
             self._job_status[job_id] = line
+
+        stop_event.set()
 
 
 
