@@ -13,6 +13,7 @@ class RcloneConnection:
         self.secret_access_key = secret_access_key
 
         self._job_status = {} # Mapping from id to status string
+        self._stop_events = {} # Mapping from id to threading.Event
         self._latest_job_id = 0
 
 
@@ -41,8 +42,9 @@ class RcloneConnection:
             'RCLONE_CONFIG_CURRENT_REGION={region} '
             'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
             'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
-            # 'rclone copy --progress {src} current:{dst}'
-            'rclone copy --stats-one-line --progress {src} current:{dst}'
+            'rclone copy {src} current:{dst} '
+            '--stats-one-line --progress '
+            '--stats 2s '
         ).format(
             type=self.type,
             region=self.region,
@@ -54,12 +56,17 @@ class RcloneConnection:
 
         job_id = self.get_next_job_id()
         self._job_status[job_id] = ''
+        self._stop_events[job_id] = threading.Event()
         self._execute_interactive(command, job_id)
         return job_id
 
 
     def copy_status(self, job_id):
         return self._job_status[job_id]
+
+
+    def copy_stop(self, job_id):
+        self._stop_events[job_id].set()
 
 
     def get_next_job_id(self):
@@ -82,6 +89,8 @@ class RcloneConnection:
 
 
     def __execute_interactive(self, command, job_id):
+        stop_event = self._stop_events[job_id]
+
         process = subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
@@ -96,7 +105,7 @@ class RcloneConnection:
         start = process.stdout.read(1).decode('utf-8')
         assert(start == first_start_sequence)
 
-        while True:
+        while not stop_event.is_set():
             start = process.stdout.read(len(start_sequence)).decode('utf-8')
             assert(start == start_sequence)
             line = ''
@@ -121,10 +130,9 @@ if __name__ == '__main__':
     # result = conection.ls('/fh-ctr-mofuz-test/hello/world')
     job_id = conection.copy('/tmp/motuz/blob2.bin', '/fh-ctr-mofuz-test/hello/world')
     print("Now sleeping")
-    time.sleep(20)
-    print("Woke up")
 
-    while True:
-        print(conection.copy_status(job_id))
-        time.sleep(3)
+    time.sleep(10)
+    print(connection.copy_status(job_id))
+    connection.copy_stop(job_id)
 
+    time.sleep(1)
