@@ -1,8 +1,8 @@
 import React from 'react';
 import upath from 'upath';
 
-import PaneFile from 'views/Pane/PaneFile.jsx'
-import PaneHeader from 'views/Pane/PaneHeader.jsx'
+import PaneFile from 'views/App/Pane/PaneFile.jsx'
+import PaneHeader from 'views/App/Pane/PaneHeader.jsx'
 
 class Pane extends React.Component {
     constructor(props) {

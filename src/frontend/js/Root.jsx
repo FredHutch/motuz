@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 
 import Dialogs from 'views/Dialog/Dialogs.jsx';
 import PageNotFound from 'views/PageNotFound.jsx'
+import Login from 'views/Login.jsx'
 import Clouds from 'views/Clouds/Clouds.jsx'
-import App from 'App.jsx'
+import App from 'views/App/App.jsx'
 
 // import 'bootstrap/dist/js/bootstrap.min.js';
 
@@ -20,6 +21,7 @@ export default class Root extends React.Component {
                 <Switch>
                     <Route exact path="/" component={App}/>
                     <Route exact path="/clouds" component={Clouds}/>
+                    <Route exact path="/login" component={Login}/>
                     <Route component={PageNotFound}/>
                 </Switch>
                 <Dialogs />

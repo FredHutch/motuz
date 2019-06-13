@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Navbar from 'components/Navbar.jsx'
-import LeftCommandBar from 'views/LeftCommandBar.jsx';
-import RightCommandBar from 'views/RightCommandBar.jsx';
-import LeftPane from 'views/LeftPane.jsx';
-import RightPane from 'views/RightPane.jsx';
-import JobProgress from 'views/JobProgress.jsx';
-import StatusBar from 'views/StatusBar.jsx';
+import LeftCommandBar from 'views/App/LeftCommandBar.jsx';
+import RightCommandBar from 'views/App/RightCommandBar.jsx';
+import LeftPane from 'views/App/LeftPane.jsx';
+import RightPane from 'views/App/RightPane.jsx';
+import JobProgress from 'views/App/JobProgress.jsx';
+import StatusBar from 'views/App/StatusBar.jsx';
 
 class App extends React.Component {
     constructor(props) {
