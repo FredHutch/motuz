@@ -13,6 +13,7 @@ def login_user(data):
     username = data['username']
     password = data['password']
 
+    # TODO: remove this to avoid side-channel attacks
     try:
         pwd.getpwnam(username)
     except KeyError:
