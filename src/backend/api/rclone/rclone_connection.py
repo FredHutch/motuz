@@ -34,7 +34,7 @@ class RcloneConnection:
         return result
 
 
-    def copy(self, src, dst):
+    def copy(self, src, dst, job_id=None):
         command = (
             'RCLONE_CONFIG_CURRENT_TYPE={type} '
             'RCLONE_CONFIG_CURRENT_REGION={region} '
@@ -54,7 +54,12 @@ class RcloneConnection:
 
         logging.info(command)
 
-        job_id = self.get_next_job_id()
+        if job_id is None:
+            job_id = self.get_next_job_id()
+        else:
+            if self.job_id_exists(job_id):
+                raise ValueError('rclone copy job with ID {} already exists'.fromat(job_id))
+
         self._job_status[job_id] = ''
         self._stop_events[job_id] = threading.Event()
         self._execute_interactive(command, job_id)
@@ -74,7 +79,12 @@ class RcloneConnection:
 
     def get_next_job_id(self):
         self._latest_job_id += 1
+        while self.job_id_exists(self._latest_job_id):
+            self._latest_job_id += 1
         return self._latest_job_id
+
+    def job_id_exists(self, job_id):
+        return job_id in self._job_status
 
 
     def _execute(self, command):

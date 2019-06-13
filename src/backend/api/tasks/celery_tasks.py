@@ -40,13 +40,14 @@ def copy_job(self, task_id=None):
         secret_access_key=cloud_connection.access_key_secret,
     )
 
-    job_id = connection.copy(
+    connection.copy(
         src=copy_job.src_resource,
         dst=copy_job.dst_path,
+        job_id=task_id,
     )
 
-    while not connection.copy_finished(job_id):
-        status = connection.copy_status(job_id)
+    while not connection.copy_finished(task_id):
+        status = connection.copy_status(task_id)
         logging.info(status)
         progress_match = re.search(r'(\d*)%', status)
         if progress_match is not None:
@@ -89,7 +90,7 @@ def dummy_copy_job(self, task_id=None):
 
 
 
-
+# TODO: remove the items below
 
 def _get_progress(task):
     _e = None
