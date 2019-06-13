@@ -1,37 +1,45 @@
 from functools import wraps
+import pwd
 
 from flask import request
 
 from ..models import User, InvalidToken
 from ..application import db
+from ..exceptions import *
+from ..utils.pam import pam
 
 
 def login_user(data):
-    try:
-        user = User.query.filter_by(email=data.get('email')).first()
-        if user and user.check_password(data.get('password')):
-            auth_token = user.encode_auth_token(user.id)
-            if auth_token:
-                response_object = {
-                    'status': 'success',
-                    'message': 'Successfully logged in.',
-                    'Authorization': auth_token.decode('utf-8')
-                }
-                return response_object, 200
-        else:
-            response_object = {
-                'status': 'fail',
-                'message': 'email or password does not match.'
-            }
-            return response_object, 401
+    username = data['username']
+    password = data['password']
 
-    except Exception as e:
-        print(e)
-        response_object = {
-            'status': 'fail',
-            'message': 'Try again'
+    try:
+        pwd.getpwnam(username)
+    except KeyError:
+        raise HTTP_401_UNAUTHORIZED('Username or password does not match.')
+
+    auth_token = None
+
+    # TODO: Remove
+    # Backdoor for local testing. User aicioara should not exist in AWS.
+    if username == 'aicioara' and password == 'RemoveThisASAP':
+        auth_token = User.encode_auth_token(username)
+
+    user_authentication = pam()
+    user_authentication.authenticate(username, password)
+
+    if user_authentication.code == 0:
+        auth_token = User.encode_auth_token(username)
+
+    if auth_token:
+        return {
+            'status': 'success',
+            'message': 'Successfully logged in.',
+            'Authorization': auth_token.decode('utf-8')
         }
-        return response_object, 500
+    else:
+        raise HTTP_401_UNAUTHORIZED('Username or password does not match.')
+
 
 
 def logout_user(data):
