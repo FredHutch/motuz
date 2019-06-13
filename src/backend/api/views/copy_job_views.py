@@ -61,7 +61,7 @@ class CopyJob(Resource):
 
 
 
-@api.route('/<id>/start')
+@api.route('/<id>/stop/')
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
@@ -69,26 +69,9 @@ class CopyJob(Resource):
     @api.marshal_with(dto, code=202)
     def put(self, id):
         """
-        Start the Copy Job
+        Stop the Copy Job
         """
         try:
-            return copy_job_manager.retrieve(id), 202
-        except HTTP_EXCEPTION as e:
-            api.abort(e.code, e.payload)
-
-
-
-@api.route('/<id>/pause')
-@api.param('id', 'The Copy Job Identifier')
-@api.response(404, 'Copy Job not found.')
-class CopyJob(Resource):
-
-    @api.marshal_with(dto, code=202)
-    def put(self, id):
-        """
-        Pause the Copy Job
-        """
-        try:
-            return copy_job_manager.retrieve(id), 202
+            return copy_job_manager.stop(id), 202
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)

@@ -18,6 +18,10 @@ export const CREATE_COPY_JOB_REQUEST = '@@api/CREATE_COPY_JOB_REQUEST';
 export const CREATE_COPY_JOB_SUCCESS = '@@api/CREATE_COPY_JOB_SUCCESS';
 export const CREATE_COPY_JOB_FAILURE = '@@api/CREATE_COPY_JOB_FAILURE';
 
+export const STOP_COPY_JOB_REQUEST = '@@api/STOP_COPY_JOB_REQUEST';
+export const STOP_COPY_JOB_SUCCESS = '@@api/STOP_COPY_JOB_SUCCESS';
+export const STOP_COPY_JOB_FAILURE = '@@api/STOP_COPY_JOB_FAILURE';
+
 export const LIST_CLOUD_CONNECTIONS_REQUEST = '@@api/LIST_CLOUD_CONNECTIONS_REQUEST';
 export const LIST_CLOUD_CONNECTIONS_SUCCESS = '@@api/LIST_CLOUD_CONNECTIONS_SUCCESS';
 export const LIST_CLOUD_CONNECTIONS_FAILURE = '@@api/LIST_CLOUD_CONNECTIONS_FAILURE';
@@ -89,7 +93,14 @@ export const createCopyJob = (data) => ({
     }
 });
 
-
+export const stopCopyJob = (id) => ({
+    [RSAA]: {
+        endpoint: `/api/copy-jobs/${id}/stop/`, // TODO: Why is there a trailing slash here?
+        method: 'PUT',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ STOP_COPY_JOB_REQUEST, STOP_COPY_JOB_SUCCESS, STOP_COPY_JOB_FAILURE ],
+    }
+});
 
 export const listCloudConnections = (data) => ({
     [RSAA]: {

@@ -1,11 +1,12 @@
 import React from 'react';
-import {ProgressBar} from 'react-bootstrap';
+import {ProgressBar, OverlayTrigger, Popover} from 'react-bootstrap';
 
 import ResizableDivider from 'components/ResizableDivider.jsx'
 
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
+        this.state = JobProgress.initialState;
         this.container = React.createRef();
         this.timeout = null;
     }
@@ -30,6 +31,38 @@ class JobProgress extends React.Component {
             );
         })
 
+        const {selectedJob} = this.state;
+        const popover = props => {
+            if (!this.state.showPopover) {
+                return <div></div>
+            }
+            return (
+                <Popover
+                    {...props}
+                    id="popover-job-progress"
+                    title={`${selectedJob.description} (${selectedJob.id})`}
+                    outOfBoundaries={true}
+                    show=''
+                >
+                    <ProgressBar
+                        now={selectedJob.progess}
+                        label={`${selectedJob.progress}%`}
+                        variant='success'
+                    />
+                    <button
+                        className="btn btn-danger btn-sm btn-block mt-4"
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            this.props.onStopJob(selectedJob.id)
+                            this._onDeselectJob()
+                        }}
+                    >
+                        STOP
+                    </button>
+                </Popover>
+            );
+        }
+
         const tableRows = this.props.jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
 
@@ -39,7 +72,10 @@ class JobProgress extends React.Component {
                 'progress': progress,
             }
             return (
-                <tr key={job.id}>
+                <tr
+                    onClick={event => this._onSelectJob(job)}
+                    key={job.id}
+                >
                     {headers.map((header, j) => {
                         if (header === 'progress') {
                             return (
@@ -54,9 +90,16 @@ class JobProgress extends React.Component {
                         }
                         const item = job[header]
                         return (
-                            <td key={j}>
-                                {item}
-                            </td>
+                            <OverlayTrigger
+                                key={j}
+                                trigger="click"
+                                placement="top"
+                                rootClose
+                                rootCloseEvent='mousedown'
+                                overlay={popover}
+                            >
+                                <td> {item} </td>
+                            </OverlayTrigger>
                         );
                     })}
                 </tr>
@@ -77,7 +120,7 @@ class JobProgress extends React.Component {
                 <ResizableDivider
                     onResize={event => this.onResize(event)}
                 />
-                <table className='table table-sm table-striped text-center'>
+                <table className='table table-sm table-striped table-hover text-center'>
                     <thead>
                         <tr>{tableHeaders}</tr>
                     </thead>
@@ -117,6 +160,17 @@ class JobProgress extends React.Component {
         container.style.height = `${newHeight}px`
     }
 
+    _onSelectJob(selectedJob) {
+        this.setState({
+            selectedJob,
+            showPopover: true,
+        })
+    }
+
+    _onDeselectJob() {
+        this.setState({showPopover: false})
+    }
+
     _clearTimeout() {
         if (this.timeout) {
             window.clearTimeout(this.timeout);
@@ -129,17 +183,24 @@ JobProgress.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
+    onStopJob: id => {},
+}
+
+JobProgress.initialState = {
+    selectedJob: {},
+    showPopover: false,
 }
 
 import {connect} from 'react-redux';
-import { listCopyJobs } from 'actions/apiActions.jsx'
+import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: () => { dispatch(listCopyJobs()) }
+    fetchData: () => dispatch(listCopyJobs()),
+    onStopJob: id => dispatch(stopCopyJob(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
