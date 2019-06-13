@@ -1,11 +1,12 @@
 import React from 'react';
-import {ProgressBar} from 'react-bootstrap';
+import {ProgressBar, OverlayTrigger, Popover} from 'react-bootstrap';
 
 import ResizableDivider from 'components/ResizableDivider.jsx'
 
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
+        this.state = JobProgress.initialState;
         this.container = React.createRef();
         this.timeout = null;
     }
@@ -30,6 +31,30 @@ class JobProgress extends React.Component {
             );
         })
 
+        const {selectedJob} = this.state;
+        console.log(selectedJob)
+        const popover = props => {
+            console.log(selectedJob.progress)
+            return (
+                <Popover
+                    {...props}
+                    id="popover-job-progress"
+                    title={`${selectedJob.description} (${selectedJob.id})`}
+                    outOfBoundaries={true}
+                    show={`${props.show}`}
+                >
+                    <ProgressBar
+                        now={selectedJob.progess}
+                        label={`${selectedJob.progress}%`}
+                        variant='success'
+                    />
+                    <button
+                        className="btn btn-danger btn-sm btn-block mt-4"
+                    >Cancel Job</button>
+                </Popover>
+            );
+        }
+
         const tableRows = this.props.jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
 
@@ -39,7 +64,10 @@ class JobProgress extends React.Component {
                 'progress': progress,
             }
             return (
-                <tr key={job.id}>
+                <tr
+                    onClick={event => this._onSelectJob(job)}
+                    key={job.id}
+                >
                     {headers.map((header, j) => {
                         if (header === 'progress') {
                             return (
@@ -54,9 +82,16 @@ class JobProgress extends React.Component {
                         }
                         const item = job[header]
                         return (
-                            <td key={j}>
-                                {item}
-                            </td>
+                            <OverlayTrigger
+                                key={j}
+                                trigger="click"
+                                placement="top"
+                                rootClose
+                                rootCloseEvent='mousedown'
+                                overlay={popover}
+                            >
+                                <td> {item} </td>
+                            </OverlayTrigger>
                         );
                     })}
                 </tr>
@@ -77,7 +112,7 @@ class JobProgress extends React.Component {
                 <ResizableDivider
                     onResize={event => this.onResize(event)}
                 />
-                <table className='table table-sm table-striped text-center'>
+                <table className='table table-sm table-striped table-hover text-center'>
                     <thead>
                         <tr>{tableHeaders}</tr>
                     </thead>
@@ -117,6 +152,10 @@ class JobProgress extends React.Component {
         container.style.height = `${newHeight}px`
     }
 
+    _onSelectJob(selectedJob) {
+        this.setState({selectedJob})
+    }
+
     _clearTimeout() {
         if (this.timeout) {
             window.clearTimeout(this.timeout);
@@ -129,6 +168,10 @@ JobProgress.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
+}
+
+JobProgress.initialState = {
+    selectedJob: {},
 }
 
 import {connect} from 'react-redux';
