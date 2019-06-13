@@ -16,7 +16,7 @@ class UserSerializer:
 class AuthSerializer:
     api = Namespace('auth', description='Authentication related operations')
     dto = api.model('auth', {
-        'email': fields.String(required=True, description='The email address'),
+        'username': fields.String(required=True, description='The (Linux) username'),
         'password': fields.String(required=True, description='The user password'),
     })
 
