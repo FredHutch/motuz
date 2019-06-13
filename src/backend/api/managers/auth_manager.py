@@ -71,33 +71,26 @@ def get_logged_in_user(new_request):
         if authorization is None:
             auth_token = None
         else:
-            _, auth_token = authorization.split(' ')
+            parts = authorization.split(' ')
+            if len(parts) != 2:
+                raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
+            _, auth_token = parts
 
-        if auth_token:
-            resp = User.decode_auth_token(auth_token)
-            if not isinstance(resp, str):
-                user = User.query.filter_by(id=resp).first()
-                response_object = {
-                    'status': 'success',
-                    'data': {
-                        'user_id': user.id,
-                        'email': user.email,
-                        'admin': user.admin,
-                        'registered_on': str(user.registered_on)
-                    }
-                }
-                return response_object, 200
-            response_object = {
-                'status': 'fail',
-                'message': resp
+        if not auth_token:
+            raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
+
+        resp = User.decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            raise HTTP_401_UNAUTHORIZED(resp)
+
+        username = resp['username']
+        response_object = {
+            'status': 'success',
+            'data': {
+                'username': username,
             }
-            return response_object, 401
-        else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Provide a valid auth token.'
-            }
-            return response_object, 401
+        }
+        return response_object, 200
 
 
 def invalidate_token(token):
