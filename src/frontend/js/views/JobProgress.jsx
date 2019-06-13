@@ -32,16 +32,17 @@ class JobProgress extends React.Component {
         })
 
         const {selectedJob} = this.state;
-        console.log(selectedJob)
         const popover = props => {
-            console.log(selectedJob.progress)
+            if (!this.state.showPopover) {
+                return <div></div>
+            }
             return (
                 <Popover
                     {...props}
                     id="popover-job-progress"
                     title={`${selectedJob.description} (${selectedJob.id})`}
                     outOfBoundaries={true}
-                    show={`${props.show}`}
+                    show=''
                 >
                     <ProgressBar
                         now={selectedJob.progess}
@@ -50,7 +51,14 @@ class JobProgress extends React.Component {
                     />
                     <button
                         className="btn btn-danger btn-sm btn-block mt-4"
-                    >Cancel Job</button>
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            this.props.onStopJob(selectedJob.id)
+                            this._onDeselectJob()
+                        }}
+                    >
+                        STOP
+                    </button>
                 </Popover>
             );
         }
@@ -153,7 +161,14 @@ class JobProgress extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        this.setState({selectedJob})
+        this.setState({
+            selectedJob,
+            showPopover: true,
+        })
+    }
+
+    _onDeselectJob() {
+        this.setState({showPopover: false})
     }
 
     _clearTimeout() {
@@ -168,21 +183,24 @@ JobProgress.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
+    onStopJob: id => {},
 }
 
 JobProgress.initialState = {
     selectedJob: {},
+    showPopover: false,
 }
 
 import {connect} from 'react-redux';
-import { listCopyJobs } from 'actions/apiActions.jsx'
+import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: () => { dispatch(listCopyJobs()) }
+    fetchData: () => dispatch(listCopyJobs()),
+    onStopJob: id => dispatch(stopCopyJob(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);

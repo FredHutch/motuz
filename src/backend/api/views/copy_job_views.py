@@ -61,7 +61,7 @@ class CopyJob(Resource):
 
 
 
-@api.route('/<id>/stop')
+@api.route('/<id>/stop/')
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):

@@ -48,7 +48,23 @@ export default (state=initialState, action) => {
     case api.CREATE_COPY_JOB_FAILURE: {
         return state;
     }
+    case api.STOP_COPY_JOB_REQUEST: {
+        return state;
+    }
+    case api.STOP_COPY_JOB_SUCCESS: {
+        const newJob = action.payload;
+        const jobs = [...state.jobs]
+        const index = jobs.findIndex(d => d.id === newJob.id)
+        jobs[index] = newJob;
 
+        return {
+            ...state,
+            jobs,
+        }
+    }
+    case api.STOP_COPY_JOB_FAILURE: {
+        return state;
+    }
 
 
 
