@@ -2,12 +2,10 @@ import json
 import uuid
 import datetime
 
-from celery.task.control import revoke
-
-from ..application import db
-from ..models import CopyJob, CloudConnection
 from .. import tasks
+from ..application import db
 from ..exceptions import *
+from ..models import CopyJob, CloudConnection
 from ..rclone.rclone_connection import RcloneConnection
 
 
@@ -50,12 +48,11 @@ def stop(id):
     if copy_job is None:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
-    revoke(str(copy_job.id), terminate=True)
-    # task = tasks.copy_job.AsyncResult(str(copy_job.id))
-    # task.revoke()
+    task = tasks.copy_job.AsyncResult(str(copy_job.id))
+    task.revoke(terminate=True)
 
+    copy_job = CopyJob.query.get(id) # Avoid race conditions
     copy_job.progress_state = 'STOPPED'
     db.session.commit()
 
     return copy_job
-
