@@ -1,5 +1,7 @@
 import React from 'react';
 
+import serializeForm from 'utils/serializeForm.jsx';
+
 import 'logo.png';
 
 
@@ -11,7 +13,10 @@ class Login extends React.Component {
     render() {
         return (
             <div className="form-wrapper">
-                <form className="form-signin">
+                <form
+                    className="form-signin"
+                    onSubmit={event => this.onSubmit(event)}
+                >
                     <img
                         className="mb-4"
                         src="/img/logo.png"
@@ -20,12 +25,27 @@ class Login extends React.Component {
                     />
                     <h1 className="h1 mb-5 font-weight-normal">Motuz</h1>
                     <div className="form-group">
-                        <label htmlFor="inputEmail" className="sr-only">Email address</label>
-                        <input type="text" className="form-control" placeholder="Username" required autoFocus autoComplete="off" />
+                        <label htmlFor="inputEmail" className="sr-only">Username</label>
+                        <input
+                            name='username'
+                            type="text"
+                            className="form-control"
+                            placeholder="Username"
+                            required
+                            autoFocus
+                            autoComplete="off"
+                        />
                     </div>
                     <div className="form-group">
                         <label htmlFor="inputPassword" className="sr-only">Password</label>
-                        <input type="password" className="form-control" placeholder="Password" required autoComplete="off" />
+                        <input
+                            name='password'
+                            type="password"
+                            className="form-control"
+                            placeholder="Password"
+                            required
+                            autoComplete="off"
+                        />
                     </div>
                     <div className="form-group">
                         <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
@@ -38,6 +58,13 @@ class Login extends React.Component {
 
     componentDidMount() {
 
+    }
+
+    onSubmit(event) {
+        event.preventDefault()
+        const form = event.target;
+        const data = serializeForm(form)
+        console.log(data)
     }
 }
 
