@@ -2,7 +2,7 @@
 
 set -e
 
-THIS_DIR=$(dirname "$0")
+THIS_DIR="$(dirname "$(readlink -f "$0")")"
 cd ${THIS_DIR}
 cd ../..
 
