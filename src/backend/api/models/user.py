@@ -62,7 +62,7 @@ class User(db.Model):
         """
         Decodes the auth token
         :param auth_token:
-        :return: integer|string
+        :return: dict|string
         """
         try:
             payload = jwt.decode(auth_token, key)

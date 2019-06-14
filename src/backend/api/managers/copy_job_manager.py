@@ -12,7 +12,6 @@ from ..managers.auth_manager import token_required
 
 def list():
     copy_jobs = CopyJob.query.all()
-
     return copy_jobs
 
 
