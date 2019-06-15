@@ -5,14 +5,16 @@ import datetime
 from ..application import db
 from ..models import CloudConnection
 from ..exceptions import *
+from ..managers.auth_manager import token_required
 
 
-
+@token_required
 def list():
     cloud_connections = CloudConnection.query.all()
     return cloud_connections
 
 
+@token_required
 def create(data):
     cloud_connection = CloudConnection(**data)
 
@@ -22,6 +24,7 @@ def create(data):
     return cloud_connection
 
 
+@token_required
 def retrieve(id):
     cloud_connection = CloudConnection.query.get(id)
 
@@ -31,6 +34,7 @@ def retrieve(id):
     return cloud_connection
 
 
+@token_required
 def update(id, data):
     cloud_connection = retrieve(id)
 
@@ -41,6 +45,7 @@ def update(id, data):
     return cloud_connection
 
 
+@token_required
 def delete(id):
     cloud_connection = retrieve(id)
 

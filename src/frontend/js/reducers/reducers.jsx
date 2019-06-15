@@ -17,10 +17,10 @@ export default (history) => combineReducers({
 export function withAuth(headers={}) {
     return (state) => {
         const ret = {...headers};
-        // TODO: Add back when we have this endpoint on the backend
-        // if (accessToken(state)) {
-        //     ret['Authorization'] = `Bearer ${accessToken(state)}`;
-        // }
+        const token = accessToken(state);
+        if (token) {
+            ret['Authorization'] = `Bearer ${token}`;
+        }
         return ret;
     };
 }
