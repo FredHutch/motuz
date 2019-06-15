@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: ./docker/web/Dockerfile
+        command: bash
+        volumes:
+            - .:/code
+        ports:
+            - "80:8080"
+    app:
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        command: bash -c "python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - .:/code
+        ports:
+            - "8000:8000"
+    celery:
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./docker/celery/Dockerfile
+        command: celery -A api.tasks worker -l info
+        volumes:
+            - .:/code
+        hostname: 0.0.0.0
+    rabbitmq:
+        network_mode: host
+        image: "rabbitmq:3-management"
+        ports:
+            - 5672:5672
+            - 15672:15672
+        expose:
+            - 5672
+        hostname: 0.0.0.0
