@@ -68,7 +68,7 @@ class Login extends React.Component {
                     <div className="form-group">
                         <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                     </div>
-                    <p className="mt-5 mb-3 text-muted">&copy; 2019 Fred Hutchinson Cancer Research Center</p>
+                    <p className="mt-5 mb-3 text-muted">&copy; 2019 Fred Hutchinson <br/> Cancer Research Center</p>
                 </form>
             </div>
         );
