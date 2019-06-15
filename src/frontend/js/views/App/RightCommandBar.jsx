@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CommandBar from 'views/CommandBar.jsx'
+import CommandBar from 'views/App/CommandBar.jsx'
 
 class RightCommandBar extends React.Component {
     constructor(props) {

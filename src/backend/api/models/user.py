@@ -36,7 +36,8 @@ class User(db.Model):
         return "<User '{}'>".format(self.username)
 
 
-    def encode_auth_token(self, user_id):
+    @staticmethod
+    def encode_auth_token(user_id):
         """
         Generates the Auth Token
         :return: string
@@ -51,7 +52,7 @@ class User(db.Model):
                 payload,
                 key,
                 algorithm='HS256'
-            )
+            ).decode('utf-8')
         except Exception as e:
             return e
 
@@ -61,7 +62,7 @@ class User(db.Model):
         """
         Decodes the auth token
         :param auth_token:
-        :return: integer|string
+        :return: dict|string
         """
         try:
             payload = jwt.decode(auth_token, key)
@@ -69,7 +70,7 @@ class User(db.Model):
             if is_blacklisted_token:
                 return 'Token blacklisted. Please log in again.'
             else:
-                return payload['sub']
+                return {'username': payload['sub']}
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

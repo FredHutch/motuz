@@ -6,23 +6,34 @@ const initialState = {
     access: undefined,
     refresh: undefined,
     errors: {},
+    loading: false,
 };
 
 export default (state=initialState, action) => {
     switch(action.type) {
-    case auth.LOGIN_SUCCESS:
+    case auth.LOGIN_REQUEST:
+    case auth.LOGOUT_REQUEST: {
+        return {
+            ...state,
+            loading: true,
+            errors: initialState.errors,
+        }
+    }
+    case auth.LOGIN_SUCCESS: {
         return {
             access: {
                 token: action.payload.access,
-                ...jwtDecode(action.payload.access)
+                ...jwtDecode(action.payload.access),
             },
             refresh: {
                 token: action.payload.refresh,
-                ...jwtDecode(action.payload.refresh)
+                ...jwtDecode(action.payload.refresh),
             },
-            errors: {}
+            errors: {},
+            loading: false,
         };
-    case auth.TOKEN_RECEIVED:
+    }
+    case auth.TOKEN_RECEIVED: {
         return {
             ...state,
             access: {
@@ -30,15 +41,19 @@ export default (state=initialState, action) => {
                 ...jwtDecode(action.payload.access)
             }
         };
+    }
     case auth.LOGIN_FAILURE:
-    case auth.TOKEN_FAILURE:
+    case auth.TOKEN_FAILURE: {
         return {
             access: undefined,
             refresh: undefined,
-            errors: action.payload.response || {'non_field_errors': action.payload.statusText},
+            errors: action.payload.response,
+            loading: false,
         };
-    case auth.LOGOUT_REQUEST:
+    }
+    case auth.LOGOUT_SUCCESS: {
         return initialState;
+    }
     default:
         return state;
     }

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Pane from 'views/Pane/Pane.jsx';
+import Pane from 'views/App/Pane/Pane.jsx';
 
-class RightPane extends React.Component {
+class LeftPane extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -13,7 +13,7 @@ class RightPane extends React.Component {
                 files={this.props.files}
                 pane={this.props.pane}
                 active={this.props.active}
-                side='right'
+                side='left'
             />
         );
     }
@@ -23,7 +23,7 @@ class RightPane extends React.Component {
     }
 }
 
-RightPane.defaultProps = {
+LeftPane.defaultProps = {
     files: [],
     active: false,
     pane: {},
@@ -32,12 +32,12 @@ RightPane.defaultProps = {
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => ({
-    files: state.pane.files.right,
-    pane: state.pane.panes.right[0],
-    active: !state.pane.focusPaneLeft,
+    files: state.pane.files.left,
+    active: state.pane.focusPaneLeft,
+    pane: state.pane.panes.left[0],
 });
 
 const mapDispatchToProps = dispatch => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RightPane);
+export default connect(mapStateToProps, mapDispatchToProps)(LeftPane);

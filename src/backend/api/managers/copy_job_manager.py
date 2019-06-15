@@ -7,11 +7,11 @@ from ..application import db
 from ..exceptions import *
 from ..models import CopyJob, CloudConnection
 from ..rclone.rclone_connection import RcloneConnection
+from ..managers.auth_manager import token_required
 
 
 def list():
     copy_jobs = CopyJob.query.all()
-
     return copy_jobs
 
 
