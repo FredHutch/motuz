@@ -1,5 +1,6 @@
 from functools import wraps
 import pwd
+import json
 
 from flask import request
 
@@ -17,7 +18,7 @@ def login_user(data):
     try:
         pwd.getpwnam(username)
     except KeyError:
-        raise HTTP_401_UNAUTHORIZED('Username or password does not match.')
+        raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
 
     auth_token = None
 
@@ -32,14 +33,16 @@ def login_user(data):
     if user_authentication.code == 0:
         auth_token = User.encode_auth_token(username)
 
+
     if auth_token:
         return {
             'status': 'success',
             'message': 'Successfully logged in.',
-            'Authorization': auth_token.decode('utf-8')
+            'access': auth_token,
+            'refresh': auth_token, # TODO: Make this one different
         }
     else:
-        raise HTTP_401_UNAUTHORIZED('Username or password does not match.')
+        raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
 
 
 
