@@ -1,4 +1,5 @@
-# Build as docker build -t motuz_celery:latest -f Dockerfile ../..
+# Build as
+# docker build -t motuz_celery:latest -f Dockerfile ../..
 
 FROM python:3.7.3-slim
 

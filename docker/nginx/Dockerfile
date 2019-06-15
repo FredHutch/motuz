@@ -17,4 +17,4 @@ RUN npm run build
 
 COPY ./build /var/www
 EXPOSE 80 443
-ENTRYPOINT ["nginx","-g","daemon off;"]
+# ENTRYPOINT ["nginx","-g","daemon off;"]

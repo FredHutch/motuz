@@ -1,1 +1,3 @@
-FROM python:3.7.3-slim
+FROM nginx:1.15.2-alpine
+
+ENTRYPOINT ["bash"]
