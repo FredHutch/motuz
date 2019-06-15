@@ -6,7 +6,9 @@ import pwd
 import subprocess
 
 from ..exceptions import *
+from ..managers.auth_manager import token_required
 
+@token_required
 def get_uid():
     uid = os.getuid()
     return {
@@ -14,6 +16,7 @@ def get_uid():
     }
 
 
+@token_required
 def get_files(data):
     if data['type'] in ('file', 'localhost'):
         return _get_local_files(data)

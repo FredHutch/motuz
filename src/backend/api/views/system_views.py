@@ -4,6 +4,7 @@ from flask_restplus import Resource
 from ..serializers import SystemSerializer
 from ..managers import system_manager
 from ..managers.auth_manager import token_required
+from ..exceptions import HTTP_EXCEPTION
 
 
 api = SystemSerializer.api
@@ -18,7 +19,11 @@ class SystemFiles(Resource):
         List all files for a particular URI.
         """
         data = request.json
-        return system_manager.get_files(data)
+        try:
+            return system_manager.get_files(data), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+
 
 
 
@@ -28,4 +33,7 @@ class SystemUid(Resource):
         """
         Get the `uid` of the currently logged in user.
         """
-        return system_manager.get_uid()
+        try:
+            return system_manager.get_uid(), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)

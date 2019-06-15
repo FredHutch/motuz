@@ -10,11 +10,13 @@ from ..rclone.rclone_connection import RcloneConnection
 from ..managers.auth_manager import token_required
 
 
+@token_required
 def list():
     copy_jobs = CopyJob.query.all()
     return copy_jobs
 
 
+@token_required
 def create(data):
     # TODO: validate that this data does not have additional fields
     copy_job = CopyJob(**data)
@@ -33,6 +35,7 @@ def create(data):
     return copy_job
 
 
+@token_required
 def retrieve(id):
     copy_job = CopyJob.query.get(id)
 
@@ -42,6 +45,7 @@ def retrieve(id):
     return copy_job
 
 
+@token_required
 def stop(id):
     copy_job = CopyJob.query.get(id)
 
