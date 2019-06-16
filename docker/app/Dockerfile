@@ -1,3 +1,4 @@
-FROM nginx:1.15.2-alpine
+FROM nginx
+EXPOSE 80 443
 
-ENTRYPOINT ["bash"]
+# ENTRYPOINT ["bash"]

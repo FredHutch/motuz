@@ -4,21 +4,20 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: ./docker/web/Dockerfile
+            dockerfile: ./docker/nginx/Dockerfile
+        volumes:
+            - .:/code
+        ports:
+            - "80:80"
+    app:
+        build:
+            context: .
+            dockerfile: ./docker/app/Dockerfile
         command: bash
         volumes:
             - .:/code
         ports:
             - "80:8080"
-    app:
-        build:
-            context: .
-            dockerfile: ./docker/nginx/Dockerfile
-        command: bash -c "python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
-        volumes:
-            - .:/code
-        ports:
-            - "8000:8000"
     celery:
         network_mode: host
         build:

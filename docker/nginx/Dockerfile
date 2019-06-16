@@ -2,19 +2,19 @@
 # docker build -t motuz_nginx:latest -f Dockerfile ../..
 
 
-FROM nginx:1.15.2-alpine
-FROM node:6
+FROM node:6 as build-stage
 
 WORKDIR /app
 COPY ./package.json /app
 RUN npm install
 
-COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
-
-COPY . /app
+COPY ./src /app/src
 RUN npm run build
 
+FROM nginx
 
-COPY ./build /var/www
+COPY --from=build-stage /app/build/ /var/www/
+# /usr/share/nginx/html
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80 443
-# ENTRYPOINT ["nginx","-g","daemon off;"]
+CMD ["nginx","-g","daemon off;"]
