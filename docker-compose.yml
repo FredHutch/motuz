@@ -7,6 +7,7 @@ services:
             dockerfile: ./docker/nginx/Dockerfile
         volumes:
             - .:/code
+            - /tmp:/tmp
         ports:
             - "80:80"
     app:
@@ -15,6 +16,7 @@ services:
             dockerfile: ./docker/app/Dockerfile
         volumes:
             - .:/code
+            - /tmp:/tmp
         ports:
             - "5000:5000"
     celery:
