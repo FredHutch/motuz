@@ -13,11 +13,10 @@ services:
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
-        command: bash
         volumes:
             - .:/code
         ports:
-            - "80:8080"
+            - "5000:5000"
     celery:
         network_mode: host
         build:
