@@ -1,7 +1,10 @@
 version: '3'
 
 services:
+
+
     nginx:
+        container_name: nginx
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
@@ -10,16 +13,22 @@ services:
             - /tmp:/tmp
         ports:
             - "80:80"
-    app:
-        build:
-            context: .
-            dockerfile: ./docker/app/Dockerfile
-        volumes:
-            - .:/code
-            - /tmp:/tmp
-        ports:
-            - "5000:5000"
+
+
+    # app:
+    #     container_name: app
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/app/Dockerfile
+    #     volumes:
+    #         - .:/code
+    #         - /tmp:/tmp
+    #     ports:
+    #         - "5000:5000"
+
+
     celery:
+        container_name: celery
         network_mode: host
         build:
             context: .
@@ -28,7 +37,10 @@ services:
         volumes:
             - .:/code
         hostname: 0.0.0.0
+
+
     rabbitmq:
+        container_name: rabbitmq
         network_mode: host
         image: "rabbitmq:3-management"
         ports:
@@ -37,3 +49,15 @@ services:
         expose:
             - 5672
         hostname: 0.0.0.0
+
+
+    test:
+        container_name: test
+        build:
+            context: .
+            dockerfile: ./docker/test/Dockerfile
+        volumes:
+            - .:/code
+            - /tmp:/tmp
+        ports:
+            - "8080:8080"
