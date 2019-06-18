@@ -3,6 +3,8 @@
 
 FROM python:3.7.3-slim
 
+RUN apt-get update -y && apt-get install -y build-essential
+
 ENV PYTHONUNBUFFERED 1
 ENV DOCKER_CONTAINER 1
 

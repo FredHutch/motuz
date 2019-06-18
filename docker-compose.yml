@@ -12,6 +12,7 @@ services:
             - .:/code
             - /tmp:/tmp
         ports:
+            - "443:443"
             - "80:80"
 
 
@@ -23,7 +24,6 @@ services:
         volumes:
             - .:/code
             - /tmp:/tmp
-            - /fh/scratch:/fh/scratch:ro
         ports:
             - "5000:5000"
 
@@ -37,6 +37,7 @@ services:
         command: celery -A api.tasks worker -l info
         volumes:
             - .:/code
+            - /fh/scratch:/fh/scratch:ro
         hostname: 0.0.0.0
 
 
