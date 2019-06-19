@@ -19,6 +19,7 @@ services:
 
     app:
         container_name: app
+        network_mode: host
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
