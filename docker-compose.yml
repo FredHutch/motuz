@@ -17,17 +17,17 @@ services:
             - "80:80"
 
 
-    app:
-        container_name: app
-        network_mode: host
-        build:
-            context: .
-            dockerfile: ./docker/app/Dockerfile
-        volumes:
-            - .:/code
-            - /tmp
-        ports:
-            - "5000:5000"
+    # app:
+    #     container_name: app
+    #     network_mode: host
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/app/Dockerfile
+    #     volumes:
+    #         - .:/code
+    #         - /tmp
+    #     ports:
+    #         - "5000:5000"
 
 
     celery:
