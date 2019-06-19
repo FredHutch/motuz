@@ -5,6 +5,7 @@ services:
 
     nginx:
         container_name: nginx
+        network_mode: host
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
