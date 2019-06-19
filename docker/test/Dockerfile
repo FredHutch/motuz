@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y curl net-tools netcat
+RUN apt-get update && apt-get install -y curl net-tools netcat nmap
 
 CMD /bin/bash
 
