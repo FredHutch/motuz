@@ -2,11 +2,11 @@
 # docker build -t motuz_nginx:latest -f Dockerfile ../..
 
 
-FROM node:6 as build-stage
+FROM node:10.15.2 as build-stage
 
 WORKDIR /app
 COPY ./package.json /app
-RUN npm install
+RUN npm install --verbose
 
 COPY ./src/frontend /app/src/frontend
 RUN npm run build
