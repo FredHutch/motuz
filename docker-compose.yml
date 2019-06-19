@@ -10,7 +10,7 @@ services:
             dockerfile: ./docker/nginx/Dockerfile
         volumes:
             - .:/code
-            - /tmp:/tmp
+            - /tmp
         ports:
             - "443:443"
             - "80:80"
@@ -23,7 +23,7 @@ services:
             dockerfile: ./docker/app/Dockerfile
         volumes:
             - .:/code
-            - /tmp:/tmp
+            - /tmp
         ports:
             - "5000:5000"
 
@@ -60,6 +60,6 @@ services:
             dockerfile: ./docker/test/Dockerfile
         volumes:
             - .:/code
-            - /tmp:/tmp
+            - /tmp
         ports:
             - "8080:8080"
