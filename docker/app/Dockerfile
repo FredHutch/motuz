@@ -15,7 +15,6 @@ RUN pip install -r /code/requirements.txt
 COPY ./src /app/src
 WORKDIR /app/src/backend
 
-
 ENV FLASK_ENV development
 ENV MOTUZ_HOST 0.0.0.0
 
