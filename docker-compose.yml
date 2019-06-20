@@ -39,6 +39,7 @@ services:
         command: celery -A api.tasks worker -l info
         volumes:
             - .:/code
+            - /efs/:/efs/:ro
             - /fh/scratch:/fh/scratch:ro
         hostname: 0.0.0.0
 
