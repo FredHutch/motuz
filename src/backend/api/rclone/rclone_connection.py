@@ -127,7 +127,9 @@ class RcloneConnection:
             logging.info(txt)
             stop_event.set()
 
-        while not stop_event.is_set():
+        logging.info("starting loop")
+        while not stop_event.is_set() and process.poll() is None:
+            logging.info("inside loop")
             start = process.stdout.read(len(start_sequence)).decode('utf-8')
             if not start == start_sequence:
                 logging.error("Start sequence chr({}) is not as expected chr({}) ".format(
@@ -144,6 +146,7 @@ class RcloneConnection:
                 line += cc
             self._job_status[job_id] = line
 
+        logging.info("outside loop")
         stop_event.set()
 
 

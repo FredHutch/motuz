@@ -48,5 +48,10 @@ def copy_job(self, task_id=None):
             db.session.commit()
         time.sleep(1)
 
+    copy_job.progress_current = 100
+    copy_job.progress_state = 'FINISHED'
+    db.session.commit()
+
+
     return {}
 
