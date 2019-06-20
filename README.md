@@ -127,7 +127,8 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 sudo apt-get install -y docker-compose
 
+sudo useradd -d /home/aicioara -m aicioara
+echo 'aicioara:ThisIsNotSecure' | sudo chpasswd
 
-useradd -d /home/aicioara -m aicioara
-echo 'aicioara:ThisIsNotSecure' | chpasswd
+
 ```

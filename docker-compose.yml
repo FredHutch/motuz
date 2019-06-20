@@ -2,7 +2,6 @@ version: '3'
 
 services:
 
-
     nginx:
         container_name: nginx
         network_mode: host
@@ -13,21 +12,37 @@ services:
             - .:/code
             - /tmp
         ports:
-            - "443:443"
-            - "80:80"
+            - 443:443
+            - 80:80
 
 
-    # app:
-    #     container_name: app
-    #     network_mode: host
-    #     build:
-    #         context: .
-    #         dockerfile: ./docker/app/Dockerfile
-    #     volumes:
-    #         - .:/code
-    #         - /tmp
-    #     ports:
-    #         - "5000:5000"
+    app:
+        container_name: app
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./docker/app/Dockerfile
+        volumes:
+            - .:/code
+
+            # Interesting folders
+            - /tmp
+            - /efs/:/efs/:ro
+            - /fh/scratch:/fh/scratch:ro
+
+            # For access by each user
+            - /home:/home
+            # Authentication
+            # passwd/group should be mounted into any container
+            # needing to share the user/group IDs
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/group:/etc/group:ro
+            # Shadow should only be mounted into containers
+            # needing to authenticate against PAM
+            - /etc/shadow:/etc/shadow:ro
+        ports:
+            - 5000:5000
+            - 5001:5001
 
 
     celery:
@@ -36,7 +51,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/celery/Dockerfile
-        command: celery -A api.tasks worker -l info
         volumes:
             - .:/code
             - /efs/:/efs/:ro
@@ -64,5 +78,15 @@ services:
         volumes:
             - .:/code
             - /tmp
+            # For access by each user
+            - /home:/home
+            # Authentication
+            # passwd/group should be mounted into any container
+            # needing to share the user/group IDs
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/group:/etc/group:ro
+            # Shadow should only be mounted into containers
+            # needing to authenticate against PAM
+            - /etc/shadow:/etc/shadow:ro
         ports:
             - "8080:8080"

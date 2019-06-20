@@ -6,8 +6,5 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ../..
 
-source venv/bin/activate
-
-cd src/backend
-
-uwsgi --ini wsgi.ini
+sudo docker build -t 'motuz_celery:latest' -f 'docker/app/Dockerfile' .
+sudo docker-compose run app

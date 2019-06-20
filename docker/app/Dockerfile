@@ -20,4 +20,4 @@ ENV MOTUZ_HOST 0.0.0.0
 
 RUN python3 manage.py db upgrade
 
-CMD python3 manage.py run
+CMD uwsgi --ini wsgi.ini
