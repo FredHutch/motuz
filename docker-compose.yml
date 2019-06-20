@@ -1,0 +1,97 @@
+version: '3'
+
+services:
+
+    nginx:
+        container_name: nginx
+        network_mode: host
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        volumes:
+            - .:/code
+            - /tmp
+        ports:
+            - 443:443
+            - 80:80
+
+
+    app:
+        container_name: app
+        network_mode: host
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/app/Dockerfile
+        volumes:
+            - .:/code
+
+            # Interesting folders
+            - /tmp
+            - /efs/:/efs/:ro
+            - /fh/scratch:/fh/scratch:ro
+
+            # For access by each user
+            - /home:/home
+            # Authentication
+            # passwd/group should be mounted into any container
+            # needing to share the user/group IDs
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/group:/etc/group:ro
+            # Shadow should only be mounted into containers
+            # needing to authenticate against PAM
+            - /etc/shadow:/etc/shadow:ro
+        ports:
+            - 5000:5000
+            - 5001:5001
+
+
+    celery:
+        container_name: celery
+        network_mode: host
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/celery/Dockerfile
+        volumes:
+            - .:/code
+            - /efs/:/efs/:ro
+            - /fh/scratch:/fh/scratch:ro
+        hostname: 0.0.0.0
+
+
+    rabbitmq:
+        container_name: rabbitmq
+        network_mode: host
+        restart: always
+        image: "rabbitmq:3-management"
+        ports:
+            - 5672:5672
+            - 15672:15672
+        expose:
+            - 5672
+        hostname: 0.0.0.0
+
+
+    test:
+        container_name: test
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./docker/test/Dockerfile
+        volumes:
+            - .:/code
+            - /tmp
+            # For access by each user
+            - /home:/home
+            # Authentication
+            # passwd/group should be mounted into any container
+            # needing to share the user/group IDs
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/group:/etc/group:ro
+            # Shadow should only be mounted into containers
+            # needing to authenticate against PAM
+            - /etc/shadow:/etc/shadow:ro
+        ports:
+            - 8080:8080

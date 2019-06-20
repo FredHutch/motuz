@@ -121,6 +121,10 @@ class RcloneConnection:
             logging.error("Start character chr({}) is not as expected chr({}) ".format(
                 ord(start), ord(first_start_sequence))
             )
+            txt = start
+            for _ in range(1000):
+                txt += process.stdout.read(1).decode('utf-8')
+            logging.info(txt)
             stop_event.set()
 
         while not stop_event.is_set():

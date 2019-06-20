@@ -110,3 +110,25 @@ Additional temporary folders - ignore and do not commit
 | `__pycache__/` | Python Bytecode |
 | `node_modules/` | JavaScript dependencies |
 | `venv/` | Python dependencies |
+
+
+
+## Setting up production
+
+Based on https://medium.com/@cjus/installing-docker-ce-on-an-aws-ec2-instance-running-ubuntu-16-04-f42fe7e80869
+
+
+Inside a fresh EC2 instance
+
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install -y docker-ce
+sudo apt-get install -y docker-compose
+
+sudo useradd -d /home/aicioara -m aicioara
+echo 'aicioara:ThisIsNotSecure' | sudo chpasswd
+
+
+```
