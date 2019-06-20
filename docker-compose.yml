@@ -5,6 +5,7 @@ services:
     nginx:
         container_name: nginx
         network_mode: host
+        restart: always
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
@@ -19,6 +20,7 @@ services:
     app:
         container_name: app
         network_mode: host
+        restart: always
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
@@ -48,6 +50,7 @@ services:
     celery:
         container_name: celery
         network_mode: host
+        restart: always
         build:
             context: .
             dockerfile: ./docker/celery/Dockerfile
@@ -61,6 +64,7 @@ services:
     rabbitmq:
         container_name: rabbitmq
         network_mode: host
+        restart: always
         image: "rabbitmq:3-management"
         ports:
             - 5672:5672
@@ -72,6 +76,7 @@ services:
 
     test:
         container_name: test
+        network_mode: host
         build:
             context: .
             dockerfile: ./docker/test/Dockerfile
@@ -89,4 +94,4 @@ services:
             # needing to authenticate against PAM
             - /etc/shadow:/etc/shadow:ro
         ports:
-            - "8080:8080"
+            - 8080:8080
