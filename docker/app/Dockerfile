@@ -3,7 +3,10 @@
 
 FROM python:3.7.3
 
-RUN apt-get install gcc
+RUN apt-get update -y
+RUN apt-get install -y build-essential curl unzip man-db gcc
+RUN curl https://rclone.org/install.sh | bash
+
 RUN pip install uwsgi
 
 ENV PYTHONUNBUFFERED 1
