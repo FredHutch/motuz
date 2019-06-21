@@ -40,18 +40,13 @@ def copy_job(self, task_id=None):
     )
 
     while not connection.copy_finished(task_id):
-        status = connection.copy_status(task_id)
-        logging.info(status)
-        progress_match = re.search(r'(\d*)%', status)
-        if progress_match is not None:
-            copy_job.progress_current = int(progress_match.group(1))
-            db.session.commit()
+        progress_current = connection.copy_percent(task_id)
+        copy_job.progress_current = progress_current
+        db.session.commit()
         time.sleep(1)
 
     copy_job.progress_current = 100
     copy_job.progress_state = 'FINISHED'
     db.session.commit()
 
-
     return {}
-
