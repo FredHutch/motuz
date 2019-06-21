@@ -55,10 +55,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/celery/Dockerfile
-        volumes:
-            - .:/code
-            - /efs/:/efs/:ro
-            - /fh/scratch:/fh/scratch:ro
+        volumes_from:
+          - app
         hostname: 0.0.0.0
 
 
