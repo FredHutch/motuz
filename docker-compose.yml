@@ -55,8 +55,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/celery/Dockerfile
-        volumes_from:
-          - app
         hostname: 0.0.0.0
 
 
