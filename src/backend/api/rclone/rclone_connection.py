@@ -1,6 +1,10 @@
 import logging
 import subprocess
+import functools
 import threading
+import re
+import time
+from collections import defaultdict
 
 
 class RcloneConnection:
@@ -10,7 +14,9 @@ class RcloneConnection:
         self.access_key_id = access_key_id
         self.secret_access_key = secret_access_key
 
-        self._job_status = {} # Mapping from id to status string
+        self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
+        self._job_text = defaultdict(str)
+        self._job_percent = defaultdict(int)
         self._stop_events = {} # Mapping from id to threading.Event
         self._latest_job_id = 0
 
@@ -41,7 +47,7 @@ class RcloneConnection:
             'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
             'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
             'rclone copy {src} current:{dst} '
-            '--stats-one-line --progress '
+            '--progress '
             '--stats 2s '
         ).format(
             type=self.type,
@@ -60,18 +66,18 @@ class RcloneConnection:
             if self._job_id_exists(job_id):
                 raise ValueError('rclone copy job with ID {} already exists'.fromat(job_id))
 
-        self._job_status[job_id] = ''
         self._stop_events[job_id] = threading.Event()
         self._execute_interactive(command, job_id)
         return job_id
 
 
-    def copy_status(self, job_id):
-        return self._job_status[job_id]
+    def copy_text(self, job_id):
+        return self._job_text[job_id]
+
+    def copy_percent(self, job_id):
+        return self._job_percent[job_id]
 
     def copy_stop(self, job_id):
-        from pprint import pprint as pp
-        pp(self._stop_events)
         self._stop_events[job_id].set()
 
     def copy_finished(self, job_id):
@@ -113,41 +119,77 @@ class RcloneConnection:
             shell=True,
         )
 
-        first_start_sequence = chr(27)
-        start_sequence = ''.join(chr(d) for d in (91, 50, 75, 27, 91, 48, 71))
+        reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
+        reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
 
-        start = process.stdout.read(1).decode('utf-8')
-        if not start == first_start_sequence:
-            logging.error("Start character chr({}) is not as expected chr({}) ".format(
-                ord(start), ord(first_start_sequence))
-            )
-            txt = start
-            for _ in range(1000):
-                txt += process.stdout.read(1).decode('utf-8')
-            logging.info(txt)
-            stop_event.set()
-
-        logging.info("starting loop")
         while not stop_event.is_set() and process.poll() is None:
-            logging.info("inside loop")
-            start = process.stdout.read(len(start_sequence)).decode('utf-8')
-            if not start == start_sequence:
-                logging.error("Start sequence chr({}) is not as expected chr({}) ".format(
-                    map(ord, start), map(ord, first_start_sequence)
-                ))
+            line = process.stdout.readline().decode('utf-8').strip()
+
+            if len(line) == 0:
                 stop_event.set()
                 continue
 
-            line = ''
-            while True:
-                cc = process.stdout.read(1).decode("utf-8")
-                if cc == first_start_sequence:
-                    break
-                line += cc
-            self._job_status[job_id] = line
+            q1 = line.find(reset_sequence1)
+            if q1 != -1:
+                line = line[q1 + len(reset_sequence1):]
 
-        logging.info("outside loop")
-        stop_event.set()
+            q2 = line.find(reset_sequence2)
+            if q2 != -1:
+                line = line[q2 + len(reset_sequence1):]
+
+            line = line.replace(reset_sequence1, '')
+            line = line.replace(reset_sequence2, '')
+
+            match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
+            if match is None:
+                print("No match in {}".format(line))
+                time.sleep(0.5)
+                continue
+
+            key, value = match.groups()
+            self._job_status[job_id][key] = value
+            self.__process_status(job_id)
+
+        self._job_percent[job_id] = 100
+        logging.info("Finished Copy")
+        stop_event.set() # Just in case
+
+
+    def __process_status(self, job_id):
+        self.__process_text(job_id)
+        self.__process_percent(job_id)
+
+
+    def __process_text(self, job_id):
+        headers = [
+            'GTransferred',
+            'Errors',
+            'Checks',
+            'Transferred',
+            'Elapsed time',
+            'Transferring',
+        ]
+
+        status = self._job_status[job_id]
+
+        text = '\n'.join(
+            '{:>12}: {}'.format(header, status[header])
+            for header in headers
+        )
+        self._job_text[job_id] = text
+
+
+    def __process_percent(self, job_id):
+        status = self._job_status[job_id]
+
+        match = re.search(r'(\d+)\%', status['GTransferred'])
+        if match is None:
+            self._job_percent[job_id] = -1
+        else:
+            self._job_percent[job_id] = match[1]
+
+
+
 
 
 
@@ -155,22 +197,23 @@ def main():
     import time
     import os
 
-    conection = RcloneConnection(
+    connection = RcloneConnection(
         type='s3',
         region=os.environ['MOTUZ_REGION'],
         access_key_id=os.environ['MOTUZ_ACCESS_KEY_ID'],
         secret_access_key=os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     )
 
-    # result = conection.ls('/fh-ctr-mofuz-test/hello/world')
-    job_id = conection.copy('/tmp/motuz/blob2.bin', '/fh-ctr-mofuz-test/hello/world')
-    print("Now sleeping")
+    # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
+    job_id = 123
+    import random
+    connection.copy('/tmp/motuz/mb_blob.bin', '/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)), job_id=job_id)
 
-    time.sleep(10)
-    print(connection.copy_status(job_id))
-    connection.copy_stop(job_id)
 
-    time.sleep(1)
+    while not connection.copy_finished(job_id):
+        print(connection.copy_percent(job_id))
+        time.sleep(0.1)
+
 
 
 if __name__ == '__main__':
