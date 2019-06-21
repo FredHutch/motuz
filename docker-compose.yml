@@ -12,6 +12,7 @@ services:
         volumes:
             - .:/code
             - /tmp
+            - /root/certs:/certs/:ro
         ports:
             - 443:443
             - 80:80
