@@ -66,7 +66,7 @@ services:
         container_name: rabbitmq
         network_mode: host
         restart: always
-        image: "rabbitmq:3-management"
+        image: rabbitmq:3-management
         ports:
             - 5672:5672
             - 15672:15672
@@ -74,6 +74,18 @@ services:
             - 5672
         hostname: 0.0.0.0
 
+    database:
+        container_name: database
+        network_mode: host
+        restart: always
+        image: postgres:11.3
+        ports:
+            - 5432:5432
+        expose:
+            - 5432
+        hostname: 0.0.0.0
+        volumes:
+            - /docker/volumes/postgres:/var/lib/postgresql/data
 
     test:
         container_name: test
