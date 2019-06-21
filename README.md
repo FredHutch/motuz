@@ -145,3 +145,16 @@ for size in {107374,1073741,10737418,107374182,1073741824}; do
 done
 
 ```
+
+Initializing the database
+
+While the database container is running
+
+```
+docker-compose run --entrypoint='bash' database
+root@0:/# psql -h 0.0.0.0 -U postgres -d postgres
+
+create database motuz;
+create user motuz_user with password 'motuz_password';
+grant all privileges on database motuz to motuz_user;
+```
