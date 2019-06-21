@@ -11,9 +11,9 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{DB_USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'.format(
-        DB_USER='postgres',
-        PASSWORD='docker',
+    SQLALCHEMY_DATABASE_URI = 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'.format(
+        USER='motuz_user',
+        PASSWORD='motuz_password',
         HOST='0.0.0.0',
         PORT='5432',
         DATABASE='motuz',
