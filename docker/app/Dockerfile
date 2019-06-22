@@ -3,10 +3,13 @@
 
 FROM python:3.7.3
 
-RUN apt-get update -y
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -y gcc 
-RUN apt-get install -y --ignore-missing --fix-missing krb5-user libpam-krb5 vim curl wget python3
+RUN apt-get update -y
+RUN apt-get -y upgrade
+
+RUN apt-get install -y gcc
+RUN apt-get install -y --ignore-missing --fix-missing krb5-user libpam-krb5 vim curl wget
 
 RUN pip install uwsgi
 
