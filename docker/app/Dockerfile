@@ -3,7 +3,11 @@
 
 FROM python:3.7.3
 
-RUN apt-get install gcc
+RUN apt-get update -y
+
+RUN apt-get install -y gcc 
+RUN apt-get install -y --ignore-missing --fix-missing krb5-user libpam-krb5 vim curl wget python3
+
 RUN pip install uwsgi
 
 ENV PYTHONUNBUFFERED 1
