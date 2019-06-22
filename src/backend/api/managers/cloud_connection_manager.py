@@ -12,7 +12,9 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 
 @token_required
 def list():
-    cloud_connections = CloudConnection.query.all()
+    owner = get_logged_in_user(request)
+
+    cloud_connections = CloudConnection.query.filter_by(owner=owner).all()
     return cloud_connections
 
 
@@ -34,6 +36,11 @@ def retrieve(id):
     cloud_connection = CloudConnection.query.get(id)
 
     if cloud_connection is None:
+        raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(id))
+
+    owner = get_logged_in_user(request)
+
+    if cloud_connection.owner != owner:
         raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(id))
 
     return cloud_connection
