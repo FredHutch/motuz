@@ -14,15 +14,15 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 
 @token_required
 def list():
-    copy_jobs = CopyJob.query.all()
+    owner = get_logged_in_user(request)[0]['data']['username']
+
+    copy_jobs = CopyJob.query.filter_by(owner=owner).all()
     return copy_jobs
 
 
 @token_required
 def create(data):
     owner = get_logged_in_user(request)[0]['data']['username']
-
-    print(data, owner)
 
     copy_job = CopyJob(**{
         'description': data.get('description', None),
@@ -54,15 +54,17 @@ def retrieve(id):
     if copy_job is None:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
+    owner = get_logged_in_user(request)[0]['data']['username']
+    if copy_job.owner != owner:
+        raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
+
+
     return copy_job
 
 
 @token_required
 def stop(id):
-    copy_job = CopyJob.query.get(id)
-
-    if copy_job is None:
-        raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
+    copy_job = retrieve(id)
 
     task = tasks.copy_job.AsyncResult(str(copy_job.id))
     task.revoke(terminate=True)
