@@ -61,7 +61,7 @@ class CopyJobDialog extends React.Component {
 
                                 <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
-                                <div className="row">
+                                <div className="row form-group">
                                     <div className="col-4 text-right">
                                         <b>Owner</b>
                                     </div>
@@ -69,7 +69,7 @@ class CopyJobDialog extends React.Component {
                                     <div className="col-1"></div>
                                 </div>
 
-                                <div className="row">
+                                <div className="row form-group">
                                     <div className="col-4 text-right">
                                         <b>Description</b>
                                     </div>

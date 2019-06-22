@@ -13,10 +13,10 @@ const initialState = {
     displayCopyJobDialog: false,
     copyJobDialogData: {
         source_cloud: SOURCE_CLOUD,
-        source_resource: '/Users/aicioara/tmp',
+        source_resource: 'ERROR',
         destination_cloud: DESTINATION_CLOUD,
-        destination_path: '/tmp',
-        owner: 'aicioara',
+        destination_path: 'ERROR',
+        owner: 'ERROR',
     },
 
     displayNewCloudConnectionDialog: false,

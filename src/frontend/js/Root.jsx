@@ -39,10 +39,10 @@ Root.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import * as reducers from 'reducers/reducers.jsx';
+import { isAuthenticated } from 'reducers/authReducer.jsx';
 
 const mapStateToProps = state => ({
-    isAuthenticated: reducers.isAuthenticated(state),
+    isAuthenticated: isAuthenticated(state.auth),
 });
 
 const mapDispatchToProps = dispatch => ({

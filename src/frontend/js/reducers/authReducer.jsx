@@ -97,12 +97,18 @@ export function errors(state) {
     return  state.errors;
 }
 
-export function userId(state) {
-    if (state.refresh) {
-        return state.refresh.user_id;
+export function getCurrentUser(state) {
+    if (!state) {
+        return 'ERROR STATE';
     }
-    if (state.access) {
-        return state.access.user_id;
+
+    if (!state.access) {
+        return 'ERROR ACCESS'
     }
-    return null;
+
+    if (!state.access.sub) {
+        return 'ERROR SUB'
+    }
+
+    return state.access.sub
 }
