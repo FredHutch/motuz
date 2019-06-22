@@ -3,6 +3,7 @@ import datetime
 
 from ..application import db
 from ..models import User
+from ..managers.auth_manager import encode_auth_token
 
 
 def save_new_user(data):
@@ -42,7 +43,7 @@ def save_changes(data):
 def generate_token(user):
     try:
         # generate the auth token
-        auth_token = user.encode_auth_token(user.id)
+        auth_token = encode_auth_token(user.id)
         response_object = {
             'status': 'success',
             'message': 'Successfully registered.',

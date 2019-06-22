@@ -1,9 +1,13 @@
+import datetime
 from functools import wraps
 import pwd
 import json
 
 from flask import request
+from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
 
+from ..config import key
 from ..models import User, InvalidToken
 from ..application import db
 from ..exceptions import *
@@ -14,9 +18,12 @@ def login_user(data):
     username = data['username']
     password = data['password']
 
+
     # TODO: Do not commit this
     if username == 'aicioara2':
-        auth_token = User.encode_auth_token(username)
+        print("her")
+        auth_token = encode_auth_token(username)
+        print(auth_token)
         return {
             'status': 'success',
             'message': 'Successfully logged in.',
@@ -36,13 +43,13 @@ def login_user(data):
     # TODO: Remove
     # Backdoor for local testing. User aicioara should not exist in AWS.
     if username == 'aicioara' and password == 'RemoveThisASAP':
-        auth_token = User.encode_auth_token(username)
+        auth_token = encode_auth_token(username)
 
     user_authentication = pam()
     user_authentication.authenticate(username, password)
 
     if user_authentication.code == 0:
-        auth_token = User.encode_auth_token(username)
+        auth_token = encode_auth_token(username)
 
 
     if auth_token:
@@ -63,7 +70,7 @@ def logout_user(data):
     else:
         auth_token = ''
     if auth_token:
-        resp = User.decode_auth_token(auth_token)
+        resp = decode_auth_token(auth_token)
         if not isinstance(resp, str):
             return invalidate_token(token=auth_token)
         else:
@@ -98,7 +105,7 @@ def _get_logged_in_user(new_request):
     if not auth_token:
         raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
 
-    resp = User.decode_auth_token(auth_token)
+    resp = decode_auth_token(auth_token)
     if isinstance(resp, str):
         raise HTTP_401_UNAUTHORIZED(resp)
 
@@ -167,3 +174,46 @@ def admin_token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+
+
+def encode_auth_token(user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            key,
+            algorithm='HS256'
+        ).decode('utf-8')
+    except Exception as e:
+        return e
+
+
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: dict|string
+    """
+    try:
+        payload = jwt.decode(auth_token, key)
+        is_blacklisted_token = InvalidToken.check_blacklist(auth_token)
+        if is_blacklisted_token:
+            return 'Token blacklisted. Please log in again.'
+        else:
+            return {'username': payload['sub']}
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
+    except Exception:
+        return 'Unknown exception.'
