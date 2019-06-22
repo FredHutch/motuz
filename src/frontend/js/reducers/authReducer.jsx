@@ -45,7 +45,6 @@ export default (state=initialState, action) => {
     case auth.LOGIN_FAILURE:
     case auth.TOKEN_FAILURE:
     {
-        console.log(action.payload.response)
         return {
             access: undefined,
             refresh: undefined,
