@@ -110,7 +110,7 @@ class CopyJobDialog extends React.Component {
         const formData = serializeForm(event.target)
 
         const data = {
-            "description": formData['description'],
+            "description": formData['description'] || '',
             "src_cloud": propsData['source_cloud'].name,
             "src_resource": propsData['source_resource'],
             "dst_cloud": propsData['destination_cloud'].name,
