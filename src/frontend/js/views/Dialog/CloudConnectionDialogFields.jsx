@@ -1,8 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap'
 
-import serializeForm from 'utils/serializeForm.jsx';
-
 const CONNECTION_TYPES = [
     {
         label: 'Amazon Simple Storage Service (s3)',

@@ -15,15 +15,18 @@ export const fileFocusIndex = (side, index) => ({
 
 export const hostChange = (side=null, host) => {
     return async (dispatch, getState) => {
-        dispatch({
+        await dispatch({
             type: HOST_CHANGE,
             payload: {side, host},
         })
 
+        const state = getState();
+        const pane = getCurrentPane(state.pane, side)
+
         // TODO: Change this
         return await dispatch(api.listFiles(side, {
             type: host.type,
-            path: '/',
+            path: pane.path,
             access_key_id: host.access_key_id,
             access_key_secret: host.access_key_secret,
             region: host.region,

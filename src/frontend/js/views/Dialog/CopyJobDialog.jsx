@@ -1,5 +1,8 @@
 import React from 'react';
+
 import { Modal, Button } from 'react-bootstrap'
+
+import serializeForm from 'utils/serializeForm.jsx'
 
 class CopyJobDialog extends React.Component {
     constructor(props) {
@@ -16,64 +19,81 @@ class CopyJobDialog extends React.Component {
                     size="lg"
                     onHide={() => this.handleClose()}
                 >
-                    <Modal.Header closeButton>
-                        <Modal.Title>New Copy Job</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="container">
-                            <h5 className="text-primary mb-2">Source</h5>
+                    <form action="#" onSubmit={(event) => this.handleSubmit(event)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>New Copy Job</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="container">
+                                <h5 className="text-primary mb-2">Source</h5>
 
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Cloud</b>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Cloud</b>
+                                    </div>
+                                    <div className="col-7">{data['source_cloud'].name}</div>
+                                    <div className="col-1"></div>
                                 </div>
-                                <div className="col-7">{data['source_cloud'].name}</div>
-                                <div className="col-1"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Resource</b>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Resource</b>
+                                    </div>
+                                    <div className="col-7">{data['source_resource']}</div>
+                                    <div className="col-1"></div>
                                 </div>
-                                <div className="col-7">{data['source_resource']}</div>
-                                <div className="col-1"></div>
-                            </div>
 
-                            <h5 className="text-primary mt-5 mb-2">Destination</h5>
+                                <h5 className="text-primary mt-5 mb-2">Destination</h5>
 
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Cloud</b>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Cloud</b>
+                                    </div>
+                                    <div className="col-7">{data['destination_cloud'].name}</div>
+                                    <div className="col-1"></div>
                                 </div>
-                                <div className="col-7">{data['destination_cloud'].name}</div>
-                                <div className="col-1"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Path</b>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Path</b>
+                                    </div>
+                                    <div className="col-7">{data['destination_path']}</div>
+                                    <div className="col-1"></div>
                                 </div>
-                                <div className="col-7">{data['destination_path']}</div>
-                                <div className="col-1"></div>
-                            </div>
 
-                            <h5 className='text-primary mt-5 mb-2'>Permissions</h5>
+                                <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
-                            <div className="row">
-                                <div className="col-4 text-right">
-                                    <b>Owner</b>
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Owner</b>
+                                    </div>
+                                    <div className="col-7">{data['owner']}</div>
+                                    <div className="col-1"></div>
                                 </div>
-                                <div className="col-7">{data['owner']}</div>
-                                <div className="col-1"></div>
+
+                                <div className="row">
+                                    <div className="col-4 text-right">
+                                        <b>Description</b>
+                                    </div>
+                                    <div className="col-7">
+                                        <input
+                                            name="description"
+                                            type="text"
+                                            className="form-control"
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <div className="col-1"></div>
+                                </div>
                             </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.handleClose()}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={() => this.handleSubmit()}>
-                            Submit Copy Job
-                        </Button>
-                    </Modal.Footer>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => this.handleClose()}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" type='submit'>
+                                Submit Copy Job
+                            </Button>
+                        </Modal.Footer>
+                    </form>
                 </Modal>
             </div>
         );
@@ -83,15 +103,18 @@ class CopyJobDialog extends React.Component {
         this.props.onClose();
     }
 
-    handleSubmit() {
-        const formData = this.props.data;
+    handleSubmit(event) {
+        event.preventDefault();
+
+        const propsData = this.props.data;
+        const formData = serializeForm(event.target)
 
         const data = {
-            "description": `Task ${Math.floor(Math.random() * 100)}`,
-            "src_cloud": formData['source_cloud'].name,
-            "src_resource": formData['source_resource'],
-            "dst_cloud": formData['destination_cloud'].name,
-            "dst_path": formData['destination_path'],
+            "description": formData['description'],
+            "src_cloud": propsData['source_cloud'].name,
+            "src_resource": propsData['source_resource'],
+            "dst_cloud": propsData['destination_cloud'].name,
+            "dst_path": propsData['destination_path'],
             "owner": "owner"
         }
         this.props.onSubmit(data);

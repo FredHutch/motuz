@@ -43,15 +43,18 @@ export default (state=initialState, action) => {
         };
     }
     case auth.LOGIN_FAILURE:
-    case auth.TOKEN_FAILURE: {
+    case auth.TOKEN_FAILURE:
+    {
         return {
             access: undefined,
             refresh: undefined,
-            errors: action.payload.response,
+            errors: action.payload.response || action.payload,
             loading: false,
         };
     }
-    case auth.LOGOUT_SUCCESS: {
+    case auth.LOGOUT_SUCCESS:
+    case auth.LOGOUT_FAILURE: // Delete tokens on failure as well
+    {
         return initialState;
     }
     default:
