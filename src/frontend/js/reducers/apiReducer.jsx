@@ -14,9 +14,10 @@ export default (state=initialState, action) => {
     }
     case api.LIST_COPY_JOBS_SUCCESS: {
         const jobs = action.payload;
+        jobs.sort((a, b) => b.id - a.id)
         return {
             ...state,
-            jobs: reverseArray(jobs),
+            jobs,
         }
     }
     case api.LIST_COPY_JOBS_FAILURE: {
