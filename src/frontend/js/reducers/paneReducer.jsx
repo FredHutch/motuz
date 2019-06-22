@@ -92,13 +92,18 @@ export default (state=initialState, action) => {
     case pane.HOST_CHANGE: {
         const {side, host} = action.payload;
 
+        let path = '/'
+        if (host.type === 's3' && host.bucket) {
+            path = `/${host.bucket}`;
+        }
+
         return {
             ...state,
             panes: {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
                     fileFocusIndex: 0,
-                    path: '/',
+                    path,
                     host,
                 }, side)
             },
