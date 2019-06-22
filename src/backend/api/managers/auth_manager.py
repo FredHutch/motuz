@@ -81,30 +81,35 @@ def logout_user(data):
 
 
 def get_logged_in_user(new_request):
-        authorization = new_request.headers.get('Authorization')
-        if authorization is None:
-            auth_token = None
-        else:
-            parts = authorization.split(' ')
-            if len(parts) != 2:
-                raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
-            _, auth_token = parts
+    response, status = _get_logged_in_user(request)
+    return response['data']['username']
 
-        if not auth_token:
-            raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
 
-        resp = User.decode_auth_token(auth_token)
-        if isinstance(resp, str):
-            raise HTTP_401_UNAUTHORIZED(resp)
+def _get_logged_in_user(new_request):
+    authorization = new_request.headers.get('Authorization')
+    if authorization is None:
+        auth_token = None
+    else:
+        parts = authorization.split(' ')
+        if len(parts) != 2:
+            raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
+        _, auth_token = parts
 
-        username = resp['username']
-        response_object = {
-            'status': 'success',
-            'data': {
-                'username': username,
-            }
+    if not auth_token:
+        raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
+
+    resp = User.decode_auth_token(auth_token)
+    if isinstance(resp, str):
+        raise HTTP_401_UNAUTHORIZED(resp)
+
+    username = resp['username']
+    response_object = {
+        'status': 'success',
+        'data': {
+            'username': username,
         }
-        return response_object, 200
+    }
+    return response_object, 200
 
 
 def invalidate_token(token):
@@ -129,8 +134,7 @@ def invalidate_token(token):
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-
-        data, status = get_logged_in_user(request)
+        data, status = _get_logged_in_user(request)
         token = data.get('data')
 
         if not token:
@@ -146,7 +150,7 @@ def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
 
-        data, status = get_logged_in_user(request)
+        data, status = _get_logged_in_user(request)
         token = data.get('data')
 
         if not token:

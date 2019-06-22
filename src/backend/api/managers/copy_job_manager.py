@@ -14,7 +14,7 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 
 @token_required
 def list():
-    owner = get_logged_in_user(request)[0]['data']['username']
+    owner = get_logged_in_user(request)
 
     copy_jobs = CopyJob.query.filter_by(owner=owner).all()
     return copy_jobs
@@ -22,7 +22,7 @@ def list():
 
 @token_required
 def create(data):
-    owner = get_logged_in_user(request)[0]['data']['username']
+    owner = get_logged_in_user(request)[0]
 
     copy_job = CopyJob(**{
         'description': data.get('description', None),
@@ -54,7 +54,8 @@ def retrieve(id):
     if copy_job is None:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
-    owner = get_logged_in_user(request)[0]['data']['username']
+    owner = get_logged_in_user(request)
+
     if copy_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 

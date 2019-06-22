@@ -2,10 +2,12 @@ import json
 import uuid
 import datetime
 
+from flask import request
+
 from ..application import db
 from ..models import CloudConnection
 from ..exceptions import *
-from ..managers.auth_manager import token_required
+from ..managers.auth_manager import token_required, get_logged_in_user
 
 
 @token_required
@@ -16,7 +18,10 @@ def list():
 
 @token_required
 def create(data):
+    owner = get_logged_in_user(request)
+
     cloud_connection = CloudConnection(**data)
+    cloud_connection.owner = owner
 
     db.session.add(cloud_connection)
     db.session.commit()
