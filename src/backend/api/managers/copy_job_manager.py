@@ -1,5 +1,5 @@
 import json
-import uuid
+import logging
 import datetime
 
 from flask import request
@@ -22,7 +22,7 @@ def list():
 
 @token_required
 def create(data):
-    owner = get_logged_in_user(request)[0]
+    owner = get_logged_in_user(request)
 
     copy_job = CopyJob(**{
         'description': data.get('description', None),
@@ -59,6 +59,10 @@ def retrieve(id):
     if copy_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
+    task = tasks.copy_job.AsyncResult(str(copy_job.id))
+
+    if task.info is not None:
+        copy_job.progress_text = task.info.get('text', '')
 
     return copy_job
 
