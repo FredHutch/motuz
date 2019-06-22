@@ -12,7 +12,15 @@ class ToolButtons extends React.Component {
         return (
             <React.Fragment>
                 <button
-                    className="btn btn-outline-primary my-2 my-sm-0"
+                    className="btn btn-outline-primary my-2 ml-2 my-sm-0"
+                    onClick={event => this.props.onToggleShowHiddenFiles()}
+                    alt='Create Folder'
+                    style={{display: 'none'}}
+                >
+                    <Icon name='file-submodule'/>
+                </button>
+                <button
+                    className="btn btn-outline-primary my-2 ml-2 my-sm-0"
                     onClick={event => this.props.onToggleShowHiddenFiles()}
                     alt='Press to toggle hidden files'
                 >
