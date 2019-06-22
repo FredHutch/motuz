@@ -51,9 +51,6 @@ def create_app(config_name='dev'):
         license_url='https://github.com/FredHutch/motuz/blob/master/LICENSE',
     )
 
-    from .views.user_views import api as user_ns
-    api.add_namespace(user_ns)
-
     from .views.auth_views import api as auth_ns
     api.add_namespace(auth_ns)
 

@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
 from ..config import key
-from ..models import User, InvalidToken
+from ..models import InvalidToken
 from ..application import db
 from ..exceptions import *
 from ..utils.pam import pam
