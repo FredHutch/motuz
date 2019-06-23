@@ -20,6 +20,7 @@ class CopyJobEditDialog extends React.Component {
             <div className='dialog-edit-copy-job'>
                 <Modal
                     show={true}
+                    size='lg'
                     onHide={() => this.handleClose()}
                 >
                     <Modal.Header closeButton>
@@ -38,15 +39,25 @@ class CopyJobEditDialog extends React.Component {
 
                             <h5 className="text-primary mb-2">Details</h5>
 
-                            <div className="form-group">
+                            <div className="row form-group">
                                 <div className="col-4 text-right">
                                     <b>Source</b>
                                 </div>
+                                <div className="col-7 text-left">
+                                    <span><b>{data.src_cloud}</b></span>
+                                    <span>:</span>
+                                    <span>{data.src_resource}</span>
+                                </div>
                                 <div className="col-1"></div>
                             </div>
-                            <div className="form-group">
+                            <div className="row form-group">
                                 <div className="col-4 text-right">
                                     <b>Destination</b>
+                                </div>
+                                <div className="col-7 text-left">
+                                    <span><b>{data.dst_cloud}</b></span>
+                                    <span>:</span>
+                                    <span>{data.dst_path}</span>
                                 </div>
                                 <div className="col-1"></div>
                             </div>

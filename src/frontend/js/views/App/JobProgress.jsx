@@ -121,12 +121,7 @@ class JobProgress extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        console.log(selectedJob)
         this.props.onShowDetails(selectedJob);
-    }
-
-    _onDeselectJob() {
-        this.setState({showPopover: false})
     }
 
     _clearTimeout() {
