@@ -55,8 +55,6 @@ def copy_job(self, task_id=None):
     copy_job.progress_state = 'FINISHED'
     db.session.commit()
 
-    print(connection.copy_text(task_id))
-
     return {
         'text': connection.copy_text(task_id),
     }
