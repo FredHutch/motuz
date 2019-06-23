@@ -41,6 +41,7 @@ class CopyJobSerializer:
         'owner': fields.String(required=True, example='owner'),
 
         'progress_state': fields.String(readonly=True, example='PENDING'),
+        'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),
         'progress_current': fields.Integer(readonly=True, example=45),
         'progress_total': fields.Integer(readonly=True, example=100),
         'progress_error': fields.String(readonly=True),

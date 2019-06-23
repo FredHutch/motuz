@@ -15,6 +15,8 @@ class ToolButtons extends React.Component {
                     className="btn btn-outline-primary my-2 ml-2 my-sm-0"
                     onClick={event => this.props.onToggleShowHiddenFiles()}
                     alt='Create Folder'
+                    title='Create Folder'
+                    aria-label='Create Folder'
                     style={{display: 'none'}}
                 >
                     <Icon name='file-submodule'/>
@@ -23,6 +25,8 @@ class ToolButtons extends React.Component {
                     className="btn btn-outline-primary my-2 ml-2 my-sm-0"
                     onClick={event => this.props.onToggleShowHiddenFiles()}
                     alt='Press to toggle hidden files'
+                    title='Press to toggle hidden files'
+                    aria-label='Press to toggle hidden files'
                 >
                     <Icon
                         name={this.props.showHiddenFiles ? 'eye' : 'eye-closed'}

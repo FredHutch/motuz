@@ -8,9 +8,13 @@ import {
     getCurrentFiles,
     setCurrentFiles,
 } from 'managers/paneManager.jsx'
+import { getCurrentUser } from 'reducers/authReducer.jsx';
 
 export const SHOW_COPY_JOB_DIALOG = '@@dialog/SHOW_COPY_JOB_DIALOG';
 export const HIDE_COPY_JOB_DIALOG = '@@dialog/HIDE_COPY_JOB_DIALOG';
+
+export const SHOW_COPY_JOB_EDIT_DIALOG = '@@dialog/SHOW_COPY_JOB_EDIT_DIALOG';
+export const HIDE_COPY_JOB_EDIT_DIALOG = '@@dialog/HIDE_COPY_JOB_EDIT_DIALOG';
 
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
@@ -21,24 +25,23 @@ export const HIDE_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_EDIT_CLOUD_CONNE
 
 export const showCopyJobDialog = () => {
     return async (dispatch, getState) => {
-        const state = getState().pane;
+        const state = getState();
 
-        const srcSide = getSide(state);
-        const srcPane = getCurrentPane(state, srcSide);
-        const srcFiles = getCurrentFiles(state, srcSide);
+        const srcSide = getSide(state.pane);
+        const srcPane = getCurrentPane(state.pane, srcSide);
+        const srcFiles = getCurrentFiles(state.pane, srcSide);
         const srcResourceName = srcFiles[srcPane.fileFocusIndex].name;
         const srcResources = upath.join(srcPane.path, srcResourceName)
 
         const dstSide = getOtherSide(srcSide);
-        const dstPane = getCurrentPane(state, dstSide)
-
+        const dstPane = getCurrentPane(state.pane, dstSide)
 
         const data = {
             source_cloud: srcPane.host,
             source_resource: srcResources,
             destination_cloud: dstPane.host,
             destination_path: dstPane.path,
-            owner: 'aicioara',
+            owner: getCurrentUser(state.auth),
         }
 
         dispatch({
@@ -53,6 +56,16 @@ export const hideCopyJobDialog = () => ({
 });
 
 
+export const showCopyJobEditDialog = (jobId) => ({
+    type: SHOW_COPY_JOB_EDIT_DIALOG,
+    payload: {data: {id: jobId}},
+});
+
+export const hideCopyJobEditDialog = () => ({
+    type: HIDE_COPY_JOB_EDIT_DIALOG,
+});
+
+
 export const showNewCloudConnectionDialog = () => ({
     type: SHOW_NEW_CLOUD_CONNECTION_DIALOG,
 });
@@ -60,6 +73,7 @@ export const showNewCloudConnectionDialog = () => ({
 export const hideNewCloudConnectionDialog = () => ({
     type: HIDE_NEW_CLOUD_CONNECTION_DIALOG,
 });
+
 
 export const showEditCloudConnectionDialog = (data) => ({
     type: SHOW_EDIT_CLOUD_CONNECTION_DIALOG,

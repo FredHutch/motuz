@@ -1,18 +1,6 @@
 from flask_restplus import Namespace, fields
 
 
-
-class UserSerializer:
-    api = Namespace('users', description='User related operations')
-    dto = api.model('user', {
-        'email': fields.String(required=True, description='User email address'),
-        'username': fields.String(required=True, description='User username'),
-        'password': fields.String(required=True, description='User password'),
-        'public_id': fields.String(description='User ID'),
-    })
-
-
-
 class AuthSerializer:
     api = Namespace('auth', description='Authentication related operations')
     dto = api.model('auth', {
