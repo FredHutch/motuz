@@ -6,6 +6,15 @@
     cursor: pointer;
 }
 
+/* General styling */
+
+pre {
+    background-color: rgba(27,31,35,.05);
+    padding: 10px;
+}
+
+
+
 /* Login */
 
 .form-wrapper {

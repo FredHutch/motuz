@@ -19,7 +19,23 @@ const initialState = {
         owner: 'ERROR',
     },
 
+    displayCopyJobEditDialog: true,
+    copyJobEditDialogData: {
+        "id": 11,
+        "description": "",
+        "src_cloud": "127.0.0.1",
+        "src_resource": "/tmp/foo.txt",
+        "dst_cloud": "Motuz",
+        "dst_path": "/fh-ctr-mofuz-test",
+        "owner": "aicioara2",
+        "progress_state": "FINISHED",
+        "progress_text": null,
+        "progress_current": 100,
+        "progress_total": 100,
+        "progress_error": null
+    },
     displayNewCloudConnectionDialog: false,
+
     displayEditCloudConnectionDialog: false,
     editCloudConnectionDialogData: {
     }
@@ -41,6 +57,22 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayCopyJobDialog: false,
+        }
+    }
+    case dialog.SHOW_COPY_JOB_EDIT_DIALOG: {
+        return {
+            ...state,
+            displayCopyJobEditDialog: true,
+            // copyJobDialogData: {
+            //     ...state.copyJobDialogData,
+            //     ...action.payload.data,
+            // }
+        }
+    }
+    case dialog.HIDE_COPY_JOB_EDIT_DIALOG: {
+        return {
+            ...state,
+            displayCopyJobEditDialog: false,
         }
     }
     case api.CREATE_COPY_JOB_SUCCESS: {

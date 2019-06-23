@@ -13,6 +13,9 @@ import { getCurrentUser } from 'reducers/authReducer.jsx';
 export const SHOW_COPY_JOB_DIALOG = '@@dialog/SHOW_COPY_JOB_DIALOG';
 export const HIDE_COPY_JOB_DIALOG = '@@dialog/HIDE_COPY_JOB_DIALOG';
 
+export const SHOW_COPY_JOB_EDIT_DIALOG = '@@dialog/SHOW_COPY_JOB_EDIT_DIALOG';
+export const HIDE_COPY_JOB_EDIT_DIALOG = '@@dialog/HIDE_COPY_JOB_EDIT_DIALOG';
+
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
 
@@ -53,6 +56,15 @@ export const hideCopyJobDialog = () => ({
 });
 
 
+export const showCopyJobEditDialog = () => ({
+    type: SHOW_COPY_JOB_EDIT_DIALOG,
+});
+
+export const hideCopyJobEditDialog = () => ({
+    type: HIDE_COPY_JOB_EDIT_DIALOG,
+});
+
+
 export const showNewCloudConnectionDialog = () => ({
     type: SHOW_NEW_CLOUD_CONNECTION_DIALOG,
 });
@@ -60,6 +72,7 @@ export const showNewCloudConnectionDialog = () => ({
 export const hideNewCloudConnectionDialog = () => ({
     type: HIDE_NEW_CLOUD_CONNECTION_DIALOG,
 });
+
 
 export const showEditCloudConnectionDialog = (data) => ({
     type: SHOW_EDIT_CLOUD_CONNECTION_DIALOG,
