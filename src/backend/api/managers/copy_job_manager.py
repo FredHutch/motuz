@@ -84,7 +84,8 @@ def stop(id):
     task.revoke(terminate=True)
 
     copy_job = CopyJob.query.get(id) # Avoid race conditions
-    copy_job.progress_state = 'STOPPED'
-    db.session.commit()
+    if copy_job.progress_state != 'FINISHED':
+        copy_job.progress_state = 'STOPPED'
+        db.session.commit()
 
     return copy_job
