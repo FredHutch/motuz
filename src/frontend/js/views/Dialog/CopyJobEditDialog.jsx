@@ -16,8 +16,6 @@ class CopyJobEditDialog extends React.Component {
         const progressText = data.progress_text;
         const progress = data.progress_current / data.progress_total * 100;
 
-        console.log(data)
-
         return (
             <div className='dialog-edit-copy-job'>
                 <Modal
