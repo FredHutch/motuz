@@ -17,6 +17,13 @@ def list():
     owner = get_logged_in_user(request)
 
     copy_jobs = CopyJob.query.filter_by(owner=owner).all()
+
+    for copy_job in copy_jobs:
+        task = tasks.copy_job.AsyncResult(str(copy_job.id))
+
+        if task.info is not None:
+            copy_job.progress_text = task.info.get('text', '')
+
     return copy_jobs
 
 

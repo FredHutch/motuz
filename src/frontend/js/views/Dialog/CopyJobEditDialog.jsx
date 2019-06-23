@@ -7,10 +7,11 @@ import serializeForm from 'utils/serializeForm.jsx'
 class CopyJobEditDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.intervalHandler = 0;
     }
 
     render() {
-        const { data } = this.props;
+        const data = this.props.jobs.find(d => d.id === this.props.data.id)
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressText = data.progress_text;
@@ -73,6 +74,9 @@ class CopyJobEditDialog extends React.Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button className='mr-auto' variant="danger" onClick={() => this.stopJob()}>
+                            Stop Job
+                        </Button>
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Close
                         </Button>
@@ -86,29 +90,38 @@ class CopyJobEditDialog extends React.Component {
         this.props.onClose();
     }
 
-    componentDidMount() {
+    stopJob() {
+        this.props.onStopJob(this.props.data.id)
+    }
 
+    componentDidMount() {
     }
 
     componentWillUnmount() {
-
     }
 }
 
 CopyJobEditDialog.defaultProps = {
     data: {},
+    jobs: [],
+    fetchData: (id) => {},
     onClose: () => {},
 }
 
 import {connect} from 'react-redux';
 import {hideCopyJobEditDialog} from 'actions/dialogActions.jsx'
+import {stopCopyJob} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
     data: state.dialog.copyJobEditDialogData,
+    jobs: state.api.jobs,
+    onClose: () => {},
+    onStopJob: id => {},
 });
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideCopyJobEditDialog()),
+    onStopJob: id => dispatch(stopCopyJob(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CopyJobEditDialog);

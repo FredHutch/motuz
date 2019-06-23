@@ -121,7 +121,7 @@ class JobProgress extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        this.props.onShowDetails(selectedJob);
+        this.props.onShowDetails(selectedJob.id);
     }
 
     _clearTimeout() {
@@ -137,7 +137,7 @@ JobProgress.defaultProps = {
     jobs: [],
     fetchData: () => {},
     onStopJob: id => {},
-    onShowDetails: (selectedJob) => {},
+    onShowDetails: (jobId) => {},
 }
 
 import {connect} from 'react-redux';
@@ -151,7 +151,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listCopyJobs()),
     onStopJob: id => dispatch(stopCopyJob(id)),
-    onShowDetails: (selectedJob) => dispatch(showCopyJobEditDialog(selectedJob)),
+    onShowDetails: (jobId) => dispatch(showCopyJobEditDialog(jobId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
