@@ -18,18 +18,14 @@ def login_user(data):
     username = data['username']
     password = data['password']
 
-
-    # TODO: Do not commit this
-    if username == 'aicioara2':
-        print("her")
-        auth_token = encode_auth_token(username)
-        print(auth_token)
-        return {
-            'status': 'success',
-            'message': 'Successfully logged in.',
-            'access': auth_token,
-            'refresh': auth_token, # TODO: Make this one different
-        }
+    # if username == 'aicioara2':
+    #     auth_token = encode_auth_token(username)
+    #     return {
+    #         'status': 'success',
+    #         'message': 'Successfully logged in.',
+    #         'access': auth_token,
+    #         'refresh': auth_token, # TODO: Make this one different
+    #     }
 
 
     # TODO: remove this to avoid side-channel attacks
@@ -39,11 +35,6 @@ def login_user(data):
         raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
 
     auth_token = None
-
-    # TODO: Remove
-    # Backdoor for local testing. User aicioara should not exist in AWS.
-    if username == 'aicioara' and password == 'RemoveThisASAP':
-        auth_token = encode_auth_token(username)
 
     user_authentication = pam()
     user_authentication.authenticate(username, password)
