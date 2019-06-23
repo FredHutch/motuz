@@ -2,13 +2,18 @@
 
 A web based infrastructure for large scale data movements between on-premise and cloud
 
+![Motuz main page ](docs/img/2019-06-23-13-14-28.png)
+
+
 ## Developer Installation
 
-1. Install system dependencies
+1. Install system dependencies (tested with Ubuntu 18.04)
 
 ```bash
-sudo apt-get install python3.5
-sudo apt-get install docker
+sudo apt-get install python3
+
+and then follow these instructions:
+    https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 # Work in progres... unsure what else is needed on a blank system. Might use docker soon
 ```
