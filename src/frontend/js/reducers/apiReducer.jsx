@@ -119,7 +119,10 @@ export default (state=initialState, action) => {
     }
 
     case api.UPDATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
         const cloudConnection = action.payload;
@@ -130,10 +133,14 @@ export default (state=initialState, action) => {
         return {
             ...state,
             clouds,
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.UPDATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
     }
 
     case api.DELETE_CLOUD_CONNECTION_REQUEST: {

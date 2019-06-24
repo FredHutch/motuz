@@ -27,7 +27,7 @@ class EditCloudConnectionDialog extends React.Component {
                         onSubmit={event => this.handleSubmit()}
                         ref={this.formRef}
                     >
-                        <CloudConnectionDialogFields data={this.props.data} />
+                        <CloudConnectionDialogFields data={this.props.data} errors={this.props.errors}/>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -70,6 +70,7 @@ class EditCloudConnectionDialog extends React.Component {
 
 EditCloudConnectionDialog.defaultProps = {
     data: {},
+    errors: {},
     onClose: () => {},
     onSubmit: (data) => {},
     onDelete: (data) => {},
@@ -81,6 +82,7 @@ import {updateCloudConnection, deleteCloudConnection} from 'actions/apiActions.j
 
 const mapStateToProps = state => ({
     data: state.dialog.editCloudConnectionDialogData,
+    errors: state.api.cloudErrors,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -22,7 +22,7 @@ const initialState = {
     displayCopyJobEditDialog: false,
     copyJobEditDialogData: {},
 
-    displayNewCloudConnectionDialog: true,
+    displayNewCloudConnectionDialog: false,
 
     displayEditCloudConnectionDialog: false,
     editCloudConnectionDialogData: {
