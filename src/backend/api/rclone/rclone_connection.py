@@ -6,6 +6,11 @@ import re
 import time
 from collections import defaultdict
 
+sanitize = functools.partial(
+    re.sub,
+    r'(RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY=)(\S*)',
+    r'\1**********'
+)
 
 class RcloneConnection:
     def __init__(self, type, region, access_key_id, secret_access_key):
@@ -58,7 +63,7 @@ class RcloneConnection:
             dst=dst,
         )
 
-        logging.info(command)
+        logging.info(sanitize(command))
 
         if job_id is None:
             job_id = self._get_next_job_id()
