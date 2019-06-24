@@ -12,6 +12,8 @@ class NewCloudConnectionDialog extends React.Component {
     }
 
     render() {
+        const {errors} = this.props
+
         return (
             <Modal
                 show={true}
@@ -27,7 +29,7 @@ class NewCloudConnectionDialog extends React.Component {
                         onSubmit={event => event.handleSubmit()}
                         ref={this.formRef}
                     >
-                        <CloudConnectionDialogFields data={{}} />
+                        <CloudConnectionDialogFields data={{}} errors={errors} />
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -61,6 +63,7 @@ class NewCloudConnectionDialog extends React.Component {
 NewCloudConnectionDialog.defaultProps = {
     onClose: () => {},
     onSubmit: (data) => {},
+    errors: {},
 }
 
 import {connect} from 'react-redux';
@@ -68,6 +71,7 @@ import {hideNewCloudConnectionDialog} from 'actions/dialogActions.jsx'
 import {createCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
+    errors: state.api.cloudErrors,
 });
 
 const mapDispatchToProps = dispatch => ({

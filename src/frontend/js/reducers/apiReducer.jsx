@@ -3,7 +3,9 @@ import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
     clouds: [],
+    cloudErrors: {},
     jobs: [],
+    jobErrors: {},
 };
 
 
@@ -92,7 +94,10 @@ export default (state=initialState, action) => {
     }
 
     case api.CREATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         const newCloudConnection = action.payload;
@@ -103,10 +108,14 @@ export default (state=initialState, action) => {
                 ...state.clouds,
                 newCloudConnection,
             ],
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.CREATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
     }
 
     case api.UPDATE_CLOUD_CONNECTION_REQUEST: {
