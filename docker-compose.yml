@@ -33,14 +33,12 @@ services:
 
             # For access by each user
             - /home:/home
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
-            # Shadow should only be mounted into containers
-            # needing to authenticate against PAM
-            - /etc/shadow:/etc/shadow:ro
+            # Authentication cannot mount individual files, because the mapping is
+            # based on the inode
+            # - /etc/passwd:/etc/passwd:ro
+            # - /etc/group:/etc/group:ro
+            # - /etc/shadow:/etc/shadow:ro
+            - /etc:/etc:ro
         ports:
             - 5000:5000
             - 5001:5001
