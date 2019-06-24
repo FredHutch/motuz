@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom"
 
 import ToolButtons from 'components/ToolButtons.jsx'
+import UserMenu from 'components/UserMenu.jsx'
 
 export default class Navbar extends React.PureComponent {
     render() {
@@ -16,10 +17,10 @@ export default class Navbar extends React.PureComponent {
                 <div className="navbar-collapse collapse" id="basic-navbar-nav">
                     <div className="mr-auto navbar-nav">
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
-                        <Link to="/logout" className="nav-link">Logout</Link>
                     </div>
                 </div>
                 {window.location.pathname === '/' && <ToolButtons/>}
+                <UserMenu />
             </nav>
         );
     }
