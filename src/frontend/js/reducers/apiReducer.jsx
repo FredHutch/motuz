@@ -1,9 +1,12 @@
 import * as api from 'actions/apiActions.jsx';
+import * as dialog from 'actions/dialogActions.jsx';
 import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
     clouds: [],
+    cloudErrors: {},
     jobs: [],
+    jobErrors: {},
 };
 
 
@@ -14,9 +17,10 @@ export default (state=initialState, action) => {
     }
     case api.LIST_COPY_JOBS_SUCCESS: {
         const jobs = action.payload;
+        jobs.sort((a, b) => b.id - a.id)
         return {
             ...state,
-            jobs: reverseArray(jobs),
+            jobs,
         }
     }
     case api.LIST_COPY_JOBS_FAILURE: {
@@ -26,7 +30,15 @@ export default (state=initialState, action) => {
         return state;
     }
     case api.RETRIEVE_COPY_JOB_SUCCESS: {
-        return state;
+        const newJob = action.payload;
+        const jobs = [...state.jobs]
+        const index = jobs.findIndex(d => d.id === newJob.id)
+        jobs[index] = newJob;
+
+        return {
+            ...state,
+            jobs,
+        }
     }
     case api.RETRIEVE_COPY_JOB_FAILURE: {
         return state;
@@ -83,7 +95,10 @@ export default (state=initialState, action) => {
     }
 
     case api.CREATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         const newCloudConnection = action.payload;
@@ -94,14 +109,21 @@ export default (state=initialState, action) => {
                 ...state.clouds,
                 newCloudConnection,
             ],
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.CREATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
     }
 
     case api.UPDATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
         const cloudConnection = action.payload;
@@ -112,10 +134,23 @@ export default (state=initialState, action) => {
         return {
             ...state,
             clouds,
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.UPDATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
+    }
+
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    {
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
 
     case api.DELETE_CLOUD_CONNECTION_REQUEST: {

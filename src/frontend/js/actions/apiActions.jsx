@@ -75,7 +75,7 @@ export const listCopyJobs = () => ({
 
 export const retrieveCopyJob = (id) => ({
     [RSAA]: {
-        endpoint: `/api/copy-jobs/${id}/`,
+        endpoint: `/api/copy-jobs/${id}`,
         method: 'GET',
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ RETRIEVE_COPY_JOB_REQUEST, RETRIEVE_COPY_JOB_SUCCESS, RETRIEVE_COPY_JOB_FAILURE ],

@@ -25,9 +25,6 @@ export function withAuth(headers={}) {
     };
 }
 
-export const isAuthenticated =
-   state => fromAuth.isAuthenticated(state.auth);
-
 export const accessToken =
     state => fromAuth.accessToken(state.auth);
 
@@ -42,11 +39,3 @@ export const isRefreshTokenExpired =
 
 export const authErrors =
     state => fromAuth.errors(state.auth);
-
-export const loggedInPlayer = state => {
-    const userId = fromAuth.userId(state.auth);
-    if (userId == null) {
-        return null;
-    }
-    return state.api.playerList.find(d => d.id === userId);
-};

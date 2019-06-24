@@ -2,21 +2,28 @@ import json
 import uuid
 import datetime
 
+from flask import request
+
 from ..application import db
 from ..models import CloudConnection
 from ..exceptions import *
-from ..managers.auth_manager import token_required
+from ..managers.auth_manager import token_required, get_logged_in_user
 
 
 @token_required
 def list():
-    cloud_connections = CloudConnection.query.all()
+    owner = get_logged_in_user(request)
+
+    cloud_connections = CloudConnection.query.filter_by(owner=owner).all()
     return cloud_connections
 
 
 @token_required
 def create(data):
+    owner = get_logged_in_user(request)
+
     cloud_connection = CloudConnection(**data)
+    cloud_connection.owner = owner
 
     db.session.add(cloud_connection)
     db.session.commit()
@@ -29,6 +36,11 @@ def retrieve(id):
     cloud_connection = CloudConnection.query.get(id)
 
     if cloud_connection is None:
+        raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(id))
+
+    owner = get_logged_in_user(request)
+
+    if cloud_connection.owner != owner:
         raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(id))
 
     return cloud_connection

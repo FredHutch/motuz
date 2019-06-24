@@ -2,7 +2,7 @@ import unittest
 import datetime
 
 from api import db
-from api.models import User
+from api.managers.auth_manager import encode_auth_token, decode_auth_token
 
 from base import BaseTestCase
 
@@ -17,7 +17,7 @@ class TestUserModel(BaseTestCase):
         )
         db.session.add(user)
         db.session.commit()
-        auth_token = user.encode_auth_token(user.id)
+        auth_token = encode_auth_token(user.id)
         self.assertTrue(isinstance(auth_token, bytes))
 
     def test_decode_auth_token(self):
@@ -28,9 +28,9 @@ class TestUserModel(BaseTestCase):
         )
         db.session.add(user)
         db.session.commit()
-        auth_token = user.encode_auth_token(user.id)
+        auth_token = encode_auth_token(user.id)
         self.assertTrue(isinstance(auth_token, bytes))
-        self.assertTrue(User.decode_auth_token(auth_token.decode("utf-8") ) == 1)
+        self.assertTrue(decode_auth_token(auth_token.decode("utf-8") ) == 1)
 
 
 if __name__ == '__main__':

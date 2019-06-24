@@ -5,7 +5,6 @@ services:
     nginx:
         container_name: nginx
         network_mode: host
-        restart: always
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
@@ -21,7 +20,6 @@ services:
     app:
         container_name: app
         network_mode: host
-        restart: always
         build:
             context: .
             dockerfile: ./docker/app/Dockerfile
@@ -54,7 +52,6 @@ services:
     celery:
         container_name: celery
         network_mode: host
-        restart: always
         build:
             context: .
             dockerfile: ./docker/celery/Dockerfile
@@ -68,8 +65,7 @@ services:
     rabbitmq:
         container_name: rabbitmq
         network_mode: host
-        restart: always
-        image: "rabbitmq:3-management"
+        image: rabbitmq:3-management
         ports:
             - 5672:5672
             - 15672:15672
@@ -77,6 +73,32 @@ services:
             - 5672
         hostname: 0.0.0.0
 
+    # database:
+    #     container_name: database
+    #     network_mode: host
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/database/Dockerfile
+    #     ports:
+    #         - 5432:5432
+    #     hostname: 0.0.0.0
+    #     environment:
+    #         -  FILLA_DB_USER=motuz_user
+    #         -  FILLA_DB_PASSWORD=motuz_password
+    #         -  FILLA_DB_DATABASE=motuz
+    #         -  POSTGRES_USER=postgres
+    #     volumes:
+    #         - /docker/volumes/postgres:/var/lib/postgresql/data
+
+    database:
+        container_name: database
+        network_mode: host
+        image: postgres:11.3
+        ports:
+            - 5432:5432
+        hostname: 0.0.0.0
+        volumes:
+            - /docker/volumes/postgres:/var/lib/postgresql/data
 
     test:
         container_name: test

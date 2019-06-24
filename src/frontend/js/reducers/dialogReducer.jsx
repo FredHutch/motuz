@@ -13,13 +13,17 @@ const initialState = {
     displayCopyJobDialog: false,
     copyJobDialogData: {
         source_cloud: SOURCE_CLOUD,
-        source_resource: '/Users/aicioara/tmp',
+        source_resource: 'ERROR',
         destination_cloud: DESTINATION_CLOUD,
-        destination_path: '/tmp',
-        owner: 'aicioara',
+        destination_path: 'ERROR',
+        owner: 'ERROR',
     },
 
+    displayCopyJobEditDialog: false,
+    copyJobEditDialogData: {},
+
     displayNewCloudConnectionDialog: false,
+
     displayEditCloudConnectionDialog: false,
     editCloudConnectionDialogData: {
     }
@@ -41,6 +45,21 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayCopyJobDialog: false,
+        }
+    }
+    case dialog.SHOW_COPY_JOB_EDIT_DIALOG: {
+        return {
+            ...state,
+            displayCopyJobEditDialog: true,
+            copyJobEditDialogData: action.payload.data,
+        }
+    }
+    case dialog.HIDE_COPY_JOB_EDIT_DIALOG:
+    case api.STOP_COPY_JOB_SUCCESS:
+    {
+        return {
+            ...state,
+            displayCopyJobEditDialog: false,
         }
     }
     case api.CREATE_COPY_JOB_SUCCESS: {

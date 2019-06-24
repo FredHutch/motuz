@@ -1,5 +1,6 @@
 import time
 import random
+import functools
 import logging
 import re
 
@@ -43,10 +44,18 @@ def copy_job(self, task_id=None):
         progress_current = connection.copy_percent(task_id)
         copy_job.progress_current = progress_current
         db.session.commit()
+
+        self.update_state(state='PROGRESS', meta={
+            'text': connection.copy_text(task_id)
+        })
+
         time.sleep(1)
+
 
     copy_job.progress_current = 100
     copy_job.progress_state = 'FINISHED'
     db.session.commit()
 
-    return {}
+    return {
+        'text': connection.copy_text(task_id),
+    }

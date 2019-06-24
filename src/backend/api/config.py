@@ -11,7 +11,15 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database_main.sqlite3')
+    SQLALCHEMY_DATABASE_URI = 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'.format(
+        USER='motuz_user',
+        PASSWORD='motuz_password',
+        HOST='0.0.0.0',
+        PORT='5432',
+        DATABASE='motuz',
+    )
+
+    # https://flask-sqlalchemy.palletsprojects.com/en/2.x/signals/
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

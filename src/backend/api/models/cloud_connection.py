@@ -15,6 +15,7 @@ class CloudConnection(db.Model):
     region = db.Column(db.String)
     access_key_id = db.Column(db.String)
     access_key_secret = db.Column(db.String)
+    owner = db.Column(db.String)
 
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
