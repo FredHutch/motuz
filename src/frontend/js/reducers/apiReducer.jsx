@@ -1,4 +1,5 @@
 import * as api from 'actions/apiActions.jsx';
+import * as dialog from 'actions/dialogActions.jsx';
 import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
@@ -140,6 +141,15 @@ export default (state=initialState, action) => {
         return {
             ...state,
             cloudErrors: action.payload.response.errors,
+        }
+    }
+
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    {
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
         }
     }
 
