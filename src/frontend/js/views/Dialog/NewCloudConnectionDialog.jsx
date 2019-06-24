@@ -8,7 +8,6 @@ import serializeForm from 'utils/serializeForm.jsx';
 class NewCloudConnectionDialog extends React.Component {
     constructor(props) {
         super(props);
-        this.formRef = React.createRef();
     }
 
     render() {
@@ -20,26 +19,25 @@ class NewCloudConnectionDialog extends React.Component {
                 size="lg"
                 onHide={() => this.handleClose()}
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>New Cloud Connection</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form
-                        action="#"
-                        onSubmit={event => event.handleSubmit()}
-                        ref={this.formRef}
-                    >
-                        <CloudConnectionDialogFields data={{}} errors={errors} />
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => this.handleClose()}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" onClick={() => this.handleSubmit()}>
-                        Create Cloud Connection
-                    </Button>
-                </Modal.Footer>
+                <form
+                    action="#"
+                    onSubmit={event => this.handleSubmit(event)}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>New Cloud Connection</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                            <CloudConnectionDialogFields data={{}} errors={errors} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.handleClose()}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            Create Cloud Connection
+                        </Button>
+                    </Modal.Footer>
+                </form>
             </Modal>
         );
     }
@@ -48,10 +46,10 @@ class NewCloudConnectionDialog extends React.Component {
         this.props.onClose();
     }
 
-    handleSubmit() {
-        const form = this.formRef.current;
-        const data = serializeForm(form)
+    handleSubmit(event) {
+        event.preventDefault();
 
+        const data = serializeForm(event.target)
         this.props.onSubmit(data);
     }
 
