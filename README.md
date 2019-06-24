@@ -2,13 +2,18 @@
 
 A web based infrastructure for large scale data movements between on-premise and cloud
 
+![Motuz main page ](docs/img/2019-06-23-13-14-28.png)
+
+
 ## Developer Installation
 
-1. Install system dependencies
+1. Install system dependencies (tested with Ubuntu 18.04)
 
 ```bash
-sudo apt-get install python3.5
-sudo apt-get install docker
+sudo apt-get install python3
+
+and then follow these instructions:
+    https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 # Work in progres... unsure what else is needed on a blank system. Might use docker soon
 ```
@@ -131,4 +136,30 @@ sudo useradd -d /home/aicioara -m aicioara
 echo 'aicioara:ThisIsNotSecure' | sudo chpasswd
 
 
+```
+
+Making some test files
+
+```bash
+for size in {107374,1073741,10737418,107374182,1073741824}; do
+    for i in $(seq 1 3); do
+        filename="file_${size}_${i}.bin"
+        echo "$filename"
+        head -c "$size" < /dev/urandom > "$filename"
+    done
+done
+
+```
+
+Initializing the database
+
+While the database container is running
+
+```
+docker-compose run --entrypoint='bash' database
+root@0:/# psql -h 0.0.0.0 -U postgres -d postgres
+
+create database motuz;
+create user motuz_user with password 'motuz_password';
+grant all privileges on database motuz to motuz_user;
 ```

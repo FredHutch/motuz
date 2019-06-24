@@ -14,9 +14,10 @@ export default (state=initialState, action) => {
     }
     case api.LIST_COPY_JOBS_SUCCESS: {
         const jobs = action.payload;
+        jobs.sort((a, b) => b.id - a.id)
         return {
             ...state,
-            jobs: reverseArray(jobs),
+            jobs,
         }
     }
     case api.LIST_COPY_JOBS_FAILURE: {
@@ -26,7 +27,15 @@ export default (state=initialState, action) => {
         return state;
     }
     case api.RETRIEVE_COPY_JOB_SUCCESS: {
-        return state;
+        const newJob = action.payload;
+        const jobs = [...state.jobs]
+        const index = jobs.findIndex(d => d.id === newJob.id)
+        jobs[index] = newJob;
+
+        return {
+            ...state,
+            jobs,
+        }
     }
     case api.RETRIEVE_COPY_JOB_FAILURE: {
         return state;

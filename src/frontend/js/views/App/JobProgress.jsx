@@ -6,7 +6,6 @@ import ResizableDivider from 'components/ResizableDivider.jsx'
 class JobProgress extends React.Component {
     constructor(props) {
         super(props);
-        this.state = JobProgress.initialState;
         this.container = React.createRef();
         this.timeout = null;
     }
@@ -30,38 +29,6 @@ class JobProgress extends React.Component {
                 </th>
             );
         })
-
-        const {selectedJob} = this.state;
-        const popover = props => {
-            if (!this.state.showPopover) {
-                return <div></div>
-            }
-            return (
-                <Popover
-                    {...props}
-                    id="popover-job-progress"
-                    title={`${selectedJob.description} (${selectedJob.id})`}
-                    outOfBoundaries={true}
-                    show=''
-                >
-                    <ProgressBar
-                        now={selectedJob.progess}
-                        label={`${selectedJob.progress}%`}
-                        variant='success'
-                    />
-                    <button
-                        className="btn btn-danger btn-sm btn-block mt-4"
-                        onClick={(event) => {
-                            event.stopPropagation()
-                            this.props.onStopJob(selectedJob.id)
-                            this._onDeselectJob()
-                        }}
-                    >
-                        STOP
-                    </button>
-                </Popover>
-            );
-        }
 
         const tableRows = this.props.jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
@@ -87,20 +54,13 @@ class JobProgress extends React.Component {
                                     />
                                 </td>
                             )
+                        } else {
+                            return (
+                                <td key={j}>
+                                    {job[header]}
+                                </td>
+                            );
                         }
-                        const item = job[header]
-                        return (
-                            <OverlayTrigger
-                                key={j}
-                                trigger="click"
-                                placement="top"
-                                rootClose
-                                rootCloseEvent='mousedown'
-                                overlay={popover}
-                            >
-                                <td> {item} </td>
-                            </OverlayTrigger>
-                        );
                     })}
                 </tr>
             );
@@ -161,14 +121,7 @@ class JobProgress extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        this.setState({
-            selectedJob,
-            showPopover: true,
-        })
-    }
-
-    _onDeselectJob() {
-        this.setState({showPopover: false})
+        this.props.onShowDetails(selectedJob.id);
     }
 
     _clearTimeout() {
@@ -184,15 +137,12 @@ JobProgress.defaultProps = {
     jobs: [],
     fetchData: () => {},
     onStopJob: id => {},
-}
-
-JobProgress.initialState = {
-    selectedJob: {},
-    showPopover: false,
+    onShowDetails: (jobId) => {},
 }
 
 import {connect} from 'react-redux';
 import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
+import { showCopyJobEditDialog } from 'actions/dialogActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
@@ -201,6 +151,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listCopyJobs()),
     onStopJob: id => dispatch(stopCopyJob(id)),
+    onShowDetails: (jobId) => dispatch(showCopyJobEditDialog(jobId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
