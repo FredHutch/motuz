@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap'
+import classnames from 'classnames';
 
 const CONNECTION_TYPES = [
     {
@@ -24,7 +25,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, errors } = this.props;
 
         return (
             <div className="container">
@@ -59,10 +60,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     <div className="col-8">
                         <input
                             type="text"
-                            className='form-control'
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': errors.name,
+                            })}
                             name='name'
                             defaultValue={data.name}
                         />
+                        <span className="invalid-feedback">
+                            {errors.name}
+                        </span>
                     </div>
                 </div>
 
@@ -73,10 +80,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     <div className="col-8">
                         <input
                             type="text"
-                            className='form-control'
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': errors.bucket,
+                            })}
                             name='bucket'
                             defaultValue={data.bucket}
                         />
+                        <span className="invalid-feedback">
+                            {errors.bucket}
+                        </span>
                     </div>
                 </div>
 
@@ -87,10 +100,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     <div className="col-8">
                         <input
                             type="text"
-                            className='form-control'
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': errors.region,
+                            })}
                             name='region'
                             defaultValue={data.region}
                         />
+                        <span className="invalid-feedback">
+                            {errors.region}
+                        </span>
                     </div>
                 </div>
 
@@ -104,10 +123,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     <div className="col-8">
                         <input
                             type="text"
-                            className='form-control'
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': errors.access_key_id,
+                            })}
                             name='access_key_id'
                             defaultValue={data.access_key_id}
                         />
+                        <span className="invalid-feedback">
+                            {errors.access_key_id}
+                        </span>
                     </div>
                 </div>
 
@@ -118,10 +143,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     <div className="col-8">
                         <input
                             type="text"
-                            className='form-control'
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': errors.access_key_secret,
+                            })}
                             name='access_key_secret'
                             defaultValue={data.access_key_secret}
                         />
+                        <span className="invalid-feedback">
+                            {errors.access_key_secret}
+                        </span>
                     </div>
                 </div>
             </div>

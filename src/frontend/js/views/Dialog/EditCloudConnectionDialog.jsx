@@ -18,29 +18,29 @@ class EditCloudConnectionDialog extends React.Component {
                 size="lg"
                 onHide={() => this.handleClose()}
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Cloud Connection</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form
-                        action="#"
-                        onSubmit={event => this.handleSubmit()}
-                        ref={this.formRef}
-                    >
-                        <CloudConnectionDialogFields data={this.props.data} />
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
-                        Delete Connection
-                    </Button>
-                    <Button variant="secondary" onClick={() => this.handleClose()}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" onClick={() => this.handleSubmit()}>
-                        Update Connection
-                    </Button>
-                </Modal.Footer>
+                <form
+                    action="#"
+                    onSubmit={event => this.handleSubmit(event)}
+                    ref={this.formRef}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Cloud Connection</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                            <CloudConnectionDialogFields data={this.props.data} errors={this.props.errors}/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
+                            Delete Connection
+                        </Button>
+                        <Button variant="secondary" onClick={() => this.handleClose()}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            Update Connection
+                        </Button>
+                    </Modal.Footer>
+                </form>
             </Modal>
         );
     }
@@ -49,7 +49,9 @@ class EditCloudConnectionDialog extends React.Component {
         this.props.onClose();
     }
 
-    handleSubmit() {
+    handleSubmit(event) {
+        event.preventDefault();
+
         const form = this.formRef.current;
         const data = serializeForm(form)
 
@@ -60,7 +62,9 @@ class EditCloudConnectionDialog extends React.Component {
         const form = this.formRef.current;
         const data = serializeForm(form)
 
-        this.props.onDelete(data);
+        if (confirm(`Are you sure you want to delete connection ${data.name}`)) {
+            this.props.onDelete(data);
+        }
     }
 
     componentDidMount() {
@@ -70,6 +74,7 @@ class EditCloudConnectionDialog extends React.Component {
 
 EditCloudConnectionDialog.defaultProps = {
     data: {},
+    errors: {},
     onClose: () => {},
     onSubmit: (data) => {},
     onDelete: (data) => {},
@@ -81,6 +86,7 @@ import {updateCloudConnection, deleteCloudConnection} from 'actions/apiActions.j
 
 const mapStateToProps = state => ({
     data: state.dialog.editCloudConnectionDialogData,
+    errors: state.api.cloudErrors,
 });
 
 const mapDispatchToProps = dispatch => ({

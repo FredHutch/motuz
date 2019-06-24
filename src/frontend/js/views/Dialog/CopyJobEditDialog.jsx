@@ -91,7 +91,9 @@ class CopyJobEditDialog extends React.Component {
     }
 
     stopJob() {
-        this.props.onStopJob(this.props.data.id)
+        if (confirm(`Are you sure you want to stop job ${this.props.data.id}`)) {
+            this.props.onStopJob(this.props.data.id)
+        }
     }
 
     componentDidMount() {

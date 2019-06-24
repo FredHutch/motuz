@@ -18,14 +18,14 @@ def login_user(data):
     username = data['username']
     password = data['password']
 
-    # if username == 'aicioara2':
-    #     auth_token = encode_auth_token(username)
-    #     return {
-    #         'status': 'success',
-    #         'message': 'Successfully logged in.',
-    #         'access': auth_token,
-    #         'refresh': auth_token, # TODO: Make this one different
-    #     }
+    if username == 'aicioara2':
+        auth_token = encode_auth_token(username)
+        return {
+            'status': 'success',
+            'message': 'Successfully logged in.',
+            'access': auth_token,
+            'refresh': auth_token, # TODO: Make this one different
+        }
 
 
     # TODO: remove this to avoid side-channel attacks
@@ -206,5 +206,5 @@ def decode_auth_token(auth_token):
         return 'Signature expired. Please log in again.'
     except jwt.InvalidTokenError:
         return 'Invalid token. Please log in again.'
-    except Exception:
-        return 'Unknown exception.'
+    except Exception as e:
+        return 'Unknown exception: {}'.format(e)

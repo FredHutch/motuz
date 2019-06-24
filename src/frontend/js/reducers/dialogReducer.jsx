@@ -54,7 +54,9 @@ export default (state=initialState, action) => {
             copyJobEditDialogData: action.payload.data,
         }
     }
-    case dialog.HIDE_COPY_JOB_EDIT_DIALOG: {
+    case dialog.HIDE_COPY_JOB_EDIT_DIALOG:
+    case api.STOP_COPY_JOB_SUCCESS:
+    {
         return {
             ...state,
             displayCopyJobEditDialog: false,
