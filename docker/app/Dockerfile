@@ -11,7 +11,6 @@ RUN apt-get -y upgrade
 RUN apt-get install -y build-essential man-db vim curl unzip wget
 RUN apt-get install -y --ignore-missing --fix-missing krb5-user libpam-krb5 
 
-RUN pip install uwsgi
 RUN curl https://rclone.org/install.sh | bash
 
 
