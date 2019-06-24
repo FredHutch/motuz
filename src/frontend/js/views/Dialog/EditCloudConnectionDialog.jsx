@@ -65,7 +65,6 @@ class EditCloudConnectionDialog extends React.Component {
         if (confirm(`Are you sure you want to delete connection ${data.name}`)) {
             this.props.onDelete(data);
         }
-
     }
 
     componentDidMount() {
