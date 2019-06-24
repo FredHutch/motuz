@@ -19,10 +19,11 @@ def list():
     copy_jobs = CopyJob.query.filter_by(owner=owner).all()
 
     for copy_job in copy_jobs:
-        task = tasks.copy_job.AsyncResult(str(copy_job.id))
-
-        if task.info is not None:
+        try:
+            task = tasks.copy_job.AsyncResult(str(copy_job.id))
             copy_job.progress_text = task.info.get('text', '')
+        except Exception:
+            pass # Sometimes rabbitmq closes the connection!
 
     return copy_jobs
 
@@ -66,10 +67,11 @@ def retrieve(id):
     if copy_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
-    task = tasks.copy_job.AsyncResult(str(copy_job.id))
-
-    if task.info is not None:
+    try:
+        task = tasks.copy_job.AsyncResult(str(copy_job.id))
         copy_job.progress_text = task.info.get('text', '')
+    except Exception:
+        pass # Sometimes rabbitmq closes the connection!
 
     return copy_job
 
@@ -82,7 +84,8 @@ def stop(id):
     task.revoke(terminate=True)
 
     copy_job = CopyJob.query.get(id) # Avoid race conditions
-    copy_job.progress_state = 'STOPPED'
-    db.session.commit()
+    if copy_job.progress_state != 'FINISHED':
+        copy_job.progress_state = 'STOPPED'
+        db.session.commit()
 
     return copy_job

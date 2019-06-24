@@ -1,9 +1,12 @@
 import * as api from 'actions/apiActions.jsx';
+import * as dialog from 'actions/dialogActions.jsx';
 import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
     clouds: [],
+    cloudErrors: {},
     jobs: [],
+    jobErrors: {},
 };
 
 
@@ -92,7 +95,10 @@ export default (state=initialState, action) => {
     }
 
     case api.CREATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         const newCloudConnection = action.payload;
@@ -103,14 +109,21 @@ export default (state=initialState, action) => {
                 ...state.clouds,
                 newCloudConnection,
             ],
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.CREATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
     }
 
     case api.UPDATE_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
     case api.UPDATE_CLOUD_CONNECTION_SUCCESS: {
         const cloudConnection = action.payload;
@@ -121,10 +134,23 @@ export default (state=initialState, action) => {
         return {
             ...state,
             clouds,
+            cloudErrors: initialState.cloudErrors,
         }
     }
     case api.UPDATE_CLOUD_CONNECTION_FAILURE: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
+    }
+
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    {
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
 
     case api.DELETE_CLOUD_CONNECTION_REQUEST: {
