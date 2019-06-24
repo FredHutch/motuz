@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom"
+import { NavDropdown } from 'react-bootstrap'
 
 class UserMenu extends React.PureComponent {
     render() {
         return (
-            <div className="ml-auto navbar-nav">
-                <Link to="/logout" className="nav-link">Logout</Link>
-                <Link to="#" className="nav-link">{this.props.username}</Link>
+            <div className="navbar-nav">
+                <NavDropdown title={this.props.username}>
+                      <Link to="/logout" className='dropdown-item'>Logout</Link>
+                </NavDropdown>
             </div>
         );
     }
