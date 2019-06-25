@@ -3,9 +3,14 @@
 
 FROM python:3.7.3
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -y
-RUN apt-get install -y build-essential curl unzip man-db gcc
+
+RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 
+
 RUN curl https://rclone.org/install.sh | bash
+
 
 ENV PYTHONUNBUFFERED 1
 ENV DOCKER_CONTAINER 1
@@ -23,3 +28,4 @@ COPY ./src/backend /app/src/backend
 WORKDIR /app/src/backend
 
 CMD uwsgi --ini wsgi.ini
+
