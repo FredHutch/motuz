@@ -6,10 +6,8 @@ FROM python:3.7.3
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y
-RUN apt-get -y upgrade
 
-RUN apt-get install -y build-essential man-db vim curl unzip wget
-RUN apt-get install -y --ignore-missing --fix-missing krb5-user libpam-krb5 
+RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 
 
 RUN curl https://rclone.org/install.sh | bash
 
