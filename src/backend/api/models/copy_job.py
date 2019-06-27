@@ -8,29 +8,33 @@ from ..mixins.timestamp_mixin import TimestampMixin
 from ..models.cloud_connection import CloudConnection
 
 
-class CopyJob(db.Model, TimestampMixin):
-    """ User Model for storing user related details """
-    __tablename__ = "copy_job"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    description = db.Column(db.String)
-    src_cloud = db.Column(db.String)
-    src_resource = db.Column(db.String)
-    dst_cloud = db.Column(db.String)
-    dst_path = db.Column(db.String)
-    owner = db.Column(db.String)
-
-    # src_cloud_rel = relationship("CloudConnection", backref="src_copy_jobs")
-    # dst_cloud_rel = relationship("CloudConnection", backref="dst_copy_jobs")
-
-    progress_state = db.Column(db.String, nullable=True)
-    progress_current = db.Column(db.Integer, nullable=True)
-    progress_total = db.Column(db.Integer, nullable=True)
-    progress_error = db.Column(db.String, nullable=True)
+class CopyJob:
+    pass
 
 
-    def __repr__(self):
-        return "<Copy Job {}>".format(self.id)
+# class CopyJob(db.Model, TimestampMixin):
+#     """ User Model for storing user related details """
+#     __tablename__ = "copy_job"
+
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     description = db.Column(db.String)
+#     src_cloud = db.Column(db.String)
+#     src_resource = db.Column(db.String)
+#     dst_cloud = db.Column(db.String)
+#     dst_path = db.Column(db.String)
+#     owner = db.Column(db.String)
+
+#     src_cloud_rel = relationship("CloudConnection", backref="src_copy_jobs")
+#     dst_cloud_rel = relationship("CloudConnection", backref="dst_copy_jobs")
+
+#     progress_state = db.Column(db.String, nullable=True)
+#     progress_current = db.Column(db.Integer, nullable=True)
+#     progress_total = db.Column(db.Integer, nullable=True)
+#     progress_error = db.Column(db.String, nullable=True)
+
+
+#     def __repr__(self):
+#         return "<Copy Job {}>".format(self.id)
 
 
 
