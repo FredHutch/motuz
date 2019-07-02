@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..managers.auth_manager import token_required
-from ..serializers import CloudConnectionSerializer
+from ..models import CloudConnectionSerializer
 from ..managers import cloud_connection_manager
 from ..exceptions import HTTP_EXCEPTION
 

@@ -10,22 +10,6 @@ class AuthSerializer:
 
 
 
-class CloudConnectionSerializer:
-    api = Namespace('connections', description='Connection related operations')
-    dto = api.model('connection', {
-        'id': fields.Integer(readonly=True, example=1),
-        'type': fields.String(required=True, example='S3'),
-        'name': fields.String(required=True, example='arbitrary-unique-name'),
-        'bucket': fields.String(required=True, example='my-bucket-name'),
-        'region': fields.String(required=True, example='us-west-2'),
-        'access_key_id': fields.String(required=True, example='KJRHJKHWEIUJDSJKDC2J'),
-        'access_key_secret': fields.String(required=True, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
-        # access_key examples above have the correct length, but characters are made up
-    })
-
-
-
-
 class SystemSerializer:
     api = Namespace('system', description='System related operations')
     dto = api.model('system', {
