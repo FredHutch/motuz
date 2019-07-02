@@ -35,21 +35,21 @@ class JobProgress extends React.Component {
         const jobs = this.props.jobs.map(job => {
             const src_cloud_id = job['src_cloud_id']
             if (!src_cloud_id) {
-                job['src_cloud'] = 'localhost'
+                job['src_cloud'] = 'file'
             } else {
                 const src_cloud = this.props.connections.find(d => d.id === src_cloud_id)
                 if (src_cloud) {
-                    job['src_cloud'] = src_cloud.name
+                    job['src_cloud'] = src_cloud.type
                 }
             }
 
             const dst_cloud_id = job['dst_cloud_id']
             if (!dst_cloud_id) {
-                job['dst_cloud'] = 'localhost'
+                job['dst_cloud'] = 'file'
             } else {
                 const dst_cloud = this.props.connections.find(d => d.id === dst_cloud_id)
                 if (dst_cloud) {
-                    job['dst_cloud'] = dst_cloud.name
+                    job['dst_cloud'] = dst_cloud.type
                 }
             }
 
