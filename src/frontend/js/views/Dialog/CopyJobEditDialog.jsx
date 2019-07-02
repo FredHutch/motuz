@@ -48,7 +48,7 @@ class CopyJobEditDialog extends React.Component {
                                 </div>
                                 <div className="col-7 text-left">
                                     <span><b>{data.src_cloud}</b></span>
-                                    <span>:</span>
+                                    <span>://</span>
                                     <span>{data.src_resource}</span>
                                 </div>
                                 <div className="col-1"></div>
@@ -59,7 +59,7 @@ class CopyJobEditDialog extends React.Component {
                                 </div>
                                 <div className="col-7 text-left">
                                     <span><b>{data.dst_cloud}</b></span>
-                                    <span>:</span>
+                                    <span>://</span>
                                     <span>{data.dst_path}</span>
                                 </div>
                                 <div className="col-1"></div>
