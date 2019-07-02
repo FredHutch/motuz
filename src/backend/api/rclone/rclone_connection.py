@@ -40,22 +40,40 @@ class RcloneConnection:
 
 
     def copy(self, src, dst, job_id=None):
-        command = (
-            'RCLONE_CONFIG_CURRENT_TYPE={type} '
-            'RCLONE_CONFIG_CURRENT_REGION={region} '
-            'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
-            'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
-            'rclone copy {src} current:{dst} '
-            '--progress '
-            '--stats 2s '
-        ).format(
-            type=self.type,
-            region=self.region,
-            access_key_id=self.access_key_id,
-            secret_access_key=self.secret_access_key,
-            src=src,
-            dst=dst,
-        )
+        if self.type == 's3':
+            command = (
+                'RCLONE_CONFIG_CURRENT_TYPE={type} '
+                'RCLONE_CONFIG_CURRENT_REGION={region} '
+                'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
+                'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
+                'rclone copy {src} current:{dst} '
+                '--progress '
+                '--stats 2s '
+            ).format(
+                type=self.type,
+                region=self.region,
+                access_key_id=self.access_key_id,
+                secret_access_key=self.secret_access_key,
+                src=src,
+                dst=dst,
+            )
+        elif self.type == 'azureblob':
+            command = (
+                'RCLONE_CONFIG_CURRENT_TYPE={type} '
+                'RCLONE_CONFIG_CURRENT_ACCOUNT={access_key_id} '
+                'RCLONE_CONFIG_CURRENT_KEY={secret_access_key} '
+                'rclone copy {src} current:{dst} '
+                '--progress '
+                '--stats 2s '
+            ).format(
+                type=self.type,
+                access_key_id=self.access_key_id,
+                secret_access_key=self.secret_access_key,
+                src=src,
+                dst=dst,
+            )
+        else:
+            raise RuntimeError('Unknown connection type {}'.format(self.type))
 
         logging.info(sanitize(command))
 
