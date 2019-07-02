@@ -8,6 +8,7 @@ class JobProgress extends React.Component {
         super(props);
         this.container = React.createRef();
         this.timeout = null;
+        this.jobsRefreshedLastRender = new Set()
     }
 
     render() {
@@ -91,9 +92,25 @@ class JobProgress extends React.Component {
             );
         })
 
-        const shouldRefresh = jobs.some(d => d.progress_state === 'PROGRESS');
-        if (shouldRefresh) {
-            this.scheduleRefresh();
+        const jobsToRefresh = new Set(jobs
+            .filter(d => d.progress_state === 'PROGRESS')
+            .map(d => d.id)
+        )
+
+        let shouldRefreshPanes = false;
+        this.jobsRefreshedLastRender.forEach(jobId => {
+            if (!jobsToRefresh.has(jobId)) {
+                shouldRefreshPanes = true;
+            }
+        })
+        if (shouldRefreshPanes) {
+            console.log("Refreshing")
+            this.props.refreshPanes();
+        }
+        this.jobsRefreshedLastRender = jobsToRefresh;
+
+        if (jobsToRefresh.size > 0) {
+            this.scheduleRefresh(jobsToRefresh);
         }
 
         return (
@@ -125,7 +142,7 @@ class JobProgress extends React.Component {
         this._clearTimeout();
     }
 
-    scheduleRefresh() {
+    scheduleRefresh(jobsToRefresh) {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
         this.timeout = setTimeout(() => {
@@ -161,6 +178,7 @@ JobProgress.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
+    refreshPanes: () => {},
     onStopJob: id => {},
     onShowDetails: (jobId) => {},
 }
@@ -168,6 +186,7 @@ JobProgress.defaultProps = {
 import {connect} from 'react-redux';
 import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
 import { showCopyJobEditDialog } from 'actions/dialogActions.jsx';
+import { refreshPanes } from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
@@ -176,6 +195,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listCopyJobs()),
+    refreshPanes: () => dispatch(refreshPanes()),
     onStopJob: id => dispatch(stopCopyJob(id)),
     onShowDetails: (jobId) => dispatch(showCopyJobEditDialog(jobId)),
 });
