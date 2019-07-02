@@ -6,12 +6,6 @@ import re
 import time
 from collections import defaultdict
 
-sanitize = functools.partial(
-    re.sub,
-    r'(RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY=)(\S*)',
-    r'\1**********'
-)
-
 class RcloneConnection:
     def __init__(self, type, region, access_key_id, secret_access_key):
         self.type = type
@@ -218,6 +212,26 @@ def main():
     while not connection.copy_finished(job_id):
         print(connection.copy_percent(job_id))
         time.sleep(0.1)
+
+
+
+def sanitize(string):
+    string = sanitize_secret_access_key(string)
+    string = sanitize_access_key_id(string)
+    return string
+
+
+sanitize_secret_access_key = functools.partial(
+    re.sub,
+    r'(RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY=)(\S*)',
+    r'\1****'
+)
+
+sanitize_access_key_id = functools.partial(
+    re.sub,
+    r'(RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID=)\S*(\S\S\S\S)',
+    r'\1****\2'
+)
 
 
 
