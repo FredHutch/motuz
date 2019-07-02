@@ -127,12 +127,22 @@ class RcloneConnection:
         reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
         reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
 
+        curr_retries = 0
+        max_retries = 100
+
         while not stop_event.is_set() and process.poll() is None:
             line = process.stdout.readline().decode('utf-8').strip()
 
             if len(line) == 0:
-                stop_event.set()
+                curr_retries += 1
+                if curr_retries >= max_retries:
+                    logging.error("Did not receive output, but process did not stop")
+                    stop_event.set()
+                else:
+                    time.sleep(0.5)
                 continue
+
+            curr_retries = 0
 
             q1 = line.find(reset_sequence1)
             if q1 != -1:
@@ -147,7 +157,7 @@ class RcloneConnection:
 
             match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
             if match is None:
-                print("No match in {}".format(line))
+                logging.warning("No match in {}".format(line))
                 time.sleep(0.5)
                 continue
 
