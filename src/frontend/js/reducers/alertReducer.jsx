@@ -14,7 +14,7 @@ export default (state=initialState, action) => {
         return initialState;
     }
 
-    case auth.LOGIN_FAILURE:
+    // case auth.LOGIN_FAILURE: // We do not want to show alert for that
     case auth.TOKEN_FAILURE:
 
     case api.LIST_FILES_FAILURE:
