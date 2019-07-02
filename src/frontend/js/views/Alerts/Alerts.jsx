@@ -7,8 +7,6 @@ class Alerts extends React.Component {
     }
 
     render() {
-        console.log(this.props.show)
-
         return (
             <div style={{
                 position: 'absolute',
