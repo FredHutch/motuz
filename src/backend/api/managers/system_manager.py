@@ -53,6 +53,8 @@ def _get_local_files(data):
                 type = "file"
             elif resource.is_symlink():
                 type = "symlink"
+            else:
+                type = "unknown"
 
             size = -1
             try:
