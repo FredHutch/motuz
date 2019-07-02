@@ -25,8 +25,16 @@ class CopyJob(db.Model, TimestampMixin):
     progress_total = db.Column(db.Integer, nullable=True)
     progress_error = db.Column(db.String, nullable=True)
 
-    src_cloud = relationship("CloudConnection", backref="src_copy_jobs")
-    dst_cloud = relationship("CloudConnection", backref="dst_copy_jobs")
+    src_cloud = relationship(
+        "CloudConnection",
+        foreign_keys=[src_cloud_id],
+        backref="src_copy_jobs",
+    )
+    dst_cloud = relationship(
+        "CloudConnection",
+        foreign_keys=[dst_cloud_id],
+        backref="dst_copy_jobs",
+    )
 
     def __repr__(self):
         return "<Copy Job {}>".format(self.id)
