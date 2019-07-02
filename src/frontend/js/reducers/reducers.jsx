@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 
+import alertReducer from 'reducers/alertReducer.jsx'
 import authReducer, * as fromAuth from 'reducers/authReducer.jsx';
 import apiReducer from 'reducers/apiReducer.jsx'
 import dialogReducer from 'reducers/dialogReducer.jsx'
 import paneReducer from 'reducers/paneReducer.jsx'
 
 export default (history) => combineReducers({
+    alert: alertReducer,
     auth: authReducer,
     api: apiReducer,
     dialog: dialogReducer,

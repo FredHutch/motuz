@@ -8,6 +8,7 @@ import Login from 'views/Login.jsx'
 import Logout from 'views/Logout.jsx'
 import Clouds from 'views/Clouds/Clouds.jsx'
 import App from 'views/App/App.jsx'
+import Alerts from 'views/Alerts/Alerts.jsx'
 
 // import 'bootstrap/dist/js/bootstrap.min.js';
 
@@ -29,6 +30,7 @@ class Root extends React.PureComponent {
                     <Route component={PageNotFound}/>
                 </Switch>
                 <Dialogs />
+                <Alerts />
             </Router>
         );
     }
