@@ -144,7 +144,7 @@ export default (state=initialState, action) => {
 
         if (type === 'localhost') {
             files = fileManager.convertLocalFilesToMotuz(files)
-        } else if (type === 's3') {
+        } else if (type === 's3' || type === 'azureblob') {
             files = fileManager.convertRcloneFilesToMotuz(files)
         } else {
             console.error(`Unknown payload type ${type}`);

@@ -9,11 +9,11 @@ const CONNECTION_TYPES = [
     },
     {
         label: 'Azure Blob Storage',
-        value: 'azure',
+        value: 'azureblob',
     },
     {
         label: 'Google Cloud Bucket',
-        value: 'google',
+        value: 'google cloud storage',
     },
 ]
 

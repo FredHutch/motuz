@@ -21,7 +21,9 @@ def get_files(data):
     if data['type'] in ('file', 'localhost'):
         return _get_local_files(data)
     elif data['type'] == 's3':
-        return _get_rclone_files(data)
+        return _get_s3_files(data)
+    elif data['type'] == 'azureblob':
+        return _get_azure_files(data)
     else:
         raise HTTP_400_BAD_REQUEST('Unknown type `{}`'.format(data['type']))
 
@@ -74,7 +76,7 @@ def _get_local_files(data):
     return result
 
 
-def _get_rclone_files(data):
+def _get_s3_files(data):
     path = data['path']
     region = data.get('region', None)
     access_key_id = data.get('access_key_id', None)
@@ -101,6 +103,44 @@ def _get_rclone_files(data):
         region=region,
         access_key_id=access_key_id,
         access_key_secret=access_key_secret,
+    )
+
+    try:
+        byteOutput = subprocess.check_output(command, shell=True)
+        output = byteOutput.decode('UTF-8').rstrip()
+        result = json.loads(output)
+        return result
+    except subprocess.CalledProcessError as e:
+        logging.error("Error in rclone", e.output)
+        return []
+
+
+def _get_azure_files(data):
+    path = data['path']
+    type = data.get('type', None)
+    access_key_id = data.get('access_key_id', None)
+    access_key_secret = data.get('access_key_secret', None)
+
+    if type is None:
+        raise HTTP_400_BAD_REQUEST('Missing type')
+
+    if access_key_id is None:
+        raise HTTP_400_BAD_REQUEST('Missing access_key_id')
+
+    if access_key_secret is None:
+        raise HTTP_400_BAD_REQUEST('Missing access_key_secret')
+
+
+    command = (
+        'RCLONE_CONFIG_CURRENT_TYPE={type} '
+        'RCLONE_CONFIG_CURRENT_ACCOUNT={access_key_id} '
+        'RCLONE_CONFIG_CURRENT_KEY={access_key_secret} '
+        'rclone lsjson current:{path}'
+    ).format(
+        type=type,
+        access_key_id=access_key_id,
+        access_key_secret=access_key_secret,
+        path=path,
     )
 
     try:
