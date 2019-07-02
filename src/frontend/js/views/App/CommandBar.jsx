@@ -1,5 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
+import Creatable from 'react-select/creatable';
+import upath from 'upath';
+
 
 import Select from 'components/Select.jsx';
 
@@ -19,10 +22,26 @@ class CommandBar extends React.Component {
             ...this.props.clouds
         ];
 
-        const cloudLabels = clouds.map(d => ({
+        const cloudOptions = clouds.map(d => ({
             label: `${d.name} (${d.type})`,
             value: d.id,
         }))
+
+        const currCloud = this.props.host.id;
+        const recentPaths = new Set()
+        for (let job of this.props.jobs) {
+            if ((job.dst_cloud_id || 0) === currCloud) {
+                recentPaths.add(job.dst_path)
+            }
+            if ((job.src_cloud_id || 0) === currCloud) {
+                recentPaths.add(upath.join(job.src_resource, '..'))
+            }
+            if (recentPaths.size > 10) {
+                break;
+            }
+        }
+
+        const pathOptions = [...recentPaths].map(d => ({value: d, label: d}))
 
         const buttonArrowLeft = (
             <div className="col-2 middle">
@@ -65,24 +84,20 @@ class CommandBar extends React.Component {
                                 className="form-control input-sm"
                                 value={this.props.host.id}
                                 onChange={(event)=> this.onHostChange(event.target.value)}
-                                options={cloudLabels}
+                                options={cloudOptions}
                             />
                         </div>
                     </div>
                     <div className="row">
                         <label className="col-2 col-form-label">Path</label>
                         <div className="col-10">
-                            <input
-                                type="text"
-                                className="form-control input-sm"
-                                list={`path_box_${this.props.isLeft ? 'left' : 'right'}`}
-                                value={this.props.path}
-                                onChange={() => {}}
+                            <Creatable
+                                options={pathOptions}
+                                onChange={(event) => this.onDirectoryChange(event)}
+                                formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
+                                noOptionsMessage={(inputValue) => null}
+                                value={{label: this.props.path, value: this.props.path}}
                             />
-                            <datalist id={`path_box_${this.props.isLeft ? 'left' : 'right'}`}>
-                                <option>/usr/bin</option>
-                                <option>/usr/etc</option>
-                            </datalist>
                         </div>
                     </div>
                 </div>
@@ -115,6 +130,11 @@ class CommandBar extends React.Component {
         const host = clouds.find(d => d.id === hostId)
         this.props.onHostChange(this.props.isLeft ? 'left' : 'right', host)
     }
+
+    onDirectoryChange(option) {
+        const {value} = option;
+        this.props.onDirectoryChange(this.props.isLeft ? 'left' : 'right', value);
+    }
 }
 
 CommandBar.defaultProps = {
@@ -127,20 +147,23 @@ CommandBar.defaultProps = {
     path: '/',
     clouds: [],
     onHostChange: (side, host) => {},
+    onDirectoryChange: (side, path) => {},
     onDisplayCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {showCopyJobDialog} from 'actions/dialogActions.jsx'
-import {hostChange} from 'actions/paneActions.jsx';
+import {hostChange, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
+    jobs: state.api.jobs,
     clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
     onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
+    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);
