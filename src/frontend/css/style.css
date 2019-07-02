@@ -17,6 +17,10 @@ body {
     overflow: hidden;
 }
 
+.octicon {
+    width: 16px;
+}
+
 /* Login */
 
 .form-wrapper {
