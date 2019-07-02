@@ -17,15 +17,40 @@ def copy_job(self, task_id=None):
     copy_job.progress_state = 'PROGRESS'
     db.session.commit()
 
-    # TODO: make the correct relationship
-    cloud_connections = CloudConnection.query.all()
-    if len(cloud_connections) == 0:
-        copy_job.progress_state = 'FINISHED'
+    src_cloud_id = copy_job.src_cloud_id
+    dst_cloud_id = copy_job.dst_cloud_id
+
+    if src_cloud_id is None and dst_cloud_id is None:
+        copy_job.progress_state = 'FAILED'
         copy_job.progress_current = 100
         copy_job.progress_total = 100
-        return {}
+        db.session.commit()
 
-    cloud_connection = cloud_connections[0]
+        text = "Local copies not supported"
+        logging.warning(text)
+        return {
+            'text': text
+        }
+
+
+    if src_cloud_id is not None and dst_cloud_id is not None:
+        copy_job.progress_state = 'FAILED'
+        copy_job.progress_current = 100
+        copy_job.progress_total = 100
+        db.session.commit()
+
+        text = "Remote-only copies not supported"
+        logging.warning(text)
+        return {
+            'text': text
+        }
+
+    if src_cloud_id is not None:
+        cloud_connection = copy_job.src_cloud
+
+    if dst_cloud_id is not None:
+        cloud_connection = copy_job.dst_cloud
+
 
     connection = RcloneConnection(
         type=cloud_connection.type,

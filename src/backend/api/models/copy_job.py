@@ -14,20 +14,27 @@ class CopyJob(db.Model, TimestampMixin):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String)
-    src_cloud = db.Column(db.String)
+    src_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
     src_resource = db.Column(db.String)
-    dst_cloud = db.Column(db.String)
+    dst_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
     dst_path = db.Column(db.String)
     owner = db.Column(db.String)
-
-    # src_cloud_rel = relationship("CloudConnection", backref="src_copy_jobs")
-    # dst_cloud_rel = relationship("CloudConnection", backref="dst_copy_jobs")
 
     progress_state = db.Column(db.String, nullable=True)
     progress_current = db.Column(db.Integer, nullable=True)
     progress_total = db.Column(db.Integer, nullable=True)
     progress_error = db.Column(db.String, nullable=True)
 
+    src_cloud = relationship(
+        "CloudConnection",
+        foreign_keys=[src_cloud_id],
+        backref="src_copy_jobs",
+    )
+    dst_cloud = relationship(
+        "CloudConnection",
+        foreign_keys=[dst_cloud_id],
+        backref="dst_copy_jobs",
+    )
 
     def __repr__(self):
         return "<Copy Job {}>".format(self.id)
@@ -39,9 +46,9 @@ class CopyJobSerializer:
     dto = api.model('copy-job', {
         'id': fields.Integer(readonly=True, example=1234),
         'description': fields.String(required=True, example='Task Description'),
-        'src_cloud': fields.String(required=True, example='localhost'),
+        'src_cloud_id': fields.Integer(required=False, example=1),
         'src_resource': fields.String(required=True, example='/tmp'),
-        'dst_cloud': fields.String(required=True, example='localhost'),
+        'dst_cloud_id': fields.Integer(required=False, example=2),
         'dst_path': fields.String(required=True, example='/trash'),
         'owner': fields.String(required=True, example='owner'),
 

@@ -30,7 +30,32 @@ class JobProgress extends React.Component {
             );
         })
 
-        const tableRows = this.props.jobs.map((job, i) => {
+        // TODO: Optimize
+        const jobs = this.props.jobs.map(job => {
+            const src_cloud_id = job['src_cloud_id']
+            if (!src_cloud_id) {
+                job['src_cloud'] = 'localhost'
+            } else {
+                const src_cloud = this.props.connections.find(d => d.id === src_cloud_id)
+                if (src_cloud) {
+                    job['src_cloud'] = src_cloud.name
+                }
+            }
+
+            const dst_cloud_id = job['dst_cloud_id']
+            if (!dst_cloud_id) {
+                job['dst_cloud'] = 'localhost'
+            } else {
+                const dst_cloud = this.props.connections.find(d => d.id === dst_cloud_id)
+                if (dst_cloud) {
+                    job['dst_cloud'] = dst_cloud.name
+                }
+            }
+
+            return job
+        })
+
+        const tableRows = jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
 
             job = {
@@ -66,7 +91,7 @@ class JobProgress extends React.Component {
             );
         })
 
-        const shouldRefresh = this.props.jobs.some(d => d.progress_state === 'PROGRESS');
+        const shouldRefresh = jobs.some(d => d.progress_state === 'PROGRESS');
         if (shouldRefresh) {
             this.scheduleRefresh();
         }
@@ -146,6 +171,7 @@ import { showCopyJobEditDialog } from 'actions/dialogActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
+    connections: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
