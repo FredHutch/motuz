@@ -79,19 +79,10 @@ class CommandBar extends React.Component {
                         <div className="col-10">
                             <Creatable
                                 options={pathOptions}
-                                onChange={() => console.log('a')}
+                                onChange={(event) => this.onDirectoryChange(event)}
                                 formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
                                 value={{label: this.props.path, value: this.props.path}}
                             />
-                            {
-                            // <input
-                            //     type="text"
-                            //     className="form-control input-sm"
-                            //     value={this.props.path}
-                            //     onChange={() => {}}
-                            // />
-
-                            }
                         </div>
                     </div>
                 </div>
@@ -124,6 +115,11 @@ class CommandBar extends React.Component {
         const host = clouds.find(d => d.id === hostId)
         this.props.onHostChange(this.props.isLeft ? 'left' : 'right', host)
     }
+
+    onDirectoryChange(option) {
+        const {value} = option;
+        this.props.onDirectoryChange(this.props.isLeft ? 'left' : 'right', value);
+    }
 }
 
 CommandBar.defaultProps = {
@@ -136,12 +132,13 @@ CommandBar.defaultProps = {
     path: '/',
     clouds: [],
     onHostChange: (side, host) => {},
+    onDirectoryChange: (side, path) => {},
     onDisplayCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {showCopyJobDialog} from 'actions/dialogActions.jsx'
-import {hostChange} from 'actions/paneActions.jsx';
+import {hostChange, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     clouds: state.api.clouds,
@@ -150,6 +147,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
+    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);
