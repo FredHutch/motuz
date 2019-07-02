@@ -8,7 +8,7 @@ from .. import tasks
 from ..application import db
 from ..exceptions import *
 from ..models import CopyJob, CloudConnection
-from ..rclone.rclone_connection import RcloneConnection
+from ..utils.rclone_connection import RcloneConnection
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 

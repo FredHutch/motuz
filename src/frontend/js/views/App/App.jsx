@@ -1,10 +1,10 @@
 import React from 'react';
 
 import Navbar from 'components/Navbar.jsx'
-import LeftCommandBar from 'views/App/LeftCommandBar.jsx';
-import RightCommandBar from 'views/App/RightCommandBar.jsx';
-import LeftPane from 'views/App/LeftPane.jsx';
-import RightPane from 'views/App/RightPane.jsx';
+import LeftCommandBar from 'views/App/CommandBar/LeftCommandBar.jsx';
+import RightCommandBar from 'views/App/CommandBar/RightCommandBar.jsx';
+import LeftPane from 'views/App/Pane/LeftPane.jsx';
+import RightPane from 'views/App/Pane/RightPane.jsx';
 import JobProgress from 'views/App/JobProgress.jsx';
 import StatusBar from 'views/App/StatusBar.jsx';
 

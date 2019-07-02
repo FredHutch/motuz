@@ -1,9 +1,9 @@
 import React from 'react';
 
-import CopyJobDialog from 'views/Dialog/CopyJobDialog.jsx';
-import CopyJobEditDialog from 'views/Dialog/CopyJobEditDialog.jsx';
-import NewCloudConnectionDialog from 'views/Dialog/NewCloudConnectionDialog.jsx';
-import EditCloudConnectionDialog from 'views/Dialog/EditCloudConnectionDialog.jsx';
+import CopyJobDialog from 'views/Dialogs/CopyJobDialog.jsx';
+import CopyJobEditDialog from 'views/Dialogs/CopyJobEditDialog.jsx';
+import NewCloudConnectionDialog from 'views/Dialogs/NewCloudConnectionDialog.jsx';
+import EditCloudConnectionDialog from 'views/Dialogs/EditCloudConnectionDialog.jsx';
 
 class Dialogs extends React.Component {
     constructor(props) {

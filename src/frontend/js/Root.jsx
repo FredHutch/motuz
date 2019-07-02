@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import PrivateRoute from 'components/PrivateRoute.jsx';
-import Dialogs from 'views/Dialog/Dialogs.jsx';
+import Dialogs from 'views/Dialogs/Dialogs.jsx';
 import PageNotFound from 'views/PageNotFound.jsx'
 import Login from 'views/Login.jsx'
 import Logout from 'views/Logout.jsx'

@@ -8,7 +8,7 @@ from .. import celery
 from ..models import CopyJob, CloudConnection
 from ..application import db
 
-from ..rclone.rclone_connection import RcloneConnection
+from ..utils.rclone_connection import RcloneConnection
 
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)

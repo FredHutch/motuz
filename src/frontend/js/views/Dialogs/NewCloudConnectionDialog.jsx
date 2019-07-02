@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap'
 
-import CloudConnectionDialogFields from 'views/Dialog/CloudConnectionDialogFields.jsx';
+import CloudConnectionDialogFields from 'views/Dialogs/CloudConnectionDialogFields.jsx';
 import serializeForm from 'utils/serializeForm.jsx';
 
 
