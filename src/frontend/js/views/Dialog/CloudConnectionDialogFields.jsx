@@ -21,11 +21,12 @@ const CONNECTION_TYPES = [
 class CloudConnectionDialogFields extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.formRef = React.createRef();
+        this.state = CloudConnectionDialogFields.initialState;
     }
 
     render() {
         const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
 
         return (
             <div className="container">
@@ -41,7 +42,8 @@ class CloudConnectionDialogFields extends React.PureComponent {
                         <select
                             className="form-control"
                             name="type"
-                            defaultValue={data.type}
+                            value={type}
+                            onChange={(event => this.setState({type: event.target.value}))}
                         >
                             {CONNECTION_TYPES.map(d => (
                                 <option
@@ -53,108 +55,14 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     </div>
                 </div>
 
-                <div className="row form-group">
-                    <div className="col-4 text-right">
-                        <b>Name</b>
-                    </div>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className={classnames({
-                                'form-control': true,
-                                'is-invalid': errors.name,
-                            })}
-                            name='name'
-                            defaultValue={data.name}
-                        />
-                        <span className="invalid-feedback">
-                            {errors.name}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="row form-group">
-                    <div className="col-4 text-right">
-                        <b>Bucket</b>
-                    </div>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className={classnames({
-                                'form-control': true,
-                                'is-invalid': errors.bucket,
-                            })}
-                            name='bucket'
-                            defaultValue={data.bucket}
-                        />
-                        <span className="invalid-feedback">
-                            {errors.bucket}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="row form-group">
-                    <div className="col-4 text-right">
-                        <b>Region</b>
-                    </div>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className={classnames({
-                                'form-control': true,
-                                'is-invalid': errors.region,
-                            })}
-                            name='region'
-                            defaultValue={data.region}
-                        />
-                        <span className="invalid-feedback">
-                            {errors.region}
-                        </span>
-                    </div>
-                </div>
-
+                {this._name()}
+                {this._bucket()}
+                {this._region()}
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
-                <div className="row form-group">
-                    <div className="col-4 text-right">
-                        <b>access_key_id</b>
-                    </div>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className={classnames({
-                                'form-control': true,
-                                'is-invalid': errors.access_key_id,
-                            })}
-                            name='access_key_id'
-                            defaultValue={data.access_key_id}
-                        />
-                        <span className="invalid-feedback">
-                            {errors.access_key_id}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="row form-group">
-                    <div className="col-4 text-right">
-                        <b>access_key_secret</b>
-                    </div>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className={classnames({
-                                'form-control': true,
-                                'is-invalid': errors.access_key_secret,
-                            })}
-                            name='access_key_secret'
-                            defaultValue={data.access_key_secret}
-                        />
-                        <span className="invalid-feedback">
-                            {errors.access_key_secret}
-                        </span>
-                    </div>
-                </div>
+                {this._accessKeyId()}
+                {this._accessKeySecret()}
             </div>
         );
     }
@@ -162,10 +70,149 @@ class CloudConnectionDialogFields extends React.PureComponent {
     componentDidMount() {
 
     }
+
+    _name() {
+        const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
+
+        return (
+            <div className="row form-group">
+                <div className="col-4 text-right">
+                    <b>Name</b>
+                </div>
+                <div className="col-8">
+                    <input
+                        type="text"
+                        className={classnames({
+                            'form-control': true,
+                            'is-invalid': errors.name,
+                        })}
+                        name='name'
+                        defaultValue={data.name}
+                    />
+                    <span className="invalid-feedback">
+                        {errors.name}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    _bucket() {
+        const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
+
+        return (
+            <div className="row form-group">
+                <div className="col-4 text-right">
+                    <b>Bucket</b>
+                </div>
+                <div className="col-8">
+                    <input
+                        type="text"
+                        className={classnames({
+                            'form-control': true,
+                            'is-invalid': errors.bucket,
+                        })}
+                        name='bucket'
+                        defaultValue={data.bucket}
+                    />
+                    <span className="invalid-feedback">
+                        {errors.bucket}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    _region() {
+        const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
+
+        return (
+            <div className="row form-group">
+                <div className="col-4 text-right">
+                    <b>Region</b>
+                </div>
+                <div className="col-8">
+                    <input
+                        type="text"
+                        className={classnames({
+                            'form-control': true,
+                            'is-invalid': errors.region,
+                        })}
+                        name='region'
+                        defaultValue={data.region}
+                    />
+                    <span className="invalid-feedback">
+                        {errors.region}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    _accessKeyId() {
+        const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
+
+        return (
+            <div className="row form-group">
+                <div className="col-4 text-right">
+                    <b>access_key_id</b>
+                </div>
+                <div className="col-8">
+                    <input
+                        type="text"
+                        className={classnames({
+                            'form-control': true,
+                            'is-invalid': errors.access_key_id,
+                        })}
+                        name='access_key_id'
+                        defaultValue={data.access_key_id}
+                    />
+                    <span className="invalid-feedback">
+                        {errors.access_key_id}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    _accessKeySecret() {
+        const { data, errors } = this.props;
+        const type = this.state.type || this.props.data.type
+
+        return (
+            <div className="row form-group">
+                <div className="col-4 text-right">
+                    <b>access_key_secret</b>
+                </div>
+                <div className="col-8">
+                    <input
+                        type="text"
+                        className={classnames({
+                            'form-control': true,
+                            'is-invalid': errors.access_key_secret,
+                        })}
+                        name='access_key_secret'
+                        defaultValue={data.access_key_secret}
+                    />
+                    <span className="invalid-feedback">
+                        {errors.access_key_secret}
+                    </span>
+                </div>
+            </div>
+        );
+    }
 }
 
 CloudConnectionDialogFields.defaultProps = {
     data: {},
+}
+
+CloudConnectionDialogFields.initialState = {
+    type: '',
 }
 
 export default CloudConnectionDialogFields;
