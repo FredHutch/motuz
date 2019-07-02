@@ -102,6 +102,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
         const { data, errors } = this.props;
         const type = this.state.type || this.props.data.type
 
+        if (type === 'azureblob') {
+            return (
+                <input
+                    type="hidden"
+                    name='bucket'
+                    value='-'
+                />
+            )
+        }
+
         return (
             <div className="row form-group">
                 <div className="col-4 text-right">
@@ -128,6 +138,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _region() {
         const { data, errors } = this.props;
         const type = this.state.type || this.props.data.type
+
+        if (type === 'azureblob') {
+            return (
+                <input
+                    type="hidden"
+                    name='region'
+                    value='-'
+                />
+            )
+        }
 
         return (
             <div className="row form-group">
@@ -156,10 +176,17 @@ class CloudConnectionDialogFields extends React.PureComponent {
         const { data, errors } = this.props;
         const type = this.state.type || this.props.data.type
 
+        let shownName = '';
+        if (type === 'azureblob') {
+            shownName = 'Account'
+        } else {
+            shownName = 'access_key_id'
+        }
+
         return (
             <div className="row form-group">
                 <div className="col-4 text-right">
-                    <b>access_key_id</b>
+                    <b>{shownName}</b>
                 </div>
                 <div className="col-8">
                     <input
@@ -183,10 +210,17 @@ class CloudConnectionDialogFields extends React.PureComponent {
         const { data, errors } = this.props;
         const type = this.state.type || this.props.data.type
 
+        let shownName = '';
+        if (type === 'azureblob') {
+            shownName = 'Key'
+        } else {
+            shownName = 'access_key_secret'
+        }
+
         return (
             <div className="row form-group">
                 <div className="col-4 text-right">
-                    <b>access_key_secret</b>
+                    <b>{shownName}</b>
                 </div>
                 <div className="col-8">
                     <input
