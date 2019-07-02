@@ -1,6 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 import Creatable from 'react-select/creatable';
+import upath from 'upath';
+
 
 import Select from 'components/Select.jsx';
 
@@ -25,9 +27,21 @@ class CommandBar extends React.Component {
             value: d.id,
         }))
 
-        const pathOptions = [
-            { value: 'chocolate', label: 'Chocolate' },
-        ]
+        const currCloud = this.props.host.id;
+        const recentPaths = new Set()
+        for (let job of this.props.jobs) {
+            if ((job.dst_cloud_id || 0) === currCloud) {
+                recentPaths.add(job.dst_path)
+            }
+            if ((job.src_cloud_id || 0) === currCloud) {
+                recentPaths.add(upath.join(job.src_resource, '..'))
+            }
+            if (recentPaths.size > 10) {
+                break;
+            }
+        }
+
+        const pathOptions = [...recentPaths].map(d => ({value: d, label: d}))
 
         const buttonArrowLeft = (
             <div className="col-2 middle">
@@ -81,6 +95,7 @@ class CommandBar extends React.Component {
                                 options={pathOptions}
                                 onChange={(event) => this.onDirectoryChange(event)}
                                 formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
+                                noOptionsMessage={(inputValue) => null}
                                 value={{label: this.props.path, value: this.props.path}}
                             />
                         </div>
@@ -141,6 +156,7 @@ import {showCopyJobDialog} from 'actions/dialogActions.jsx'
 import {hostChange, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
+    jobs: state.api.jobs,
     clouds: state.api.clouds,
 });
 
