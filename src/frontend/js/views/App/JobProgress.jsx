@@ -8,7 +8,7 @@ class JobProgress extends React.Component {
         super(props);
         this.container = React.createRef();
         this.timeout = null;
-        this.jobsRefreshedLastRender = new Set()
+        this.previousJobsInProgress = new Set()
     }
 
     render() {
@@ -92,25 +92,24 @@ class JobProgress extends React.Component {
             );
         })
 
-        const jobsToRefresh = new Set(jobs
+        const currentJobsInProgress = new Set(jobs
             .filter(d => d.progress_state === 'PROGRESS')
             .map(d => d.id)
         )
 
         let shouldRefreshPanes = false;
-        this.jobsRefreshedLastRender.forEach(jobId => {
-            if (!jobsToRefresh.has(jobId)) {
+        this.previousJobsInProgress.forEach(jobId => {
+            if (!currentJobsInProgress.has(jobId)) {
                 shouldRefreshPanes = true;
             }
         })
         if (shouldRefreshPanes) {
-            console.log("Refreshing")
             this.props.refreshPanes();
         }
-        this.jobsRefreshedLastRender = jobsToRefresh;
+        this.previousJobsInProgress = currentJobsInProgress;
 
-        if (jobsToRefresh.size > 0) {
-            this.scheduleRefresh(jobsToRefresh);
+        if (currentJobsInProgress.size > 0) {
+            this.scheduleRefresh(currentJobsInProgress);
         }
 
         return (
@@ -142,7 +141,7 @@ class JobProgress extends React.Component {
         this._clearTimeout();
     }
 
-    scheduleRefresh(jobsToRefresh) {
+    scheduleRefresh(currentJobsInProgress) {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
         this.timeout = setTimeout(() => {
