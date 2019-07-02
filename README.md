@@ -120,6 +120,13 @@ Additional temporary folders - ignore and do not commit
 
 ## Setting up production
 
+### On-premises setup
+
+Refer to [machine-setup.md](machine-setup.md).
+
+### AWS EC2 setup
+
+
 Based on https://medium.com/@cjus/installing-docker-ce-on-an-aws-ec2-instance-running-ubuntu-16-04-f42fe7e80869
 
 
@@ -151,7 +158,7 @@ done
 
 ```
 
-Initializing the database
+### Initializing the database
 
 While the database container is running
 
