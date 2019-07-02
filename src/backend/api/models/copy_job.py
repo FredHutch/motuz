@@ -46,9 +46,9 @@ class CopyJobSerializer:
     dto = api.model('copy-job', {
         'id': fields.Integer(readonly=True, example=1234),
         'description': fields.String(required=True, example='Task Description'),
-        'src_cloud': fields.String(required=True, example='localhost'),
+        'src_cloud_id': fields.Integer(required=False, example=1),
         'src_resource': fields.String(required=True, example='/tmp'),
-        'dst_cloud': fields.String(required=True, example='localhost'),
+        'dst_cloud_id': fields.Integer(required=False, example=2),
         'dst_path': fields.String(required=True, example='/trash'),
         'owner': fields.String(required=True, example='owner'),
 

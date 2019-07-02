@@ -111,12 +111,21 @@ class CopyJobDialog extends React.Component {
 
         const data = {
             "description": formData['description'] || '',
-            "src_cloud": propsData['source_cloud'].name,
+            "src_cloud_id": propsData['source_cloud'].id,
             "src_resource": propsData['source_resource'],
-            "dst_cloud": propsData['destination_cloud'].name,
+            "dst_cloud_id": propsData['destination_cloud'].id,
             "dst_path": propsData['destination_path'],
             "owner": "owner"
         }
+
+        if (data['src_cloud_id'] === 0) {
+            delete data['src_cloud_id'];
+        }
+        if (data['dst_cloud_id'] === 0) {
+            delete data['src_cloud_id'];
+        }
+
+        console.log(data)
         this.props.onSubmit(data);
     }
 
