@@ -7,6 +7,10 @@ class Alerts extends React.Component {
     }
 
     render() {
+        if (!this.props.show) {
+            return <React.Fragment />
+        }
+
         return (
             <div style={{
                 position: 'absolute',
@@ -16,7 +20,6 @@ class Alerts extends React.Component {
             }}>
                 <Alert
                     variant="danger"
-                    show={this.props.show}
                     onClose={() => this.props.onDismiss()}
                     dismissible
                 >
