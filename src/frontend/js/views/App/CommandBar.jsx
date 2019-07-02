@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import Creatable from 'react-select/creatable';
 
 import Select from 'components/Select.jsx';
 
@@ -19,10 +20,14 @@ class CommandBar extends React.Component {
             ...this.props.clouds
         ];
 
-        const cloudLabels = clouds.map(d => ({
+        const cloudOptions = clouds.map(d => ({
             label: `${d.name} (${d.type})`,
             value: d.id,
         }))
+
+        const pathOptions = [
+            { value: 'chocolate', label: 'Chocolate' },
+        ]
 
         const buttonArrowLeft = (
             <div className="col-2 middle">
@@ -65,24 +70,28 @@ class CommandBar extends React.Component {
                                 className="form-control input-sm"
                                 value={this.props.host.id}
                                 onChange={(event)=> this.onHostChange(event.target.value)}
-                                options={cloudLabels}
+                                options={cloudOptions}
                             />
                         </div>
                     </div>
                     <div className="row">
                         <label className="col-2 col-form-label">Path</label>
                         <div className="col-10">
-                            <input
-                                type="text"
-                                className="form-control input-sm"
-                                list={`path_box_${this.props.isLeft ? 'left' : 'right'}`}
-                                value={this.props.path}
-                                onChange={() => {}}
+                            <Creatable
+                                options={pathOptions}
+                                onChange={() => console.log('a')}
+                                formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
+                                value={{label: this.props.path, value: this.props.path}}
                             />
-                            <datalist id={`path_box_${this.props.isLeft ? 'left' : 'right'}`}>
-                                <option>/usr/bin</option>
-                                <option>/usr/etc</option>
-                            </datalist>
+                            {
+                            // <input
+                            //     type="text"
+                            //     className="form-control input-sm"
+                            //     value={this.props.path}
+                            //     onChange={() => {}}
+                            // />
+
+                            }
                         </div>
                     </div>
                 </div>
