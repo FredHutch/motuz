@@ -122,7 +122,7 @@ class CopyJobDialog extends React.Component {
             delete data['src_cloud_id'];
         }
         if (data['dst_cloud_id'] === 0) {
-            delete data['src_cloud_id'];
+            delete data['dst_cloud_id'];
         }
 
         console.log(data)
