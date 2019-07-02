@@ -23,6 +23,17 @@ class ToolButtons extends React.Component {
                 </button>
                 <button
                     className="btn btn-outline-primary my-2 ml-2 my-sm-0"
+                    onClick={event => this.props.onRefresh()}
+                    alt='Press to refresh panes'
+                    title='Press to refresh panes'
+                    aria-label='Press to refresh panes'
+                >
+                    <Icon
+                        name='sync'
+                    />
+                </button>
+                <button
+                    className="btn btn-outline-primary my-2 ml-2 my-sm-0"
                     onClick={event => this.props.onToggleShowHiddenFiles()}
                     alt='Press to toggle hidden files'
                     title='Press to toggle hidden files'
@@ -47,17 +58,19 @@ class ToolButtons extends React.Component {
 
 ToolButtons.defaultProps = {
     showHiddenFiles: true,
+    onRefresh: () => {},
     onToggleShowHiddenFiles: () => {},
 }
 
 import {connect} from 'react-redux';
-import {toggleShowHiddenFiles} from 'actions/paneActions.jsx';
+import {toggleShowHiddenFiles, refreshPanes} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     showHiddenFiles: state.pane.showHiddenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({
+    onRefresh: () => dispatch(refreshPanes()),
     onToggleShowHiddenFiles: () => dispatch(toggleShowHiddenFiles()),
 });
 
