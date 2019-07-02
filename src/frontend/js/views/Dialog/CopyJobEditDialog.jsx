@@ -17,6 +17,8 @@ class CopyJobEditDialog extends React.Component {
         const progressText = data.progress_text;
         const progress = data.progress_current / data.progress_total * 100;
 
+        const isInProgress = data.progress_state === 'PROGRESS'
+
         return (
             <div className='dialog-edit-copy-job'>
                 <Modal
@@ -74,9 +76,11 @@ class CopyJobEditDialog extends React.Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button className='mr-auto' variant="danger" onClick={() => this.stopJob()}>
-                            Stop Job
-                        </Button>
+                        {isInProgress && (
+                            <Button className='mr-auto' variant="danger" onClick={() => this.stopJob()}>
+                                Stop Job
+                            </Button>
+                        )}
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Close
                         </Button>
