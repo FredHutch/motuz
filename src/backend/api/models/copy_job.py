@@ -1,6 +1,5 @@
 import datetime
 
-from flask_restplus import Namespace, fields
 from sqlalchemy.orm import relationship
 
 from ..application import db
@@ -38,23 +37,3 @@ class CopyJob(db.Model, TimestampMixin):
 
     def __repr__(self):
         return "<Copy Job {}>".format(self.id)
-
-
-
-class CopyJobSerializer:
-    api = Namespace('copy-jobs', description='CopyJob related operations')
-    dto = api.model('copy-job', {
-        'id': fields.Integer(readonly=True, example=1234),
-        'description': fields.String(required=True, example='Task Description'),
-        'src_cloud_id': fields.Integer(required=False, example=1),
-        'src_resource': fields.String(required=True, example='/tmp'),
-        'dst_cloud_id': fields.Integer(required=False, example=2),
-        'dst_path': fields.String(required=True, example='/trash'),
-        'owner': fields.String(required=True, example='owner'),
-
-        'progress_state': fields.String(readonly=True, example='PENDING'),
-        'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),
-        'progress_current': fields.Integer(readonly=True, example=45),
-        'progress_total': fields.Integer(readonly=True, example=100),
-        'progress_error': fields.String(readonly=True),
-    })
