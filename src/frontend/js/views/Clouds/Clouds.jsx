@@ -8,8 +8,7 @@ const headers = [
     "name",
     "type",
     "bucket",
-    "region",
-    "access_key_id",
+    "username",
 ];
 
 

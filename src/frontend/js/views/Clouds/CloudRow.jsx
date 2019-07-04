@@ -5,7 +5,6 @@ const headers = [
     "name",
     "type",
     "bucket",
-    "region",
     "access_key_id",
 ];
 
@@ -17,7 +16,35 @@ class CloudRow extends React.Component {
 
     render() {
         const { data } = this.props;
-        console.log(data)
+
+        const headers = [
+            "id",
+            "name",
+            "type",
+        ]
+        if (data.type === "s3") {
+            headers.push(
+                "s3_bucket",
+                "s3_access_key_id",
+            );
+        } else if (data.type === "azureblob") {
+            headers.push(
+                "",
+                "azure_account",
+            )
+        } else if (data.type === "swift") {
+            headers.push(
+                "",
+                "swift_user",
+            )
+        } else if (data.type === "google cloud storage") {
+            headers.push(
+                "gcp_project_number",
+                "gcp_client_id",
+            )
+        } else {
+            console.error(`Unknown Connection Type ${data.type}`)
+        }
 
         const items = headers.map((header, j) => {
             return (
