@@ -21,22 +21,21 @@ def get_uid():
 
 @token_required
 def get_files(data):
+    path = data['path']
     connection_id = data['connection_id']
 
     if connection_id == 0:
-        return _get_local_files(data)
+        return _get_local_files(path)
 
     cloud_connection = cloud_connection_manager.retrieve(connection_id)
 
     # If user does not have permission to the cloud_connection or if the cloud_connection
     # does not exist, the line above will raise the correct HTTP 4xx Exception
 
-    return _get_remote_files(cloud_connection, data['path'])
+    return _get_remote_files(cloud_connection, path)
 
 
-def _get_local_files(data):
-    path = data['path']
-
+def _get_local_files(path):
     result = []
 
     try:
