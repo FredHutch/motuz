@@ -54,9 +54,7 @@ def copy_job(self, task_id=None):
 
     connection = RcloneConnection(
         type=cloud_connection.type,
-        region=cloud_connection.region,
-        access_key_id=cloud_connection.access_key_id,
-        secret_access_key=cloud_connection.access_key_secret,
+        data=cloud_connection,
     )
 
     connection.copy(

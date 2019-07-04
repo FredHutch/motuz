@@ -7,6 +7,9 @@ import subprocess
 
 from ..exceptions import *
 from ..managers.auth_manager import token_required
+from ..managers import cloud_connection_manager
+from ..utils.rclone_connection import RcloneConnection
+
 
 @token_required
 def get_uid():
@@ -18,14 +21,17 @@ def get_uid():
 
 @token_required
 def get_files(data):
-    if data['type'] in ('file', 'localhost'):
+    connection_id = data['connection_id']
+
+    if connection_id == 0:
         return _get_local_files(data)
-    elif data['type'] == 's3':
-        return _get_s3_files(data)
-    elif data['type'] == 'azureblob':
-        return _get_azure_files(data)
-    else:
-        raise HTTP_400_BAD_REQUEST('Unknown type `{}`'.format(data['type']))
+
+    cloud_connection = cloud_connection_manager.retrieve(connection_id)
+
+    # If user does not have permission to the cloud_connection or if the cloud_connection
+    # does not exist, the line above will raise the correct HTTP 4xx Exception
+
+    return _get_remote_files(cloud_connection, data['path'])
 
 
 def _get_local_files(data):
@@ -74,6 +80,20 @@ def _get_local_files(data):
         raise HTTP_400_BAD_REQUEST('Unknown Error {}'.format(e))
 
     return result
+
+
+def _get_remote_files(cloud_connection, path):
+    connection = RcloneConnection(
+        type=cloud_connection.type,
+        data=cloud_connection,
+    )
+
+    try:
+        return connection.ls(path=path)
+    except Exception as e:
+        # TODO: be more granular about it
+        raise HTTP_503_SERVICE_UNAVAILABLE(str(e))
+
 
 
 def _get_s3_files(data):
