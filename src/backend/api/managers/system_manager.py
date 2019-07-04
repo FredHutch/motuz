@@ -95,6 +95,8 @@ def _get_remote_files(cloud_connection, path):
 
 
 
+# TODO: Delete the two functions below
+
 def _get_s3_files(data):
     path = data['path']
     region = data.get('region', None)
