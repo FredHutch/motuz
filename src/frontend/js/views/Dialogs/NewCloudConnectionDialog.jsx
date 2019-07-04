@@ -27,7 +27,10 @@ class NewCloudConnectionDialog extends React.Component {
                         <Modal.Title>New Cloud Connection</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                            <CloudConnectionDialogFields data={{}} errors={errors} />
+                            <CloudConnectionDialogFields
+                                data={{}}
+                                errors={errors}
+                            />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.handleClose()}>

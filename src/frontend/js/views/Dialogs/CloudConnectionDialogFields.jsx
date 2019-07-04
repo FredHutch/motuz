@@ -29,7 +29,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
 
     render() {
         const { data, errors } = this.props;
-        const type = this.state.type || this.props.data.type;
+        const type = this.state.type || this.props.data.type || 's3';
 
         return (
             <div className="container">
