@@ -2,18 +2,31 @@ import logging
 import random
 
 from flask import request
-from flask_restplus import Resource
+from flask_restplus import Resource, Namespace, fields
 
-from ..models import CopyJobSerializer
 from ..managers import copy_job_manager
 from .. import tasks
 from ..exceptions import HTTP_EXCEPTION
 
 
 
-api = CopyJobSerializer.api
-dto = CopyJobSerializer.dto
+api = Namespace('copy-jobs', description='CopyJob related operations')
 
+dto = api.model('copy-job', {
+    'id': fields.Integer(readonly=True, example=1234),
+    'description': fields.String(required=True, example='Task Description'),
+    'src_cloud_id': fields.Integer(required=False, example=1),
+    'src_resource': fields.String(required=True, example='/tmp'),
+    'dst_cloud_id': fields.Integer(required=False, example=2),
+    'dst_path': fields.String(required=True, example='/trash'),
+    'owner': fields.String(required=True, example='owner'),
+
+    'progress_state': fields.String(readonly=True, example='PENDING'),
+    'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),
+    'progress_current': fields.Integer(readonly=True, example=45),
+    'progress_total': fields.Integer(readonly=True, example=100),
+    'progress_error': fields.String(readonly=True),
+})
 
 
 @api.route('/')
