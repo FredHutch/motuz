@@ -14,6 +14,8 @@ export const fileFocusIndex = (side, index) => ({
 
 
 export const hostChange = (side=null, host) => {
+    console.log(host)
+
     return async (dispatch, getState) => {
         await dispatch({
             type: HOST_CHANGE,
@@ -25,11 +27,8 @@ export const hostChange = (side=null, host) => {
 
         // TODO: Change this
         return await dispatch(api.listFiles(side, {
-            type: host.type,
+            connection_id: host.id,
             path: pane.path,
-            access_key_id: host.access_key_id,
-            access_key_secret: host.access_key_secret,
-            region: host.region,
         }))
     }
 }
@@ -46,11 +45,8 @@ export const directoryChange = (side=null, path) => {
         const host = pane.host;
 
         return await dispatch(api.listFiles(side, {
-            type: host.type,
+            connection_id: host.id,
             path,
-            access_key_id: host.access_key_id,
-            access_key_secret: host.access_key_secret,
-            region: host.region,
         }));
     }
 }

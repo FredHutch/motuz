@@ -26,10 +26,12 @@ class RcloneConnection:
         self.credentials += 'RCLONE_CONFIG_CURRENT_TYPE={} '.format(self.type)
 
         def _addCredential(env_key, data_key):
-            if data_key in self.data:
+            value = getattr(self.data, data_key, None)
+
+            if value is not None:
                 self.credentials += '{env_key}={value} '.format(
                     env_key=env_key,
-                    value=self.data[data_key]
+                    value=getattr(self.data, data_key)
                 )
 
         if self.type == 's3':
@@ -244,13 +246,19 @@ def main():
     import time
     import os
 
+    class CloudConnection:
+        pass
+
+    data = CloudConnection()
+    data.__dict__ = {
+        'region': os.environ['MOTUZ_REGION'],
+        'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
+        'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
+    }
+
     connection = RcloneConnection(
         type='s3',
-        data={
-            'region': os.environ['MOTUZ_REGION'],
-            'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
-            'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
-        }
+        data=data,
     )
 
     # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
