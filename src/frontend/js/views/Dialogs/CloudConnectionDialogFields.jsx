@@ -33,7 +33,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
 
         return (
             <div className="container">
-                <h5 className="text-primary mb-2">Details</h5>
+                <h5 className="text-primary mb-2">Basic</h5>
 
                 <input type="hidden" name='id' value={data.id}/>
 
@@ -79,6 +79,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderS3Section() {
         return (
             <React.Fragment>
+                <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
                 <CloudConnectionField
                     label='Bucket'
@@ -105,6 +106,15 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     defaultValue={this.props.data.s3_secret_access_key}
                     error={this.props.errors.s3_secret_access_key}
                 />
+
+                <h5 className='text-primary mt-5 mb-2'>Optionals</h5>
+
+                <CloudConnectionField
+                    label='endpoint'
+                    defaultValue={this.props.data.s3_endpoint}
+                    error={this.props.errors.s3_endpoint}
+                />
+
             </React.Fragment>
         )
     }
@@ -132,6 +142,33 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderSwiftSection() {
         return (
             <React.Fragment>
+                <h5 className='text-primary mt-5 mb-2'>Details</h5>
+
+                <CloudConnectionField
+                    label='auth'
+                    defaultValue={this.props.data.swift_auth}
+                    error={this.props.errors.swift_auth}
+                />
+
+                <CloudConnectionField
+                    label='tenant'
+                    defaultValue={this.props.data.swift_tenant}
+                    error={this.props.errors.swift_tenant}
+                />
+
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='user'
+                    defaultValue={this.props.data.swift_user}
+                    error={this.props.errors.swift_user}
+                />
+
+                <CloudConnectionField
+                    label='key'
+                    defaultValue={this.props.data.swift_key}
+                    error={this.props.errors.swift_key}
+                />
             </React.Fragment>
         )
     }
@@ -139,6 +176,39 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderGCPSection() {
         return (
             <React.Fragment>
+                <h5 className='text-primary mt-5 mb-2'>Details</h5>
+
+                <CloudConnectionField
+                    label='project_number'
+                    defaultValue={this.props.data.gcp_project_number}
+                    error={this.props.errors.gcp_project_number}
+                />
+
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='client_id'
+                    defaultValue={this.props.data.gcp_client_id}
+                    error={this.props.errors.gcp_client_id}
+                />
+
+                <CloudConnectionField
+                    label='service_account_credentials'
+                    defaultValue={this.props.data.gcp_service_account_credentials}
+                    error={this.props.errors.gcp_service_account_credentials}
+                />
+
+                <input
+                    type="hidden"
+                    name='gcp_object_acl'
+                    value='authenticatedRead'
+                />
+
+                <input
+                    type="hidden"
+                    name='gcp_bucket_acl'
+                    value='authenticatedRead'
+                />
             </React.Fragment>
         )
     }
@@ -156,7 +226,7 @@ CloudConnectionDialogFields.initialState = {
 
 class CloudConnectionField extends React.PureComponent {
     render() {
-        const { label, defaultValue, error } = this.props;
+        const { label, defaultValue, placeholder, error } = this.props;
 
         return (
             <div className="row form-group">
@@ -164,15 +234,18 @@ class CloudConnectionField extends React.PureComponent {
                     <b>{label}</b>
                 </div>
                 <div className="col-8">
-                    <input
-                        type="text"
-                        className={classnames({
-                            'form-control': true,
-                            'is-invalid': error,
-                        })}
-                        name='bucket'
-                        defaultValue={defaultValue}
-                    />
+                    {this.props.children || (
+                        <input
+                            type="text"
+                            className={classnames({
+                                'form-control': true,
+                                'is-invalid': error,
+                            })}
+                            name='bucket'
+                            defaultValue={defaultValue}
+                            palceholder={placeholder}
+                        />
+                    )}
                     <span className="invalid-feedback">
                         {error}
                     </span>
