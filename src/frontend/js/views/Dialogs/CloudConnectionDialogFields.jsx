@@ -216,13 +216,13 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <input
                     type="hidden"
                     name='gcp_object_acl'
-                    value='authenticatedRead'
+                    value='private'
                 />
 
                 <input
                     type="hidden"
                     name='gcp_bucket_acl'
-                    value='authenticatedRead'
+                    value='private'
                 />
             </React.Fragment>
         )

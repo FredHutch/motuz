@@ -49,9 +49,9 @@ class RcloneConnection:
             _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
             _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
             _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
-            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
 
         elif self.type == 'google cloud storage':
+            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
             _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
             _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
             _addCredential('RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
@@ -71,7 +71,7 @@ class RcloneConnection:
             path=path,
         )
 
-        logging.info(sanitize(command))
+        logging.error(sanitize(command))
 
         result = self._execute(command)
         result = json.loads(result)
