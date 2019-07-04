@@ -7,11 +7,11 @@ import time
 from collections import defaultdict
 
 class RcloneConnection:
-    def __init__(self, type, region, access_key_id, secret_access_key):
+    def __init__(self, type, data):
         self.type = type
-        self.region = region
-        self.access_key_id = access_key_id
-        self.secret_access_key = secret_access_key
+        self.data = data
+
+        self._setCredentials()
 
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
         self._job_text = defaultdict(str)
@@ -20,18 +20,54 @@ class RcloneConnection:
         self._latest_job_id = 0
 
 
+
+    def _setCredentials(self):
+        self.credentials = ''
+        self.credentials += 'RCLONE_CONFIG_CURRENT_TYPE={} '.format(self.type)
+
+        def _addCredential(env_key, data_key):
+            if data_key in self.data:
+                self.credentials += '{env_key}={value} '.format(
+                    env_key=env_key,
+                    value=self.data[data_key]
+                )
+
+        if self.type == 's3':
+            _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
+            _addCredential('RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
+            _addCredential('RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
+
+            _addCredential('RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
+            _addCredential('RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
+
+        elif self.type == 'azureblob':
+            _addCredential('RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
+            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
+
+        elif self.type == 'swift':
+            _addCredential('RCLONE_CONFIG_CURRENT_USER', 'swift_user')
+            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
+            _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
+            _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
+            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
+
+        elif self.type == 'google cloud storage':
+            _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
+            _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
+            _addCredential('RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
+            _addCredential('RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
+
+        else:
+            logging.error("Connection type unknown: {}".format(self.type))
+
+
+
     def ls(self, path):
         command = (
-            'RCLONE_CONFIG_CURRENT_TYPE={type} '
-            'RCLONE_CONFIG_CURRENT_REGION={region} '
-            'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
-            'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
+            '{credentials} '
             'rclone lsjson current:{path}'
         ).format(
-            type=self.type,
-            region=self.region,
-            access_key_id=self.access_key_id,
-            secret_access_key=self.secret_access_key,
+            credentials=self.credentials,
             path=path,
         )
 
@@ -40,40 +76,16 @@ class RcloneConnection:
 
 
     def copy(self, src, dst, job_id=None):
-        if self.type == 's3':
-            command = (
-                'RCLONE_CONFIG_CURRENT_TYPE={type} '
-                'RCLONE_CONFIG_CURRENT_REGION={region} '
-                'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID={access_key_id} '
-                'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY={secret_access_key} '
-                'rclone copy {src} current:{dst} '
-                '--progress '
-                '--stats 2s '
-            ).format(
-                type=self.type,
-                region=self.region,
-                access_key_id=self.access_key_id,
-                secret_access_key=self.secret_access_key,
-                src=src,
-                dst=dst,
-            )
-        elif self.type == 'azureblob':
-            command = (
-                'RCLONE_CONFIG_CURRENT_TYPE={type} '
-                'RCLONE_CONFIG_CURRENT_ACCOUNT={access_key_id} '
-                'RCLONE_CONFIG_CURRENT_KEY={secret_access_key} '
-                'rclone copy {src} current:{dst} '
-                '--progress '
-                '--stats 2s '
-            ).format(
-                type=self.type,
-                access_key_id=self.access_key_id,
-                secret_access_key=self.secret_access_key,
-                src=src,
-                dst=dst,
-            )
-        else:
-            raise RuntimeError('Unknown connection type {}'.format(self.type))
+        command = (
+            '{credentials} '
+            'rclone copy {src} current:{dst} '
+            '--progress '
+            '--stats 2s '
+        ).format(
+            credentials=self.credentials,
+            src=src,
+            dst=dst,
+        )
 
         logging.info(sanitize(command))
 
@@ -207,32 +219,6 @@ class RcloneConnection:
 
 
 
-
-
-
-def main():
-    import time
-    import os
-
-    connection = RcloneConnection(
-        type='s3',
-        region=os.environ['MOTUZ_REGION'],
-        access_key_id=os.environ['MOTUZ_ACCESS_KEY_ID'],
-        secret_access_key=os.environ['MOTUZ_SECRET_ACCESS_KEY'],
-    )
-
-    # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
-    job_id = 123
-    import random
-    connection.copy('/tmp/motuz/mb_blob.bin', '/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)), job_id=job_id)
-
-
-    while not connection.copy_finished(job_id):
-        print(connection.copy_percent(job_id))
-        time.sleep(0.1)
-
-
-
 def sanitize(string):
     string = sanitize_secret_access_key(string)
     string = sanitize_access_key_id(string)
@@ -250,6 +236,32 @@ sanitize_access_key_id = functools.partial(
     r'(RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID=)\S*(\S\S\S\S)',
     r'\1****\2'
 )
+
+
+
+
+def main():
+    import time
+    import os
+
+    connection = RcloneConnection(
+        type='s3',
+        data={
+            'region': os.environ['MOTUZ_REGION'],
+            'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
+            'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
+        }
+    )
+
+    # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
+    job_id = 123
+    import random
+    connection.copy('/tmp/motuz/mb_blob.bin', '/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)), job_id=job_id)
+
+
+    while not connection.copy_finished(job_id):
+        print(connection.copy_percent(job_id))
+        time.sleep(0.1)
 
 
 
