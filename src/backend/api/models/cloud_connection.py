@@ -35,7 +35,7 @@ class CloudConnection(db.Model):
     swift_auth = db.Column(db.String, nullable=True)
 
     # Swift V2 additional fields
-    swift_tenant = db.Column(db.String)
+    swift_tenant = db.Column(db.String, nullable=True)
 
     # Google Cloud Services fields
     gcp_client_id = db.Column(db.String, nullable=True)
