@@ -136,19 +136,19 @@ export default (state=initialState, action) => {
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
-        const { type, path } = data;
+        const { connection_id, path } = data;
 
         const { showHiddenFiles } = state;
 
         let files = action.payload;
 
-        if (type === 'localhost') {
+        if (connection_id === 0) {
             files = fileManager.convertLocalFilesToMotuz(files)
-        } else if (type === 's3' || type === 'azureblob') {
-            files = fileManager.convertRcloneFilesToMotuz(files)
         } else {
-            console.error(`Unknown payload type ${type}`);
+            files = fileManager.convertRcloneFilesToMotuz(files)
         }
+
+        console.log(files)
 
         files = fileManager.filterFiles(files, {
             showHiddenFiles: state.showHiddenFiles,

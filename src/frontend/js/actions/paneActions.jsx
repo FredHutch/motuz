@@ -14,8 +14,6 @@ export const fileFocusIndex = (side, index) => ({
 
 
 export const hostChange = (side=null, host) => {
-    console.log(host)
-
     return async (dispatch, getState) => {
         await dispatch({
             type: HOST_CHANGE,

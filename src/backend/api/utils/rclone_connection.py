@@ -1,10 +1,11 @@
-import logging
-import subprocess
-import functools
-import threading
-import re
-import time
 from collections import defaultdict
+import functools
+import json
+import logging
+import re
+import subprocess
+import threading
+import time
 
 class RcloneConnection:
     def __init__(self, type, data):
@@ -71,6 +72,7 @@ class RcloneConnection:
         )
 
         result = self._execute(command)
+        result = json.loads(result)
         return result
 
 
