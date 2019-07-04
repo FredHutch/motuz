@@ -226,7 +226,7 @@ CloudConnectionDialogFields.initialState = {
 
 class CloudConnectionField extends React.PureComponent {
     render() {
-        const { label, defaultValue, placeholder, error } = this.props;
+        const { label, defaultValue, error } = this.props;
 
         return (
             <div className="row form-group">
@@ -243,7 +243,6 @@ class CloudConnectionField extends React.PureComponent {
                             })}
                             name='bucket'
                             defaultValue={defaultValue}
-                            palceholder={placeholder}
                         />
                     )}
                     <span className="invalid-feedback">
