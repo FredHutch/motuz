@@ -79,13 +79,32 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderS3Section() {
         return (
             <React.Fragment>
-                {this._bucket()}
-                {this._region()}
+
+                <CloudConnectionField
+                    label='Bucket'
+                    defaultValue={this.props.data.s3_bucket}
+                    error={this.props.errors.s3_bucket}
+                />
+
+                <CloudConnectionField
+                    label='Region'
+                    defaultValue={this.props.data.s3_region}
+                    error={this.props.errors.s3_region}
+                />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
-                {this._accessKeyId()}
-                {this._secretAccessKey()}
+                <CloudConnectionField
+                    label='access_key_id'
+                    defaultValue={this.props.data.s3_access_key_id}
+                    error={this.props.errors.s3_access_key_id}
+                />
+
+                <CloudConnectionField
+                    label='secret_access_key'
+                    defaultValue={this.props.data.s3_secret_access_key}
+                    error={this.props.errors.s3_secret_access_key}
+                />
             </React.Fragment>
         )
     }
@@ -93,13 +112,19 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderAzureSection() {
         return (
             <React.Fragment>
-                {this._bucket()}
-                {this._region()}
-
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
-                {this._accessKeyId()}
-                {this._secretAccessKey()}
+                <CloudConnectionField
+                    label='account'
+                    defaultValue={this.props.data.azure_account}
+                    error={this.props.errors.azure_account}
+                />
+
+                <CloudConnectionField
+                    label='key'
+                    defaultValue={this.props.data.azure_key}
+                    error={this.props.errors.azure_key}
+                />
             </React.Fragment>
         )
     }
@@ -118,105 +143,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
         )
     }
 
-    _bucket() {
-        const type = this.state.type || this.props.data.type
-
-        if (type === 'azureblob') {
-            return <div></div>
-        }
-
-        return (
-            <CloudConnectionField
-                label='Bucket'
-                defaultValue={this.props.data.s3_bucket}
-                error={this.props.errors.s3_bucket}
-            />
-        )
-    }
-
-    _region() {
-        const type = this.state.type || this.props.data.type
-
-        if (type === 'azureblob') {
-            return <div></div>
-        }
-
-        return (
-            <CloudConnectionField
-                label='Bucket'
-                defaultValue={this.props.data.s3_region}
-                error={this.props.errors.s3_region}
-            />
-        )
-    }
-
-    _accessKeyId() {
-        const { data, errors } = this.props;
-        const type = this.state.type || this.props.data.type
-
-        let shownName = '';
-        if (type === 'azureblob') {
-            shownName = 'Account'
-        } else {
-            shownName = 'access_key_id'
-        }
-
-        return (
-            <div className="row form-group">
-                <div className="col-4 text-right">
-                    <b>{shownName}</b>
-                </div>
-                <div className="col-8">
-                    <input
-                        type="text"
-                        className={classnames({
-                            'form-control': true,
-                            'is-invalid': errors.access_key_id,
-                        })}
-                        name='access_key_id'
-                        defaultValue={data.access_key_id}
-                    />
-                    <span className="invalid-feedback">
-                        {errors.access_key_id}
-                    </span>
-                </div>
-            </div>
-        );
-    }
-
-    _secretAccessKey() {
-        const { data, errors } = this.props;
-        const type = this.state.type || this.props.data.type
-
-        let shownName = '';
-        if (type === 'azureblob') {
-            shownName = 'Key'
-        } else {
-            shownName = 'access_key_secret'
-        }
-
-        return (
-            <div className="row form-group">
-                <div className="col-4 text-right">
-                    <b>{shownName}</b>
-                </div>
-                <div className="col-8">
-                    <input
-                        type="text"
-                        className={classnames({
-                            'form-control': true,
-                            'is-invalid': errors.access_key_secret,
-                        })}
-                        name='access_key_secret'
-                        defaultValue={data.access_key_secret}
-                    />
-                    <span className="invalid-feedback">
-                        {errors.access_key_secret}
-                    </span>
-                </div>
-            </div>
-        );
-    }
 }
 
 CloudConnectionDialogFields.defaultProps = {
