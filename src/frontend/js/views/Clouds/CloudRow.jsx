@@ -16,15 +16,16 @@ class CloudRow extends React.Component {
     }
 
     render() {
-        const cloud = this.props.data;
+        const { data } = this.props;
+        console.log(data)
 
         const items = headers.map((header, j) => {
             return (
                 <td
                     key={j}
-                    onClick={() => this.props.onShowEditConnectionDialog(cloud)}
+                    onClick={() => this.props.onShowEditConnectionDialog(data)}
                 >
-                    {cloud[header]}
+                    {data[header]}
                 </td>
             );
         })
@@ -38,7 +39,7 @@ class CloudRow extends React.Component {
 }
 
 CloudRow.defaultProps = {
-    data: {},
+    // data: {},
     onShowEditConnectionDialog: data => {},
 }
 
@@ -49,7 +50,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onShowEditConnectionDialog: () => dispatch(showEditCloudConnectionDialog()),
+    onShowEditConnectionDialog: data => dispatch(showEditCloudConnectionDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CloudRow);
