@@ -1,15 +1,14 @@
 import React from 'react';
 
 import Navbar from 'components/Navbar.jsx'
-
+import CloudRow from 'views/Clouds/CloudRow.jsx'
 
 const headers = [
     "id",
-    "type",
     "name",
+    "type",
     "bucket",
-    "region",
-    "access_key_id",
+    "username",
 ];
 
 
@@ -19,27 +18,6 @@ class Clouds extends React.Component {
     }
 
     render() {
-        const connectionRows = this.props.clouds.map((cloud, i) => {
-            const items = headers.map((header, j) => {
-                return (
-                    <td
-                        key={j}
-                        onClick={() => this.props.onShowEditConnectionDialog(cloud)}
-                    >
-                        {cloud[header]}
-                    </td>
-                );
-            })
-
-            return (
-                <tr key={cloud.id}>
-                    {items}
-                </tr>
-            );
-        })
-
-
-
         return (
             <React.Fragment>
                 <Navbar />
@@ -61,7 +39,9 @@ class Clouds extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {connectionRows}
+                                    {this.props.clouds.map(cloud =>
+                                        <CloudRow key={cloud.id} data={cloud} />
+                                    )}
                                 </tbody>
                             </table>
                         </div>

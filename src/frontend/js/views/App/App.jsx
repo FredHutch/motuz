@@ -50,7 +50,7 @@ App.defaultProps = {
 
 import {connect} from 'react-redux';
 import {refreshPanes} from 'actions/paneActions.jsx'
-import {listFiles, listCloudConnections} from 'actions/apiActions.jsx'
+import {listCloudConnections} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
 });

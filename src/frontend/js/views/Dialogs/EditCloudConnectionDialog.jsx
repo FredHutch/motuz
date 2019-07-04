@@ -52,7 +52,7 @@ class EditCloudConnectionDialog extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        const form = this.formRef.current;
+        const form = event.target;
         const data = serializeForm(form)
 
         this.props.onSubmit(data);
