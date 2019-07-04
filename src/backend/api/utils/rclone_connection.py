@@ -27,12 +27,9 @@ class RcloneConnection:
 
         def _addCredential(env_key, data_key):
             value = getattr(self.data, data_key, None)
-
             if value is not None:
-                self.credentials += '{env_key}={value} '.format(
-                    env_key=env_key,
-                    value=getattr(self.data, data_key)
-                )
+                self.credentials += '{}={} '.format(env_key, value)
+
 
         if self.type == 's3':
             _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
