@@ -93,8 +93,8 @@ export default (state=initialState, action) => {
         const {side, host} = action.payload;
 
         let path = '/'
-        if (host.type === 's3' && host.bucket) {
-            path = `/${host.bucket}`;
+        if (host.type === 's3' && host.s3_bucket) {
+            path = `/${host.s3_bucket}`;
         }
 
         return {
@@ -147,8 +147,6 @@ export default (state=initialState, action) => {
         } else {
             files = fileManager.convertRcloneFilesToMotuz(files)
         }
-
-        console.log(files)
 
         files = fileManager.filterFiles(files, {
             showHiddenFiles: state.showHiddenFiles,
