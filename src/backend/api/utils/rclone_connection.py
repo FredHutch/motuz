@@ -24,12 +24,12 @@ class RcloneConnection:
 
     def _setCredentials(self):
         self.credentials = ''
-        self.credentials += 'RCLONE_CONFIG_CURRENT_TYPE={} '.format(self.type)
+        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.type)
 
         def _addCredential(env_key, data_key):
             value = getattr(self.data, data_key, None)
             if value is not None:
-                self.credentials += '{}={} '.format(env_key, value)
+                self.credentials += "{}='{}' ".format(env_key, value)
 
 
         if self.type == 's3':
@@ -70,6 +70,8 @@ class RcloneConnection:
             credentials=self.credentials,
             path=path,
         )
+
+        logging.info(sanitize(command))
 
         result = self._execute(command)
         result = json.loads(result)
