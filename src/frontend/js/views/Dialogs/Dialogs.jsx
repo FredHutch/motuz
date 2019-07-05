@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CopyJobDialog from 'views/Dialogs/CopyJobDialog.jsx';
+import NewCopyJobDialog from 'views/Dialogs/NewCopyJobDialog.jsx';
 import CopyJobEditDialog from 'views/Dialogs/CopyJobEditDialog.jsx';
 import NewCloudConnectionDialog from 'views/Dialogs/NewCloudConnectionDialog.jsx';
 import EditCloudConnectionDialog from 'views/Dialogs/EditCloudConnectionDialog.jsx';
@@ -14,7 +14,7 @@ class Dialogs extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {this.props.dialogs.displayCopyJobDialog && <CopyJobDialog />}
+                {this.props.dialogs.displayCopyJobDialog && <NewCopyJobDialog />}
                 {this.props.dialogs.displayCopyJobEditDialog && <CopyJobEditDialog />}
                 {this.props.dialogs.displayNewCloudConnectionDialog && <NewCloudConnectionDialog />}
                 {this.props.dialogs.displayEditCloudConnectionDialog && <EditCloudConnectionDialog />}
