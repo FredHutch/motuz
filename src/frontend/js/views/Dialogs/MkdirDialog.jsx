@@ -11,7 +11,7 @@ class MkdirDialog extends React.Component {
     }
 
     render() {
-        const { host, path } = this.props.data;
+        const { host, path, loading } = this.props.data;
         const uri = `${host.type}://${path}`
 
         return (
@@ -64,7 +64,7 @@ class MkdirDialog extends React.Component {
                             <Button variant="secondary" onClick={() => this.handleClose()}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" type='submit'>
+                            <Button variant="primary" type='submit' disabled={loading}>
                                 Make Directory
                             </Button>
                         </Modal.Footer>
