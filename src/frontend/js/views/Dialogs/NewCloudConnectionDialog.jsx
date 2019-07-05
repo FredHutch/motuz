@@ -15,13 +15,10 @@ class NewCloudConnectionDialog extends React.Component {
 
     render() {
         const {errors} = this.props
-
-        const verify_success = false;
-        const verify_loading = false;
-        const verify_finished = false;
+        const {verifySuccess, verifyLoading, verifyFinished} = this.props.data;
 
         let verificationStatusButton = <div></div>
-        if (verify_loading) {
+        if (verifyLoading) {
             verificationStatusButton = (
                 <Button
                     variant='outline-warning'
@@ -30,7 +27,7 @@ class NewCloudConnectionDialog extends React.Component {
                     Verifying...
                 </Button>
             )
-        } else if (verify_finished && verify_success) {
+        } else if (verifyFinished && verifySuccess) {
             verificationStatusButton = (
                 <Button
                     variant='outline-success'
@@ -40,7 +37,7 @@ class NewCloudConnectionDialog extends React.Component {
                     <span> Correct </span>
                 </Button>
             )
-        } else if (verify_finished && !verify_success) {
+        } else if (verifyFinished && !verifySuccess) {
             verificationStatusButton = (
                 <Button
                     variant='outline-danger'
@@ -70,7 +67,7 @@ class NewCloudConnectionDialog extends React.Component {
                             <CloudConnectionDialogFields
                                 data={{}}
                                 errors={errors}
-                                verify_success={(verify_finished && verify_success)}
+                                verifySuccess={(verifyFinished && verifySuccess)}
                             />
                     </Modal.Body>
                     <Modal.Footer>
@@ -117,10 +114,11 @@ class NewCloudConnectionDialog extends React.Component {
 }
 
 NewCloudConnectionDialog.defaultProps = {
+    errors: {},
+    data: {},
     onClose: () => {},
     onSubmit: (data) => {},
     onVerify: (data) => {},
-    errors: {},
 }
 
 import {connect} from 'react-redux';
@@ -129,6 +127,7 @@ import {createCloudConnection, verifyCloudConnection} from 'actions/apiActions.j
 
 const mapStateToProps = state => ({
     errors: state.api.cloudErrors,
+    data: state.dialog.newCloudConnectionDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -63,7 +63,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='name'
                     defaultValue={this.props.data.name}
                     error={this.props.errors.name}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 {type === 's3' && this._renderS3Section()}
@@ -88,7 +88,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='s3_bucket'
                     defaultValue={this.props.data.s3_bucket}
                     error={this.props.errors.s3_bucket}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -96,7 +96,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='s3_region'
                     defaultValue={this.props.data.s3_region}
                     error={this.props.errors.s3_region}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -106,7 +106,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='s3_access_key_id'
                     defaultValue={this.props.data.s3_access_key_id}
                     error={this.props.errors.s3_access_key_id}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -114,7 +114,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='s3_secret_access_key'
                     defaultValue={this.props.data.s3_secret_access_key}
                     error={this.props.errors.s3_secret_access_key}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Optionals</h5>
@@ -124,7 +124,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='s3_endpoint'
                     defaultValue={this.props.data.s3_endpoint}
                     error={this.props.errors.s3_endpoint}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
             </React.Fragment>
@@ -141,7 +141,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='azure_account'
                     defaultValue={this.props.data.azure_account}
                     error={this.props.errors.azure_account}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -149,7 +149,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='azure_key'
                     defaultValue={this.props.data.azure_key}
                     error={this.props.errors.azure_key}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
             </React.Fragment>
         )
@@ -165,7 +165,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='swift_auth'
                     defaultValue={this.props.data.swift_auth}
                     error={this.props.errors.swift_auth}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -173,7 +173,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='swift_tenant'
                     defaultValue={this.props.data.swift_tenant}
                     error={this.props.errors.swift_tenant}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -183,7 +183,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='swift_user'
                     defaultValue={this.props.data.swift_user}
                     error={this.props.errors.swift_user}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -191,7 +191,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='swift_key'
                     defaultValue={this.props.data.swift_key}
                     error={this.props.errors.swift_key}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
             </React.Fragment>
         )
@@ -207,7 +207,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='gcp_project_number'
                     defaultValue={this.props.data.gcp_project_number}
                     error={this.props.errors.gcp_project_number}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -217,7 +217,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='gcp_client_id'
                     defaultValue={this.props.data.gcp_client_id}
                     error={this.props.errors.gcp_client_id}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -225,7 +225,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     name='gcp_service_account_credentials'
                     defaultValue={this.props.data.gcp_service_account_credentials}
                     error={this.props.errors.gcp_service_account_credentials}
-                    is_valid={this.props.verify_success}
+                    is_valid={this.props.verifySuccess}
                 />
 
                 <input
@@ -246,7 +246,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
 }
 
 CloudConnectionDialogFields.defaultProps = {
-    verify_success: false,
+    verifySuccess: false,
     data: {},
 }
 

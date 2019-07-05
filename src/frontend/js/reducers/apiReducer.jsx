@@ -137,6 +137,7 @@ export default (state=initialState, action) => {
             cloudErrors: initialState.cloudErrors,
         }
     }
+
     case api.UPDATE_CLOUD_CONNECTION_FAILURE: {
         return {
             ...state,
@@ -145,11 +146,16 @@ export default (state=initialState, action) => {
     }
 
     case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
-        return state;
+        return {
+            ...state,
+            cloudErrors: initialState.cloudErrors,
+        }
     }
+
     case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
         return state;
     }
+
     case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
         return {
             ...state,
