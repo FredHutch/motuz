@@ -23,14 +23,19 @@ const initialState = {
     copyJobEditDialogData: {},
 
     displayNewCloudConnectionDialog: false,
+    newCloudConnectionDialogData: {
+        verifySuccess: false,
+        verifyLoading: false,
+        verifyFinished: false,
+    },
 
     displayEditCloudConnectionDialog: false,
-    editCloudConnectionDialogData: {
-    }
+    editCloudConnectionDialogData: {}
 };
 
 export default (state=initialState, action) => {
     switch(action.type) {
+
     case dialog.SHOW_COPY_JOB_DIALOG: {
         return {
             ...state,
@@ -41,12 +46,14 @@ export default (state=initialState, action) => {
             }
         }
     }
+
     case dialog.HIDE_COPY_JOB_DIALOG: {
         return {
             ...state,
             displayCopyJobDialog: false,
         }
     }
+
     case dialog.SHOW_COPY_JOB_EDIT_DIALOG: {
         return {
             ...state,
@@ -54,6 +61,7 @@ export default (state=initialState, action) => {
             copyJobEditDialogData: action.payload.data,
         }
     }
+
     case dialog.HIDE_COPY_JOB_EDIT_DIALOG:
     case api.STOP_COPY_JOB_SUCCESS:
     {
@@ -62,6 +70,7 @@ export default (state=initialState, action) => {
             displayCopyJobEditDialog: false,
         }
     }
+
     case api.CREATE_COPY_JOB_SUCCESS: {
         return {
             ...state,
@@ -75,6 +84,7 @@ export default (state=initialState, action) => {
             displayNewCloudConnectionDialog: true,
         }
     }
+
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         return {
@@ -92,6 +102,7 @@ export default (state=initialState, action) => {
             },
         }
     }
+
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
     case api.UPDATE_CLOUD_CONNECTION_SUCCESS:
     case api.DELETE_CLOUD_CONNECTION_SUCCESS: {
@@ -100,6 +111,46 @@ export default (state=initialState, action) => {
             displayEditCloudConnectionDialog: false,
         }
     }
+
+    case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
+        return {
+            ...state,
+            newCloudConnectionDialogData: {
+                ...state.newCloudConnectionDialogData,
+                verifyLoading: true,
+                verifyFinished: false,
+            }
+        }
+    }
+
+    case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
+        const {result} = action.payload;
+
+        return {
+            ...state,
+            newCloudConnectionDialogData: {
+                ...state.newCloudConnectionDialogData,
+                verifyLoading: false,
+                verifyFinished: true,
+                verifySuccess: result,
+            }
+        }
+    }
+
+    case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
+        return {
+            ...state,
+            newCloudConnectionDialogData: {
+                ...state.newCloudConnectionDialogData,
+                verifyLoading: false,
+                verifyFinished: true,
+                verifySuccess: false,
+            }
+        }
+    }
+
+
+
     default:
         return state;
     }

@@ -38,6 +38,10 @@ export const DELETE_CLOUD_CONNECTION_REQUEST = '@@api/DELETE_CLOUD_CONNECTION_RE
 export const DELETE_CLOUD_CONNECTION_SUCCESS = '@@api/DELETE_CLOUD_CONNECTION_SUCCESS';
 export const DELETE_CLOUD_CONNECTION_FAILURE = '@@api/DELETE_CLOUD_CONNECTION_FAILURE';
 
+export const VERIFY_CLOUD_CONNECTION_REQUEST = '@@api/VERIFY_CLOUD_CONNECTION_REQUEST';
+export const VERIFY_CLOUD_CONNECTION_SUCCESS = '@@api/VERIFY_CLOUD_CONNECTION_SUCCESS';
+export const VERIFY_CLOUD_CONNECTION_FAILURE = '@@api/VERIFY_CLOUD_CONNECTION_FAILURE';
+
 
 export const listFiles = (side, data) => ({
     [RSAA]: {
@@ -124,6 +128,21 @@ export const createCloudConnection = (data) => {
         }
     }
 };
+
+export const verifyCloudConnection = (data) => {
+    delete data.id;
+
+    return {
+        [RSAA]: {
+            endpoint: `/api/connections/verify/`, // TODO: Why is there a trailing slash here?
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: withAuth({ 'Content-Type': 'application/json' }),
+            types: [ VERIFY_CLOUD_CONNECTION_REQUEST, VERIFY_CLOUD_CONNECTION_SUCCESS, VERIFY_CLOUD_CONNECTION_FAILURE ],
+        }
+    }
+};
+
 
 export const updateCloudConnection = (data) => {
     const id = data.id;

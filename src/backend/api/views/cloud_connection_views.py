@@ -15,7 +15,7 @@ dto = api.model('connection', {
     'id': fields.Integer(readonly=True, example=1),
     'name': fields.String(required=True, example='arbitrary-unique-name'),
 
-    'type': fields.String(required=True, example='S3'),
+    'type': fields.String(required=True, example='s3'),
 
     's3_bucket': fields.String(required=False, example='my-bucket-name'),
     's3_access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
@@ -67,6 +67,22 @@ class ConnectionList(Resource):
 
         try:
             return cloud_connection_manager.create(data=data), 201
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+
+
+
+@api.route('/verify/')
+class ConnectionVerify(Resource):
+    @api.expect(dto, validate=True)
+    def post(self):
+        """
+        Verify credentials for a connection
+        """
+        data = request.json
+
+        try:
+            return cloud_connection_manager.verify(data=data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
 

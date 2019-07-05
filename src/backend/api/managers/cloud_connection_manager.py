@@ -7,6 +7,7 @@ from flask import request
 from ..application import db
 from ..models import CloudConnection
 from ..exceptions import *
+from ..utils.rclone_connection import RcloneConnection
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 
@@ -29,6 +30,7 @@ def create(data):
     db.session.commit()
 
     return cloud_connection
+
 
 
 @token_required
@@ -65,3 +67,17 @@ def delete(id):
     db.session.commit()
 
     return cloud_connection
+
+
+
+@token_required
+def verify(data):
+    owner = get_logged_in_user(request)
+    cloud_connection = CloudConnection(**data)
+    cloud_connection.owner = owner
+
+    connection = RcloneConnection(
+        type=cloud_connection.type,
+        data=cloud_connection,
+    )
+    return connection.verify()
