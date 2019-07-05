@@ -20,7 +20,7 @@ def get_uid():
 
 
 @token_required
-def get_files(data):
+def ls(data):
     path = data['path']
     connection_id = data['connection_id']
 
@@ -33,6 +33,27 @@ def get_files(data):
     # does not exist, the line above will raise the correct HTTP 4xx Exception
 
     return _get_remote_files(cloud_connection, path)
+
+
+@token_required
+def mkdir(data):
+    path = data['path']
+    connection_id = data['connection_id']
+
+    if connection_id == 0:
+        raise HTTP_400_BAD_REQUEST("Cannot create local folder")
+
+    cloud_connection = cloud_connection_manager.retrieve(connection_id)
+
+    # If user does not have permission to the cloud_connection or if the cloud_connection
+    # does not exist, the line above will raise the correct HTTP 4xx Exception
+
+    connection = RcloneConnection(
+        type=cloud_connection.type,
+        data=cloud_connection,
+    )
+
+    return connection.mkdir(path=path)
 
 
 def _get_local_files(path):

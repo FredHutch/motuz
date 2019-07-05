@@ -65,7 +65,9 @@ class NewCloudConnectionDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                             <CloudConnectionDialogFields
-                                data={{}}
+                                data={{
+                                    s3_region: 'us-west-2'
+                                }}
                                 errors={errors}
                                 verifySuccess={(verifyFinished && verifySuccess)}
                             />

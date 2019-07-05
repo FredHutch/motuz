@@ -6,6 +6,10 @@ export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
 export const LIST_FILES_FAILURE = '@@api/LIST_FILES_FAILURE';
 
+export const MAKE_DIRECTORY_REQUEST = '@@api/MAKE_DIRECTORY_REQUEST';
+export const MAKE_DIRECTORY_SUCCESS = '@@api/MAKE_DIRECTORY_SUCCESS';
+export const MAKE_DIRECTORY_FAILURE = '@@api/MAKE_DIRECTORY_FAILURE';
+
 export const LIST_COPY_JOBS_REQUEST = '@@api/LIST_COPY_JOBS_REQUEST';
 export const LIST_COPY_JOBS_SUCCESS = '@@api/LIST_COPY_JOBS_SUCCESS';
 export const LIST_COPY_JOBS_FAILURE = '@@api/LIST_COPY_JOBS_FAILURE';
@@ -63,6 +67,17 @@ export const listFiles = (side, data) => ({
                 meta: {side, data},
             },
         ]
+    }
+});
+
+
+export const makeDirectory = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/system/files/mkdir/`,
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ MAKE_DIRECTORY_REQUEST, MAKE_DIRECTORY_SUCCESS, MAKE_DIRECTORY_FAILURE ],
     }
 });
 

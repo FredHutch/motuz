@@ -30,7 +30,10 @@ const initialState = {
     },
 
     displayEditCloudConnectionDialog: false,
-    editCloudConnectionDialogData: {}
+    editCloudConnectionDialogData: {},
+
+    displayMkdirDialog: false,
+    mkdirDialogData: {},
 };
 
 export default (state=initialState, action) => {
@@ -146,6 +149,25 @@ export default (state=initialState, action) => {
                 verifyFinished: true,
                 verifySuccess: false,
             }
+        }
+    }
+
+
+    case dialog.SHOW_MKDIR_DIALOG: {
+        return {
+            ...state,
+            displayMkdirDialog: true,
+            mkdirDialogData: {
+                ...state.mkdirDialogData,
+                ...action.payload.data,
+            }
+        }
+    }
+
+    case dialog.HIDE_MKDIR_DIALOG: {
+        return {
+            ...state,
+            displayMkdirDialog: false,
         }
     }
 
