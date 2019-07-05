@@ -144,6 +144,19 @@ export default (state=initialState, action) => {
         }
     }
 
+    case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
+        return state;
+    }
+    case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
+        return state;
+    }
+    case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
+        return {
+            ...state,
+            cloudErrors: action.payload.response.errors,
+        }
+    }
+
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
     {

@@ -61,6 +61,22 @@ class RcloneConnection:
             logging.error("Connection type unknown: {}".format(self.type))
 
 
+    def verify(self):
+        command = '{} rclone lsjson current:'.format(self.credentials)
+
+        try:
+            result = self._execute(command)
+            return {
+                'result': True,
+                'message': 'Success',
+            }
+        except subprocess.CalledProcessError as e:
+            returncode = e.returncode
+            return {
+                'result': False,
+                'message': 'Exit status {}'.format(returncode),
+            }
+
 
     def ls(self, path):
         command = (
@@ -70,8 +86,6 @@ class RcloneConnection:
             credentials=self.credentials,
             path=path,
         )
-
-        logging.error(sanitize(command))
 
         result = self._execute(command)
         result = json.loads(result)
