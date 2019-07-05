@@ -5,14 +5,17 @@ import { NavDropdown } from 'react-bootstrap'
 class UserMenu extends React.PureComponent {
     render() {
         return (
-            <div className="navbar-nav text-right d-inline-block">
-                <NavDropdown title={this.props.username}>
-                      <Link to="/logout" className='dropdown-item'>Logout</Link>
-                </NavDropdown>
+            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <div className="navbar-nav ml-auto">
+                    <NavDropdown direction='left' title={this.props.username}>
+                        <Link to="/logout" className='dropdown-item'>Logout</Link>
+                    </NavDropdown>
+                </div>
             </div>
         );
     }
 }
+
 
 
 UserMenu.defaultProps = {
