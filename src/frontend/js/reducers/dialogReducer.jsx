@@ -30,7 +30,12 @@ const initialState = {
     },
 
     displayEditCloudConnectionDialog: false,
-    editCloudConnectionDialogData: {}
+    editCloudConnectionDialogData: {},
+
+    displayMkdirDialog: false,
+    mkdirDialogData: {
+        loading: false,
+    },
 };
 
 export default (state=initialState, action) => {
@@ -145,6 +150,47 @@ export default (state=initialState, action) => {
                 verifyLoading: false,
                 verifyFinished: true,
                 verifySuccess: false,
+            }
+        }
+    }
+
+
+    case dialog.SHOW_MKDIR_DIALOG: {
+        return {
+            ...state,
+            displayMkdirDialog: true,
+            mkdirDialogData: {
+                ...state.mkdirDialogData,
+                ...action.payload.data,
+            }
+        }
+    }
+
+    case dialog.HIDE_MKDIR_DIALOG: {
+        return {
+            ...state,
+            displayMkdirDialog: false,
+            mkdirDialogData: initialState.mkdirDialogData,
+        }
+    }
+
+    case api.MAKE_DIRECTORY_REQUEST: {
+        return {
+            ...state,
+            mkdirDialogData: {
+                ...state.mkdirDialogData,
+                loading: true,
+            }
+        }
+    }
+    case api.MAKE_DIRECTORY_SUCCESS:
+    case api.MAKE_DIRECTORY_FAILURE:
+    {
+        return {
+            ...state,
+            mkdirDialogData: {
+                ...state.mkdirDialogData,
+                loading: false,
             }
         }
     }

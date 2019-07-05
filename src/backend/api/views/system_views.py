@@ -24,7 +24,21 @@ class SystemFiles(Resource):
         """
         data = request.json
         try:
-            return system_manager.get_files(data), 200
+            return system_manager.ls(data), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+
+
+@api.route('/files/mkdir/')
+class SystemFiles(Resource):
+    @api.expect(dto, validate=True)
+    def post(self):
+        """
+        List all files for a particular URI.
+        """
+        data = request.json
+        try:
+            return system_manager.mkdir(data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
 

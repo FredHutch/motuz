@@ -26,7 +26,7 @@ export default (state=initialState, action) => {
     case api.CREATE_CLOUD_CONNECTION_FAILURE:
     case api.UPDATE_CLOUD_CONNECTION_FAILURE:
     case api.DELETE_CLOUD_CONNECTION_FAILURE:
-
+    case api.MAKE_DIRECTORY_FAILURE:
     {
         return {
             ...state,

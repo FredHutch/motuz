@@ -22,6 +22,9 @@ export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECT
 export const SHOW_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_EDIT_CLOUD_CONNECTION_DIALOG';
 export const HIDE_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_EDIT_CLOUD_CONNECTION_DIALOG';
 
+export const SHOW_MKDIR_DIALOG = '@@dialog/SHOW_MKDIR_DIALOG';
+export const HIDE_MKDIR_DIALOG = '@@dialog/HIDE_MKDIR_DIALOG';
+
 
 export const showCopyJobDialog = () => {
     return async (dispatch, getState) => {
@@ -82,4 +85,24 @@ export const showEditCloudConnectionDialog = (data) => ({
 
 export const hideEditCloudConnectionDialog = () => ({
     type: HIDE_EDIT_CLOUD_CONNECTION_DIALOG,
+});
+
+export const showMkdirDialog = (data) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const pane = getCurrentPane(state.pane);
+
+        const {host, path} = pane;
+
+        dispatch({
+            type: SHOW_MKDIR_DIALOG,
+            payload: {
+                data: {host, path}
+            },
+        })
+    }
+};
+
+export const hideMkdirDialog = () => ({
+    type: HIDE_MKDIR_DIALOG,
 });

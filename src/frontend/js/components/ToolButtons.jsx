@@ -13,11 +13,10 @@ class ToolButtons extends React.Component {
             <React.Fragment>
                 <button
                     className="btn btn-outline-primary my-2 ml-2 my-sm-0"
-                    onClick={event => this.props.onToggleShowHiddenFiles()}
+                    onClick={event => this.props.onShowMkdirDialog()}
                     alt='Create Folder'
                     title='Create Folder'
                     aria-label='Create Folder'
-                    style={{display: 'none'}}
                 >
                     <Icon name='file-submodule'/>
                 </button>
@@ -58,18 +57,21 @@ class ToolButtons extends React.Component {
 
 ToolButtons.defaultProps = {
     showHiddenFiles: true,
+    onShowMkdirDialog: () => {},
     onRefresh: () => {},
     onToggleShowHiddenFiles: () => {},
 }
 
 import {connect} from 'react-redux';
 import {toggleShowHiddenFiles, refreshPanes} from 'actions/paneActions.jsx';
+import {showMkdirDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     showHiddenFiles: state.pane.showHiddenFiles,
 });
 
 const mapDispatchToProps = dispatch => ({
+    onShowMkdirDialog: () => dispatch(showMkdirDialog()),
     onRefresh: () => dispatch(refreshPanes()),
     onToggleShowHiddenFiles: () => dispatch(toggleShowHiddenFiles()),
 });

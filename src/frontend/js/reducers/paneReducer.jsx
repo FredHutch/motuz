@@ -15,8 +15,8 @@ import {
 const INITIAL_PANE = {
     host: {
         id: 0,
-        name: '127.0.0.1',
-        type: 'localhost',
+        name: 'localhost',
+        type: 'file',
         access_key_id: '',
         access_key_secret: '',
         region: '',

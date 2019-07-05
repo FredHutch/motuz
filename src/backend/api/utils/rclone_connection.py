@@ -21,46 +21,6 @@ class RcloneConnection:
         self._latest_job_id = 0
 
 
-
-    def _setCredentials(self):
-        self.credentials = ''
-        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.type)
-
-        def _addCredential(env_key, data_key):
-            value = getattr(self.data, data_key, None)
-            if value is not None:
-                self.credentials += "{}='{}' ".format(env_key, value)
-
-
-        if self.type == 's3':
-            _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
-            _addCredential('RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
-            _addCredential('RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
-
-            _addCredential('RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
-            _addCredential('RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
-
-        elif self.type == 'azureblob':
-            _addCredential('RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
-            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
-
-        elif self.type == 'swift':
-            _addCredential('RCLONE_CONFIG_CURRENT_USER', 'swift_user')
-            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
-            _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
-            _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
-
-        elif self.type == 'google cloud storage':
-            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
-            _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
-            _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
-            _addCredential('RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
-            _addCredential('RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
-
-        else:
-            logging.error("Connection type unknown: {}".format(self.type))
-
-
     def verify(self):
         command = '{} rclone lsjson current:'.format(self.credentials)
 
@@ -90,6 +50,23 @@ class RcloneConnection:
         result = self._execute(command)
         result = json.loads(result)
         return result
+
+
+
+    def mkdir(self, path):
+        command = (
+            '{credentials} '
+            'rclone touch current:{path}/.keep'
+        ).format(
+            credentials=self.credentials,
+            path=path,
+        )
+
+        result = self._execute(command)
+        return {
+            'message': 'Success',
+        }
+
 
 
     def copy(self, src, dst, job_id=None):
@@ -128,6 +105,45 @@ class RcloneConnection:
 
     def copy_finished(self, job_id):
         return self._stop_events[job_id].is_set()
+
+
+    def _setCredentials(self):
+        self.credentials = ''
+        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.type)
+
+        def _addCredential(env_key, data_key):
+            value = getattr(self.data, data_key, None)
+            if value is not None:
+                self.credentials += "{}='{}' ".format(env_key, value)
+
+
+        if self.type == 's3':
+            _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
+            _addCredential('RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
+            _addCredential('RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
+
+            _addCredential('RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
+            _addCredential('RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
+
+        elif self.type == 'azureblob':
+            _addCredential('RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
+            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
+
+        elif self.type == 'swift':
+            _addCredential('RCLONE_CONFIG_CURRENT_USER', 'swift_user')
+            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
+            _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
+            _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
+
+        elif self.type == 'google cloud storage':
+            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
+            _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
+            _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
+            _addCredential('RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
+            _addCredential('RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
+
+        else:
+            logging.error("Connection type unknown: {}".format(self.type))
 
 
     def _get_next_job_id(self):

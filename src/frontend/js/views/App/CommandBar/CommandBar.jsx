@@ -121,8 +121,8 @@ class CommandBar extends React.Component {
         const clouds = [
             {
                 id: 0,
-                name: '127.0.0.1',
-                type: 'localhost',
+                name: 'localhost',
+                type: 'file',
             },
             ...this.props.clouds
         ];

@@ -22,7 +22,8 @@ class NewCloudConnectionDialog extends React.Component {
             verificationStatusButton = (
                 <Button
                     variant='outline-warning'
-                    className='ml-2 disabled'
+                    className='ml-2'
+                    disabled
                 >
                     Verifying...
                 </Button>
@@ -31,7 +32,8 @@ class NewCloudConnectionDialog extends React.Component {
             verificationStatusButton = (
                 <Button
                     variant='outline-success'
-                    className='ml-2 disabled'
+                    className='ml-2'
+                    disabled
                 >
                     <Icon name='check'/>
                     <span> Correct </span>
@@ -41,7 +43,8 @@ class NewCloudConnectionDialog extends React.Component {
             verificationStatusButton = (
                 <Button
                     variant='outline-danger'
-                    className='ml-2 disabled'
+                    className='ml-2'
+                    disabled
                 >
                     <Icon name='x'/>
                     <span> Incorrect </span>
@@ -65,7 +68,9 @@ class NewCloudConnectionDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                             <CloudConnectionDialogFields
-                                data={{}}
+                                data={{
+                                    s3_region: 'us-west-2'
+                                }}
                                 errors={errors}
                                 verifySuccess={(verifyFinished && verifySuccess)}
                             />

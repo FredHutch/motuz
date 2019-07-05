@@ -7,6 +7,7 @@ import serializeForm from 'utils/serializeForm.jsx'
 class CopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef()
     }
 
     render() {
@@ -78,7 +79,7 @@ class CopyJobDialog extends React.Component {
                                             name="description"
                                             type="text"
                                             className="form-control"
-                                            autoFocus
+                                            ref={this.inputRef}
                                         />
                                     </div>
                                     <div className="col-1"></div>
@@ -129,7 +130,7 @@ class CopyJobDialog extends React.Component {
     }
 
     componentDidMount() {
-
+        this.inputRef.current.focus()
     }
 }
 
