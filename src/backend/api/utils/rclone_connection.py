@@ -253,23 +253,26 @@ class RcloneConnection:
 
 
 def sanitize(string):
-    string = sanitize_secret_access_key(string)
-    string = sanitize_access_key_id(string)
+    sanitizations_regs = [
+        # s3
+        (r"(RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID=')(\S*)(\S\S\S\S')", r"\1***\3"),
+        (r"(RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY=')(\S*)(')", r"\1***\3"),
+
+        # Azure
+        (r"(RCLONE_CONFIG_CURRENT_KEY=')(\S*)(')", r"\1***\3"),
+
+        # Swift
+        (r"(RCLONE_CONFIG_CURRENT_KEY=')(\S*)(')", r"\1***\3"),
+
+        # GCP
+        (r"(RCLONE_CONFIG_CURRENT_CLIENT_ID=')(\S*)(\S\S\S\S')", r"\1***\3"),
+        (r"(RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS=')([^']*)(')", r"\1{***}\3"),
+    ]
+
+    for regex, replace in sanitizations_regs:
+        string = re.sub(regex, replace, string)
+
     return string
-
-
-sanitize_secret_access_key = functools.partial(
-    re.sub,
-    r'(RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY=)(\S*)',
-    r'\1****'
-)
-
-sanitize_access_key_id = functools.partial(
-    re.sub,
-    r'(RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID=)\S*(\S\S\S\S)',
-    r'\1****\2'
-)
-
 
 
 
