@@ -53,7 +53,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.displayCopyJobDialog()}
+                    onClick={() => this.displayNewCopyJobDialog()}
                 > <b> &lt; </b> </button>
             </div>
         )
@@ -68,7 +68,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.displayCopyJobDialog()}
+                    onClick={() => this.displayNewCopyJobDialog()}
                 > <b> &gt; </b> </button>
             </div>
         );
@@ -110,8 +110,8 @@ class CommandBar extends React.Component {
 
     }
 
-    displayCopyJobDialog() {
-        this.props.onDisplayCopyJobDialog()
+    displayNewCopyJobDialog() {
+        this.props.onDisplayNewCopyJobDialog()
     }
 
     onHostChange(hostId) {
@@ -148,11 +148,11 @@ CommandBar.defaultProps = {
     clouds: [],
     onHostChange: (side, host) => {},
     onDirectoryChange: (side, path) => {},
-    onDisplayCopyJobDialog: () => {},
+    onDisplayNewCopyJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
-import {showCopyJobDialog} from 'actions/dialogActions.jsx'
+import {showNewCopyJobDialog} from 'actions/dialogActions.jsx'
 import {hostChange, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
@@ -161,7 +161,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onDisplayCopyJobDialog: () => dispatch(showCopyJobDialog()),
+    onDisplayNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });

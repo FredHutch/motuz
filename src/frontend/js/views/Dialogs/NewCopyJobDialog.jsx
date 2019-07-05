@@ -141,15 +141,15 @@ NewCopyJobDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hideNewCopyJobDialog} from 'actions/dialogActions.jsx'
 import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.copyJobDialogData,
+    data: state.dialog.newCopyJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideCopyJobDialog()),
+    onClose: () => dispatch(hideNewCopyJobDialog()),
     onSubmit: data => dispatch(createCopyJob(data)),
 });
 

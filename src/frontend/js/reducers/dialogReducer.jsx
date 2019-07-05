@@ -10,8 +10,8 @@ const DESTINATION_CLOUD = {
 }
 
 const initialState = {
-    displayCopyJobDialog: false,
-    copyJobDialogData: {
+    displayNewCopyJobDialog: false,
+    newCopyJobDialogData: {
         source_cloud: SOURCE_CLOUD,
         source_resource: 'ERROR',
         destination_cloud: DESTINATION_CLOUD,
@@ -41,21 +41,21 @@ const initialState = {
 export default (state=initialState, action) => {
     switch(action.type) {
 
-    case dialog.SHOW_COPY_JOB_DIALOG: {
+    case dialog.SHOW_NEW_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobDialog: true,
-            copyJobDialogData: {
-                ...state.copyJobDialogData,
+            displayNewCopyJobDialog: true,
+            newCopyJobDialogData: {
+                ...state.newCopyJobDialogData,
                 ...action.payload.data,
             }
         }
     }
 
-    case dialog.HIDE_COPY_JOB_DIALOG: {
+    case dialog.HIDE_NEW_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobDialog: false,
+            displayNewCopyJobDialog: false,
         }
     }
 
@@ -79,7 +79,7 @@ export default (state=initialState, action) => {
     case api.CREATE_COPY_JOB_SUCCESS: {
         return {
             ...state,
-            displayCopyJobDialog: false,
+            displayNewCopyJobDialog: false,
         }
     }
 

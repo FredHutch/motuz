@@ -14,7 +14,7 @@ class Dialogs extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {this.props.dialogs.displayCopyJobDialog && <NewCopyJobDialog />}
+                {this.props.dialogs.displayNewCopyJobDialog && <NewCopyJobDialog />}
                 {this.props.dialogs.displayCopyJobEditDialog && <CopyJobEditDialog />}
                 {this.props.dialogs.displayNewCloudConnectionDialog && <NewCloudConnectionDialog />}
                 {this.props.dialogs.displayEditCloudConnectionDialog && <EditCloudConnectionDialog />}
