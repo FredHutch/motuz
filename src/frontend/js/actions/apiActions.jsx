@@ -1,6 +1,8 @@
 import { RSAA } from 'redux-api-middleware';
 
 import { withAuth } from 'reducers/reducers.jsx';
+import * as pane from 'actions/paneActions.jsx'
+import * as dialog from 'actions/dialogActions.jsx'
 
 export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
@@ -71,7 +73,15 @@ export const listFiles = (side, data) => ({
 });
 
 
-export const makeDirectory = (data) => ({
+export const makeDirectory = (data) => {
+    return async (dispatch, getState) => {
+        await dispatch(_makeDirectory(data));
+        await dispatch(dialog.hideMkdirDialog())
+        await dispatch(pane.refreshPanes())
+    }
+}
+
+export const _makeDirectory = (data) => ({
     [RSAA]: {
         endpoint: `/api/system/files/mkdir/`,
         method: 'POST',

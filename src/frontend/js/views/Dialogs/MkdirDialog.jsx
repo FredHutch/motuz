@@ -7,6 +7,7 @@ import serializeForm from 'utils/serializeForm.jsx'
 class MkdirDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.inputRef = React.createRef()
     }
 
     render() {
@@ -52,6 +53,7 @@ class MkdirDialog extends React.Component {
                                             className="form-control"
                                             type="text"
                                             name="path_suffix"
+                                            ref={this.inputRef}
                                         />
                                     </div>
                                     <div className="col-1"></div>
@@ -90,7 +92,7 @@ class MkdirDialog extends React.Component {
     }
 
     componentDidMount() {
-
+        this.inputRef.current.focus()
     }
 }
 
