@@ -108,6 +108,10 @@ class EditCopyJobDialog extends React.Component {
 
     }
 
+    componentWillUnmount() {
+
+    }
+
     outputText(data) {
         if (!data.progress_text) {
             return <React.Fragment />
