@@ -22,10 +22,10 @@ class RcloneConnection:
 
     def verify(self, data):
         credentials = self._formatCredentials(data, name='current')
-        command = '{} rclone lsjson current:'.format(credentials)
+        command = 'rclone lsjson current:'.format()
 
         try:
-            result = self._execute(command)
+            result = self._execute(command, credentials)
             return {
                 'result': True,
                 'message': 'Success',
@@ -42,15 +42,13 @@ class RcloneConnection:
         credentials = self._formatCredentials(data, name='current')
 
         command = (
-            '{credentials} '
             'rclone lsjson current:{path}'
         ).format(
-            credentials=credentials,
             path=path,
         )
 
         try:
-            result = self._execute(command)
+            result = self._execute(command, credentials)
             result = json.loads(result)
             return result
         except subprocess.CalledProcessError as e:
@@ -63,15 +61,13 @@ class RcloneConnection:
         credentials = self._formatCredentials(data, name='current')
 
         command = (
-            '{credentials} '
             'rclone touch current:{path}/.keep'
         ).format(
-            credentials=credentials,
             path=path,
         )
 
         try:
-            result = self._execute(command)
+            result = self._execute(command, credentials)
             return {
                 'message': 'Success',
             }
@@ -81,28 +77,26 @@ class RcloneConnection:
 
 
     def copy(self, src_data, src_path, dst_data, dst_path, job_id=None):
-        credentials = ''
+        credentials = {}
 
         if src_data is None: # Local
             src = src_path
         else:
-            credentials += self._formatCredentials(src_data, name='src')
+            credentials.update(self._formatCredentials(src_data, name='src'))
             src = 'src:{}'.format(src_path)
 
         if dst_data is None: # Local
             dst = dst_path
         else:
-            credentials += self._formatCredentials(dst_data, name='dst')
+            credentials.update(self._formatCredentials(dst_data, name='dst'))
             dst = 'dst:{}'.format(dst_path)
 
 
         command = (
-            '{credentials} '
             'rclone copy {src} {dst} '
             '--progress '
             '--stats 2s '
         ).format(
-            credentials=credentials,
             src=src,
             dst=dst,
         )
@@ -118,7 +112,7 @@ class RcloneConnection:
         self._stop_events[job_id] = threading.Event()
 
         try:
-            self._execute_interactive(command, job_id)
+            self._execute_interactive(command, credentials, job_id)
         except subprocess.CalledProcessError as e:
             raise RcloneException(sanitize(str(e)))
 
@@ -154,13 +148,13 @@ class RcloneConnection:
 
         prefix = "RCLONE_CONFIG_{}".format(name.upper())
 
-        credentials = ''
-        credentials += "{}_TYPE='{}' ".format(prefix, data.type)
+        credentials = {}
+        credentials['{}_TYPE'.format(prefix)] = data.type
 
         def _addCredential(credentials, env_key, data_key):
             value = getattr(data, data_key, None)
             if value is not None:
-                credentials += "{}='{}' ".format(env_key, value)
+                credentials[env_key] = value
             return credentials
 
 
@@ -253,26 +247,28 @@ class RcloneConnection:
         return job_id in self._job_status
 
 
-    def _execute(self, command):
-        byteOutput = subprocess.check_output(command, shell=True)
+    def _execute(self, command, env={}):
+        byteOutput = subprocess.check_output(command, env=env, shell=True)
         output = byteOutput.decode('UTF-8').rstrip()
         return output
 
 
-    def _execute_interactive(self, command, job_id):
+    def _execute_interactive(self, command, env, job_id):
         thread = threading.Thread(target=self.__execute_interactive, kwargs={
             'command': command,
+            'env': env,
             'job_id': job_id,
         })
         thread.daemon = True
         thread.start()
 
 
-    def __execute_interactive(self, command, job_id):
+    def __execute_interactive(self, command, env={}, job_id=0):
         stop_event = self._stop_events[job_id]
 
         process = subprocess.Popen(
             command,
+            env=env,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
