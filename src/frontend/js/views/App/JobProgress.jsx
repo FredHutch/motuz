@@ -1,6 +1,7 @@
 import React from 'react';
 import {ProgressBar, OverlayTrigger, Popover} from 'react-bootstrap';
 
+import parseTime from 'utils/parseTime.jsx'
 import ResizableDivider from 'components/ResizableDivider.jsx'
 
 class JobProgress extends React.Component {
@@ -20,6 +21,7 @@ class JobProgress extends React.Component {
             'dst_cloud',
             'dst_path',
             'state',
+            'time',
             'progress',
         ]
 
@@ -30,6 +32,8 @@ class JobProgress extends React.Component {
                 </th>
             );
         })
+
+        console.log(this.props.jobs)
 
         // TODO: Optimize
         const jobs = this.props.jobs.map(job => {
@@ -63,6 +67,7 @@ class JobProgress extends React.Component {
                 ...job,
                 'state': job.progress_state,
                 'progress': progress,
+                'time': parseTime(job.progress_execution_time),
             }
             return (
                 <tr
