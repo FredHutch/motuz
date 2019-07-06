@@ -190,19 +190,24 @@ class RcloneConnection:
             command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            stderr=subprocess.PIPE,
             shell=True,
         )
 
         reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
         reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
 
-        while not stop_event.is_set() and process.poll() is None:
-            line = process.stdout.readline().decode('utf-8').strip()
+        while not stop_event.is_set():
+            line = process.stdout.readline().decode('utf-8')
 
             if len(line) == 0:
-                stop_event.set()
+                if process.poll() is not None:
+                    stop_event.set()
+                else:
+                    time.sleep(0.5)
                 continue
+
+            line = line.strip()
 
             q1 = line.find(reset_sequence1)
             if q1 != -1:
@@ -215,9 +220,15 @@ class RcloneConnection:
             line = line.replace(reset_sequence1, '')
             line = line.replace(reset_sequence2, '')
 
+            match = re.search(r'(ERROR.*)', line)
+            if match is not None:
+                error = match.groups()[0]
+                logging.error(error)
+                continue
+
             match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
             if match is None:
-                print("No match in {}".format(line))
+                logging.info("No match in {}".format(line))
                 time.sleep(0.5)
                 continue
 
