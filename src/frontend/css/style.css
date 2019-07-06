@@ -191,3 +191,6 @@ body {
     z-index: 300;
 }
 
+.copy-job-blob {
+    max-height: 300px;
+}

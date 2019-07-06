@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Modal, Button, ProgressBar } from 'react-bootstrap'
+import classnames from 'classnames'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
@@ -14,7 +14,7 @@ class EditCopyJobDialog extends React.Component {
         const data = this.props.jobs.find(d => d.id === this.props.data.id)
 
         const description = data.description ? ` - ${data.description}` : ''
-        const progressText = data.progress_text;
+        const progressErrorText = data.progress_error_text;
         const progress = data.progress_current / data.progress_total * 100;
 
         const isInProgress = data.progress_state === 'PROGRESS'
@@ -27,7 +27,16 @@ class EditCopyJobDialog extends React.Component {
                     onHide={() => this.handleClose()}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Copy Job {data.id}{description}</Modal.Title>
+                        <Modal.Title>
+                            <span>Copy Job {data.id}{description} - </span>
+                            <b className={classnames({
+                                'text-success': data.progress_state === 'SUCCESS',
+                                'text-danger': data.progress_state === 'FAILED',
+                                'text-primary': data.progress_state === 'PROGRESS',
+                            })}>
+                                {data.progress_state}
+                            </b>
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="container">
@@ -65,13 +74,9 @@ class EditCopyJobDialog extends React.Component {
                                 <div className="col-1"></div>
                             </div>
 
-                            <h5 className="text-primary mb-2">Output</h5>
+                            {this.outputErrorText(data)}
 
-                            <div className="form-group">
-                                <pre><code>
-                                    {progressText}
-                                </code></pre>
-                            </div>
+                            {this.outputText(data)}
 
                         </div>
                     </Modal.Body>
@@ -90,6 +95,44 @@ class EditCopyJobDialog extends React.Component {
         );
     }
 
+    componentDidMount() {
+
+    }
+
+    outputText(data) {
+        if (!data.progress_text) {
+            return <React.Fragment />
+        }
+
+        return (
+            <React.Fragment>
+                <h5 className="text-primary mb-2">Output</h5>
+                <div className="form-group">
+                    <pre className='copy-job-blob'><code>
+                        {data.progress_text}
+                    </code></pre>
+                </div>
+            </React.Fragment>
+        )
+    }
+
+    outputErrorText(data) {
+        if (!data.progress_error_text) {
+            return <React.Fragment />
+        }
+
+        return (
+            <React.Fragment>
+                <h5 className="text-primary mb-2">Output</h5>
+                <div className="form-group">
+                    <pre className='copy-job-blob'><code>
+                        {data.progress_error_text}
+                    </code></pre>
+                </div>
+            </React.Fragment>
+        )
+    }
+
     handleClose() {
         this.props.onClose();
     }
@@ -98,12 +141,6 @@ class EditCopyJobDialog extends React.Component {
         if (confirm(`Are you sure you want to stop job ${this.props.data.id}`)) {
             this.props.onStopJob(this.props.data.id)
         }
-    }
-
-    componentDidMount() {
-    }
-
-    componentWillUnmount() {
     }
 }
 

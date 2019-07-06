@@ -54,7 +54,7 @@ class CopyJobTable extends React.Component {
                 <b className={classnames({
                     'text-success': job.progress_state === 'SUCCESS',
                     'text-danger': job.progress_state === 'FAILED',
-                    'text-warning': job.progress_state === 'PROGRESS',
+                    'text-primary': job.progress_state === 'PROGRESS',
                 })}>
                     {job.progress_state}
                 </b>
