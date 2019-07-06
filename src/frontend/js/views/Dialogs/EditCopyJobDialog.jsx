@@ -56,7 +56,7 @@ class EditCopyJobDialog extends React.Component {
                                     <b>Source</b>
                                 </div>
                                 <div className="col-7 text-left">
-                                    <span><b>{data.src_cloud}</b></span>
+                                    <span><b>{data.src_cloud_type}</b></span>
                                     <span>://</span>
                                     <span>{data.src_resource}</span>
                                 </div>
@@ -67,7 +67,7 @@ class EditCopyJobDialog extends React.Component {
                                     <b>Destination</b>
                                 </div>
                                 <div className="col-7 text-left">
-                                    <span><b>{data.dst_cloud}</b></span>
+                                    <span><b>{data.dst_cloud_type}</b></span>
                                     <span>://</span>
                                     <span>{data.dst_path}</span>
                                 </div>
@@ -123,7 +123,7 @@ class EditCopyJobDialog extends React.Component {
 
         return (
             <React.Fragment>
-                <h5 className="text-primary mb-2">Output</h5>
+                <h5 className="text-primary mb-2">Errors</h5>
                 <div className="form-group">
                     <pre className='copy-job-blob'><code>
                         {data.progress_error_text}

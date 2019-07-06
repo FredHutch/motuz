@@ -50,6 +50,10 @@ class CopyJobTable extends React.Component {
             const dst_cloud_id = job['dst_cloud_id'] || 0
             const dst_cloud = cloudMapping[dst_cloud_id]
 
+            // TODO: We need this in the modal, but this object should ideally be immutable
+            job.src_cloud_type = src_cloud.type;
+            job.dst_cloud_type = dst_cloud.type;
+
             const state = (
                 <b className={classnames({
                     'text-success': job.progress_state === 'SUCCESS',
