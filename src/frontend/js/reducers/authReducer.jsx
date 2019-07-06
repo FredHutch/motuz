@@ -33,7 +33,7 @@ export default (state=initialState, action) => {
             loading: false,
         };
     }
-    case auth.TOKEN_RECEIVED: {
+    case auth.REFRESH_TOKEN_SUCCESS: {
         return {
             ...state,
             access: {
@@ -47,7 +47,7 @@ export default (state=initialState, action) => {
         };
     }
     case auth.LOGIN_FAILURE:
-    case auth.TOKEN_FAILURE:
+    case auth.REFRESH_TOKEN_FAILURE:
     {
         return {
             access: undefined,
