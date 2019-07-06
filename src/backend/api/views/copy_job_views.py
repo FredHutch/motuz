@@ -26,6 +26,7 @@ dto = api.model('copy-job', {
     'progress_current': fields.Integer(readonly=True, example=45),
     'progress_total': fields.Integer(readonly=True, example=100),
     'progress_error': fields.String(readonly=True),
+    'progress_execution_time': fields.Integer(readonly=True, example=3600),
 })
 
 

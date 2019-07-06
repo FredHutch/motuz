@@ -1,12 +1,12 @@
 import React from 'react';
-import {ProgressBar, OverlayTrigger, Popover} from 'react-bootstrap';
+import { ProgressBar } from 'react-bootstrap';
 
-import ResizableDivider from 'components/ResizableDivider.jsx'
+import parseTime from 'utils/parseTime.jsx'
 
-class JobProgress extends React.Component {
+
+class CopyJobTable extends React.Component {
     constructor(props) {
         super(props);
-        this.container = React.createRef();
         this.timeout = null;
         this.previousJobsInProgress = new Set()
     }
@@ -15,55 +15,64 @@ class JobProgress extends React.Component {
         const headers = [
             'id',
             'description',
-            'src_cloud',
-            'src_resource',
-            'dst_cloud',
-            'dst_path',
+            'source',
+            'destination',
             'state',
+            'time',
             'progress',
         ]
 
-        const tableHeaders = headers.map((header, j) => {
+        const tableHeaders = headers.map(header => {
             return (
-                <th key={j}>
+                <th key={header}>
                     {header}
                 </th>
             );
         })
 
-        // TODO: Optimize
-        const jobs = this.props.jobs.map(job => {
-            const src_cloud_id = job['src_cloud_id']
-            if (!src_cloud_id) {
-                job['src_cloud'] = 'file'
-            } else {
-                const src_cloud = this.props.connections.find(d => d.id === src_cloud_id)
-                if (src_cloud) {
-                    job['src_cloud'] = src_cloud.type
-                }
+        const cloudMapping = {
+            0: {
+                type: 'file',
             }
-
-            const dst_cloud_id = job['dst_cloud_id']
-            if (!dst_cloud_id) {
-                job['dst_cloud'] = 'file'
-            } else {
-                const dst_cloud = this.props.connections.find(d => d.id === dst_cloud_id)
-                if (dst_cloud) {
-                    job['dst_cloud'] = dst_cloud.type
-                }
-            }
-
-            return job
+        }
+        this.props.connections.forEach(connection => {
+            cloudMapping[connection.id] = connection
         })
 
-        const tableRows = jobs.map((job, i) => {
+
+        const tableRows = this.props.jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
+
+            const src_cloud_id = job['src_cloud_id'] || 0
+            const src_cloud = cloudMapping[src_cloud_id]
+
+            const dst_cloud_id = job['dst_cloud_id'] || 0
+            const dst_cloud = cloudMapping[dst_cloud_id]
+
+            const source = (
+                <React.Fragment>
+                    <b>{src_cloud.type}</b>
+                    <span>://</span>
+                    <span>{job.src_resource}</span>
+                </React.Fragment>
+            )
+            const destination = (
+                <React.Fragment>
+                    <b>{dst_cloud.type}</b>
+                    <span>://</span>
+                    <span>{job.dst_path}</span>
+                </React.Fragment>
+            )
 
             job = {
                 ...job,
-                'state': job.progress_state,
-                'progress': progress,
+                state: job.progress_state,
+                time: parseTime(job.progress_execution_time),
+                progress,
+                source,
+                destination,
             }
+
             return (
                 <tr
                     onClick={event => this._onSelectJob(job)}
@@ -92,7 +101,7 @@ class JobProgress extends React.Component {
             );
         })
 
-        const currentJobsInProgress = new Set(jobs
+        const currentJobsInProgress = new Set(this.props.jobs
             .filter(d => d.progress_state === 'PROGRESS')
             .map(d => d.id)
         )
@@ -113,23 +122,14 @@ class JobProgress extends React.Component {
         }
 
         return (
-            <div
-                id={this.props.id}
-                ref={this.container}
-                style={{position: 'relative'}}
-            >
-                <ResizableDivider
-                    onResize={event => this.onResize(event)}
-                />
-                <table className='table table-sm table-striped table-hover text-center'>
-                    <thead>
-                        <tr>{tableHeaders}</tr>
-                    </thead>
-                    <tbody>
-                        {tableRows}
-                    </tbody>
-                </table>
-            </div>
+            <table className='table table-sm table-striped table-hover text-left'>
+                <thead>
+                    <tr>{tableHeaders}</tr>
+                </thead>
+                <tbody>
+                    {tableRows}
+                </tbody>
+            </table>
         );
     }
 
@@ -149,18 +149,6 @@ class JobProgress extends React.Component {
         }, refreshDelay)
     }
 
-    onResize(event) {
-        const container = this.container.current
-
-        const newTop = event.pageY;
-        const oldTop = container.offsetTop;
-
-        const oldHeight = container.offsetHeight;
-        const newHeight = oldHeight + oldTop - newTop;
-
-        container.style.height = `${newHeight}px`
-    }
-
     _onSelectJob(selectedJob) {
         this.props.onShowDetails(selectedJob.id);
     }
@@ -173,7 +161,7 @@ class JobProgress extends React.Component {
     }
 }
 
-JobProgress.defaultProps = {
+CopyJobTable.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
@@ -199,4 +187,4 @@ const mapDispatchToProps = dispatch => ({
     onShowDetails: (jobId) => dispatch(showEditCopyJobDialog(jobId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
+export default connect(mapStateToProps, mapDispatchToProps)(CopyJobTable);
