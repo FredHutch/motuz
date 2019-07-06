@@ -63,10 +63,11 @@ def login_user(data):
         'message': 'Successfully logged in.',
         'access': flask_jwt.create_access_token(
             identity=username,
-            expires_delta=datetime.timedelta(seconds=30),
+            expires_delta=datetime.timedelta(days=1),
         ),
         'refresh': flask_jwt.create_refresh_token(
             identity=username,
+            expires_delta=datetime.timedelta(days=30),
         ),
     }
 
@@ -80,10 +81,11 @@ def refresh_token():
         'message': 'Successfully refreshed token.',
         'access': flask_jwt.create_access_token(
             identity=current_user,
-            expires_delta=datetime.timedelta(seconds=30),
+            expires_delta=datetime.timedelta(days=1),
         ),
         'refresh': flask_jwt.create_refresh_token(
             identity=current_user,
+            expires_delta=datetime.timedelta(days=30),
         ),
     }
 
