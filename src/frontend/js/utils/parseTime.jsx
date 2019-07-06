@@ -1,15 +1,11 @@
 export default function parseTime(intValue) {
-    let seconds = intValue % 60;
-    let minutes = Math.floor(intValue / 60) % 60;
-    let hours = Math.floor(Math.floor(intValue / 60) / 60) % 60;
+    const seconds = intValue % 60;
+    const minutes = Math.floor(intValue / 60) % 60;
+    const hours = Math.floor(Math.floor(intValue / 60) / 60) % 60;
 
-    hours = hours.toString().padStart(2, 0)
-    minutes = minutes.toString().padStart(2, 0)
-    seconds = seconds.toString().padStart(2, 0)
+    const _hours = hours.toString().padStart(2, 0)
+    const _minutes = minutes.toString().padStart(2, 0)
+    const _seconds = seconds.toString().padStart(2, 0)
 
-    if (hours !== 0) {
-        return `${hours}:${minutes}:${seconds}`
-    } else {
-        return `${minutes}:${seconds}`
-    }
+    return `${_hours}:${_minutes}:${_seconds}`
 }
