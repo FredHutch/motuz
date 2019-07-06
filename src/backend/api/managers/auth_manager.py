@@ -61,8 +61,13 @@ def login_user(data):
     return {
         'status': 'success',
         'message': 'Successfully logged in.',
-        'access': flask_jwt.create_access_token(identity=username),
-        'refresh': flask_jwt.create_refresh_token(identity=username),
+        'access': flask_jwt.create_access_token(
+            identity=username,
+            expires_delta=datetime.timedelta(seconds=30),
+        ),
+        'refresh': flask_jwt.create_refresh_token(
+            identity=username,
+        ),
     }
 
 
@@ -73,8 +78,13 @@ def refresh_token():
     return {
         'status': 'success',
         'message': 'Successfully refreshed token.',
-        'access': flask_jwt.create_access_token(identity=current_user),
-        'refresh': flask_jwt.create_refresh_token(identity=current_user),
+        'access': flask_jwt.create_access_token(
+            identity=current_user,
+            expires_delta=datetime.timedelta(seconds=30),
+        ),
+        'refresh': flask_jwt.create_refresh_token(
+            identity=current_user,
+        ),
     }
 
 

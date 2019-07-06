@@ -32,7 +32,6 @@ export const logout = () => ({
         method: 'POST',
         body: JSON.stringify({}),
         headers: withAuth({ 'Content-Type': 'application/json' }),
-        headers: { 'Content-Type': 'application/json' },
         types: [
             LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
         ]
@@ -42,10 +41,12 @@ export const logout = () => ({
 
 export const refreshAccessToken = (token) => ({
     [RSAA]: {
-        endpoint: '/api/auth/token/refresh/',
+        endpoint: '/api/auth/refresh/',
         method: 'POST',
-        body: JSON.stringify({refresh: token}),
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
         types: [
             TOKEN_REQUEST, TOKEN_RECEIVED, TOKEN_FAILURE
         ]
