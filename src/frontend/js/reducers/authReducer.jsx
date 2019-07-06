@@ -39,7 +39,11 @@ export default (state=initialState, action) => {
             access: {
                 token: action.payload.access,
                 ...jwtDecode(action.payload.access)
-            }
+            },
+            refresh: {
+                token: action.payload.refresh,
+                ...jwtDecode(action.payload.refresh),
+            },
         };
     }
     case auth.LOGIN_FAILURE:
@@ -106,9 +110,9 @@ export function getCurrentUser(state) {
         return 'ERROR ACCESS'
     }
 
-    if (!state.access.sub) {
+    if (!state.access.identity) {
         return 'ERROR SUB'
     }
 
-    return state.access.sub
+    return state.access.identity
 }
