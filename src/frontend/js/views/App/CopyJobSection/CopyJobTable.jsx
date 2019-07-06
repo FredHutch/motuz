@@ -15,22 +15,21 @@ class CopyJobTable extends React.Component {
         const headers = [
             'id',
             'description',
-            'src_cloud',
-            'src_resource',
-            'dst_cloud',
-            'dst_path',
+            'source',
+            'destination',
             'state',
             'time',
             'progress',
         ]
 
-        const tableHeaders = headers.map((header, j) => {
+        const tableHeaders = headers.map(header => {
             return (
-                <th key={j}>
+                <th key={header}>
                     {header}
                 </th>
             );
         })
+
 
         // TODO: Optimize
         const jobs = this.props.jobs.map(job => {
@@ -60,11 +59,28 @@ class CopyJobTable extends React.Component {
         const tableRows = jobs.map((job, i) => {
             const progress = Math.round(job.progress_current / job.progress_total * 100);
 
+            const source = (
+                <React.Fragment>
+                    <b>{job.src_cloud}</b>
+                    <span>://</span>
+                    <span>{job.src_resource}</span>
+                </React.Fragment>
+            )
+            const destination = (
+                <React.Fragment>
+                    <b>{job.dst_cloud}</b>
+                    <span>://</span>
+                    <span>{job.dst_path}</span>
+                </React.Fragment>
+            )
+
             job = {
                 ...job,
-                'state': job.progress_state,
-                'progress': progress,
-                'time': parseTime(job.progress_execution_time),
+                state: job.progress_state,
+                time: parseTime(job.progress_execution_time),
+                progress,
+                source,
+                destination,
             }
             return (
                 <tr
@@ -115,7 +131,7 @@ class CopyJobTable extends React.Component {
         }
 
         return (
-            <table className='table table-sm table-striped table-hover text-center'>
+            <table className='table table-sm table-striped table-hover text-left'>
                 <thead>
                     <tr>{tableHeaders}</tr>
                 </thead>
