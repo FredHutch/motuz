@@ -86,13 +86,13 @@ class RcloneConnection:
         if src_data is None: # Local
             src = src_path
         else:
-            credentials = self._formatCredentials(src_data, name='src')
+            credentials += self._formatCredentials(src_data, name='src')
             src = 'src:{}'.format(src_path)
 
         if dst_data is None: # Local
             dst = dst_path
         else:
-            credentials = self._formatCredentials(dst_data, name='dst')
+            credentials += self._formatCredentials(dst_data, name='dst')
             dst = 'dst:{}'.format(dst_path)
 
 
