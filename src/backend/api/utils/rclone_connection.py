@@ -101,7 +101,12 @@ class RcloneConnection:
             dst=dst,
         )
 
-        logging.info(sanitize(command))
+        bash_command = "{} {}".format(
+            ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),
+            command,
+        )
+
+        logging.info(sanitize(bash_command))
 
         if job_id is None:
             job_id = self._get_next_job_id()
