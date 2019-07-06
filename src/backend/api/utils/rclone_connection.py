@@ -6,6 +6,7 @@ import re
 import subprocess
 import threading
 import time
+import os
 
 class RcloneConnection:
     def __init__(self):
@@ -22,7 +23,11 @@ class RcloneConnection:
 
     def verify(self, data):
         credentials = self._formatCredentials(data, name='current')
-        command = 'rclone lsjson current:'.format()
+        command = [
+            'rclone',
+            'lsjson',
+            'current:',
+        ]
 
         try:
             result = self._execute(command, credentials)
@@ -40,12 +45,11 @@ class RcloneConnection:
 
     def ls(self, data, path):
         credentials = self._formatCredentials(data, name='current')
-
-        command = (
-            'rclone lsjson current:{path}'
-        ).format(
-            path=path,
-        )
+        command = [
+            'rclone',
+            'lsjson',
+            'current:{}'.format(path),
+        ]
 
         try:
             result = self._execute(command, credentials)
@@ -59,12 +63,11 @@ class RcloneConnection:
 
     def mkdir(self, data, path):
         credentials = self._formatCredentials(data, name='current')
-
-        command = (
-            'rclone touch current:{path}/.keep'
-        ).format(
-            path=path,
-        )
+        command = [
+            'rclone',
+            'touch',
+            'current:{}/.keep'.format(path),
+        ]
 
         try:
             result = self._execute(command, credentials)
@@ -253,7 +256,9 @@ class RcloneConnection:
 
 
     def _execute(self, command, env={}):
-        byteOutput = subprocess.check_output(command, env=env, shell=True)
+        full_env = os.environ.copy()
+        full_env.update(env)
+        byteOutput = subprocess.check_output(command, env=full_env)
         output = byteOutput.decode('UTF-8').rstrip()
         return output
 
