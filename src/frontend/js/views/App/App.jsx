@@ -5,7 +5,7 @@ import LeftCommandBar from 'views/App/CommandBar/LeftCommandBar.jsx';
 import RightCommandBar from 'views/App/CommandBar/RightCommandBar.jsx';
 import LeftPane from 'views/App/Pane/LeftPane.jsx';
 import RightPane from 'views/App/Pane/RightPane.jsx';
-import JobProgress from 'views/App/JobProgress.jsx';
+import CopyJobSection from 'views/App/CopyJobSection/CopyJobSection.jsx';
 import StatusBar from 'views/App/StatusBar.jsx';
 
 class App extends React.Component {
@@ -30,7 +30,7 @@ class App extends React.Component {
                     <div id="zone-right-pane" className='zone-pane'>
                         <RightPane />
                     </div>
-                    <JobProgress id="zone-job-progress"/>
+                    <CopyJobSection id="zone-job-progress"/>
                     <div id="zone-status-bar">
                         <StatusBar />
                     </div>

@@ -4,7 +4,7 @@ import {ProgressBar, OverlayTrigger, Popover} from 'react-bootstrap';
 import parseTime from 'utils/parseTime.jsx'
 import ResizableDivider from 'components/ResizableDivider.jsx'
 
-class JobProgress extends React.Component {
+class CopyJobSection extends React.Component {
     constructor(props) {
         super(props);
         this.container = React.createRef();
@@ -32,8 +32,6 @@ class JobProgress extends React.Component {
                 </th>
             );
         })
-
-        console.log(this.props.jobs)
 
         // TODO: Optimize
         const jobs = this.props.jobs.map(job => {
@@ -178,7 +176,7 @@ class JobProgress extends React.Component {
     }
 }
 
-JobProgress.defaultProps = {
+CopyJobSection.defaultProps = {
     id: '',
     jobs: [],
     fetchData: () => {},
@@ -204,4 +202,4 @@ const mapDispatchToProps = dispatch => ({
     onShowDetails: (jobId) => dispatch(showEditCopyJobDialog(jobId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
+export default connect(mapStateToProps, mapDispatchToProps)(CopyJobSection);
