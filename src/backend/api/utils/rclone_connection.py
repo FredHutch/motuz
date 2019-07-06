@@ -47,9 +47,13 @@ class RcloneConnection:
             path=path,
         )
 
-        result = self._execute(command)
-        result = json.loads(result)
-        return result
+        try:
+            result = self._execute(command)
+            result = json.loads(result)
+            return result
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
+
 
 
 
@@ -62,10 +66,13 @@ class RcloneConnection:
             path=path,
         )
 
-        result = self._execute(command)
-        return {
-            'message': 'Success',
-        }
+        try:
+            result = self._execute(command)
+            return {
+                'message': 'Success',
+            }
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
 
 
 
@@ -160,6 +167,7 @@ class RcloneConnection:
         byteOutput = subprocess.check_output(command, shell=True)
         output = byteOutput.decode('UTF-8').rstrip()
         return output
+
 
     def _execute_interactive(self, command, job_id):
         thread = threading.Thread(target=self.__execute_interactive, kwargs={
@@ -274,6 +282,10 @@ def sanitize(string):
 
     return string
 
+
+
+class RcloneException(Exception):
+    pass
 
 
 def main():
