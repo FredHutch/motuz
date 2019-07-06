@@ -76,8 +76,5 @@ def verify(data):
     cloud_connection = CloudConnection(**data)
     cloud_connection.owner = owner
 
-    connection = RcloneConnection(
-        type=cloud_connection.type,
-        data=cloud_connection,
-    )
-    return connection.verify()
+    rclone = RcloneConnection()
+    return rclone.verify(cloud_connection)

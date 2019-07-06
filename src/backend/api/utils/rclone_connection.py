@@ -8,12 +8,7 @@ import threading
 import time
 
 class RcloneConnection:
-    def __init__(self, type, data):
-        self.type = type
-        self.data = data
-
-        self._setCredentials()
-
+    def __init__(self):
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
         self._job_text = defaultdict(str)
@@ -25,8 +20,9 @@ class RcloneConnection:
         self._latest_job_id = 0
 
 
-    def verify(self):
-        command = '{} rclone lsjson current:'.format(self.credentials)
+    def verify(self, data):
+        credentials = self._formatCredentials(data, name='current')
+        command = '{} rclone lsjson current:'.format(credentials)
 
         try:
             result = self._execute(command)
@@ -42,12 +38,14 @@ class RcloneConnection:
             }
 
 
-    def ls(self, path):
+    def ls(self, data, path):
+        credentials = self._formatCredentials(data, name='current')
+
         command = (
             '{credentials} '
             'rclone lsjson current:{path}'
         ).format(
-            credentials=self.credentials,
+            credentials=credentials,
             path=path,
         )
 
@@ -61,12 +59,14 @@ class RcloneConnection:
 
 
 
-    def mkdir(self, path):
+    def mkdir(self, data, path):
+        credentials = self._formatCredentials(data, name='current')
+
         command = (
             '{credentials} '
             'rclone touch current:{path}/.keep'
         ).format(
-            credentials=self.credentials,
+            credentials=credentials,
             path=path,
         )
 
@@ -80,14 +80,29 @@ class RcloneConnection:
 
 
 
-    def copy(self, src, dst, job_id=None):
+    def copy(self, src_data, src_path, dst_data, dst_path, job_id=None):
+        credentials = ''
+
+        if src_data is None: # Local
+            src = src_path
+        else:
+            credentials += self._formatCredentials(src_data, name='src')
+            src = 'src:{}'.format(src_path)
+
+        if dst_data is None: # Local
+            dst = dst_path
+        else:
+            credentials += self._formatCredentials(dst_data, name='dst')
+            dst = 'dst:{}'.format(dst_path)
+
+
         command = (
             '{credentials} '
-            'rclone copy {src} current:{dst} '
+            'rclone copy {src} {dst} '
             '--progress '
             '--stats 2s '
         ).format(
-            credentials=self.credentials,
+            credentials=credentials,
             src=src,
             dst=dst,
         )
@@ -129,43 +144,103 @@ class RcloneConnection:
         return self._job_exitstatus.get(job_id, -1)
 
 
-    def _setCredentials(self):
-        self.credentials = ''
-        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.type)
+    def _formatCredentials(self, data, name):
+        """
+        Credentials are of the form
+        RCLONE_CONFIG_CURRENT_TYPE=s3
+            ^          ^        ^   ^
+        [mandatory  ][name  ][key][value]
+        """
 
-        def _addCredential(env_key, data_key):
-            value = getattr(self.data, data_key, None)
+        prefix = "RCLONE_CONFIG_{}".format(name.upper())
+
+        credentials = ''
+        credentials += "{}_TYPE='{}' ".format(prefix, data.type)
+
+        def _addCredential(credentials, env_key, data_key):
+            value = getattr(data, data_key, None)
             if value is not None:
-                self.credentials += "{}='{}' ".format(env_key, value)
+                credentials += "{}='{}' ".format(env_key, value)
+            return credentials
 
 
-        if self.type == 's3':
-            _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
-            _addCredential('RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
-            _addCredential('RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
+        if data.type == 's3':
+            credentials = _addCredential(credentials,
+                '{}_REGION'.format(prefix),
+                's3_region'
+            )
+            credentials = _addCredential(credentials,
+                '{}_ACCESS_KEY_ID'.format(prefix),
+                's3_access_key_id'
+            )
+            credentials = _addCredential(credentials,
+                '{}_SECRET_ACCESS_KEY'.format(prefix),
+                's3_secret_access_key'
+            )
 
-            _addCredential('RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
-            _addCredential('RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
+            credentials = _addCredential(credentials,
+                '{}_ENDPOINT'.format(prefix),
+                's3_endpoint'
+            )
+            credentials = _addCredential(credentials,
+                '{}_V2_AUTH'.format(prefix),
+                's3_v2_auth'
+            )
 
-        elif self.type == 'azureblob':
-            _addCredential('RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
-            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
+        elif data.type == 'azureblob':
+            credentials = _addCredential(credentials,
+                '{}_ACCOUNT'.format(prefix),
+                'azure_account'
+            )
+            credentials = _addCredential(credentials,
+                '{}_KEY'.format(prefix),
+                'azure_key'
+            )
 
-        elif self.type == 'swift':
-            _addCredential('RCLONE_CONFIG_CURRENT_USER', 'swift_user')
-            _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
-            _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
-            _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
+        elif data.type == 'swift':
+            credentials = _addCredential(credentials,
+                '{}_USER'.format(prefix),
+                'swift_user'
+            )
+            credentials = _addCredential(credentials,
+                '{}_KEY'.format(prefix),
+                'swift_key'
+            )
+            credentials = _addCredential(credentials,
+                '{}_AUTH'.format(prefix),
+                'swift_auth'
+            )
+            credentials = _addCredential(credentials,
+                '{}_TENANT'.format(prefix),
+                'swift_tenant'
+            )
 
-        elif self.type == 'google cloud storage':
-            _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
-            _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
-            _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
-            _addCredential('RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
-            _addCredential('RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
+        elif data.type == 'google cloud storage':
+            credentials = _addCredential(credentials,
+                '{}_CLIENT_ID'.format(prefix),
+                'gcp_client_id'
+            )
+            credentials = _addCredential(credentials,
+                '{}_SERVICE_ACCOUNT_CREDENTIALS'.format(prefix),
+                'gcp_service_account_credentials'
+            )
+            credentials = _addCredential(credentials,
+                '{}_PROJECT_NUMBER'.format(prefix),
+                'gcp_project_number'
+            )
+            credentials = _addCredential(credentials,
+                '{}_OBJECT_ACL'.format(prefix),
+                'gcp_object_acl'
+            )
+            credentials = _addCredential(credentials,
+                '{}_BUCKET_ACL'.format(prefix),
+                'gcp_bucket_acl'
+            )
 
         else:
-            logging.error("Connection type unknown: {}".format(self.type))
+            logging.error("Connection type unknown: {}".format(data.type))
+
+        return credentials
 
 
     def _get_next_job_id(self):
@@ -330,20 +405,24 @@ def main():
 
     data = CloudConnection()
     data.__dict__ = {
+        'type': 's3',
         'region': os.environ['MOTUZ_REGION'],
         'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
         'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     }
 
-    connection = RcloneConnection(
-        type='s3',
-        data=data,
-    )
+    connection = RcloneConnection()
 
     # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
     job_id = 123
     import random
-    connection.copy('/tmp/motuz/mb_blob.bin', '/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)), job_id=job_id)
+    connection.copy(
+        src_data=None, # Local
+        src_path='/tmp/motuz/mb_blob.bin',
+        dst_data=data,
+        dst_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
+        job_id=job_id
+    )
 
 
     while not connection.copy_finished(job_id):
