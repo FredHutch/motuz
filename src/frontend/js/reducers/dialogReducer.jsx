@@ -19,8 +19,8 @@ const initialState = {
         owner: 'ERROR',
     },
 
-    displayCopyJobEditDialog: false,
-    copyJobEditDialogData: {},
+    displayEditCopyJobDialog: false,
+    editCopyJobDialogData: {},
 
     displayNewCloudConnectionDialog: false,
     newCloudConnectionDialogData: {
@@ -59,20 +59,20 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_COPY_JOB_EDIT_DIALOG: {
+    case dialog.SHOW_EDIT_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobEditDialog: true,
-            copyJobEditDialogData: action.payload.data,
+            displayEditCopyJobDialog: true,
+            editCopyJobDialogData: action.payload.data,
         }
     }
 
-    case dialog.HIDE_COPY_JOB_EDIT_DIALOG:
+    case dialog.HIDE_EDIT_COPY_JOB_DIALOG:
     case api.STOP_COPY_JOB_SUCCESS:
     {
         return {
             ...state,
-            displayCopyJobEditDialog: false,
+            displayEditCopyJobDialog: false,
         }
     }
 

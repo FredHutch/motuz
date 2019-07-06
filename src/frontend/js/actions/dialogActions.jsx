@@ -13,8 +13,8 @@ import { getCurrentUser } from 'reducers/authReducer.jsx';
 export const SHOW_NEW_COPY_JOB_DIALOG = '@@dialog/SHOW_NEW_COPY_JOB_DIALOG';
 export const HIDE_NEW_COPY_JOB_DIALOG = '@@dialog/HIDE_NEW_COPY_JOB_DIALOG';
 
-export const SHOW_COPY_JOB_EDIT_DIALOG = '@@dialog/SHOW_COPY_JOB_EDIT_DIALOG';
-export const HIDE_COPY_JOB_EDIT_DIALOG = '@@dialog/HIDE_COPY_JOB_EDIT_DIALOG';
+export const SHOW_EDIT_COPY_JOB_DIALOG = '@@dialog/SHOW_EDIT_COPY_JOB_DIALOG';
+export const HIDE_EDIT_COPY_JOB_DIALOG = '@@dialog/HIDE_EDIT_COPY_JOB_DIALOG';
 
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
@@ -59,13 +59,13 @@ export const hideNewCopyJobDialog = () => ({
 });
 
 
-export const showCopyJobEditDialog = (jobId) => ({
-    type: SHOW_COPY_JOB_EDIT_DIALOG,
+export const showEditCopyJobDialog = (jobId) => ({
+    type: SHOW_EDIT_COPY_JOB_DIALOG,
     payload: {data: {id: jobId}},
 });
 
-export const hideCopyJobEditDialog = () => ({
-    type: HIDE_COPY_JOB_EDIT_DIALOG,
+export const hideEditCopyJobDialog = () => ({
+    type: HIDE_EDIT_COPY_JOB_DIALOG,
 });
 
 

@@ -184,7 +184,7 @@ JobProgress.defaultProps = {
 
 import {connect} from 'react-redux';
 import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
-import { showCopyJobEditDialog } from 'actions/dialogActions.jsx';
+import { showEditCopyJobDialog } from 'actions/dialogActions.jsx';
 import { refreshPanes } from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
@@ -196,7 +196,7 @@ const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listCopyJobs()),
     refreshPanes: () => dispatch(refreshPanes()),
     onStopJob: id => dispatch(stopCopyJob(id)),
-    onShowDetails: (jobId) => dispatch(showCopyJobEditDialog(jobId)),
+    onShowDetails: (jobId) => dispatch(showEditCopyJobDialog(jobId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobProgress);
