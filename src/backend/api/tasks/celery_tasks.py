@@ -36,26 +36,6 @@ def copy_job(self, task_id=None):
         }
 
 
-    if src_cloud_id is not None and dst_cloud_id is not None:
-        copy_job.progress_state = 'FAILED'
-        copy_job.progress_current = 100
-        copy_job.progress_total = 100
-        copy_job.progress_execution_time = int(time.time() - start_time)
-        db.session.commit()
-
-        text = "Remote-only copies not supported"
-        logging.warning(text)
-        return {
-            'text': text
-        }
-
-    if src_cloud_id is not None:
-        cloud_connection = copy_job.src_cloud
-
-    if dst_cloud_id is not None:
-        cloud_connection = copy_job.dst_cloud
-
-
     connection = RcloneConnection()
     connection.copy(
         src_data=copy_job.src_cloud,
