@@ -23,7 +23,7 @@ class RcloneConnection:
 
 
     def verify(self):
-        credentials = self._formatCredentials(self.data)
+        credentials = self._formatCredentials(self.data, name='current')
         command = '{} rclone lsjson current:'.format(credentials)
 
         try:
@@ -41,7 +41,7 @@ class RcloneConnection:
 
 
     def ls(self, path):
-        credentials = self._formatCredentials(self.data)
+        credentials = self._formatCredentials(self.data, name='current')
 
         command = (
             '{credentials} '
@@ -62,7 +62,7 @@ class RcloneConnection:
 
 
     def mkdir(self, path):
-        credentials = self._formatCredentials(self.data)
+        credentials = self._formatCredentials(self.data, name='current')
 
         command = (
             '{credentials} '
@@ -83,7 +83,7 @@ class RcloneConnection:
 
 
     def copy(self, src, dst, job_id=None):
-        credentials = self._formatCredentials(self.data)
+        credentials = self._formatCredentials(self.data, name='current')
 
         command = (
             '{credentials} '
@@ -133,9 +133,18 @@ class RcloneConnection:
         return self._job_exitstatus.get(job_id, -1)
 
 
-    def _formatCredentials(self, data):
-        cr = ''
-        cr += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(data.type)
+    def _formatCredentials(self, data, name):
+        """
+        Credentials are of the form
+        RCLONE_CONFIG_CURRENT_TYPE=s3
+            ^          ^        ^   ^
+        [mandatory  ][name  ][key][value]
+        """
+
+        prefix = "RCLONE_CONFIG_{}".format(name.upper())
+
+        credentials = ''
+        credentials += "{}_TYPE='{}' ".format(prefix, data.type)
 
         def _addCredential(credentials, env_key, data_key):
             value = getattr(data, data_key, None)
@@ -145,34 +154,82 @@ class RcloneConnection:
 
 
         if data.type == 's3':
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_REGION', 's3_region')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
+            credentials = _addCredential(credentials,
+                '{}_REGION'.format(prefix),
+                's3_region'
+            )
+            credentials = _addCredential(credentials,
+                '{}_ACCESS_KEY_ID'.format(prefix),
+                's3_access_key_id'
+            )
+            credentials = _addCredential(credentials,
+                '{}_SECRET_ACCESS_KEY'.format(prefix),
+                's3_secret_access_key'
+            )
 
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
+            credentials = _addCredential(credentials,
+                '{}_ENDPOINT'.format(prefix),
+                's3_endpoint'
+            )
+            credentials = _addCredential(credentials,
+                '{}_V2_AUTH'.format(prefix),
+                's3_v2_auth'
+            )
 
         elif data.type == 'azureblob':
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
+            credentials = _addCredential(credentials,
+                '{}_ACCOUNT'.format(prefix),
+                'azure_account'
+            )
+            credentials = _addCredential(credentials,
+                '{}_KEY'.format(prefix),
+                'azure_key'
+            )
 
         elif data.type == 'swift':
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_USER', 'swift_user')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
+            credentials = _addCredential(credentials,
+                '{}_USER'.format(prefix),
+                'swift_user'
+            )
+            credentials = _addCredential(credentials,
+                '{}_KEY'.format(prefix),
+                'swift_key'
+            )
+            credentials = _addCredential(credentials,
+                '{}_AUTH'.format(prefix),
+                'swift_auth'
+            )
+            credentials = _addCredential(credentials,
+                '{}_TENANT'.format(prefix),
+                'swift_tenant'
+            )
 
         elif data.type == 'google cloud storage':
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_OBJECT_ACL', 'gcp_object_acl')
-            cr = _addCredential(cr, 'RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
+            credentials = _addCredential(credentials,
+                '{}_CLIENT_ID'.format(prefix),
+                'gcp_client_id'
+            )
+            credentials = _addCredential(credentials,
+                '{}_SERVICE_ACCOUNT_CREDENTIALS'.format(prefix),
+                'gcp_service_account_credentials'
+            )
+            credentials = _addCredential(credentials,
+                '{}_PROJECT_NUMBER'.format(prefix),
+                'gcp_project_number'
+            )
+            credentials = _addCredential(credentials,
+                '{}_OBJECT_ACL'.format(prefix),
+                'gcp_object_acl'
+            )
+            credentials = _addCredential(credentials,
+                '{}_BUCKET_ACL'.format(prefix),
+                'gcp_bucket_acl'
+            )
 
         else:
             logging.error("Connection type unknown: {}".format(data.type))
 
-        return cr
+        return credentials
 
 
     def _get_next_job_id(self):
