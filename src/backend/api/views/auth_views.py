@@ -8,7 +8,7 @@ from ..exceptions import HTTP_EXCEPTION
 
 api = Namespace('auth', description='Authentication related operations')
 
-auth_dto = api.model('auth', {
+dto = api.model('auth', {
     'username': fields.String(required=True, description='The (Linux) username'),
     'password': fields.String(required=True, description='The user password'),
 })
@@ -16,7 +16,7 @@ auth_dto = api.model('auth', {
 
 @api.route('/login/')
 class UserLogin(Resource):
-    @api.expect(auth_dto, validate=True)
+    @api.expect(dto, validate=True)
     def post(self):
         """Login and retrieve JWT token"""
         post_data = request.json
