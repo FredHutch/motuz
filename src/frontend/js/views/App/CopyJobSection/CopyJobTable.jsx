@@ -41,7 +41,7 @@ class CopyJobTable extends React.Component {
 
 
         const tableRows = this.props.jobs.map((job, i) => {
-            const progress = Math.round(job.progress_current / job.progress_total * 100);
+            const progressValue = Math.round(job.progress_current / job.progress_total * 100);
 
             const src_cloud_id = job['src_cloud_id'] || 0
             const src_cloud = cloudMapping[src_cloud_id]
@@ -63,14 +63,21 @@ class CopyJobTable extends React.Component {
                     <span>{job.dst_path}</span>
                 </React.Fragment>
             )
+            const progress = (
+                <ProgressBar
+                    now={progressValue}
+                    label={`${progressValue}%`}
+                    variant='success'
+                />
+            )
 
             job = {
                 ...job,
                 state: job.progress_state,
                 time: parseTime(job.progress_execution_time),
-                progress,
                 source,
                 destination,
+                progress,
             }
 
             return (
@@ -78,25 +85,11 @@ class CopyJobTable extends React.Component {
                     onClick={event => this._onSelectJob(job)}
                     key={job.id}
                 >
-                    {headers.map((header, j) => {
-                        if (header === 'progress') {
-                            return (
-                                <td key={j}>
-                                    <ProgressBar
-                                        now={job[header]}
-                                        label={`${job[header]}%`}
-                                        variant='success'
-                                    />
-                                </td>
-                            )
-                        } else {
-                            return (
-                                <td key={j}>
-                                    {job[header]}
-                                </td>
-                            );
-                        }
-                    })}
+                    {headers.map((header, j) => (
+                        <td key={j}>
+                            {job[header]}
+                        </td>
+                    ))}
                 </tr>
             );
         })
