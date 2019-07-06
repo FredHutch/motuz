@@ -97,7 +97,12 @@ class RcloneConnection:
                 raise ValueError('rclone copy job with ID {} already exists'.fromat(job_id))
 
         self._stop_events[job_id] = threading.Event()
-        self._execute_interactive(command, job_id)
+
+        try:
+            self._execute_interactive(command, job_id)
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
+
         return job_id
 
 
