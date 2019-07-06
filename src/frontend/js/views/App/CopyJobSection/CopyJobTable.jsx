@@ -54,12 +54,17 @@ class CopyJobTable extends React.Component {
             job.src_cloud_type = src_cloud.type;
             job.dst_cloud_type = dst_cloud.type;
 
+            let color = 'default';
+            if (job.progress_state === 'SUCCESS') {
+                color = 'success'
+            } else if (job.progress_state === 'FAILED') {
+                color = 'danger'
+            } else if (job.progress_state === 'PROGRESS') {
+                color = 'primary'
+            }
+
             const state = (
-                <b className={classnames({
-                    'text-success': job.progress_state === 'SUCCESS',
-                    'text-danger': job.progress_state === 'FAILED',
-                    'text-primary': job.progress_state === 'PROGRESS',
-                })}>
+                <b className={`text-${color}`}>
                     {job.progress_state}
                 </b>
             )
@@ -81,7 +86,7 @@ class CopyJobTable extends React.Component {
                 <ProgressBar
                     now={progressValue}
                     label={`${progressValue}%`}
-                    variant='success'
+                    variant={color}
                 />
             )
 
