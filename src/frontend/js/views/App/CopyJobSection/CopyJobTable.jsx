@@ -161,7 +161,8 @@ class CopyJobTable extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        this.props.onShowDetails(selectedJob.id);
+        console.log(selectedJob)
+        this.props.onShowDetails(selectedJob);
     }
 
     _clearTimeout() {
@@ -178,7 +179,7 @@ CopyJobTable.defaultProps = {
     fetchData: () => {},
     refreshPanes: () => {},
     onStopJob: id => {},
-    onShowDetails: (jobId) => {},
+    onShowDetails: (copyJob) => {},
 }
 
 import {connect} from 'react-redux';
@@ -195,7 +196,7 @@ const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listCopyJobs()),
     refreshPanes: () => dispatch(refreshPanes()),
     onStopJob: id => dispatch(stopCopyJob(id)),
-    onShowDetails: (jobId) => dispatch(showEditCopyJobDialog(jobId)),
+    onShowDetails: (copyJob) => dispatch(showEditCopyJobDialog(copyJob)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CopyJobTable);
