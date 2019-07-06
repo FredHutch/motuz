@@ -4,7 +4,7 @@ import { Modal, Button } from 'react-bootstrap'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
-class CopyJobDialog extends React.Component {
+class NewCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.inputRef = React.createRef()
@@ -134,23 +134,23 @@ class CopyJobDialog extends React.Component {
     }
 }
 
-CopyJobDialog.defaultProps = {
+NewCopyJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
     onSubmit: (data) => {},
 }
 
 import {connect} from 'react-redux';
-import {hideCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hideNewCopyJobDialog} from 'actions/dialogActions.jsx'
 import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.copyJobDialogData,
+    data: state.dialog.newCopyJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideCopyJobDialog()),
+    onClose: () => dispatch(hideNewCopyJobDialog()),
     onSubmit: data => dispatch(createCopyJob(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CopyJobDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(NewCopyJobDialog);

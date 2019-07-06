@@ -10,8 +10,8 @@ const DESTINATION_CLOUD = {
 }
 
 const initialState = {
-    displayCopyJobDialog: false,
-    copyJobDialogData: {
+    displayNewCopyJobDialog: false,
+    newCopyJobDialogData: {
         source_cloud: SOURCE_CLOUD,
         source_resource: 'ERROR',
         destination_cloud: DESTINATION_CLOUD,
@@ -19,8 +19,8 @@ const initialState = {
         owner: 'ERROR',
     },
 
-    displayCopyJobEditDialog: false,
-    copyJobEditDialogData: {},
+    displayEditCopyJobDialog: false,
+    editCopyJobDialogData: {},
 
     displayNewCloudConnectionDialog: false,
     newCloudConnectionDialogData: {
@@ -41,45 +41,45 @@ const initialState = {
 export default (state=initialState, action) => {
     switch(action.type) {
 
-    case dialog.SHOW_COPY_JOB_DIALOG: {
+    case dialog.SHOW_NEW_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobDialog: true,
-            copyJobDialogData: {
-                ...state.copyJobDialogData,
+            displayNewCopyJobDialog: true,
+            newCopyJobDialogData: {
+                ...state.newCopyJobDialogData,
                 ...action.payload.data,
             }
         }
     }
 
-    case dialog.HIDE_COPY_JOB_DIALOG: {
+    case dialog.HIDE_NEW_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobDialog: false,
+            displayNewCopyJobDialog: false,
         }
     }
 
-    case dialog.SHOW_COPY_JOB_EDIT_DIALOG: {
+    case dialog.SHOW_EDIT_COPY_JOB_DIALOG: {
         return {
             ...state,
-            displayCopyJobEditDialog: true,
-            copyJobEditDialogData: action.payload.data,
+            displayEditCopyJobDialog: true,
+            editCopyJobDialogData: action.payload.data,
         }
     }
 
-    case dialog.HIDE_COPY_JOB_EDIT_DIALOG:
+    case dialog.HIDE_EDIT_COPY_JOB_DIALOG:
     case api.STOP_COPY_JOB_SUCCESS:
     {
         return {
             ...state,
-            displayCopyJobEditDialog: false,
+            displayEditCopyJobDialog: false,
         }
     }
 
     case api.CREATE_COPY_JOB_SUCCESS: {
         return {
             ...state,
-            displayCopyJobDialog: false,
+            displayNewCopyJobDialog: false,
         }
     }
 

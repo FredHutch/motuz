@@ -5,9 +5,15 @@ from ..managers.auth_manager import token_required
 from ..managers import cloud_connection_manager
 from ..exceptions import HTTP_EXCEPTION
 
-class NullableString(fields.String):
+class OptionalString(fields.String):
     __schema_type__ = ['string', 'null']
     __schema_example__ = 'nullable string'
+
+
+class PrivateString(fields.String):
+    def format(self, value):
+        return None
+
 
 api = Namespace('connections', description='Connection related operations')
 
@@ -19,22 +25,22 @@ dto = api.model('connection', {
 
     's3_bucket': fields.String(required=False, example='my-bucket-name'),
     's3_access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
-    's3_secret_access_key': fields.String(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
-    's3_region': NullableString(required=False, example='us-west-2'),
+    's3_secret_access_key': PrivateString(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
+    's3_region': OptionalString(required=False, example='us-west-2'),
 
-    's3_endpoint': NullableString(required=False, example='https://hello.swiftstack.com'),
+    's3_endpoint': OptionalString(required=False, example='https://hello.swiftstack.com'),
     's3_v2_auth': fields.String(required=False, example='true'),
 
     'azure_account': fields.String(required=False, example='my_azure_account'),
-    'azure_key': fields.String(required=False, example='qe21euoidjlkadj283u2398rudy8d87adh3dasdkahsd23ey239eaduhawd812e1uidhwdkjdh2es_asdASDAS=='),
+    'azure_key': PrivateString(required=False, example='qe21euoidjlkadj283u2398rudy8d87adh3dasdkahsd23ey239eaduhawd812e1uidhwdkjdh2es_asdASDAS=='),
 
     'swift_user': fields.String(required=False, example='swift_username'),
-    'swift_key': fields.String(required=False, example='asd*aqeaSDASDASDlkas.u'),
+    'swift_key': PrivateString(required=False, example='asd*aqeaSDASDASDlkas.u'),
     'swift_auth': fields.String(required=False, example='https://hello.swiftstack.com/auth/v2.0'),
-    'swift_tenant': NullableString(required=False, example='AUTH_swift_tennant'),
+    'swift_tenant': OptionalString(required=False, example='AUTH_swift_tennant'),
 
     'gcp_client_id': fields.String(required=False, example='141849123123812938127'),
-    'gcp_service_account_credentials': fields.String(required=False, example='{"type": "service_account", "project_id": "myID1233s", "private_key_id": "123012312ea12390d09123aa12390dda1309123a", "private_key": "-----BEGIN PRIVATE KEY-----\nA_PASTE_OF_YOUR_KEY\n-----END PRIVATE KEY-----\n", "client_email": "hello@email.com", "client_id": "141849123123812938127", "auth_uri": "https://accounts.google.com/o/oauth2/auth", "token_uri": "https://oauth2.googleapis.com/token", "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs", "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sa-datamover%40datamover.iam.gserviceaccount.com"}'),
+    'gcp_service_account_credentials': PrivateString(required=False, example='{"type": "service_account", "project_id": "myID1233s", "private_key_id": "123012312ea12390d09123aa12390dda1309123a", "private_key": "-----BEGIN PRIVATE KEY-----\nA_PASTE_OF_YOUR_KEY\n-----END PRIVATE KEY-----\n", "client_email": "hello@email.com", "client_id": "141849123123812938127", "auth_uri": "https://accounts.google.com/o/oauth2/auth", "token_uri": "https://oauth2.googleapis.com/token", "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs", "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sa-datamover%40datamover.iam.gserviceaccount.com"}'),
     'gcp_project_number': fields.String(required=False, example='199432342343'),
     'gcp_object_acl': fields.String(required=False, example='authenticatedRead'),
     'gcp_bucket_acl': fields.String(required=False, example='authenticatedRead'),

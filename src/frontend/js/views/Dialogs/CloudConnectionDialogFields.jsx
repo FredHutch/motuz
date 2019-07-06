@@ -275,6 +275,7 @@ class CloudConnectionField extends React.PureComponent {
                             })}
                             name={name}
                             defaultValue={defaultValue}
+                            autoComplete='off'
                         />
                     )}
                     <span className="invalid-feedback">

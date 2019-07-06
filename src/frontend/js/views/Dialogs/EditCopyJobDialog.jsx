@@ -4,7 +4,7 @@ import { Modal, Button, ProgressBar } from 'react-bootstrap'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
-class CopyJobEditDialog extends React.Component {
+class EditCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.intervalHandler = 0;
@@ -107,7 +107,7 @@ class CopyJobEditDialog extends React.Component {
     }
 }
 
-CopyJobEditDialog.defaultProps = {
+EditCopyJobDialog.defaultProps = {
     data: {},
     jobs: [],
     fetchData: (id) => {},
@@ -115,19 +115,19 @@ CopyJobEditDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideCopyJobEditDialog} from 'actions/dialogActions.jsx'
+import {hideEditCopyJobDialog} from 'actions/dialogActions.jsx'
 import {stopCopyJob} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
-    data: state.dialog.copyJobEditDialogData,
+    data: state.dialog.editCopyJobDialogData,
     jobs: state.api.jobs,
     onClose: () => {},
     onStopJob: id => {},
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideCopyJobEditDialog()),
+    onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CopyJobEditDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditCopyJobDialog);
