@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import { ProgressBar } from 'react-bootstrap';
 
 import parseTime from 'utils/parseTime.jsx'
@@ -17,8 +18,8 @@ class CopyJobTable extends React.Component {
             'description',
             'source',
             'destination',
-            'state',
             'time',
+            'state',
             'progress',
         ]
 
@@ -49,6 +50,15 @@ class CopyJobTable extends React.Component {
             const dst_cloud_id = job['dst_cloud_id'] || 0
             const dst_cloud = cloudMapping[dst_cloud_id]
 
+            const state = (
+                <b className={classnames({
+                    'text-success': job.progress_state === 'SUCCESS',
+                    'text-danger': job.progress_state === 'FAILED',
+                    'text-warning': job.progress_state === 'PROGRESS',
+                })}>
+                    {job.progress_state}
+                </b>
+            )
             const source = (
                 <React.Fragment>
                     <b>{src_cloud.type}</b>
@@ -73,8 +83,8 @@ class CopyJobTable extends React.Component {
 
             job = {
                 ...job,
-                state: job.progress_state,
                 time: parseTime(job.progress_execution_time),
+                state,
                 source,
                 destination,
                 progress,
