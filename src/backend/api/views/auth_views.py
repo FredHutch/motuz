@@ -13,10 +13,6 @@ auth_dto = api.model('auth', {
     'password': fields.String(required=True, description='The user password'),
 })
 
-# refresh_dto = api.model('auth_refresh', {
-#     'refresh': fields.String(required=True, description='The refresh token'),
-# })
-
 
 @api.route('/login/')
 class UserLogin(Resource):
@@ -47,8 +43,7 @@ class TokenRefresh(Resource):
 class LogoutAPI(Resource):
     def post(self):
         """Logout and invalidate JWT token"""
-        auth_header = request.headers.get('Authorization')
         try:
-            return auth_manager.logout_user(data=auth_header), 200
+            return auth_manager.logout_user(), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)

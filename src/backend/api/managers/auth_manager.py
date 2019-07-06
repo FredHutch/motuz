@@ -91,28 +91,12 @@ def refresh_token():
 
 
 
-
-def logout_user(data):
-    if data:
-        auth_token = data.split(" ")[1]
-    else:
-        auth_token = ''
-    if auth_token:
-        resp = decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            return invalidate_token(token=auth_token)
-        else:
-            response_object = {
-                'status': 'fail',
-                'message': resp
-            }
-            return response_object, 401
-    else:
-        response_object = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
-        }
-        return response_object, 403
+@refresh_token_required
+def logout_user():
+    return {
+        'status': 'success',
+        'message': 'Token Revocation not implemented yet.'
+    }
 
 
 
@@ -132,25 +116,3 @@ def invalidate_token(token):
             'message': e
         }
         return response_object, 200
-
-
-
-def decode_auth_token(auth_token):
-    """
-    Decodes the auth token
-    :param auth_token:
-    :return: dict|string
-    """
-    try:
-        payload = jwt.decode(auth_token, key)
-        is_blacklisted_token = InvalidToken.check_blacklist(auth_token)
-        if is_blacklisted_token:
-            return 'Token blacklisted. Please log in again.'
-        else:
-            return {'username': payload['sub']}
-    except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
-    except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
-    except Exception as e:
-        return 'Unknown exception: {}'.format(e)

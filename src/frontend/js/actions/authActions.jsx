@@ -1,6 +1,6 @@
 import { RSAA } from 'redux-api-middleware';
 
-import { withAuth } from 'reducers/reducers.jsx';
+import { withRefresh } from 'reducers/reducers.jsx';
 
 export const LOGIN_REQUEST = '@@auth/LOGIN_REQUEST';
 export const LOGIN_SUCCESS = '@@auth/LOGIN_SUCCESS';
@@ -26,12 +26,11 @@ export const login = (username, password) => ({
     }
 });
 
-export const logout = () => ({
+export const logout = (refresh_token) => ({
     [RSAA]: {
         endpoint: '/api/auth/logout/',
         method: 'POST',
-        body: JSON.stringify({}),
-        headers: withAuth({ 'Content-Type': 'application/json' }),
+        headers: withRefresh({ 'Content-Type': 'application/json' }),
         types: [
             LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
         ]
@@ -39,14 +38,11 @@ export const logout = () => ({
 });
 
 
-export const refreshAccessToken = (token) => ({
+export const refreshAccessToken = (refresh_token) => ({
     [RSAA]: {
         endpoint: '/api/auth/refresh/',
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
+        headers: withRefresh({ 'Content-Type': 'application/json' }),
         types: [
             TOKEN_REQUEST, TOKEN_RECEIVED, TOKEN_FAILURE
         ]
