@@ -13,6 +13,8 @@ from ..utils.rclone_connection import RcloneConnection
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
 def copy_job(self, task_id=None):
+    start_time = time.time()
+
     copy_job = CopyJob.query.get(task_id)
     copy_job.progress_state = 'PROGRESS'
     db.session.commit()
@@ -24,6 +26,7 @@ def copy_job(self, task_id=None):
         copy_job.progress_state = 'FAILED'
         copy_job.progress_current = 100
         copy_job.progress_total = 100
+        copy_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
         text = "Local copies not supported"
@@ -37,6 +40,7 @@ def copy_job(self, task_id=None):
         copy_job.progress_state = 'FAILED'
         copy_job.progress_current = 100
         copy_job.progress_total = 100
+        copy_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
         text = "Remote-only copies not supported"
@@ -66,6 +70,7 @@ def copy_job(self, task_id=None):
     while not connection.copy_finished(task_id):
         progress_current = connection.copy_percent(task_id)
         copy_job.progress_current = progress_current
+        copy_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
         self.update_state(state='PROGRESS', meta={
@@ -77,6 +82,7 @@ def copy_job(self, task_id=None):
 
     copy_job.progress_current = 100
     copy_job.progress_state = 'FINISHED'
+    copy_job.progress_execution_time = int(time.time() - start_time)
     db.session.commit()
 
     return {

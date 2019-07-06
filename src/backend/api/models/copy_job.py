@@ -23,6 +23,7 @@ class CopyJob(db.Model, TimestampMixin):
     progress_current = db.Column(db.Integer, nullable=True)
     progress_total = db.Column(db.Integer, nullable=True)
     progress_error = db.Column(db.String, nullable=True)
+    progress_execution_time = db.Column(db.Integer, nullable=False, server_default="0")
 
     src_cloud = relationship(
         "CloudConnection",
