@@ -9,7 +9,6 @@ import time
 
 class RcloneConnection:
     def __init__(self, data):
-        self.type = data.type
         self.data = data
 
         self._setCredentials()
@@ -131,7 +130,7 @@ class RcloneConnection:
 
     def _setCredentials(self):
         self.credentials = ''
-        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.type)
+        self.credentials += "RCLONE_CONFIG_CURRENT_TYPE='{}' ".format(self.data.type)
 
         def _addCredential(env_key, data_key):
             value = getattr(self.data, data_key, None)
@@ -139,7 +138,7 @@ class RcloneConnection:
                 self.credentials += "{}='{}' ".format(env_key, value)
 
 
-        if self.type == 's3':
+        if self.data.type == 's3':
             _addCredential('RCLONE_CONFIG_CURRENT_REGION', 's3_region')
             _addCredential('RCLONE_CONFIG_CURRENT_ACCESS_KEY_ID', 's3_access_key_id')
             _addCredential('RCLONE_CONFIG_CURRENT_SECRET_ACCESS_KEY', 's3_secret_access_key')
@@ -147,17 +146,17 @@ class RcloneConnection:
             _addCredential('RCLONE_CONFIG_CURRENT_ENDPOINT', 's3_endpoint')
             _addCredential('RCLONE_CONFIG_CURRENT_V2_AUTH', 's3_v2_auth')
 
-        elif self.type == 'azureblob':
+        elif self.data.type == 'azureblob':
             _addCredential('RCLONE_CONFIG_CURRENT_ACCOUNT', 'azure_account')
             _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'azure_key')
 
-        elif self.type == 'swift':
+        elif self.data.type == 'swift':
             _addCredential('RCLONE_CONFIG_CURRENT_USER', 'swift_user')
             _addCredential('RCLONE_CONFIG_CURRENT_KEY', 'swift_key')
             _addCredential('RCLONE_CONFIG_CURRENT_AUTH', 'swift_auth')
             _addCredential('RCLONE_CONFIG_CURRENT_TENANT', 'swift_tenant')
 
-        elif self.type == 'google cloud storage':
+        elif self.data.type == 'google cloud storage':
             _addCredential('RCLONE_CONFIG_CURRENT_CLIENT_ID', 'gcp_client_id')
             _addCredential('RCLONE_CONFIG_CURRENT_SERVICE_ACCOUNT_CREDENTIALS', 'gcp_service_account_credentials')
             _addCredential('RCLONE_CONFIG_CURRENT_PROJECT_NUMBER', 'gcp_project_number')
@@ -165,7 +164,7 @@ class RcloneConnection:
             _addCredential('RCLONE_CONFIG_CURRENT_BUCKET_ACL', 'gcp_bucket_acl')
 
         else:
-            logging.error("Connection type unknown: {}".format(self.type))
+            logging.error("Connection type unknown: {}".format(self.data.type))
 
 
     def _get_next_job_id(self):
