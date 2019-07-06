@@ -15,8 +15,12 @@ class RcloneConnection:
         self._setCredentials()
 
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
+
         self._job_text = defaultdict(str)
+        self._job_error_text = defaultdict(str)
         self._job_percent = defaultdict(int)
+        self._job_exitstatus = {}
+
         self._stop_events = {} # Mapping from id to threading.Event
         self._latest_job_id = 0
 
@@ -109,6 +113,9 @@ class RcloneConnection:
     def copy_text(self, job_id):
         return self._job_text[job_id]
 
+    def copy_error_text(self, job_id):
+        return self._job_error_text[job_id]
+
     def copy_percent(self, job_id):
         return self._job_percent[job_id]
 
@@ -117,6 +124,9 @@ class RcloneConnection:
 
     def copy_finished(self, job_id):
         return self._stop_events[job_id].is_set()
+
+    def copy_exitstatus(self, job_id):
+        return self._job_exitstatus.get(job_id, -1)
 
 
     def _setCredentials(self):
@@ -224,6 +234,8 @@ class RcloneConnection:
             if match is not None:
                 error = match.groups()[0]
                 logging.error(error)
+                self._job_error_text[job_id] += error
+                self._job_error_text[job_id] += '\n'
                 continue
 
             match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
@@ -237,7 +249,12 @@ class RcloneConnection:
             self.__process_status(job_id)
 
         self._job_percent[job_id] = 100
-        logging.info("Finished Copy")
+        self.__process_status(job_id)
+
+        exitstatus = process.poll()
+        self._job_exitstatus[job_id] = exitstatus
+
+        logging.info("Copy process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case
 
 

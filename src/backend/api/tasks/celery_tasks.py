@@ -74,17 +74,28 @@ def copy_job(self, task_id=None):
         db.session.commit()
 
         self.update_state(state='PROGRESS', meta={
-            'text': connection.copy_text(task_id)
+            'text': connection.copy_text(task_id),
+            'error_text': connection.copy_error_text(task_id)
         })
 
         time.sleep(1)
 
 
+    exitstatus = connection.copy_exitstatus(task_id)
+    if exitstatus == -1:
+        logging.error("Copy Job did not set its status")
+        copy_job.progress_state = 'UNSET'
+    elif exitstatus == 0:
+        copy_job.progress_state = 'SUCCESS'
+    else:
+        copy_job.progress_state = 'FAILED'
+
+
     copy_job.progress_current = 100
-    copy_job.progress_state = 'FINISHED'
     copy_job.progress_execution_time = int(time.time() - start_time)
     db.session.commit()
 
     return {
         'text': connection.copy_text(task_id),
+        'error_text': connection.copy_error_text(task_id)
     }
