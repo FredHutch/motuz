@@ -329,6 +329,14 @@ class RcloneConnection:
         exitstatus = process.poll()
         self._job_exitstatus[job_id] = exitstatus
 
+        for _ in range(1000):
+            line = process.stderr.readline().decode('utf-8')
+            if len(line) == 0:
+                break
+            line = line.strip()
+            self._job_error_text[job_id] += line
+            self._job_error_text[job_id] += '\n'
+
         logging.info("Copy process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case
 
