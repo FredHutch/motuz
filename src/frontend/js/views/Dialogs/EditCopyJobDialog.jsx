@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button, ProgressBar } from 'react-bootstrap'
-import classnames from 'classnames'
 
+import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
 class EditCopyJobDialog extends React.Component {
@@ -16,13 +16,14 @@ class EditCopyJobDialog extends React.Component {
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
         const progress = Math.floor(data.progress_current / data.progress_total * 100);
+        const executionTime = parseTime(data.progress_execution_time);
 
         const isInProgress = data.progress_state === 'PROGRESS'
 
         let color = 'default';
         if (data.progress_state === 'SUCCESS') {
             color = 'success'
-        } else if (data.progress_state === 'FAILED') {
+        } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
             color = 'danger'
         } else if (data.progress_state === 'PROGRESS') {
             color = 'primary'
@@ -46,6 +47,9 @@ class EditCopyJobDialog extends React.Component {
                     <Modal.Body>
                         <div className="container">
                             <div className="form-group">
+                                <div className="text-center">
+                                    <b className={`text-${color}`}>{executionTime}</b>
+                                </div>
                                 <ProgressBar
                                     now={progress}
                                     label={`${progress}%`}

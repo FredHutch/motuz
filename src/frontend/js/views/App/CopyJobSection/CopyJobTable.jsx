@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import { ProgressBar } from 'react-bootstrap';
 
 import parseTime from 'utils/parseTime.jsx'
@@ -57,7 +56,7 @@ class CopyJobTable extends React.Component {
             let color = 'default';
             if (job.progress_state === 'SUCCESS') {
                 color = 'success'
-            } else if (job.progress_state === 'FAILED') {
+            } else if (job.progress_state === 'FAILED' || job.progress_state === 'STOPPED') {
                 color = 'danger'
             } else if (job.progress_state === 'PROGRESS') {
                 color = 'primary'

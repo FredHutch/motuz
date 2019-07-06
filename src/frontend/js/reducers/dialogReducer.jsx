@@ -68,7 +68,6 @@ export default (state=initialState, action) => {
     }
 
     case dialog.HIDE_EDIT_COPY_JOB_DIALOG:
-    case api.STOP_COPY_JOB_SUCCESS:
     {
         return {
             ...state,
