@@ -94,19 +94,18 @@ class RcloneConnection:
             credentials.update(self._formatCredentials(dst_data, name='dst'))
             dst = 'dst:{}'.format(dst_path)
 
-
-        command = (
-            'rclone copy {src} {dst} '
-            '--progress '
-            '--stats 2s '
-        ).format(
-            src=src,
-            dst=dst,
-        )
+        command = [
+            'rclone',
+            'copy',
+            src,
+            dst,
+            '--progress',
+            '--stats', '2s',
+        ]
 
         bash_command = "{} {}".format(
             ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),
-            command,
+            ' '.join(command),
         )
 
         logging.info(sanitize(bash_command))
@@ -275,14 +274,15 @@ class RcloneConnection:
 
     def __execute_interactive(self, command, env={}, job_id=0):
         stop_event = self._stop_events[job_id]
+        full_env = os.environ.copy()
+        full_env.update(env)
 
         process = subprocess.Popen(
             command,
-            env=env,
+            env=full_env,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=True,
         )
 
         reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
