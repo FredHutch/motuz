@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import { ProgressBar } from 'react-bootstrap';
 
 import parseTime from 'utils/parseTime.jsx'
@@ -17,8 +18,8 @@ class CopyJobTable extends React.Component {
             'description',
             'source',
             'destination',
-            'state',
             'time',
+            'state',
             'progress',
         ]
 
@@ -41,7 +42,7 @@ class CopyJobTable extends React.Component {
 
 
         const tableRows = this.props.jobs.map((job, i) => {
-            const progress = Math.round(job.progress_current / job.progress_total * 100);
+            const progressValue = Math.round(job.progress_current / job.progress_total * 100);
 
             const src_cloud_id = job['src_cloud_id'] || 0
             const src_cloud = cloudMapping[src_cloud_id]
@@ -49,6 +50,19 @@ class CopyJobTable extends React.Component {
             const dst_cloud_id = job['dst_cloud_id'] || 0
             const dst_cloud = cloudMapping[dst_cloud_id]
 
+            // TODO: We need this in the modal, but this object should ideally be immutable
+            job.src_cloud_type = src_cloud.type;
+            job.dst_cloud_type = dst_cloud.type;
+
+            const state = (
+                <b className={classnames({
+                    'text-success': job.progress_state === 'SUCCESS',
+                    'text-danger': job.progress_state === 'FAILED',
+                    'text-primary': job.progress_state === 'PROGRESS',
+                })}>
+                    {job.progress_state}
+                </b>
+            )
             const source = (
                 <React.Fragment>
                     <b>{src_cloud.type}</b>
@@ -63,14 +77,21 @@ class CopyJobTable extends React.Component {
                     <span>{job.dst_path}</span>
                 </React.Fragment>
             )
+            const progress = (
+                <ProgressBar
+                    now={progressValue}
+                    label={`${progressValue}%`}
+                    variant='success'
+                />
+            )
 
             job = {
                 ...job,
-                state: job.progress_state,
                 time: parseTime(job.progress_execution_time),
-                progress,
+                state,
                 source,
                 destination,
+                progress,
             }
 
             return (
@@ -78,25 +99,11 @@ class CopyJobTable extends React.Component {
                     onClick={event => this._onSelectJob(job)}
                     key={job.id}
                 >
-                    {headers.map((header, j) => {
-                        if (header === 'progress') {
-                            return (
-                                <td key={j}>
-                                    <ProgressBar
-                                        now={job[header]}
-                                        label={`${job[header]}%`}
-                                        variant='success'
-                                    />
-                                </td>
-                            )
-                        } else {
-                            return (
-                                <td key={j}>
-                                    {job[header]}
-                                </td>
-                            );
-                        }
-                    })}
+                    {headers.map((header, j) => (
+                        <td key={j}>
+                            {job[header]}
+                        </td>
+                    ))}
                 </tr>
             );
         })

@@ -21,6 +21,7 @@ def list():
         try:
             task = tasks.copy_job.AsyncResult(str(copy_job.id))
             copy_job.progress_text = task.info.get('text', '')
+            copy_job.progress_error_text = task.info.get('error_text', '')
         except Exception:
             pass # Sometimes rabbitmq closes the connection!
 
@@ -69,6 +70,7 @@ def retrieve(id):
     try:
         task = tasks.copy_job.AsyncResult(str(copy_job.id))
         copy_job.progress_text = task.info.get('text', '')
+        copy_job.progress_error_text = task.info.get('error_text', '')
     except Exception:
         pass # Sometimes rabbitmq closes the connection!
 

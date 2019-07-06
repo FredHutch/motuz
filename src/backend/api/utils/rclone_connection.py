@@ -15,8 +15,12 @@ class RcloneConnection:
         self._setCredentials()
 
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
+
         self._job_text = defaultdict(str)
+        self._job_error_text = defaultdict(str)
         self._job_percent = defaultdict(int)
+        self._job_exitstatus = {}
+
         self._stop_events = {} # Mapping from id to threading.Event
         self._latest_job_id = 0
 
@@ -47,9 +51,13 @@ class RcloneConnection:
             path=path,
         )
 
-        result = self._execute(command)
-        result = json.loads(result)
-        return result
+        try:
+            result = self._execute(command)
+            result = json.loads(result)
+            return result
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
+
 
 
 
@@ -62,10 +70,13 @@ class RcloneConnection:
             path=path,
         )
 
-        result = self._execute(command)
-        return {
-            'message': 'Success',
-        }
+        try:
+            result = self._execute(command)
+            return {
+                'message': 'Success',
+            }
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
 
 
 
@@ -90,12 +101,20 @@ class RcloneConnection:
                 raise ValueError('rclone copy job with ID {} already exists'.fromat(job_id))
 
         self._stop_events[job_id] = threading.Event()
-        self._execute_interactive(command, job_id)
+
+        try:
+            self._execute_interactive(command, job_id)
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
+
         return job_id
 
 
     def copy_text(self, job_id):
         return self._job_text[job_id]
+
+    def copy_error_text(self, job_id):
+        return self._job_error_text[job_id]
 
     def copy_percent(self, job_id):
         return self._job_percent[job_id]
@@ -105,6 +124,9 @@ class RcloneConnection:
 
     def copy_finished(self, job_id):
         return self._stop_events[job_id].is_set()
+
+    def copy_exitstatus(self, job_id):
+        return self._job_exitstatus.get(job_id, -1)
 
 
     def _setCredentials(self):
@@ -161,6 +183,7 @@ class RcloneConnection:
         output = byteOutput.decode('UTF-8').rstrip()
         return output
 
+
     def _execute_interactive(self, command, job_id):
         thread = threading.Thread(target=self.__execute_interactive, kwargs={
             'command': command,
@@ -177,19 +200,24 @@ class RcloneConnection:
             command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            stderr=subprocess.PIPE,
             shell=True,
         )
 
         reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
         reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
 
-        while not stop_event.is_set() and process.poll() is None:
-            line = process.stdout.readline().decode('utf-8').strip()
+        while not stop_event.is_set():
+            line = process.stdout.readline().decode('utf-8')
 
             if len(line) == 0:
-                stop_event.set()
+                if process.poll() is not None:
+                    stop_event.set()
+                else:
+                    time.sleep(0.5)
                 continue
+
+            line = line.strip()
 
             q1 = line.find(reset_sequence1)
             if q1 != -1:
@@ -202,9 +230,17 @@ class RcloneConnection:
             line = line.replace(reset_sequence1, '')
             line = line.replace(reset_sequence2, '')
 
+            match = re.search(r'(ERROR.*)', line)
+            if match is not None:
+                error = match.groups()[0]
+                logging.error(error)
+                self._job_error_text[job_id] += error
+                self._job_error_text[job_id] += '\n'
+                continue
+
             match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
             if match is None:
-                print("No match in {}".format(line))
+                logging.info("No match in {}".format(line))
                 time.sleep(0.5)
                 continue
 
@@ -213,7 +249,12 @@ class RcloneConnection:
             self.__process_status(job_id)
 
         self._job_percent[job_id] = 100
-        logging.info("Finished Copy")
+        self.__process_status(job_id)
+
+        exitstatus = process.poll()
+        self._job_exitstatus[job_id] = exitstatus
+
+        logging.info("Copy process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case
 
 
@@ -274,6 +315,10 @@ def sanitize(string):
 
     return string
 
+
+
+class RcloneException(Exception):
+    pass
 
 
 def main():
