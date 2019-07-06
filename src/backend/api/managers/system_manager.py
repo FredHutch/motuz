@@ -48,11 +48,8 @@ def mkdir(data):
     # If user does not have permission to the cloud_connection or if the cloud_connection
     # does not exist, the line above will raise the correct HTTP 4xx Exception
 
-    connection = RcloneConnection(
-        data=cloud_connection,
-    )
-
-    return connection.mkdir(path=path)
+    connection = RcloneConnection()
+    return connection.mkdir(data=cloud_connection, path=path)
 
 
 def _get_local_files(path):
@@ -102,12 +99,9 @@ def _get_local_files(path):
 
 
 def _get_remote_files(cloud_connection, path):
-    connection = RcloneConnection(
-        data=cloud_connection,
-    )
-
+    connection = RcloneConnection()
     try:
-        return connection.ls(path=path)
+        return connection.ls(data=cloud_connection, path=path)
     except Exception as e:
         # TODO: be more granular about it
         raise HTTP_503_SERVICE_UNAVAILABLE(str(e))

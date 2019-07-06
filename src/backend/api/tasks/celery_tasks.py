@@ -56,13 +56,12 @@ def copy_job(self, task_id=None):
         cloud_connection = copy_job.dst_cloud
 
 
-    connection = RcloneConnection(
-        data=cloud_connection,
-    )
-
+    connection = RcloneConnection()
     connection.copy(
-        src=copy_job.src_resource,
-        dst=copy_job.dst_path,
+        src_data=copy_job.src_cloud,
+        src_path=copy_job.src_resource,
+        dst_data=copy_job.dst_cloud,
+        dst_path=copy_job.dst_path,
         job_id=task_id,
     )
 

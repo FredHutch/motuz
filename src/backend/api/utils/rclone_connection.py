@@ -8,9 +8,7 @@ import threading
 import time
 
 class RcloneConnection:
-    def __init__(self, data):
-        self.data = data
-
+    def __init__(self):
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
         self._job_text = defaultdict(str)
@@ -22,8 +20,8 @@ class RcloneConnection:
         self._latest_job_id = 0
 
 
-    def verify(self):
-        credentials = self._formatCredentials(self.data, name='current')
+    def verify(self, data):
+        credentials = self._formatCredentials(data, name='current')
         command = '{} rclone lsjson current:'.format(credentials)
 
         try:
@@ -40,8 +38,8 @@ class RcloneConnection:
             }
 
 
-    def ls(self, path):
-        credentials = self._formatCredentials(self.data, name='current')
+    def ls(self, data, path):
+        credentials = self._formatCredentials(data, name='current')
 
         command = (
             '{credentials} '
@@ -61,8 +59,8 @@ class RcloneConnection:
 
 
 
-    def mkdir(self, path):
-        credentials = self._formatCredentials(self.data, name='current')
+    def mkdir(self, data, path):
+        credentials = self._formatCredentials(data, name='current')
 
         command = (
             '{credentials} '
@@ -82,12 +80,25 @@ class RcloneConnection:
 
 
 
-    def copy(self, src, dst, job_id=None):
-        credentials = self._formatCredentials(self.data, name='current')
+    def copy(self, src_data, src_path, dst_data, dst_path, job_id=None):
+        credentials = ''
+
+        if src_data is None: # Local
+            src = src_path
+        else:
+            credentials = self._formatCredentials(src_data, name='src')
+            src = 'src:{}'.format(src_path)
+
+        if dst_data is None: # Local
+            dst = dst_path
+        else:
+            credentials = self._formatCredentials(dst_data, name='dst')
+            dst = 'dst:{}'.format(dst_path)
+
 
         command = (
             '{credentials} '
-            'rclone copy {src} current:{dst} '
+            'rclone copy {src} {dst} '
             '--progress '
             '--stats 2s '
         ).format(
@@ -400,14 +411,18 @@ def main():
         'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     }
 
-    connection = RcloneConnection(
-        data=data,
-    )
+    connection = RcloneConnection()
 
     # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
     job_id = 123
     import random
-    connection.copy('/tmp/motuz/mb_blob.bin', '/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)), job_id=job_id)
+    connection.copy(
+        src_data=None, # Local
+        src_path='/tmp/motuz/mb_blob.bin',
+        dst_data=data,
+        dst_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
+        job_id=job_id
+    )
 
 
     while not connection.copy_finished(job_id):
