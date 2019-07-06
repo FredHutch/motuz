@@ -2,6 +2,8 @@ from celery import Celery
 from flask import Flask, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_restplus import Api
+from flask_jwt_extended import JWTManager
+
 
 from .config import config_by_name, Config
 
@@ -11,6 +13,7 @@ db = SQLAlchemy()
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(config_by_name['dev'])
 db.init_app(app)
+jwt = JWTManager(app)
 
 celery = Celery(
     __name__,

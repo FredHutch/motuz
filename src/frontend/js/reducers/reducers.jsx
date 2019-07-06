@@ -27,6 +27,17 @@ export function withAuth(headers={}) {
     };
 }
 
+export function withRefresh(headers={}) {
+    return (state) => {
+        const ret = {...headers};
+        const token = refreshToken(state);
+        if (token) {
+            ret['Authorization'] = `Bearer ${token}`;
+        }
+        return ret;
+    };
+}
+
 export const accessToken =
     state => fromAuth.accessToken(state.auth);
 

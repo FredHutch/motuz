@@ -1,14 +1,14 @@
 import { RSAA } from 'redux-api-middleware';
 
-import { withAuth } from 'reducers/reducers.jsx';
+import { withRefresh } from 'reducers/reducers.jsx';
 
 export const LOGIN_REQUEST = '@@auth/LOGIN_REQUEST';
 export const LOGIN_SUCCESS = '@@auth/LOGIN_SUCCESS';
 export const LOGIN_FAILURE = '@@auth/LOGIN_FAILURE';
 
-export const TOKEN_REQUEST = '@@auth/TOKEN_REQUEST';
-export const TOKEN_RECEIVED = '@@auth/TOKEN_RECEIVED';
-export const TOKEN_FAILURE = '@@auth/TOKEN_FAILURE';
+export const REFRESH_TOKEN_REQUEST = '@@auth/REFRESH_TOKEN_REQUEST';
+export const REFRESH_TOKEN_SUCCESS = '@@auth/REFRESH_TOKEN_SUCCESS';
+export const REFRESH_TOKEN_FAILURE = '@@auth/REFRESH_TOKEN_FAILURE';
 
 export const LOGOUT_REQUEST = '@@auth/LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = '@@auth/LOGOUT_SUCCESS';
@@ -26,13 +26,11 @@ export const login = (username, password) => ({
     }
 });
 
-export const logout = () => ({
+export const logout = (refresh_token) => ({
     [RSAA]: {
         endpoint: '/api/auth/logout/',
         method: 'POST',
-        body: JSON.stringify({}),
-        headers: withAuth({ 'Content-Type': 'application/json' }),
-        headers: { 'Content-Type': 'application/json' },
+        headers: withRefresh({ 'Content-Type': 'application/json' }),
         types: [
             LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
         ]
@@ -40,14 +38,13 @@ export const logout = () => ({
 });
 
 
-export const refreshAccessToken = (token) => ({
+export const refreshAccessToken = (refresh_token) => ({
     [RSAA]: {
-        endpoint: '/api/auth/token/refresh/',
+        endpoint: '/api/auth/refresh/',
         method: 'POST',
-        body: JSON.stringify({refresh: token}),
-        headers: { 'Content-Type': 'application/json' },
+        headers: withRefresh({ 'Content-Type': 'application/json' }),
         types: [
-            TOKEN_REQUEST, TOKEN_RECEIVED, TOKEN_FAILURE
+            REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE
         ]
     }
 });

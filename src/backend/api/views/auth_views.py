@@ -26,13 +26,24 @@ class UserLogin(Resource):
             api.abort(e.code, e.payload)
 
 
+@api.route('/refresh/')
+class TokenRefresh(Resource):
+    def post(self):
+        """Use JWT refresh token to retrienve a new JWT access token"""
+        try:
+            return auth_manager.refresh_token(), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+        except Exception as e:
+            api.abort(500, str(e))
+
+
 
 @api.route('/logout/')
 class LogoutAPI(Resource):
     def post(self):
         """Logout and invalidate JWT token"""
-        auth_header = request.headers.get('Authorization')
         try:
-            return auth_manager.logout_user(data=auth_header), 200
+            return auth_manager.logout_user(), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)

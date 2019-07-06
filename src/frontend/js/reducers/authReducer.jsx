@@ -33,17 +33,21 @@ export default (state=initialState, action) => {
             loading: false,
         };
     }
-    case auth.TOKEN_RECEIVED: {
+    case auth.REFRESH_TOKEN_SUCCESS: {
         return {
             ...state,
             access: {
                 token: action.payload.access,
                 ...jwtDecode(action.payload.access)
-            }
+            },
+            refresh: {
+                token: action.payload.refresh,
+                ...jwtDecode(action.payload.refresh),
+            },
         };
     }
     case auth.LOGIN_FAILURE:
-    case auth.TOKEN_FAILURE:
+    case auth.REFRESH_TOKEN_FAILURE:
     {
         return {
             access: undefined,
@@ -106,9 +110,9 @@ export function getCurrentUser(state) {
         return 'ERROR ACCESS'
     }
 
-    if (!state.access.sub) {
+    if (!state.access.identity) {
         return 'ERROR SUB'
     }
 
-    return state.access.sub
+    return state.access.identity
 }

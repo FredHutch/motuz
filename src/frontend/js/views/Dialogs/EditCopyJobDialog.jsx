@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button, ProgressBar } from 'react-bootstrap'
-import classnames from 'classnames'
 
+import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
 class EditCopyJobDialog extends React.Component {
@@ -15,9 +15,19 @@ class EditCopyJobDialog extends React.Component {
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
-        const progress = data.progress_current / data.progress_total * 100;
+        const progress = Math.floor(data.progress_current / data.progress_total * 100);
+        const executionTime = parseTime(data.progress_execution_time);
 
         const isInProgress = data.progress_state === 'PROGRESS'
+
+        let color = 'default';
+        if (data.progress_state === 'SUCCESS') {
+            color = 'success'
+        } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
+            color = 'danger'
+        } else if (data.progress_state === 'PROGRESS') {
+            color = 'primary'
+        }
 
         return (
             <div className='dialog-edit-copy-job'>
@@ -29,11 +39,7 @@ class EditCopyJobDialog extends React.Component {
                     <Modal.Header closeButton>
                         <Modal.Title>
                             <span>Copy Job {data.id}{description} - </span>
-                            <b className={classnames({
-                                'text-success': data.progress_state === 'SUCCESS',
-                                'text-danger': data.progress_state === 'FAILED',
-                                'text-primary': data.progress_state === 'PROGRESS',
-                            })}>
+                            <b className={`text-${color}`}>
                                 {data.progress_state}
                             </b>
                         </Modal.Title>
@@ -41,10 +47,13 @@ class EditCopyJobDialog extends React.Component {
                     <Modal.Body>
                         <div className="container">
                             <div className="form-group">
+                                <div className="text-center">
+                                    <b className={`text-${color}`}>{executionTime}</b>
+                                </div>
                                 <ProgressBar
                                     now={progress}
                                     label={`${progress}%`}
-                                    variant='success'
+                                    variant={color}
                                     style={{width: '100%', height: 30}}
                                 />
                             </div>
@@ -96,6 +105,10 @@ class EditCopyJobDialog extends React.Component {
     }
 
     componentDidMount() {
+
+    }
+
+    componentWillUnmount() {
 
     }
 

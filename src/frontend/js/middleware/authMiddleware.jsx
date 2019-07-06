@@ -1,6 +1,6 @@
 import { isRSAA, apiMiddleware } from 'redux-api-middleware';
 
-import { TOKEN_RECEIVED, refreshAccessToken } from 'actions/authActions.jsx';
+import { REFRESH_TOKEN_SUCCESS, refreshAccessToken } from 'actions/authActions.jsx';
 import { refreshToken, isAccessTokenExpired } from 'reducers/reducers.jsx';
 
 
@@ -13,7 +13,7 @@ function createAuthMiddleware() {
         return (next) => (action) => {
             const nextCheckPostoned = (nextAction) => {
                 // Run postponed actions after token refresh
-                if (nextAction.type === TOKEN_RECEIVED) {
+                if (nextAction.type === REFRESH_TOKEN_SUCCESS) {
                     next(nextAction);
                     postponedRSAAs.forEach((postponed) => {
                         rsaaMiddleware(next)(postponed);
