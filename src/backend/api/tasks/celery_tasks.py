@@ -57,7 +57,6 @@ def copy_job(self, task_id=None):
 
 
     connection = RcloneConnection(
-        type=cloud_connection.type,
         data=cloud_connection,
     )
 

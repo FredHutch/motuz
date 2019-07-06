@@ -49,7 +49,6 @@ def mkdir(data):
     # does not exist, the line above will raise the correct HTTP 4xx Exception
 
     connection = RcloneConnection(
-        type=cloud_connection.type,
         data=cloud_connection,
     )
 
@@ -104,7 +103,6 @@ def _get_local_files(path):
 
 def _get_remote_files(cloud_connection, path):
     connection = RcloneConnection(
-        type=cloud_connection.type,
         data=cloud_connection,
     )
 

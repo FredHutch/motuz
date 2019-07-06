@@ -8,8 +8,8 @@ import threading
 import time
 
 class RcloneConnection:
-    def __init__(self, type, data):
-        self.type = type
+    def __init__(self, data):
+        self.type = data.type
         self.data = data
 
         self._setCredentials()
@@ -330,13 +330,13 @@ def main():
 
     data = CloudConnection()
     data.__dict__ = {
+        'type': 's3',
         'region': os.environ['MOTUZ_REGION'],
         'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
         'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     }
 
     connection = RcloneConnection(
-        type='s3',
         data=data,
     )
 
