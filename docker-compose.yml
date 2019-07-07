@@ -28,8 +28,8 @@ services:
 
             # Interesting folders
             - /tmp
-            - /efs/:/efs/:ro
-            - /fh/scratch:/fh/scratch:ro
+            - /efs/:/efs/
+            - /fh/scratch/:/fh/scratch/
 
             # For access by each user
             - /home:/home
