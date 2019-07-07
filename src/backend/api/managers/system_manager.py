@@ -67,6 +67,11 @@ def _get_local_files(path, user):
 
     try:
         output = _ls_with_impersonation(path, user)
+    except subprocess.CalledProcessError as err:
+        raise HTTP_403_FORBIDDEN("User {user} does not have privilege for path '{path}'".format(
+            user=user,
+            path=path,
+        ))
     except Exception as err:
         raise HTTP_403_FORBIDDEN(str(err))
 
