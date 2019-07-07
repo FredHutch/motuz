@@ -98,6 +98,18 @@ services:
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
 
+
+    migrate:
+        container_name: database
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./docker/migrate/Dockerfile
+        depends_on:
+          - database
+          - app
+
+
     test:
         container_name: test
         network_mode: host
