@@ -35,6 +35,12 @@ class CopyJobTable extends React.Component {
                 type: 'file',
             }
         }
+
+        if (this.props.connections.length == 0) {
+            // Can happen if connections have not been fetched yet
+            return <div></div>
+        }
+
         this.props.connections.forEach(connection => {
             cloudMapping[connection.id] = connection
         })
@@ -89,7 +95,7 @@ class CopyJobTable extends React.Component {
                 />
             )
 
-            job = {
+            const jobFields = {
                 ...job,
                 time: parseTime(job.progress_execution_time),
                 state,
@@ -105,7 +111,7 @@ class CopyJobTable extends React.Component {
                 >
                     {headers.map((header, j) => (
                         <td key={j}>
-                            {job[header]}
+                            {jobFields[header]}
                         </td>
                     ))}
                 </tr>
@@ -161,7 +167,6 @@ class CopyJobTable extends React.Component {
     }
 
     _onSelectJob(selectedJob) {
-        console.log(selectedJob)
         this.props.onShowDetails(selectedJob);
     }
 
