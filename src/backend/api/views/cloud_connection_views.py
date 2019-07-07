@@ -72,10 +72,8 @@ class ConnectionList(Resource):
         """
         Create a new Connection
         """
-        data = request.json
-
         try:
-            return cloud_connection_manager.create(data=data), 201
+            return cloud_connection_manager.create(request.json), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -91,10 +89,8 @@ class ConnectionVerify(Resource):
         """
         Verify credentials for a connection
         """
-        data = request.json
-
         try:
-            return cloud_connection_manager.verify(data=data), 200
+            return cloud_connection_manager.verify(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -128,10 +124,8 @@ class Connection(Resource):
         """
         Update a specific Connection
         """
-        data = request.json
-
         try:
-            return cloud_connection_manager.update(id, data), 200
+            return cloud_connection_manager.update(id, request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -144,7 +138,6 @@ class Connection(Resource):
         """
         Delete a specific Connection
         """
-
         try:
             return cloud_connection_manager.delete(id), 200
         except HTTP_EXCEPTION as e:

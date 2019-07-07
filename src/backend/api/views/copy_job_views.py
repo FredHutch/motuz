@@ -55,9 +55,8 @@ class CopyJobList(Resource):
         """
         Create a new Copy Job
         """
-        data = request.json
         try:
-            return copy_job_manager.create(data), 201
+            return copy_job_manager.create(request.json), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:

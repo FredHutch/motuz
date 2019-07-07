@@ -24,9 +24,8 @@ class SystemFiles(Resource):
         """
         List all files for a particular URI.
         """
-        data = request.json
         try:
-            return system_manager.ls(data), 200
+            return system_manager.ls(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -42,9 +41,8 @@ class SystemFiles(Resource):
         """
         List all files for a particular URI.
         """
-        data = request.json
         try:
-            return system_manager.mkdir(data), 200
+            return system_manager.mkdir(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:

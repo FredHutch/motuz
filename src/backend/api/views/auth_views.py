@@ -19,9 +19,8 @@ class UserLogin(Resource):
     @api.expect(dto, validate=True)
     def post(self):
         """Login and retrieve JWT token"""
-        post_data = request.json
         try:
-            return auth_manager.login_user(data=post_data), 200
+            return auth_manager.login_user(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
