@@ -2,12 +2,18 @@ import datetime
 import json
 import logging
 import os
+import re
 import pwd
 import subprocess
+
+# TODO: For testing purposes, this file should not take flask as an import
+# Move this requirement 1 level up, inside the view
+from flask import request
 
 from ..exceptions import *
 from ..managers.auth_manager import token_required
 from ..managers import cloud_connection_manager
+from ..managers.auth_manager import get_logged_in_user
 from ..utils.rclone_connection import RcloneConnection
 
 
@@ -23,9 +29,10 @@ def get_uid():
 def ls(data):
     path = data['path']
     connection_id = data['connection_id']
+    user = get_logged_in_user(request)
 
     if connection_id == 0:
-        return _get_local_files(path)
+        return _get_local_files(path, user)
 
     cloud_connection = cloud_connection_manager.retrieve(connection_id)
 
@@ -52,7 +59,83 @@ def mkdir(data):
     return connection.mkdir(data=cloud_connection, path=path)
 
 
-def _get_local_files(path):
+
+def _get_local_files(path, user):
+    """
+    New way of doing it
+    """
+
+    try:
+        output = _ls_with_impersonation(path, user)
+    except Exception as err:
+        raise HTTP_403_FORBIDDEN(str(err))
+
+    files = _parse_ls(output)
+    return files
+
+
+def _parse_ls(output):
+    """
+    Each line looks like
+    drwxr-xr-x      12      ubuntu  staff    384    Jul     6    15:42    ./
+    permissions | position | user | group | size | month | day | time | filename
+        0       |    1     |   2  |   3   |   4  |   5   |  6  |  7   |   8
+    """
+
+    regex = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.+)'
+    #            0       1       2       3       4       5       6       7       8
+
+    result = []
+    for line in output.split('\n'):
+        match = re.search(regex, line)
+        if match is None:
+            logging.error("Could not parse line `{}`".format(line))
+            continue
+
+        groups = match.groups()
+        permissions = groups[0]
+        size = groups[4]
+        filename = groups[8]
+
+        if permissions[0] == 'l':
+            type = "symlink"
+        elif permissions[0] == 'd':
+            type = "dir"
+        elif permissions[0] == '-':
+            type = "file"
+        else:
+            type = "unknown"
+
+        if type == 'symlink':
+            filename = filename.split('->')[0].strip()
+
+        result.append({
+            "name": filename,
+            "type": type,
+            "size": size,
+        })
+
+    return result
+
+
+
+def _ls_with_impersonation(path, user):
+    command = [
+        'sudo',
+        '-n',
+        '-u', user,
+        'ls',
+        '-al',
+        path,
+    ]
+
+    byteOutput = subprocess.check_output(command)
+    output = byteOutput.decode('UTF-8').rstrip()
+    return output
+
+
+
+def _get_local_files_pythonic(path):
     result = []
 
     try:

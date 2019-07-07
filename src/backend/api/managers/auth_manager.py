@@ -55,7 +55,7 @@ def login_user(data):
     user_authentication.authenticate(username, password)
 
     # TODO: remove backdoor
-    if user_authentication.code != 0 and username != 'aicioara2':
+    if user_authentication.code != 0 and username != 'aicioara':
         raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
 
     return {
