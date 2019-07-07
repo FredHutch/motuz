@@ -170,3 +170,19 @@ create database motuz;
 create user motuz_user with password 'motuz_password';
 grant all privileges on database motuz to motuz_user;
 ```
+
+
+
+### AWS EC2 redeploy
+
+```
+cd /path/to/motuz/folder
+docker-compose down
+yes | docker system prune -a
+docker image ls -a # should show nothing
+docker-compose up -d
+
+# Wait for DB to start, then migrate
+docker build --no-cache=true -t motuz_migrate:latest -f docker/migrate/Dockerfile .
+docker run -it --net='host' motuz_migrate:latest
+```

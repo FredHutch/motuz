@@ -28,8 +28,8 @@ services:
 
             # Interesting folders
             - /tmp
-            - /efs/:/efs/:ro
-            - /fh/scratch:/fh/scratch:ro
+            - /efs/:/efs/
+            - /fh/scratch/:/fh/scratch/
 
             # For access by each user
             - /home:/home
@@ -71,22 +71,6 @@ services:
             - 5672
         hostname: 0.0.0.0
 
-    # database:
-    #     container_name: database
-    #     network_mode: host
-    #     build:
-    #         context: .
-    #         dockerfile: ./docker/database/Dockerfile
-    #     ports:
-    #         - 5432:5432
-    #     hostname: 0.0.0.0
-    #     environment:
-    #         -  FILLA_DB_USER=motuz_user
-    #         -  FILLA_DB_PASSWORD=motuz_password
-    #         -  FILLA_DB_DATABASE=motuz
-    #         -  POSTGRES_USER=postgres
-    #     volumes:
-    #         - /docker/volumes/postgres:/var/lib/postgresql/data
 
     database:
         container_name: database
@@ -98,24 +82,13 @@ services:
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
 
-    test:
-        container_name: test
-        network_mode: host
-        build:
-            context: .
-            dockerfile: ./docker/test/Dockerfile
-        volumes:
-            - .:/code
-            - /tmp
-            # For access by each user
-            - /home:/home
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
-            # Shadow should only be mounted into containers
-            # needing to authenticate against PAM
-            - /etc/shadow:/etc/shadow:ro
-        ports:
-            - 8080:8080
+
+    # migrate:
+    #     container_name: database
+    #     network_mode: host
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/migrate/Dockerfile
+    #     depends_on:
+    #       - database
+    #       - app
