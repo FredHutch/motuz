@@ -63,6 +63,10 @@ export default (state=initialState, action) => {
     case api.RETRIEVE_COPY_JOB_SUCCESS:
     case api.STOP_COPY_JOB_SUCCESS:
     {
+        if (state.editCopyJobDialogData.progress_state === 'STOPPED') {
+            return state; // Do not overwrite STOPPED due to race condition
+        }
+
         return {
             ...state,
             displayEditCopyJobDialog: true,
