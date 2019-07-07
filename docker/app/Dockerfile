@@ -1,5 +1,5 @@
 # Build as
-# docker build -t motuz_app:latest -f Dockerfile ../..
+# docker build -t motuz_app:latest -f docker/app/Dockerfile .
 
 FROM python:3.7.3
 
@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y
 
-RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 
+RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 sudo
 
 RUN curl https://rclone.org/install.sh | bash
 
