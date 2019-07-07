@@ -61,6 +61,9 @@ class ConnectionList(Resource):
             return cloud_connection_manager.list(), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
     @api.expect(dto, validate=True)
@@ -75,6 +78,9 @@ class ConnectionList(Resource):
             return cloud_connection_manager.create(data=data), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 
@@ -91,6 +97,9 @@ class ConnectionVerify(Resource):
             return cloud_connection_manager.verify(data=data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 
@@ -108,6 +117,9 @@ class Connection(Resource):
             return cloud_connection_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
     @api.expect(dto, validate=True)
@@ -122,6 +134,9 @@ class Connection(Resource):
             return cloud_connection_manager.update(id, data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
     @api.marshal_with(dto, code=200)
@@ -134,4 +149,6 @@ class Connection(Resource):
             return cloud_connection_manager.delete(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
-
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))

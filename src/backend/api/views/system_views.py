@@ -1,3 +1,5 @@
+import logging
+
 from flask import request
 from flask_restplus import Resource, Namespace, fields
 
@@ -27,6 +29,10 @@ class SystemFiles(Resource):
             return system_manager.ls(data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
+
 
 
 @api.route('/files/mkdir/')
@@ -41,6 +47,9 @@ class SystemFiles(Resource):
             return system_manager.mkdir(data), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 
@@ -54,3 +63,6 @@ class SystemUid(Resource):
             return system_manager.get_uid(), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))

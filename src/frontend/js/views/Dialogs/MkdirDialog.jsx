@@ -54,6 +54,7 @@ class MkdirDialog extends React.Component {
                                             type="text"
                                             name="path_suffix"
                                             ref={this.inputRef}
+                                            autoComplete='off'
                                         />
                                     </div>
                                     <div className="col-1"></div>

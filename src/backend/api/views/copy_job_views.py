@@ -43,6 +43,10 @@ class CopyJobList(Resource):
             return copy_job_manager.list()
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
+
 
 
     @api.expect(dto, validate=True)
@@ -56,6 +60,9 @@ class CopyJobList(Resource):
             return copy_job_manager.create(data), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 
@@ -73,6 +80,9 @@ class CopyJob(Resource):
             return copy_job_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 
@@ -90,3 +100,6 @@ class CopyJob(Resource):
             return copy_job_manager.stop(id), 202
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
