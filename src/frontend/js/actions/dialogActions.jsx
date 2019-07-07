@@ -59,12 +59,10 @@ export const hideNewCopyJobDialog = () => ({
 });
 
 
-export const showEditCopyJobDialog = (copyJob) => {
-    return {
-        type: SHOW_EDIT_COPY_JOB_DIALOG,
-        payload: copyJob,
-    }
-};
+export const showEditCopyJobDialog = (copyJob) => ({
+    type: SHOW_EDIT_COPY_JOB_DIALOG,
+    payload: copyJob,
+});
 
 export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
