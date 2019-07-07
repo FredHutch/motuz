@@ -59,11 +59,23 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_EDIT_COPY_JOB_DIALOG: {
+    case dialog.SHOW_EDIT_COPY_JOB_DIALOG:
+    case api.RETRIEVE_COPY_JOB_SUCCESS:
+    case api.STOP_COPY_JOB_SUCCESS:
+    {
+        if (
+            state.editCopyJobDialogData.progress_state === 'STOPPED' &&
+            action.payload.progress_state === 'PROGRESS'
+        ) {
+            // TODO: This is a bit of a hack
+            // Do not overwrite STOPPED due to race condition
+            return state;
+        }
+
         return {
             ...state,
             displayEditCopyJobDialog: true,
-            editCopyJobDialogData: action.payload.data,
+            editCopyJobDialogData: action.payload,
         }
     }
 
@@ -72,6 +84,7 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayEditCopyJobDialog: false,
+            editCopyJobDialogData: initialState.editCopyJobDialogData,
         }
     }
 

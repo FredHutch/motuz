@@ -16,15 +16,6 @@ def list():
     owner = get_logged_in_user(request)
 
     copy_jobs = CopyJob.query.filter_by(owner=owner).all()
-
-    for copy_job in copy_jobs:
-        try:
-            task = tasks.copy_job.AsyncResult(str(copy_job.id))
-            copy_job.progress_text = task.info.get('text', '')
-            copy_job.progress_error_text = task.info.get('error_text', '')
-        except Exception:
-            pass # Sometimes rabbitmq closes the connection!
-
     return copy_jobs
 
 

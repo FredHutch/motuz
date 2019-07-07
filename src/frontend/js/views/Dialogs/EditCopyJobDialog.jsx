@@ -7,11 +7,11 @@ import serializeForm from 'utils/serializeForm.jsx'
 class EditCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
-        this.intervalHandler = 0;
+        this.timeout = null;
     }
 
     render() {
-        const data = this.props.jobs.find(d => d.id === this.props.data.id)
+        const { data } = this.props;
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
@@ -104,12 +104,20 @@ class EditCopyJobDialog extends React.Component {
         );
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        this.props.fetchData(this.props.data.id);
+    }
 
+    componentDidMount() {
+        this._scheduleRefresh()
+    }
+
+    componentDidUpdate() {
+        this._scheduleRefresh()
     }
 
     componentWillUnmount() {
-
+        this._clearTimeout()
     }
 
     outputText(data) {
@@ -155,6 +163,23 @@ class EditCopyJobDialog extends React.Component {
             this.props.onStopJob(this.props.data.id)
         }
     }
+
+    _scheduleRefresh() {
+        const refreshDelay = 1000; // 1s
+        this._clearTimeout();
+        this.timeout = setTimeout(() => {
+            if (this.props.data.progress_state === 'PROGRESS') {
+                this.props.fetchData(this.props.data.id);
+            }
+        }, refreshDelay)
+    }
+
+    _clearTimeout() {
+        if (this.timeout) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    }
 }
 
 EditCopyJobDialog.defaultProps = {
@@ -162,20 +187,20 @@ EditCopyJobDialog.defaultProps = {
     jobs: [],
     fetchData: (id) => {},
     onClose: () => {},
+    onStopJob: id => {},
 }
 
 import {connect} from 'react-redux';
 import {hideEditCopyJobDialog} from 'actions/dialogActions.jsx'
-import {stopCopyJob} from 'actions/apiActions.jsx';
+import {retrieveCopyJob, stopCopyJob} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
     data: state.dialog.editCopyJobDialogData,
     jobs: state.api.jobs,
-    onClose: () => {},
-    onStopJob: id => {},
 });
 
 const mapDispatchToProps = dispatch => ({
+    fetchData: (id) => dispatch(retrieveCopyJob(id)),
     onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
 });
