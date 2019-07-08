@@ -8,7 +8,9 @@ import threading
 import time
 import os
 
-class RcloneConnection:
+from .abstract_connection import AbstractConnection, RcloneException
+
+class RcloneConnection(AbstractConnection):
     def __init__(self):
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
@@ -418,10 +420,6 @@ def sanitize(string):
 
     return string
 
-
-
-class RcloneException(Exception):
-    pass
 
 
 def main():

@@ -74,7 +74,7 @@ class CommandBar extends React.Component {
         );
 
         return (
-            <div className='row'>
+            <div className='row' onClick={() => this.onClick()}>
                 {!this.props.isLeft && buttonArrowLeft}
                 <div className="col-10">
                     <div className="row mb-1">
@@ -114,6 +114,12 @@ class CommandBar extends React.Component {
         this.props.onDisplayNewCopyJobDialog()
     }
 
+    onClick() {
+        if (!this.props.active) {
+            this.props.onClick(this.props.isLeft ? 'left' : 'right')
+        }
+    }
+
     onHostChange(hostId) {
         hostId = parseInt(hostId)
 
@@ -140,6 +146,7 @@ class CommandBar extends React.Component {
 CommandBar.defaultProps = {
     isLeft: true,
     active: true,
+    focusPaneLeft: false,
     host: {
         name: '127.0.0.1',
         type: 'localhost',
@@ -149,11 +156,12 @@ CommandBar.defaultProps = {
     onHostChange: (side, host) => {},
     onDirectoryChange: (side, path) => {},
     onDisplayNewCopyJobDialog: () => {},
+    onClick: side => {},
 }
 
 import {connect} from 'react-redux';
 import {showNewCopyJobDialog} from 'actions/dialogActions.jsx'
-import {hostChange, directoryChange} from 'actions/paneActions.jsx';
+import {hostChange, directoryChange, sideFocus} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
@@ -164,6 +172,7 @@ const mapDispatchToProps = dispatch => ({
     onDisplayNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
+    onClick: side => dispatch(sideFocus(side)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

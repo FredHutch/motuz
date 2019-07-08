@@ -1,6 +1,7 @@
 import * as api from 'actions/apiActions.jsx';
 import { getCurrentPane } from 'managers/paneManager.jsx'
 
+export const SIDE_FOCUS = '@@pane/SIDE_FOCUS';
 export const FILE_FOCUS_INDEX = '@@pane/FILE_FOCUS_INDEX';
 export const DIRECTORY_CHANGE = '@@pane/DIRECTORY_CHANGE';
 export const HOST_CHANGE = '@@pane/HOST_CHANGE';
@@ -10,6 +11,12 @@ export const TOGGLE_SHOW_HIDDEN_FILES = '@@pane/TOGGLE_SHOW_HIDDEN_FILES';
 export const fileFocusIndex = (side, index) => ({
     type: FILE_FOCUS_INDEX,
     payload: {side, index},
+});
+
+
+export const sideFocus = (side) => ({
+    type: SIDE_FOCUS,
+    payload: {side},
 });
 
 

@@ -4,7 +4,6 @@ from flask import request
 from flask_restplus import Resource, Namespace, fields
 
 from ..managers import system_manager
-from ..managers.auth_manager import token_required
 from ..exceptions import HTTP_EXCEPTION
 
 

@@ -54,6 +54,12 @@ export default (state=initialState, action) => {
     {
         return initialState;
     }
+    case pane.SIDE_FOCUS: {
+        return {
+            ...state,
+            focusPaneLeft: (action.payload.side === 'left'),
+        }
+    }
     case pane.FILE_FOCUS_INDEX: {
         const index = action.payload.index;
         const side = action.payload.side || getSide(state);

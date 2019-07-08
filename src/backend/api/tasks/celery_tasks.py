@@ -19,23 +19,6 @@ def copy_job(self, task_id=None):
     copy_job.progress_state = 'PROGRESS'
     db.session.commit()
 
-    src_cloud_id = copy_job.src_cloud_id
-    dst_cloud_id = copy_job.dst_cloud_id
-
-    if src_cloud_id is None and dst_cloud_id is None:
-        copy_job.progress_state = 'FAILED'
-        copy_job.progress_current = 100
-        copy_job.progress_total = 100
-        copy_job.progress_execution_time = int(time.time() - start_time)
-        db.session.commit()
-
-        text = "Local copies not supported"
-        logging.warning(text)
-        return {
-            'text': text
-        }
-
-
     connection = RcloneConnection()
     connection.copy(
         src_data=copy_job.src_cloud,
