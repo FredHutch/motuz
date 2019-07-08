@@ -14,7 +14,7 @@ from ..exceptions import *
 from ..managers.auth_manager import token_required
 from ..managers import cloud_connection_manager
 from ..managers.auth_manager import get_logged_in_user
-from ..utils.rclone_connection import RcloneConnection
+from ..utils.rclone_connection import RcloneConnection, RcloneException
 
 
 @token_required
@@ -55,8 +55,11 @@ def mkdir(data):
     # If user does not have permission to the cloud_connection or if the cloud_connection
     # does not exist, the line above will raise the correct HTTP 4xx Exception
 
-    connection = RcloneConnection()
-    return connection.mkdir(data=cloud_connection, path=path)
+    try:
+        connection = RcloneConnection()
+        return connection.mkdir(data=cloud_connection, path=path)
+    except RcloneException as e:
+        raise HTTP_400_BAD_REQUEST(str(e))
 
 
 

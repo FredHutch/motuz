@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Button, ProgressBar } from 'react-bootstrap'
 
+import UriResource from 'components/UriResource.jsx';
 import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
@@ -65,9 +66,10 @@ class EditCopyJobDialog extends React.Component {
                                     <b>Source</b>
                                 </div>
                                 <div className="col-7 text-left">
-                                    <span><b>{data.src_cloud_type}</b></span>
-                                    <span>://</span>
-                                    <span>{data.src_resource}</span>
+                                    <UriResource
+                                        protocol={data.src_cloud_type}
+                                        path={data.src_resource}
+                                    />
                                 </div>
                                 <div className="col-1"></div>
                             </div>
@@ -76,9 +78,10 @@ class EditCopyJobDialog extends React.Component {
                                     <b>Destination</b>
                                 </div>
                                 <div className="col-7 text-left">
-                                    <span><b>{data.dst_cloud_type}</b></span>
-                                    <span>://</span>
-                                    <span>{data.dst_path}</span>
+                                    <UriResource
+                                        protocol={data.dst_cloud_type}
+                                        path={data.dst_path}
+                                    />
                                 </div>
                                 <div className="col-1"></div>
                             </div>

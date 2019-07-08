@@ -1,5 +1,6 @@
 import * as pane from 'actions/paneActions.jsx';
 import * as api from 'actions/apiActions.jsx';
+import * as auth from 'actions/authActions.jsx';
 
 import fileManager from 'managers/fileManager.jsx'
 import {
@@ -49,6 +50,10 @@ const initialState = {
 
 export default (state=initialState, action) => {
     switch(action.type) {
+    case auth.LOGOUT_REQUEST:
+    {
+        return initialState;
+    }
     case pane.FILE_FOCUS_INDEX: {
         const index = action.payload.index;
         const side = action.payload.side || getSide(state);

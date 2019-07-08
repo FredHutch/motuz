@@ -21,6 +21,7 @@ class RcloneConnection:
         self._latest_job_id = 0
 
 
+
     def verify(self, data):
         credentials = self._formatCredentials(data, name='current')
         command = [
@@ -43,6 +44,7 @@ class RcloneConnection:
             }
 
 
+
     def ls(self, data, path):
         credentials = self._formatCredentials(data, name='current')
         command = [
@@ -57,7 +59,6 @@ class RcloneConnection:
             return result
         except subprocess.CalledProcessError as e:
             raise RcloneException(sanitize(str(e)))
-
 
 
 
@@ -124,6 +125,7 @@ class RcloneConnection:
             raise RcloneException(sanitize(str(e)))
 
         return job_id
+
 
 
     def copy_text(self, job_id):
@@ -257,9 +259,21 @@ class RcloneConnection:
     def _execute(self, command, env={}):
         full_env = os.environ.copy()
         full_env.update(env)
-        byteOutput = subprocess.check_output(command, env=full_env)
-        output = byteOutput.decode('UTF-8').rstrip()
-        return output
+        try:
+            byteOutput = subprocess.check_output(
+                command,
+                stderr=subprocess.PIPE,
+                env=full_env
+            )
+            output = byteOutput.decode('UTF-8').rstrip()
+            return output
+        except subprocess.CalledProcessError as err:
+            if (err.stderr is None):
+                raise
+            stderr = err.stderr.decode('UTF-8').strip()
+            if len(stderr) == 0:
+                raise
+            raise RcloneException(stderr)
 
 
     def _execute_interactive(self, command, env, job_id):

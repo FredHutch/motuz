@@ -19,11 +19,13 @@ class UserLogin(Resource):
     @api.expect(dto, validate=True)
     def post(self):
         """Login and retrieve JWT token"""
-        post_data = request.json
         try:
-            return auth_manager.login_user(data=post_data), 200
+            return auth_manager.login_user(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
 
 
 @api.route('/refresh/')
@@ -35,6 +37,7 @@ class TokenRefresh(Resource):
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
+            logging.exception(e, exc_info=True)
             api.abort(500, str(e))
 
 
@@ -47,3 +50,6 @@ class LogoutAPI(Resource):
             return auth_manager.logout_user(), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))

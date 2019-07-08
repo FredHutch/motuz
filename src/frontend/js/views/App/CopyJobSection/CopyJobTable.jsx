@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProgressBar } from 'react-bootstrap';
 
+import UriResource from 'components/UriResource.jsx'
 import parseTime from 'utils/parseTime.jsx'
 
 
@@ -74,18 +75,10 @@ class CopyJobTable extends React.Component {
                 </b>
             )
             const source = (
-                <React.Fragment>
-                    <b>{src_cloud.type}</b>
-                    <span>://</span>
-                    <span>{job.src_resource}</span>
-                </React.Fragment>
+                <UriResource protocol={src_cloud.type} path={job.src_resource} />
             )
             const destination = (
-                <React.Fragment>
-                    <b>{dst_cloud.type}</b>
-                    <span>://</span>
-                    <span>{job.dst_path}</span>
-                </React.Fragment>
+                <UriResource protocol={dst_cloud.type} path={job.dst_path} />
             )
             const progress = (
                 <ProgressBar

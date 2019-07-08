@@ -33,15 +33,19 @@ export const hostChange = (side=null, host) => {
 
 export const directoryChange = (side=null, path) => {
     return async (dispatch, getState) => {
-        dispatch({
-            type: DIRECTORY_CHANGE,
-            payload: {side, path}
-        })
-
         const state = getState();
         const pane = getCurrentPane(state.pane, side);
         const host = pane.host;
 
+        if (host.id !== 0) {
+            // Cloud paths should not have a leading slash
+            path = path.replace(/^\/+/, '') || '/'
+        }
+
+        dispatch({
+            type: DIRECTORY_CHANGE,
+            payload: {side, path}
+        })
         return await dispatch(api.listFiles(side, {
             connection_id: host.id,
             path,

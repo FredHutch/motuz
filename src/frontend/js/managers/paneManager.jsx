@@ -1,3 +1,6 @@
+import upath from 'upath'
+
+
 export function getSide(state) {
     if (state.focusPaneLeft) {
         return 'left';
@@ -55,4 +58,16 @@ export function setCurrentFiles(state, payload, side=null) {
     }
 }
 
+export function fileExists(state, dirname, basename) {
+    let files;
+    if (getCurrentPane(state, 'left').path === dirname) {
+        files = getCurrentFiles(state, 'left');
+    } else if (getCurrentPane(state, 'right').path === dirname) {
+        files = getCurrentFiles(state, 'right');
+    } else {
+        console.error(`Neither left nor right pane has path '${dirname}'`)
+        return false; // Fail safe
+    }
 
+    return files.some(d => d.name === basename);
+}

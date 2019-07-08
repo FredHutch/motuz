@@ -1,8 +1,10 @@
 import { RSAA } from 'redux-api-middleware';
+import upath from 'upath';
 
 import { withAuth } from 'reducers/reducers.jsx';
 import * as pane from 'actions/paneActions.jsx'
 import * as dialog from 'actions/dialogActions.jsx'
+import { getCurrentPane, getCurrentFiles, fileExists } from 'managers/paneManager.jsx'
 
 export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
@@ -75,6 +77,15 @@ export const listFiles = (side, data) => ({
 
 export const makeDirectory = (data) => {
     return async (dispatch, getState) => {
+        const state = getState();
+        const dirname = upath.dirname(data.path)
+        const basename = upath.basename(data.path)
+        if (fileExists(state.pane, dirname, basename) && !confirm(
+            `${basename} already exists at destination. Overwrite?`
+        )) {
+            return;
+        }
+
         await dispatch(_makeDirectory(data));
         await dispatch(dialog.hideMkdirDialog())
         await dispatch(pane.refreshPanes())
@@ -112,7 +123,21 @@ export const retrieveCopyJob = (id) => ({
 });
 
 
-export const createCopyJob = (data) => ({
+export const createCopyJob = (data) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const dirname = data.dst_path
+        const basename = upath.basename(data.src_resource)
+        if (fileExists(state.pane, dirname, basename) && !confirm(
+            `${basename} already exists at destination. Overwrite?`
+        )) {
+            return;
+        }
+        await dispatch(_createCopyJob(data));
+    }
+}
+
+export const _createCopyJob = (data) => ({
     [RSAA]: {
         endpoint: `/api/copy-jobs/`, // TODO: Why is there a trailing slash here?
         method: 'POST',
