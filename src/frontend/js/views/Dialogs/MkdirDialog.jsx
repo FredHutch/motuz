@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { Modal, Button } from 'react-bootstrap'
 
+import UriResource from 'components/UriResource.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
 class MkdirDialog extends React.Component {
@@ -12,7 +12,6 @@ class MkdirDialog extends React.Component {
 
     render() {
         const { host, path, loading } = this.props.data;
-        const uri = `${host.type}://${path}`
 
         return (
             <div className='dialog-copy-job'>
@@ -37,9 +36,7 @@ class MkdirDialog extends React.Component {
                                         <b>Path</b>
                                     </div>
                                     <div className="col-7">
-                                        <b>{host.type}</b>
-                                        <span>://</span>
-                                        <span>{path}</span>
+                                        <UriResource protocol={host.type} path={path} />
                                     </div>
                                     <input type="hidden" name="path_prefix" value={path}/>
                                     <div className="col-1"></div>
@@ -54,6 +51,7 @@ class MkdirDialog extends React.Component {
                                             type="text"
                                             name="path_suffix"
                                             ref={this.inputRef}
+                                            required
                                             autoComplete='off'
                                         />
                                     </div>
@@ -83,7 +81,6 @@ class MkdirDialog extends React.Component {
         event.preventDefault();
 
         const form_data = serializeForm(event.target)
-
         const data = {
             path: `${form_data.path_prefix}/${form_data.path_suffix}`,
             connection_id: window.parseInt(form_data.connection_id),
