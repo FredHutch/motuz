@@ -4,7 +4,6 @@ from flask import request
 from flask_restplus import Resource, Namespace, fields
 
 from ..managers import system_manager
-from ..managers.auth_manager import token_required, get_logged_in_user
 from ..exceptions import HTTP_EXCEPTION
 
 
@@ -25,8 +24,7 @@ class SystemFiles(Resource):
         List all files for a particular URI.
         """
         try:
-            user = get_logged_in_user(request)
-            return system_manager.ls(request.json, user), 200
+            return system_manager.ls(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -43,8 +41,7 @@ class SystemFiles(Resource):
         List all files for a particular URI.
         """
         try:
-            user = get_logged_in_user(request)
-            return system_manager.mkdir(request.json, user), 200
+            return system_manager.mkdir(request.json), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:

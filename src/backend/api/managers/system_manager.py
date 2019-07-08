@@ -6,8 +6,10 @@ import re
 import pwd
 import subprocess
 
+from flask import request
+
 from ..exceptions import *
-from ..managers.auth_manager import token_required
+from ..managers.auth_manager import token_required, get_logged_in_user
 from ..managers import cloud_connection_manager
 from ..utils.rclone_connection import RcloneConnection
 from ..utils.local_connection import LocalConnection
@@ -24,7 +26,8 @@ def get_uid():
 
 
 @token_required
-def ls(data, user):
+def ls(data):
+    user = get_logged_in_user(request)
     path = data['path']
     connection_id = data['connection_id']
 
@@ -47,7 +50,8 @@ def ls(data, user):
 
 
 @token_required
-def mkdir(data, user):
+def mkdir(data):
+    user = get_logged_in_user(request)
     path = data['path']
     connection_id = data['connection_id']
 
