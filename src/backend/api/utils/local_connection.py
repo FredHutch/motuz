@@ -38,7 +38,21 @@ class LocalConnection(AbstractConnection):
 
 
     def mkdir(self, data, path):
-        pass
+        user = data.owner
+
+        try:
+            output = _mkdir_with_impersonation(path, user)
+        except subprocess.CalledProcessError as err:
+            raise HTTP_403_FORBIDDEN("User {user} does not have privilege for path '{path}'".format(
+                user=user,
+                path=path,
+            ))
+        except Exception as err:
+            raise HTTP_403_FORBIDDEN(str(err))
+
+        return {
+            'message': 'success',
+        }
 
 
 
@@ -101,6 +115,20 @@ def _ls_with_impersonation(path, user):
     output = byteOutput.decode('UTF-8').rstrip()
     return output
 
+
+def _mkdir_with_impersonation(path, user):
+    command = [
+        'sudo',
+        '-n',
+        '-u', user,
+        'mkdir',
+        '-p',
+        path,
+    ]
+
+    byteOutput = subprocess.check_output(command)
+    output = byteOutput.decode('UTF-8').rstrip()
+    return output
 
 
 def _get_local_files_pythonic(path):

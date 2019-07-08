@@ -22,24 +22,28 @@ def get_uid():
     }
 
 
+
 @token_required
 def ls(data, user):
     path = data['path']
     connection_id = data['connection_id']
 
     if connection_id == 0:
-        data = Dummy()
-        data.owner = user
+        cloud_connection = Dummy()
+        cloud_connection.owner = user
         connection = LocalConnection()
-        return connection.ls(data, path)
+    else:
+        cloud_connection = cloud_connection_manager.retrieve(connection_id)
+        if cloud_connection.owner != user:
+            # Should never happen
+            raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(connection_id))
+        connection = RcloneConnection()
 
-    cloud_connection = cloud_connection_manager.retrieve(connection_id)
-    if cloud_connection.owner != user:
-        # Should never happen
-        raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(connection_id))
+    try:
+        return connection.ls(data=cloud_connection, path=path)
+    except RcloneException as e:
+        raise HTTP_400_BAD_REQUEST(str(e))
 
-    connection = RcloneConnection()
-    return connection.ls(data=cloud_connection, path=path)
 
 
 @token_required
@@ -48,18 +52,21 @@ def mkdir(data, user):
     connection_id = data['connection_id']
 
     if connection_id == 0:
-        raise HTTP_400_BAD_REQUEST("Cannot create local folder")
-
-    cloud_connection = cloud_connection_manager.retrieve(connection_id)
-    if cloud_connection.owner != user:
-        # Should never happen
-        raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(connection_id))
+        cloud_connection = Dummy()
+        cloud_connection.owner = user
+        connection = LocalConnection()
+    else:
+        cloud_connection = cloud_connection_manager.retrieve(connection_id)
+        if cloud_connection.owner != user:
+            # Should never happen
+            raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(connection_id))
+            connection = RcloneConnection()
 
     try:
-        connection = RcloneConnection()
         return connection.mkdir(data=cloud_connection, path=path)
     except RcloneException as e:
         raise HTTP_400_BAD_REQUEST(str(e))
+
 
 
 class Dummy:
