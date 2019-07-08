@@ -14,10 +14,6 @@ from ..utils.local_connection import LocalConnection
 from ..utils.abstract_connection import RcloneException
 
 
-class Dummy:
-    pass
-
-
 @token_required
 def get_uid():
     uid = os.getuid()
@@ -64,3 +60,7 @@ def mkdir(data, user):
         return connection.mkdir(data=cloud_connection, path=path)
     except RcloneException as e:
         raise HTTP_400_BAD_REQUEST(str(e))
+
+
+class Dummy:
+    pass
