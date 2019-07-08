@@ -6,14 +6,9 @@ import re
 import pwd
 import subprocess
 
-# TODO: For testing purposes, this file should not take flask as an import
-# Move this requirement 1 level up, inside the view
-from flask import request
-
 from ..exceptions import *
 from ..managers.auth_manager import token_required
 from ..managers import cloud_connection_manager
-from ..managers.auth_manager import get_logged_in_user
 from ..utils.rclone_connection import RcloneConnection
 from ..utils.local_connection import LocalConnection
 from ..utils.abstract_connection import RcloneException
@@ -32,10 +27,9 @@ def get_uid():
 
 
 @token_required
-def ls(data):
+def ls(data, user):
     path = data['path']
     connection_id = data['connection_id']
-    user = get_logged_in_user(request)
 
     if connection_id == 0:
         data = Dummy()
@@ -53,10 +47,9 @@ def ls(data):
 
 
 @token_required
-def mkdir(data):
+def mkdir(data, user):
     path = data['path']
     connection_id = data['connection_id']
-    user = get_logged_in_user(request)
 
     if connection_id == 0:
         raise HTTP_400_BAD_REQUEST("Cannot create local folder")
