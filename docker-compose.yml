@@ -26,22 +26,22 @@ services:
         volumes:
             - .:/code
 
-            # Interesting folders
-            - /tmp
-            - /efs/:/efs/
-            - /fh/scratch/:/fh/scratch/
-
-            # For access by each user
-            - /home:/home
             # Authentication
             # passwd/group should be mounted into any container
             # needing to share the user/group IDs
             - /var/run/nscd/socket:/var/run/nscd/socket
             - /etc/krb5.conf:/etc/krb5.conf
             - /etc/pam.d:/etc/pam.d
+
             # Authentication cannot mount individual files, because the mapping is
             # based on the inode
             - /etc:/etc:ro
+
+            - /tmp
+            - /efs/:/efs/
+            - /fh/scratch/:/fh/scratch/
+            - /home:/home
+
         ports:
             - 5000:5000
             - 5001:5001
@@ -55,8 +55,21 @@ services:
             dockerfile: ./docker/celery/Dockerfile
         volumes:
             - .:/code
-            - /efs/:/efs/:ro
-            - /fh/scratch:/fh/scratch:ro
+
+            # Authentication
+            # passwd/group should be mounted into any container
+            # needing to share the user/group IDs
+            - /var/run/nscd/socket:/var/run/nscd/socket
+            - /etc/krb5.conf:/etc/krb5.conf
+            - /etc/pam.d:/etc/pam.d
+
+            # Authentication cannot mount individual files, because the mapping is
+            # based on the inode
+            - /etc:/etc:ro
+
+            - /efs/:/efs/
+            - /fh/scratch:/fh/scratch
+
         hostname: 0.0.0.0
         depends_on:
             - app
