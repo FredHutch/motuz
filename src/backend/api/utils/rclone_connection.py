@@ -94,15 +94,8 @@ class RcloneConnection(AbstractConnection):
 
 
 
-    def copy(self, src_data, src_path, dst_data, dst_path, job_id=None):
+    def copy(self, src_data, src_path, dst_data, dst_path, user, job_id=None):
         credentials = {}
-        src_user = src_data.owner
-        dst_user = dst_data.owner
-
-        if src_user != dst_user:
-            raise RcloneException("Data ownership inconsistency ({} vs {}). This should never happen.".format(
-                src_user, dst_user,
-            ))
 
         if src_data is None: # Local
             src = src_path
@@ -119,7 +112,7 @@ class RcloneConnection(AbstractConnection):
         command = [
             'sudo',
             '-E',
-            '-u', src_user,
+            '-u', user,
             'rclone',
             'copy',
             src,
