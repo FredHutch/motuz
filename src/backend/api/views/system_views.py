@@ -11,7 +11,7 @@ api = Namespace('system', description='System related operations')
 
 
 dto = api.model('system', {
-    'connection_id': fields.Integer(required=True, example='2'),
+    'connection_id': fields.Integer(required=True, example=2),
     'path': fields.String(required=True, example='/usr/bin/'),
 })
 

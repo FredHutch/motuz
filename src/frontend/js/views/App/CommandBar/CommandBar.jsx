@@ -3,8 +3,15 @@ import classnames from 'classnames';
 import Creatable from 'react-select/creatable';
 import upath from 'upath';
 
-
 import Select from 'components/Select.jsx';
+import constants from 'constants.jsx'
+
+
+const LOCALHOST = {
+    id: 0,
+    name: constants.local_name,
+    type: 'file',
+}
 
 
 class CommandBar extends React.Component {
@@ -14,11 +21,7 @@ class CommandBar extends React.Component {
 
     render() {
         const clouds = [
-            {
-                id: 0,
-                name: 'localhost',
-                type: 'file',
-            },
+            LOCALHOST,
             ...this.props.clouds
         ];
 
@@ -123,13 +126,8 @@ class CommandBar extends React.Component {
     onHostChange(hostId) {
         hostId = parseInt(hostId)
 
-        // TODO: Add this to the database
         const clouds = [
-            {
-                id: 0,
-                name: 'localhost',
-                type: 'file',
-            },
+            LOCALHOST,
             ...this.props.clouds
         ];
 
@@ -148,8 +146,8 @@ CommandBar.defaultProps = {
     active: true,
     focusPaneLeft: false,
     host: {
-        name: '127.0.0.1',
-        type: 'localhost',
+        name: '',
+        type: '',
     },
     path: '/',
     clouds: [],

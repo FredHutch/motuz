@@ -46,7 +46,10 @@ export const directoryChange = (side=null, path) => {
 
         if (host.id !== 0) {
             // Cloud paths should not have a leading slash
-            path = path.replace(/^\/+/, '') || '/'
+            path = path.replace(/^\/+/, '');
+            if (path === '.' || path === '') {
+                path = '/'
+            }
         }
 
         dispatch({
