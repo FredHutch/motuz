@@ -1,20 +1,12 @@
 import * as dialog from 'actions/dialogActions.jsx';
 import * as api from 'actions/apiActions.jsx';
 
-const SOURCE_CLOUD = {
-    name: 'localhost',
-}
-
-const DESTINATION_CLOUD = {
-    name: 'localhost',
-}
-
 const initialState = {
     displayNewCopyJobDialog: false,
     newCopyJobDialogData: {
-        source_cloud: SOURCE_CLOUD,
+        source_cloud: {name: 'ERROR'},
         source_resource: 'ERROR',
-        destination_cloud: DESTINATION_CLOUD,
+        destination_cloud: {name: 'ERROR'},
         destination_path: 'ERROR',
         owner: 'ERROR',
     },
