@@ -26,11 +26,13 @@ class LocalConnection(AbstractConnection):
         try:
             output = _ls_with_impersonation(path, user)
         except subprocess.CalledProcessError as err:
+            logging.exception(err)
             raise HTTP_403_FORBIDDEN("User {user} does not have privilege for path '{path}'".format(
                 user=user,
                 path=path,
             ))
         except Exception as err:
+            logging.exception(err)
             raise HTTP_403_FORBIDDEN(str(err))
 
         files = _parse_ls(output)
