@@ -1,3 +1,5 @@
+import logging
+
 from flask import request
 from flask_restplus import Resource, Namespace, fields
 
