@@ -26,7 +26,11 @@ class RcloneConnection(AbstractConnection):
 
     def verify(self, data):
         credentials = self._formatCredentials(data, name='current')
+        user = data.owner
         command = [
+            'sudo',
+            '-E',
+            '-u', user,
             'rclone',
             'lsjson',
             'current:',
@@ -49,7 +53,11 @@ class RcloneConnection(AbstractConnection):
 
     def ls(self, data, path):
         credentials = self._formatCredentials(data, name='current')
+        user = data.owner
         command = [
+            'sudo',
+            '-E',
+            '-u', user,
             'rclone',
             'lsjson',
             'current:{}'.format(path),
@@ -66,7 +74,11 @@ class RcloneConnection(AbstractConnection):
 
     def mkdir(self, data, path):
         credentials = self._formatCredentials(data, name='current')
+        user = data.owner
         command = [
+            'sudo',
+            '-E',
+            '-u', user,
             'rclone',
             'touch',
             'current:{}/.keep'.format(path),
@@ -84,6 +96,13 @@ class RcloneConnection(AbstractConnection):
 
     def copy(self, src_data, src_path, dst_data, dst_path, job_id=None):
         credentials = {}
+        src_user = src_data.owner
+        dst_user = dst_data.owner
+
+        if src_user != dst_user:
+            raise RcloneException("Data ownership inconsistency ({} vs {}). This should never happen.".format(
+                src_user, dst_user,
+            ))
 
         if src_data is None: # Local
             src = src_path
@@ -98,6 +117,9 @@ class RcloneConnection(AbstractConnection):
             dst = 'dst:{}'.format(dst_path)
 
         command = [
+            'sudo',
+            '-E',
+            '-u', src_user,
             'rclone',
             'copy',
             src,
