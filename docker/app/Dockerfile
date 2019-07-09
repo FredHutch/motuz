@@ -23,6 +23,7 @@ RUN pip install -r /code/requirements.txt
 
 RUN mkdir -p /root/.config/rclone/
 RUN touch /root/.config/rclone/rclone.conf
+RUN chmod 755 /root
 
 COPY ./src/backend /app/src/backend
 WORKDIR /app/src/backend
