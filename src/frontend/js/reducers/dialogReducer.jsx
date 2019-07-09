@@ -1,3 +1,4 @@
+import * as auth from 'actions/authActions.jsx';
 import * as dialog from 'actions/dialogActions.jsx';
 import * as api from 'actions/apiActions.jsx';
 
@@ -199,7 +200,9 @@ export default (state=initialState, action) => {
         }
     }
 
-
+    case auth.LOGOUT_REQUEST: {
+        return initialState;
+    }
 
     default:
         return state;
