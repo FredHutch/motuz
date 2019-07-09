@@ -50,10 +50,6 @@ const initialState = {
 
 export default (state=initialState, action) => {
     switch(action.type) {
-    case auth.LOGOUT_REQUEST:
-    {
-        return initialState;
-    }
     case pane.SIDE_FOCUS: {
         return {
             ...state,
@@ -197,6 +193,10 @@ export default (state=initialState, action) => {
                 ),
             },
         }
+    }
+
+    case auth.LOGOUT_REQUEST: {
+        return initialState;
     }
 
     default:

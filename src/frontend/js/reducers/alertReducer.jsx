@@ -35,6 +35,10 @@ export default (state=initialState, action) => {
         };
     }
 
+    case auth.LOGOUT_REQUEST: {
+        return initialState;
+    }
+
     default:
         return state;
     }
