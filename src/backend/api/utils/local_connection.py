@@ -73,7 +73,8 @@ def _parse_ls(output):
     for line in output.split('\n'):
         match = re.search(regex, line)
         if match is None:
-            logging.error("Could not parse line `{}`".format(line))
+            if not line.startswith('total'):
+                logging.error("Could not parse line `{}`".format(line))
             continue
 
         groups = match.groups()
