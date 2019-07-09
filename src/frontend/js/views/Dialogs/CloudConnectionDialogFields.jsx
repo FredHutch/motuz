@@ -59,7 +59,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 </div>
 
                 <CloudConnectionField
-                    label='Name'
+                    label='Connection Name'
                     name='name'
                     defaultValue={this.props.data.name}
                     error={this.props.errors.name}
@@ -84,7 +84,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
                 <CloudConnectionField
-                    label='Bucket'
+                    label='Bucket Name'
                     name='s3_bucket'
                     defaultValue={this.props.data.s3_bucket}
                     error={this.props.errors.s3_bucket}
@@ -120,7 +120,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Optionals</h5>
 
                 <CloudConnectionField
-                    label='endpoint'
+                    label='Endpoint URL'
                     name='s3_endpoint'
                     defaultValue={this.props.data.s3_endpoint}
                     error={this.props.errors.s3_endpoint}
@@ -137,7 +137,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
                 <CloudConnectionField
-                    label='account'
+                    label='Account'
                     name='azure_account'
                     defaultValue={this.props.data.azure_account}
                     error={this.props.errors.azure_account}
@@ -145,7 +145,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 />
 
                 <CloudConnectionField
-                    label='key'
+                    label='Key'
                     name='azure_key'
                     defaultValue={this.props.data.azure_key}
                     error={this.props.errors.azure_key}
@@ -161,7 +161,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
                 <CloudConnectionField
-                    label='auth'
+                    label='Auth URL'
                     name='swift_auth'
                     defaultValue={this.props.data.swift_auth}
                     error={this.props.errors.swift_auth}
@@ -169,7 +169,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 />
 
                 <CloudConnectionField
-                    label='tenant'
+                    label='Tenant'
                     name='swift_tenant'
                     defaultValue={this.props.data.swift_tenant}
                     error={this.props.errors.swift_tenant}
@@ -179,7 +179,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
                 <CloudConnectionField
-                    label='user'
+                    label='User'
                     name='swift_user'
                     defaultValue={this.props.data.swift_user}
                     error={this.props.errors.swift_user}
@@ -187,7 +187,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 />
 
                 <CloudConnectionField
-                    label='key'
+                    label='Password / Key'
                     name='swift_key'
                     defaultValue={this.props.data.swift_key}
                     error={this.props.errors.swift_key}
@@ -203,7 +203,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Details</h5>
 
                 <CloudConnectionField
-                    label='project_number'
+                    label='Project Number'
                     name='gcp_project_number'
                     defaultValue={this.props.data.gcp_project_number}
                     error={this.props.errors.gcp_project_number}
@@ -213,7 +213,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
                 <CloudConnectionField
-                    label='client_id'
+                    label='Client ID'
                     name='gcp_client_id'
                     defaultValue={this.props.data.gcp_client_id}
                     error={this.props.errors.gcp_client_id}
@@ -221,7 +221,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 />
 
                 <CloudConnectionField
-                    label='service_account_credentials'
+                    label='Service Account Credentials (JSON)'
                     name='gcp_service_account_credentials'
                     defaultValue={this.props.data.gcp_service_account_credentials}
                     error={this.props.errors.gcp_service_account_credentials}
@@ -257,7 +257,14 @@ CloudConnectionDialogFields.initialState = {
 
 class CloudConnectionField extends React.PureComponent {
     render() {
-        const { label, defaultValue, name, error, is_valid } = this.props;
+        const {
+            label,
+            placeholder,
+            defaultValue,
+            name,
+            error,
+            is_valid,
+        } = this.props;
 
         return (
             <div className="row form-group">
@@ -275,6 +282,7 @@ class CloudConnectionField extends React.PureComponent {
                             })}
                             name={name}
                             defaultValue={defaultValue}
+                            placeholder={placeholder}
                             autoComplete='off'
                         />
                     )}
