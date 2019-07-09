@@ -56,16 +56,16 @@ services:
         volumes:
             - .:/code
 
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            - /var/run/nscd/socket:/var/run/nscd/socket
-            - /etc/krb5.conf:/etc/krb5.conf
-            - /etc/pam.d:/etc/pam.d
+            # # Authentication
+            # # passwd/group should be mounted into any container
+            # # needing to share the user/group IDs
+            # - /var/run/nscd/socket:/var/run/nscd/socket
+            # - /etc/krb5.conf:/etc/krb5.conf
+            # - /etc/pam.d:/etc/pam.d
 
-            # Authentication cannot mount individual files, because the mapping is
-            # based on the inode
-            - /etc:/etc:ro
+            # # Authentication cannot mount individual files, because the mapping is
+            # # based on the inode
+            # - /etc:/etc:ro
 
             - /efs/:/efs/
             - /fh/scratch:/fh/scratch
@@ -78,7 +78,7 @@ services:
     rabbitmq:
         container_name: rabbitmq
         network_mode: host
-        image: rabbitmq:3-management
+        image: rabbitmq:3.7.16
         ports:
             - 5672:5672
             - 15672:15672
