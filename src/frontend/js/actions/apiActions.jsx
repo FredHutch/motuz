@@ -193,7 +193,6 @@ export const verifyCloudConnection = (data) => {
     }
 };
 
-
 export const updateCloudConnection = (data) => {
     const id = data.id;
     delete data.id;

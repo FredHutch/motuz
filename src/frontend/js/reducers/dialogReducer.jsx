@@ -45,10 +45,13 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.HIDE_NEW_COPY_JOB_DIALOG: {
+    case dialog.HIDE_NEW_COPY_JOB_DIALOG:
+    case api.CREATE_COPY_JOB_SUCCESS:
+    {
         return {
             ...state,
             displayNewCopyJobDialog: false,
+            newCopyJobDialogData: initialState.newCopyJobDialogData,
         }
     }
 
@@ -81,12 +84,6 @@ export default (state=initialState, action) => {
         }
     }
 
-    case api.CREATE_COPY_JOB_SUCCESS: {
-        return {
-            ...state,
-            displayNewCopyJobDialog: false,
-        }
-    }
 
     case dialog.SHOW_NEW_CLOUD_CONNECTION_DIALOG: {
         return {
@@ -99,7 +96,8 @@ export default (state=initialState, action) => {
     case api.CREATE_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
-            displayNewCloudConnectionDialog: false,
+            displayNewCloudConnectionDialog: initialState.displayNewCloudConnectionDialog,
+            newCloudConnectionDialogData: initialState.newCloudConnectionDialogData
         }
     }
 
@@ -119,6 +117,7 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayEditCloudConnectionDialog: false,
+            editCloudConnectionDialogData: initialState.editCloudConnectionDialogData,
         }
     }
 
@@ -158,7 +157,6 @@ export default (state=initialState, action) => {
             }
         }
     }
-
 
     case dialog.SHOW_MKDIR_DIALOG: {
         return {
