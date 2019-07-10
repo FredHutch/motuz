@@ -25,8 +25,8 @@ class LeftCommandBar extends React.Component {
 
 LeftCommandBar.defaultProps = {
     active: false,
-    host: 'ERROR',
-    path: 'ERROR',
+    host: '',
+    path: '',
 }
 
 import {connect} from 'react-redux';
