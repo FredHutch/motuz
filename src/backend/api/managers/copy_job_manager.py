@@ -26,9 +26,9 @@ def create(data):
     copy_job = CopyJob(**{
         'description': data.get('description', None),
         'src_cloud_id': data.get('src_cloud_id', None),
-        'src_resource': data.get('src_resource', None),
+        'src_resource_path': data.get('src_resource_path', None),
         'dst_cloud_id': data.get('dst_cloud_id', None),
-        'dst_path': data.get('dst_path', None),
+        'dst_resource_path': data.get('dst_resource_path', None),
         'progress_current': 0,
         'progress_total': 100,
         'progress_state': "PROGRESS",

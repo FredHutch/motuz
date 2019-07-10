@@ -39,7 +39,7 @@ class NewCopyJobDialog extends React.Component {
                                     <div className="col-4 text-right">
                                         <b>Resource</b>
                                     </div>
-                                    <div className="col-7">{data['source_resource']}</div>
+                                    <div className="col-7">{data['src_resource_path']}</div>
                                     <div className="col-1"></div>
                                 </div>
 
@@ -113,9 +113,9 @@ class NewCopyJobDialog extends React.Component {
         const data = {
             "description": formData['description'] || '',
             "src_cloud_id": propsData['source_cloud'].id,
-            "src_resource": propsData['source_resource'],
+            "src_resource_path": propsData['src_resource_path'],
             "dst_cloud_id": propsData['destination_cloud'].id,
-            "dst_path": propsData['destination_path'],
+            "dst_resource_path": propsData['destination_path'],
             "owner": "owner"
         }
 

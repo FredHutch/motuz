@@ -3,6 +3,7 @@ import random
 import functools
 import logging
 import re
+from os import path as os_path
 
 from .. import celery
 from ..models import CopyJob, CloudConnection
@@ -23,9 +24,9 @@ def copy_job(self, task_id=None):
         connection = RcloneConnection()
         connection.copy(
             src_data=copy_job.src_cloud,
-            src_path=copy_job.src_resource,
+            src_resource_path=copy_job.src_resource_path,
             dst_data=copy_job.dst_cloud,
-            dst_path=copy_job.dst_path,
+            dst_resource_path=copy_job.dst_resource_path,
             user=copy_job.owner,
             job_id=task_id,
         )

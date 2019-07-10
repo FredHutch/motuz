@@ -75,10 +75,10 @@ class CopyJobTable extends React.Component {
                 </b>
             )
             const source = (
-                <UriResource protocol={src_cloud.type} path={job.src_resource} />
+                <UriResource protocol={src_cloud.type} path={job.src_resource_path} />
             )
             const destination = (
-                <UriResource protocol={dst_cloud.type} path={job.dst_path} />
+                <UriResource protocol={dst_cloud.type} path={job.dst_resource_path} />
             )
             const progress = (
                 <ProgressBar

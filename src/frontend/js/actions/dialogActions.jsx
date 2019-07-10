@@ -34,16 +34,17 @@ export const showNewCopyJobDialog = () => {
         const srcPane = getCurrentPane(state.pane, srcSide);
         const srcFiles = getCurrentFiles(state.pane, srcSide);
         const srcResourceName = srcFiles[srcPane.fileFocusIndex].name;
-        const srcResources = upath.join(srcPane.path, srcResourceName)
+        const srcResourcePath = upath.join(srcPane.path, srcResourceName)
 
         const dstSide = getOtherSide(srcSide);
         const dstPane = getCurrentPane(state.pane, dstSide)
+        const dstResourcePath = upath.join(dstPane.path, srcResourceName)
 
         const data = {
             source_cloud: srcPane.host,
-            source_resource: srcResources,
+            src_resource_path: srcResourcePath,
             destination_cloud: dstPane.host,
-            destination_path: dstPane.path,
+            destination_path: dstResourcePath,
             owner: getCurrentUser(state.auth),
         }
 

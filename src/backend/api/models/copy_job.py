@@ -14,9 +14,9 @@ class CopyJob(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String)
     src_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
-    src_resource = db.Column(db.String)
+    src_resource_path = db.Column(db.String)
     dst_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
-    dst_path = db.Column(db.String)
+    dst_resource_path = db.Column(db.String)
     owner = db.Column(db.String)
 
     progress_state = db.Column(db.String, nullable=True)
