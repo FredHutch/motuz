@@ -64,7 +64,7 @@ def mkdir(data):
         if cloud_connection.owner != user:
             # Should never happen
             raise HTTP_404_NOT_FOUND('Cloud Connection with id {} not found'.format(connection_id))
-            connection = RcloneConnection()
+        connection = RcloneConnection()
 
     try:
         return connection.mkdir(data=cloud_connection, path=path)
