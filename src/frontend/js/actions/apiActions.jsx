@@ -126,8 +126,8 @@ export const retrieveCopyJob = (id) => ({
 export const createCopyJob = (data) => {
     return async (dispatch, getState) => {
         const state = getState();
-        const dirname = data.dst_path
-        const basename = upath.basename(data.src_resource)
+        const dirname = upath.dirname(data.dst_resource_path)
+        const basename = upath.basename(data.src_resource_path)
         if (fileExists(state.pane, dirname, basename) && !confirm(
             `${basename} already exists at destination. Overwrite?`
         )) {

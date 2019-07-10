@@ -122,7 +122,7 @@ Additional temporary folders - ignore and do not commit
 
 ### On-premises setup
 
-Refer to [machine-setup.md](machine-setup.md).
+Refer to [machine-setup.md](docs/machine-setup.md).
 
 ### AWS EC2 setup
 

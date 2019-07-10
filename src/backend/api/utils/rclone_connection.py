@@ -94,27 +94,27 @@ class RcloneConnection(AbstractConnection):
 
 
 
-    def copy(self, src_data, src_path, dst_data, dst_path, user, job_id=None):
+    def copy(self, src_data, src_resource_path, dst_data, dst_resource_path, user, job_id=None):
         credentials = {}
 
         if src_data is None: # Local
-            src = src_path
+            src = src_resource_path
         else:
             credentials.update(self._formatCredentials(src_data, name='src'))
-            src = 'src:{}'.format(src_path)
+            src = 'src:{}'.format(src_resource_path)
 
         if dst_data is None: # Local
-            dst = dst_path
+            dst = dst_resource_path
         else:
             credentials.update(self._formatCredentials(dst_data, name='dst'))
-            dst = 'dst:{}'.format(dst_path)
+            dst = 'dst:{}'.format(dst_resource_path)
 
         command = [
             # 'sudo',
             # '-E',
             # '-u', user,
             'rclone',
-            'copy',
+            'copyto',
             src,
             dst,
             '--progress',
@@ -459,9 +459,9 @@ def main():
     import random
     connection.copy(
         src_data=None, # Local
-        src_path='/tmp/motuz/mb_blob.bin',
+        src_resource_path='/tmp/motuz/mb_blob.bin',
         dst_data=data,
-        dst_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
+        dst_resource_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
         job_id=job_id
     )
 
