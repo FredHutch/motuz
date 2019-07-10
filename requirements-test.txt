@@ -1,8 +1,0 @@
-pandas
-requests
-python-hostlist
-python-swiftclient
-biopython
-psycopg2
-PyMySQL
-pymssql
