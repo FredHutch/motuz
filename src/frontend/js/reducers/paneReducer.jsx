@@ -11,12 +11,13 @@ import {
     getCurrentFiles,
     setCurrentFiles,
 } from 'managers/paneManager.jsx';
+import constants from 'constants.jsx';
 
 
 const INITIAL_PANE = {
     host: {
         id: 0,
-        name: 'ERROR',
+        name: constants.local_name,
         type: 'file',
         access_key_id: '',
         access_key_secret: '',

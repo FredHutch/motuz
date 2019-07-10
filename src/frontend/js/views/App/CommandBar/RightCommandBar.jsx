@@ -25,8 +25,8 @@ class RightCommandBar extends React.Component {
 
 RightCommandBar.defaultProps = {
     active: false,
-    host: 'ERROR',
-    path: 'ERROR',
+    host: '',
+    path: '',
 }
 
 import {connect} from 'react-redux';
