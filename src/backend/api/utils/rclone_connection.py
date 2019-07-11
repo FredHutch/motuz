@@ -114,9 +114,9 @@ class RcloneConnection(AbstractConnection):
             dst = 'dst:{}'.format(dst_resource_path)
 
         command = [
-            # 'sudo',
-            # '-E',
-            # '-u', user,
+            'sudo',
+            '-E',
+            '-u', user,
             'rclone',
             'copyto',
             src,
