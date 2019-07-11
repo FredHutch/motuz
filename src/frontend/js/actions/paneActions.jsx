@@ -70,22 +70,6 @@ export const refreshPanes = () => {
         const pathLeft = state.pane.panes.left[0].path;
         const pathRight = state.pane.panes.right[0].path;
 
-        const hostLeft = state.pane.panes.left[0].host.id;
-        const hostRight = state.pane.panes.right[0].host.id;
-
-        if (pathLeft === pathRight && hostLeft === hostRight) { // optimization
-            const dirLeft = await dispatch(directoryChange('left', pathLeft));
-            const dirRight = {
-                ...dirLeft,
-                meta: {
-                    ...dirLeft.meta,
-                    side: 'right',
-                }
-            }
-            dispatch(dirRight)
-            return;
-        }
-
         await Promise.all([
             dispatch(directoryChange('left', pathLeft)),
             dispatch(directoryChange('right', pathRight)),

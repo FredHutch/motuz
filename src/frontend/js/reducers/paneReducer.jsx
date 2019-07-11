@@ -136,11 +136,12 @@ export default (state=initialState, action) => {
         }
     }
 
-    case api.LIST_FILES_REQUEST: {
-        return {
-            ...state,
-        }
+    case api.LIST_FILES_REQUEST:
+    case api.LIST_HOME_FILES_REQUEST:
+    {
+        return state;
     }
+
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
@@ -148,8 +149,7 @@ export default (state=initialState, action) => {
 
         const { showHiddenFiles } = state;
 
-        let {files} = action.payload;
-        const {path} = action.payload;
+        let {files, path} = action.payload;
 
         if (connection_id === 0) {
             files = fileManager.convertLocalFilesToMotuz(files)
@@ -182,8 +182,8 @@ export default (state=initialState, action) => {
             },
         }
     }
+
     case api.LIST_FILES_FAILURE: {
-        const { payload } = action;
         const { side } = action.meta;
 
         return {
@@ -200,6 +200,61 @@ export default (state=initialState, action) => {
             },
         }
     }
+
+    case api.LIST_HOME_FILES_SUCCESS: {
+        const { payload } = action;
+        const { showHiddenFiles } = state;
+
+        let {files, path} = action.payload;
+
+        files = fileManager.convertLocalFilesToMotuz(files)
+        files = fileManager.filterFiles(files, {
+            showHiddenFiles: state.showHiddenFiles,
+        })
+        files = fileManager.sortFiles(files);
+
+        if (path !== '/') {
+            files.unshift({
+                'name': '..',
+                'size': 'Folder',
+                'type': 'dir',
+            })
+        }
+
+        return {
+            ...state,
+            panes: {
+                left: [{
+                    ...getCurrentPane(state, 'left'),
+                    path,
+                }],
+                right: [{
+                    ...getCurrentPane(state, 'right'),
+                    path,
+                }],
+            },
+            files: {
+                left: files,
+                right: files.slice(), // Avoid accidenal state mutations
+            },
+        }
+    }
+
+    case api.LIST_HOME_FILES_FAILURE: {
+        return {
+            ...state,
+            files: {
+                left: [
+                    {name: "ERROR - CHECK THE CONSOLE"},
+                ],
+                right: [
+                    {name: "ERROR - CHECK THE CONSOLE"},
+                ],
+            },
+        }
+    }
+
+
 
     case auth.LOGOUT_REQUEST: {
         return initialState;

@@ -10,6 +10,10 @@ export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
 export const LIST_FILES_FAILURE = '@@api/LIST_FILES_FAILURE';
 
+export const LIST_HOME_FILES_REQUEST = '@@api/LIST_HOME_FILES_REQUEST';
+export const LIST_HOME_FILES_SUCCESS = '@@api/LIST_HOME_FILES_SUCCESS';
+export const LIST_HOME_FILES_FAILURE = '@@api/LIST_HOME_FILES_FAILURE';
+
 export const MAKE_DIRECTORY_REQUEST = '@@api/MAKE_DIRECTORY_REQUEST';
 export const MAKE_DIRECTORY_SUCCESS = '@@api/MAKE_DIRECTORY_SUCCESS';
 export const MAKE_DIRECTORY_FAILURE = '@@api/MAKE_DIRECTORY_FAILURE';
@@ -71,6 +75,15 @@ export const listFiles = (side, data) => ({
                 meta: {side, data},
             },
         ]
+    }
+});
+
+export const listHomeFiles = () => ({
+    [RSAA]: {
+        endpoint: '/api/system/files/home/',
+        method: 'POST',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ LIST_HOME_FILES_REQUEST, LIST_HOME_FILES_SUCCESS, LIST_HOME_FILES_FAILURE ],
     }
 });
 
