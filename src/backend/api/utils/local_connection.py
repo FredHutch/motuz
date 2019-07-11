@@ -110,7 +110,7 @@ def _ls_with_impersonation(path, user):
         '-n',
         '-u', user,
         'ls',
-        '-al',
+        '-alL',
         path,
     ]
 
