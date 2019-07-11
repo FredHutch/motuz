@@ -69,6 +69,17 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     is_valid={this.props.verifySuccess}
                 />
 
+                <CloudConnectionField
+                    label='Bucket Name'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.s3_bucket,
+                        required: true,
+                    }}
+                    error={this.props.errors.s3_bucket}
+                    is_valid={this.props.verifySuccess}
+                />
+
                 {type === 's3' && this._renderS3Section()}
                 {type === 'azureblob' && this._renderAzureSection()}
                 {type === 'swift' && this._renderSwiftSection()}
@@ -85,17 +96,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
         return (
             <React.Fragment>
                 <h5 className='text-primary mt-5 mb-2'>Details</h5>
-
-                <CloudConnectionField
-                    label='Bucket Name'
-                    input={{
-                        name: 's3_bucket',
-                        defaultValue: this.props.data.s3_bucket,
-                        required: true,
-                    }}
-                    error={this.props.errors.s3_bucket}
-                    is_valid={this.props.verifySuccess}
-                />
 
                 <CloudConnectionField
                     label='Region'
@@ -131,17 +131,23 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     is_valid={this.props.verifySuccess}
                 />
 
-                <h5 className='text-primary mt-5 mb-2'>Optionals</h5>
+                <details>
+                    <summary className='text-primary h5 mt-5 mb-2'>
+                        S3 Compatible Storage
+                    </summary>
 
-                <CloudConnectionField
-                    label='Endpoint URL'
-                    input={{
-                        name: 's3_endpoint',
-                        defaultValue: this.props.data.s3_endpoint,
-                    }}
-                    error={this.props.errors.s3_endpoint}
-                    is_valid={this.props.verifySuccess}
-                />
+                    <CloudConnectionField
+                        label='Endpoint URL'
+                        input={{
+                            name: 's3_endpoint',
+                            defaultValue: this.props.data.s3_endpoint,
+                        }}
+                        error={this.props.errors.s3_endpoint}
+                        is_valid={this.props.verifySuccess}
+                    />
+                </details>
+
+
 
             </React.Fragment>
         )
