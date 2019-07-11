@@ -52,7 +52,7 @@ class SystemFilesMkdir(Resource):
     @api.expect(dto, validate=True)
     def post(self):
         """
-        List all files for a particular URI.
+        Crete a new directory at a particular URI.
         """
         try:
             return system_manager.mkdir(request.json), 200
