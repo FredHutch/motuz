@@ -13,14 +13,7 @@ class LocalConnection(AbstractConnection):
     A symmetric API for RcloneConnection to be used locally
     """
 
-    def __init__(self):
-        pass
-
-
     def ls(self, data, path):
-        """
-        New way of doing it
-        """
         user = data.owner
 
         try:
