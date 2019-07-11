@@ -73,10 +73,10 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     label='Bucket Name'
                     input={{
                         name: 'bucket',
-                        defaultValue: this.props.data.s3_bucket,
+                        defaultValue: this.props.data.bucket,
                         required: true,
                     }}
-                    error={this.props.errors.s3_bucket}
+                    error={this.props.errors.bucket}
                     is_valid={this.props.verifySuccess}
                 />
 

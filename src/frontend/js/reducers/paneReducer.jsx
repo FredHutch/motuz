@@ -101,8 +101,8 @@ export default (state=initialState, action) => {
         const {side, host} = action.payload;
 
         let path = '/'
-        if (host.type === 's3' && host.s3_bucket) {
-            path = `/${host.s3_bucket}`;
+        if (host.bucket) {
+            path = `/${host.bucket}`;
         }
 
         return {

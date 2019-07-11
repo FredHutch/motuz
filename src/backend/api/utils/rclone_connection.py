@@ -27,13 +27,17 @@ class RcloneConnection(AbstractConnection):
     def verify(self, data):
         credentials = self._formatCredentials(data, name='current')
         user = data.owner
+        bucket = getattr(data, 'bucket', None)
+        if bucket is None:
+            bucket = ''
+
         command = [
             'sudo',
             '-E',
             '-u', user,
             'rclone',
             'lsjson',
-            'current:',
+            'current:{}'.format(bucket),
         ]
 
         try:

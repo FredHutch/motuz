@@ -21,25 +21,22 @@ class CloudRow extends React.Component {
             "id",
             "name",
             "type",
+            "bucket",
         ]
         if (data.type === "s3") {
             headers.push(
-                "s3_bucket",
                 "s3_access_key_id",
             );
         } else if (data.type === "azureblob") {
             headers.push(
-                "",
                 "azure_account",
             )
         } else if (data.type === "swift") {
             headers.push(
-                "",
                 "swift_user",
             )
         } else if (data.type === "google cloud storage") {
             headers.push(
-                "gcp_project_number",
                 "gcp_client_id",
             )
         } else {
