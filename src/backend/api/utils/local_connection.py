@@ -13,14 +13,7 @@ class LocalConnection(AbstractConnection):
     A symmetric API for RcloneConnection to be used locally
     """
 
-    def __init__(self):
-        pass
-
-
     def ls(self, data, path):
-        """
-        New way of doing it
-        """
         user = data.owner
 
         try:
@@ -36,7 +29,21 @@ class LocalConnection(AbstractConnection):
             raise HTTP_403_FORBIDDEN(str(err))
 
         files = _parse_ls(output)
-        return files
+        return {
+            'files': files,
+            'path': path,
+        }
+
+
+    def lshome(self, data):
+        user = data.owner
+
+        try:
+            homePath = _homepath_with_impersonation(user)
+            return self.ls(data, homePath)
+        except Exception as e:
+            logging.error("User does not have a home", exc_info=True)
+            return self.ls(data, '/')
 
 
     def mkdir(self, data, path):
@@ -56,6 +63,20 @@ class LocalConnection(AbstractConnection):
             'message': 'success',
         }
 
+
+
+def _homepath_with_impersonation(user):
+    command = [
+        'sudo',
+        '-n',
+        '-u', user,
+        '-i', 'eval',
+        'echo $HOME'
+    ]
+
+    byteOutput = subprocess.check_output(command)
+    output = byteOutput.decode('UTF-8').rstrip()
+    return output
 
 
 def _parse_ls(output):

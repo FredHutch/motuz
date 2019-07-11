@@ -49,6 +49,20 @@ def ls(data):
         raise HTTP_400_BAD_REQUEST(str(e))
 
 
+@token_required
+def lshome():
+    user = get_logged_in_user(request)
+
+    cloud_connection = Dummy()
+    cloud_connection.owner = user
+    connection = LocalConnection()
+
+    try:
+        return connection.lshome(data=cloud_connection)
+    except RcloneException as e:
+        raise HTTP_400_BAD_REQUEST(str(e))
+
+
 
 @token_required
 def mkdir(data):

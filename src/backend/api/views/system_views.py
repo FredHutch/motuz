@@ -32,13 +32,27 @@ class SystemFiles(Resource):
             api.abort(500, str(e))
 
 
+@api.route('/files/home/')
+class SystemFilesHome(Resource):
+    def post(self):
+        """
+        List all files for local home
+        """
+        try:
+            return system_manager.lshome(), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
+
 
 @api.route('/files/mkdir/')
-class SystemFiles(Resource):
+class SystemFilesMkdir(Resource):
     @api.expect(dto, validate=True)
     def post(self):
         """
-        List all files for a particular URI.
+        Crete a new directory at a particular URI.
         """
         try:
             return system_manager.mkdir(request.json), 200
