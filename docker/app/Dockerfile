@@ -16,6 +16,8 @@ ENV PYTHONUNBUFFERED 1
 ENV DOCKER_CONTAINER 1
 ENV FLASK_ENV development
 ENV MOTUZ_HOST 0.0.0.0
+# libpython3.7m.so.1.0 cannot be found if /etc is remapped
+ENV LD_LIBRARY_PATH /usr/local/lib
 
 
 COPY ./requirements.txt /code/requirements.txt

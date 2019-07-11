@@ -69,8 +69,11 @@ class RcloneConnection(AbstractConnection):
 
         try:
             result = self._execute(command, credentials)
-            result = json.loads(result)
-            return result
+            files = json.loads(result)
+            return {
+                'files': files,
+                'path': path,
+            }
         except subprocess.CalledProcessError as e:
             raise RcloneException(sanitize(str(e)))
 

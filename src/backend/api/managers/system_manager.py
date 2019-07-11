@@ -44,10 +44,7 @@ def ls(data):
         connection = RcloneConnection()
 
     try:
-        return {
-            'files': connection.ls(data=cloud_connection, path=path),
-            'path': path,
-        }
+        return connection.ls(data=cloud_connection, path=path)
     except RcloneException as e:
         raise HTTP_400_BAD_REQUEST(str(e))
 
