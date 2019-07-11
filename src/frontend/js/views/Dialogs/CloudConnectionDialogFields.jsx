@@ -37,8 +37,8 @@ class CloudConnectionDialogFields extends React.PureComponent {
 
                 <input type="hidden" name='id' value={data.id}/>
 
-                <div className="row form-group">
-                    <div className="col-4 text-right">
+                <div className="row form-group required">
+                    <div className="col-4 text-right control-label">
                         <b>Type</b>
                     </div>
                     <div className="col-8">
@@ -311,8 +311,8 @@ class CloudConnectionField extends React.PureComponent {
         } = this.props;
 
         return (
-            <div className="row form-group">
-                <div className="col-4 text-right">
+            <div className={`row form-group ${this.props.input.required && 'required'}`}>
+                <div className="col-4 text-right control-label">
                     <b>{label}</b>
                 </div>
                 <div className="col-8">
