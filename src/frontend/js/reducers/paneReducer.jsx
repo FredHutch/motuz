@@ -144,11 +144,12 @@ export default (state=initialState, action) => {
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
-        const { connection_id, path } = data;
+        const { connection_id } = data;
 
         const { showHiddenFiles } = state;
 
-        let files = action.payload;
+        let {files} = action.payload;
+        const {path} = action.payload;
 
         if (connection_id === 0) {
             files = fileManager.convertLocalFilesToMotuz(files)
@@ -161,8 +162,6 @@ export default (state=initialState, action) => {
         })
         files = fileManager.sortFiles(files);
 
-        // Convert `rclone` files to `motuz`
-
         if (path !== '/') {
             files.unshift({
                 'name': '..',
@@ -172,6 +171,12 @@ export default (state=initialState, action) => {
         }
         return {
             ...state,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...getCurrentPane(state, side),
+                    path,
+                }, side)
+            },
             files: {
                 ...setCurrentFiles(state, files, side),
             },
