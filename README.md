@@ -72,7 +72,11 @@ grant all privileges on database motuz to motuz_user;
 ./bin/frontend_start.sh
 ```
 
+---
+
 ![Motuz main page ](docs/img/image_root.png)
+
+---
 
 ## Examples
 
