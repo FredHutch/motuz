@@ -4,6 +4,12 @@
 
 FROM postgres:11.3
 
+# TODO The environment variables below should not be hardcoded
+env DB_USER=motuz_user
+env DB_PASSWORD=motuz_password
+env DB_DATABASE=motuz
+env POSTGRES_USER=postgres
+
 WORKDIR /app
 COPY ./docker/database_init/database_init.sh /app/database_init.sh
 
