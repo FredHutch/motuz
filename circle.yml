@@ -14,7 +14,8 @@ test:
 
 deployment:
   prod:
-    branch: experiment/ci-cd
+    branch: master
+    # branch: experiment/ci-cd
     commands:
       - aws s3 cp s3://fh-ctr-mofuz-test/motuz-cicd/id_rsa .
       - chmod 0400 ./id_rsa
@@ -25,4 +26,5 @@ deployment:
 general:
   branches:
     only:
-     - experiment/ci-cd
+     - master
+    #  - experiment/ci-cd
