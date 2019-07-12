@@ -2,7 +2,8 @@
 
 A web based infrastructure for large scale data movements between on-premise and cloud
 
-![Motuz main page ](docs/img/2019-06-23-13-14-28.png)
+![Motuz main page ](docs/img/image_root.png)
+![Motuz transfer in progress ](docs/img/image_transfer.png)
 
 
 ## Developer Installation
