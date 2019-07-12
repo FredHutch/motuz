@@ -1,6 +1,8 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="200" height="200">
     <h1>Motuz</h1>
+    <p>
+        <img src="src/frontend/img/logo.png" width="200" height="200">
+    </p>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
     </p>
@@ -9,17 +11,12 @@
     <br>
 </div>
 
+![Motuz transfer in progress](docs/img/image_transfer.png) | 
 
-# Motuz
-
-A web based infrastructure for large scale data movements between on-premise and cloud
-
+<br>
+<br>
 
 ![Motuz main page ](docs/img/image_root.png)
-<div align="center"> _Main Page_ </div>
-
-![Motuz transfer in progress ](docs/img/image_transfer.png) | 
-<center> _Transfer in Progress_ </center>
 
 
 ## Developer Installation
