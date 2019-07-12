@@ -2,7 +2,4 @@
 
 set -e
 
-THIS_DIR=$(dirname "$0")
-cd ${THIS_DIR}
-cd ..
-
+echo "HERE"

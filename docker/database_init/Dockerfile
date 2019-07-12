@@ -4,4 +4,7 @@
 
 FROM postgres:11.3
 
+WORKDIR /app
+COPY ./docker/database_init/database_init.sh /app/database_init.sh
 
+CMD /app/database_init.sh
