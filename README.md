@@ -1,17 +1,13 @@
 <div align="center">
+    <img src="src/frontend/img/logo.png" width="200" height="200">
     <h1>Motuz</h1>
-    <p>
-        <img src="src/frontend/img/logo.png" width="200" height="200">
-    </p>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
     </p>
     <br>
-    <br>
-    <br>
 </div>
 
-![Motuz transfer in progress](docs/img/image_transfer.png) | 
+![Motuz transfer in progress](docs/img/image_transfer.png)
 
 <br>
 <br>
