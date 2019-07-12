@@ -1,3 +1,4 @@
+import logging
 import datetime
 from functools import wraps
 import pwd
@@ -55,7 +56,10 @@ def login_user(data):
     user_authentication.authenticate(username, password)
 
     # TODO: remove backdoor
-    if user_authentication.code != 0 and username not in ('aicioara', 'aicioara2'):
+    if user_authentication.code != 0 and username not in ('aicioara'):
+        logging.error("Could not authenticate {}. Reason: `{}` (Code: {})".format(
+            username, user_authentication.reason, user_authentication.code,
+        ))
         raise HTTP_401_UNAUTHORIZED('No match for Username and Password.')
 
     return {
