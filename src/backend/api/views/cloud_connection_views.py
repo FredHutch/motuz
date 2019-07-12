@@ -24,7 +24,7 @@ dto = api.model('connection', {
     'name': fields.String(required=True, example='arbitrary-unique-name'),
 
     'type': fields.String(required=True, example='s3'),
-    'bucket': fields.String(required=False, example='my-bucket-name'),
+    'bucket': OptionalString(required=False, example='my-bucket-name'),
 
     's3_access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
     's3_secret_access_key': PrivateString(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),

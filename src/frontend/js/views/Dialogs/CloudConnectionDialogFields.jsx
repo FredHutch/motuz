@@ -74,7 +74,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     input={{
                         name: 'bucket',
                         defaultValue: this.props.data.bucket,
-                        required: true,
                     }}
                     error={this.props.errors.bucket}
                     is_valid={this.props.verifySuccess}
@@ -95,8 +94,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderS3Section() {
         return (
             <React.Fragment>
-                <h5 className='text-primary mt-5 mb-2'>Details</h5>
-
                 <CloudConnectionField
                     label='Region'
                     input={{
@@ -186,8 +183,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderSwiftSection() {
         return (
             <React.Fragment>
-                <h5 className='text-primary mt-5 mb-2'>Details</h5>
-
                 <CloudConnectionField
                     label='Auth URL'
                     input={{
@@ -238,8 +233,6 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderGCPSection() {
         return (
             <React.Fragment>
-                <h5 className='text-primary mt-5 mb-2'>Details</h5>
-
                 <CloudConnectionField
                     label='Project Number'
                     input={{
