@@ -1,0 +1,27 @@
+machine:
+  services:
+    - docker
+  environment:
+    BUILD_HOST: circle-build01.fhcrc.org
+
+dependencies:
+  override:
+    - echo "I don't think I need any dependencies."
+
+test:
+  override:
+    - echo we need real unit tests here
+
+deployment:
+  prod:
+    branch: experiment/ci-cd
+    commands:
+      - cat ${SSH_KEY} > ./ssh-key
+      - chmod 0400 ./ssh-key
+      - scp -i ./ssh-key bin/prod/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
+      - ssh -i ./ssh-key ${REMOTE_USER}@${REMOTE_HOST} ~/update.sh; rm ./ssh-key
+
+general:
+  branches:
+    only:
+     - experiment/ci-cd
