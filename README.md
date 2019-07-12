@@ -27,19 +27,6 @@
 ./bin/init.sh
 ```
 
-3. Initialize the DB
-
-While the database container is running
-
-```
-docker-compose run --entrypoint='bash' motuz_database
-root@0:/# psql -h 0.0.0.0 -U postgres -d postgres
-
-create database motuz;
-create user motuz_user with password 'motuz_password';
-grant all privileges on database motuz to motuz_user;
-```
-
 ### Start
 
 1. Start Database

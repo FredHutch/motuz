@@ -18,3 +18,7 @@ echo "DONE - Initializing backend"
 echo "Installing frontend dependencies..."
 ./bin/utils/frontend_install.sh
 echo "DONE - Installing frontend dependencies"
+
+echo "Setting up the database..."
+./bin/utils/database_install.sh
+echo "DONE - Setting up the database"
