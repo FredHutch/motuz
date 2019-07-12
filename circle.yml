@@ -18,6 +18,9 @@ deployment:
     commands:
       - echo "${SSH_KEY}" > ./ssh-key
       - chmod 0400 ./ssh-key
+      - echo before
+      - cat ./ssh-key
+      - echo after
       - scp -o StrictHostKeyChecking=no -i ./ssh-key bin/prod/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
       - ssh -o StrictHostKeyChecking=no -i ./ssh-key ${REMOTE_USER}@${REMOTE_HOST} ~/update.sh; rm ./ssh-key
 
