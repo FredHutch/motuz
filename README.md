@@ -7,16 +7,14 @@ A web based infrastructure for large scale data movements between on-premise and
 
 ## Developer Installation
 
-1. Install system dependencies (tested with Ubuntu 18.04)
+### Initialize
 
-```bash
-sudo apt-get install python3
+1. Install system dependencies (tested with Ubuntu 18.04 and MacOS 10.14)
 
-and then follow these instructions:
-    https://docs.docker.com/install/linux/docker-ce/ubuntu/
+- [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- Python ~ 3.7
+- Node ~ 10.15
 
-# Work in progres... unsure what else is needed on a blank system. Might use docker soon
-```
 
 2. Initialize app
 
@@ -24,27 +22,46 @@ and then follow these instructions:
 ./bin/init.sh
 ```
 
----
+3. Initialize the DB
 
-3. Start RabbitMQ
+While the database container is running
+
+```
+docker-compose run --entrypoint='bash' motuz_database
+root@0:/# psql -h 0.0.0.0 -U postgres -d postgres
+
+create database motuz;
+create user motuz_user with password 'motuz_password';
+grant all privileges on database motuz to motuz_user;
+```
+
+### Start
+
+1. Start Database
+
+```bash
+./bin/database_start.sh
+```
+
+2. Start RabbitMQ
 
 ```bash
 ./bin/rabbitmq_start.sh
 ```
 
-4. Start Celery
+3. Start Celery
 
 ```bash
 ./bin/celery_start.sh
 ```
 
-5. Start Backend
+4. Start Backend
 
 ```bash
 ./bin/backend_start.sh
 ```
 
-6. Start Frontend
+5. Start Frontend
 
 ```bash
 ./bin/frontend_start.sh
@@ -67,6 +84,7 @@ MOTUZ_HOST='0.0.0.0' ./bin/backend_start.sh
 | Folder | Description |
 | --- | --- |
 | `bin/` | Scripts for starting / installing / testing the application |
+| `docker/` | Container definition for production |
 | `docs/` | Documentation |
 | `sandbox/` | Temporary place for Proof of Concept code |
 | `src/` | All source code in one place |
@@ -77,7 +95,7 @@ MOTUZ_HOST='0.0.0.0' ./bin/backend_start.sh
 | `test/backend/` | Backend testing |
 
 
-### Frontend folder structure (inside /src/frontend)
+### Frontend folder structure (inside `/src/frontend/`)
 
 | Folder | Description |
 | --- | --- |
@@ -94,15 +112,16 @@ MOTUZ_HOST='0.0.0.0' ./bin/backend_start.sh
 | `webpack/` | Webpack configurations (For JS bundling) |
 
 
-### Backend folder structure (inside /src/backend)
+### Backend folder structure (inside `/src/backend/`)
 
 | Folder | Description |
 | --- | --- |
 | `api/` | Code for the API (Swagger) Module |
 | `api/managers/` | Utilities that the views call to perform actions (Also called services in Flask) |
+| `api/mixins/` | Flask Mixins for Database Models |
 | `api/models/` | Database Models |
+| `api/utils/` | Standalone helper code. Could be inside its own repository |
 | `api/views/` | API Endpoints for Swagger |
-| `api/serializers.py` | DTOs - They define the Data Input expectations for Swagger |
 | `migrations/` | Database Migrations |
 
 
@@ -124,8 +143,8 @@ Additional temporary folders - ignore and do not commit
 
 Refer to [machine-setup.md](docs/machine-setup.md).
 
-### AWS EC2 setup
 
+### AWS EC2 setup
 
 Based on https://medium.com/@cjus/installing-docker-ce-on-an-aws-ec2-instance-running-ubuntu-16-04-f42fe7e80869
 
@@ -141,11 +160,18 @@ sudo apt-get install -y docker-compose
 
 sudo useradd -d /home/aicioara -m aicioara
 echo 'aicioara:ThisIsNotSecure' | sudo chpasswd
-
-
 ```
 
-Making some test files
+### AWS EC2 purge and deploy / redeploy
+
+```
+cd /path/to/motuz/folder
+./bin/prod/redeploy.sh
+```
+
+## Misc
+
+### Utility for making some test files
 
 ```bash
 for size in {107374,1073741,10737418,107374182,1073741824}; do
@@ -156,33 +182,4 @@ for size in {107374,1073741,10737418,107374182,1073741824}; do
     done
 done
 
-```
-
-### Initializing the database
-
-While the database container is running
-
-```
-docker-compose run --entrypoint='bash' database
-root@0:/# psql -h 0.0.0.0 -U postgres -d postgres
-
-create database motuz;
-create user motuz_user with password 'motuz_password';
-grant all privileges on database motuz to motuz_user;
-```
-
-
-
-### AWS EC2 redeploy
-
-```
-cd /path/to/motuz/folder
-docker-compose down
-yes | docker system prune -a
-docker image ls -a # should show nothing
-docker-compose up -d
-
-# Wait for DB to start, then migrate
-docker build --no-cache=true -t motuz_migrate:latest -f docker/migrate/Dockerfile .
-docker run -it --net='host' motuz_migrate:latest
 ```
