@@ -16,10 +16,10 @@ deployment:
   prod:
     branch: experiment/ci-cd
     commands:
-      - cat ${SSH_KEY} > ./ssh-key
+      - cat "${SSH_KEY}" > ./ssh-key
       - chmod 0400 ./ssh-key
-      - scp -i ./ssh-key bin/prod/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
-      - ssh -i ./ssh-key ${REMOTE_USER}@${REMOTE_HOST} ~/update.sh; rm ./ssh-key
+      - scp -o StrictHostKeyChecking=no -i ./ssh-key bin/prod/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
+      - ssh -o StrictHostKeyChecking=no -i ./ssh-key ${REMOTE_USER}@${REMOTE_HOST} ~/update.sh; rm ./ssh-key
 
 general:
   branches:
