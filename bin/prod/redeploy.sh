@@ -17,5 +17,5 @@ echo "Sleeping 30 seconds"
 sleep 30
 
 # Wait for DB to start, then migrate
-sudo docker build --no-cache=true -t motuz_migrate:latest -f docker/migrate/Dockerfile .
-sudo docker run -it --net='host' motuz_migrate:latest
+sudo docker build --no-cache=true -t motuz_database_migrate:latest -f docker/database_migrate/Dockerfile .
+sudo docker run -it --net='host' motuz_database_migrate:latest
