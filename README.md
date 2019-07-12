@@ -169,6 +169,28 @@ cd /path/to/motuz/folder
 ./bin/prod/redeploy.sh
 ```
 
+
+## Examples
+
+### How to use the API
+
+Once started, the API can be found at localhost:5000/api. There is a Swagger Front End that makes the API easy to explore.
+
+### Authentication
+
+- POST requests to `/api/auth/login/` with correct credentials will issue an `access_token` and a `refresh_token` (called `access` and `refresh` in the JSON response)
+
+- Protected API points can then be accessed by providing the `access_token` as an Authorization header. Example header:
+    - Authorization: Bearer `access_token`
+
+- The `access_token` can be provided to Swagger using the "Authorize" button an the top-right and inserting `Bearer $access_token` in the box, where $access_token is the value returned for key access" in step 1
+
+- The `access_token` is only valid for a limited amount of time (usually 6 hours). Upon expiration, a new `access_token` can be retrieved by issuing a POST request to `/api/auth/refresh/` using the `refresh_token` in the Authorization field. Example:
+    - Authorization: Bearer `refresh_token`
+
+- The `refresh_token` has longer validity, say T days. Please note that the `POST /api/auth/refresh/` endpoint issues a new `refresh_token` as well, so if the users login at least once every T days, they will never be logged out.
+
+
 ## Misc
 
 ### Utility for making some test files
