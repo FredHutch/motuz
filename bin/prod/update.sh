@@ -14,7 +14,7 @@ echo updating code...
 # TODO - make sure we are in the right branch?
 git pull
 echo running redeploy script...
-sudo bash -c "(cd /root/motuz && /bin/prod/redeploy.sh)"
+sudo bash -c "(cd /root/motuz && bin/prod/redeploy.sh)"
 echo Done.
 
 
