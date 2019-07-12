@@ -9,11 +9,6 @@
 
 ![Motuz transfer in progress](docs/img/image_transfer.png)
 
-<br>
-<br>
-
-![Motuz main page ](docs/img/image_root.png)
-
 
 ## Developer Installation
 
@@ -76,6 +71,8 @@ grant all privileges on database motuz to motuz_user;
 ```bash
 ./bin/frontend_start.sh
 ```
+
+![Motuz main page ](docs/img/image_root.png)
 
 ## Examples
 
