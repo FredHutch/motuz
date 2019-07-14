@@ -13,5 +13,6 @@ env POSTGRES_PASSWORD=lk31j2lj1ss1ws
 
 WORKDIR /app
 COPY ./docker/database_init/database_init.sh /app/database_init.sh
+COPY ./docker/utils/wait-for-it.sh /app/wait-for-it.sh
 
 CMD /app/database_init.sh

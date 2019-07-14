@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# https://github.com/vishnubob/wait-for-it
 #   Use this script to test if a given TCP host/port are available
 
 

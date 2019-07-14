@@ -50,7 +50,6 @@ EOSQL
 
 docker-entrypoint.sh postgres &
 
-echo "Waiting for DB to start..."
-sleep 5
+./wait-for-it.sh 0.0.0.0:5432 -t 0
 
 init "$@"
