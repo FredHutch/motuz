@@ -48,8 +48,6 @@ EOSQL
 }
 
 
-
-
 docker-entrypoint.sh postgres &
 
 echo "Waiting for DB to start..."
