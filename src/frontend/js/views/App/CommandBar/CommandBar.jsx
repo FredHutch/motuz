@@ -34,7 +34,7 @@ class CommandBar extends React.Component {
         const recentPaths = new Set()
         for (let job of this.props.jobs) {
             if ((job.dst_cloud_id || 0) === currCloud) {
-                recentPaths.add(job.dst_resource_path)
+                recentPaths.add(upath.join(job.dst_resource_path, '..'))
             }
             if ((job.src_cloud_id || 0) === currCloud) {
                 recentPaths.add(upath.join(job.src_resource_path, '..'))
