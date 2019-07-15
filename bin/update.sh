@@ -9,10 +9,10 @@ set -e
 set -o pipefail
 
 # clone the repo, capturing the latest changes.
-sudo bash -c "(cd /root &&  rm -rf motuz-temp  &&  git clone https://github.com/FredHutch/motuz.git motuz-temp)"
+sudo bash -c "(cd /root &&  rm -rf motuz-temp motuz-bak &&  git clone https://github.com/FredHutch/motuz.git motuz-temp)"
 
 # check if rclone is running
-if pgrep -l rclone|grep -q rclone; then
+if sudo bash -c "pgrep -l rclone"|grep -q rclone; then
   echo "rclone is running, not redeploying at this time"
   echo "in future, consider adding delays/retries here"
   exit 1
