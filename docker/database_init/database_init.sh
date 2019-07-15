@@ -43,7 +43,6 @@ init_user_and_db() {
     CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';
     CREATE DATABASE $DB_DATABASE;
     GRANT ALL PRIVILEGES ON DATABASE $DB_DATABASE TO $DB_USER;
-    ALTER USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';
 EOSQL
 }
 
@@ -54,3 +53,7 @@ docker-entrypoint.sh postgres &
 ./wait-for-it.sh 0.0.0.0:5432 -t 0
 
 init "$@"
+
+# Shut the door behind us, do not allow further alterations or reads to the database
+# except from motuz_user for motuz_database
+cp pg_hba.conf /var/lib/postgresql/data

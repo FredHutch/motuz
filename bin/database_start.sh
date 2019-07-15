@@ -9,7 +9,7 @@ cd ..
 
 # In order to check that it all works well
 # docker run -it --entrypoint='bash' --net='host' postgres:11.3
-# psql -h 0.0.0.0 -U postgres
+# psql -h 0.0.0.0 -U postgres -d postgres
 # password: docker
 
 docker run --rm \
