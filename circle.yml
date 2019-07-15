@@ -19,7 +19,7 @@ deployment:
     commands:
       - aws s3 cp s3://fh-ctr-mofuz-test/motuz-cicd/id_rsa .
       - chmod 0400 ./id_rsa
-      - scp -o StrictHostKeyChecking=no -i ./id_rsa bin/prod/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
+      - scp -o StrictHostKeyChecking=no -i ./id_rsa bin/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
       - ssh -o StrictHostKeyChecking=no -i ./id_rsa ${REMOTE_USER}@${REMOTE_HOST} ./update.sh
       - rm -f ./id_rsa
 
