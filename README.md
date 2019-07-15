@@ -12,11 +12,14 @@
 ## Quickstart
 
 1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. Run the start script
+2. Create a folder called docker in your root directory `sudo mkdir /docker`.
+3. Run the start script
 
 ```bash
 ./start.sh
 ```
+
+4. See result at `http://localhost/`.
 
 ---
 
@@ -93,6 +96,8 @@ Once started, the API can be found at `localhost:5000/api/`. There is a Swagger 
 ```bash
 ./bin/frontend_start.sh
 ```
+
+6. See result at http://localhost:8080/
 
 ## Development Options
 
