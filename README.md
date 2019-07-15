@@ -19,7 +19,7 @@
 ./start.sh
 ```
 
-4. See result at `http://localhost/`.
+4. See result at http://localhost/.
 
 ---
 
