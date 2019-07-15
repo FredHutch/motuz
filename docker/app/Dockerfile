@@ -32,4 +32,4 @@ COPY ./docker/app/app.sh /app/src/backend/app.sh
 COPY ./docker/wait-for-it.sh /app/src/backend/wait-for-it.sh
 WORKDIR /app/src/backend
 
-CMD app.sh
+CMD /app/src/backend/app.sh
