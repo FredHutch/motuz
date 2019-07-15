@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script is part of the CI/CD pipeline in use 
+# at Fred Hutch to deploy Motuz. It may not be super useful
+# in other deployments.
+
+
 set -e
 set -o pipefail
 

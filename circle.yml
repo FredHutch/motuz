@@ -1,3 +1,6 @@
+# This is part of the CI/CD pipeline in use at Fred Hutch
+# to deploy motuz. It may not be super useful in other
+# deployments.
 machine:
   services:
     - docker
@@ -15,7 +18,6 @@ test:
 deployment:
   prod:
     branch: master
-    # branch: experiment/ci-cd
     commands:
       - aws s3 cp s3://fh-ctr-mofuz-test/motuz-cicd/id_rsa .
       - chmod 0400 ./id_rsa
@@ -27,4 +29,3 @@ general:
   branches:
     only:
      - master
-    #  - experiment/ci-cd
