@@ -28,7 +28,8 @@ RUN touch /root/.config/rclone/rclone.conf
 RUN chmod 755 /root
 
 COPY ./src/backend /app/src/backend
+COPY ./docker/app/app.sh /app/src/backend/app.sh
+COPY ./docker/wait-for-it.sh /app/src/backend/wait-for-it.sh
 WORKDIR /app/src/backend
 
-CMD uwsgi --ini wsgi.ini
-
+CMD /app/src/backend/app.sh
