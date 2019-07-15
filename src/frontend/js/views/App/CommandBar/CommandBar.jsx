@@ -97,6 +97,8 @@ class CommandBar extends React.Component {
                             <Creatable
                                 options={pathOptions}
                                 onChange={(event) => this.onDirectoryChange(event)}
+                                isValidNewOption={(value) => true}
+                                createOptionPosition='first'
                                 formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
                                 noOptionsMessage={(inputValue) => null}
                                 value={{label: this.props.path, value: this.props.path}}
