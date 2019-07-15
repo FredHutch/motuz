@@ -7,7 +7,6 @@ from ..exceptions import *
 from .abstract_connection import AbstractConnection, RcloneException
 
 
-
 class LocalConnection(AbstractConnection):
     """
     A symmetric API for RcloneConnection to be used locally
@@ -135,9 +134,20 @@ def _ls_with_impersonation(path, user):
         path,
     ]
 
-    byteOutput = subprocess.check_output(command)
-    output = byteOutput.decode('UTF-8').rstrip()
-    return output
+    try:
+        byteOutput = subprocess.check_output(command)
+        output = byteOutput.decode('UTF-8').rstrip()
+        return output
+    except subprocess.CalledProcessError as err:
+        # Sometimes `ls -alL` errors out when it cannot dereference symlinks, but it
+        # still returns some results on stdout. We should display those cases
+        try:
+            output = err.stdout.decode('UTF-8').rstrip()
+            if len(output) == 0:
+                raise
+            return output
+        except:
+            raise
 
 
 def _mkdir_with_impersonation(path, user):
