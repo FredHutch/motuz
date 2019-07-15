@@ -5,7 +5,7 @@ set -x
 
 THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
-cd ../..
+cd ..
 
 sudo docker-compose down
 yes | sudo docker system prune -a
