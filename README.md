@@ -13,13 +13,14 @@
 
 1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 2. Create a folder called docker in your root directory `sudo mkdir /docker`.
-3. Run the start script
+3. Add SSL certificates inside `/root/certs`
+4. Run the start script
 
 ```bash
 ./start.sh
 ```
 
-4. See result at http://localhost/.
+5. See result at http://localhost/.
 
 ---
 
