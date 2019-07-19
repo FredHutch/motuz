@@ -124,12 +124,12 @@ sudo apt-get install -y krb5-user libpam-krb5
 
 ### Requirements 
 
-Git is required regardless of authentication method.
-Install it as follows:
+Git and rsyslog are required regardless of authentication method.
+Install them as follows:
 
 ```
 sudo apt-get update -y
-sudo apt-get install -y git 
+sudo apt-get install -y git rsyslog
 ```
 
 
