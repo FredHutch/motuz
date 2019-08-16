@@ -26,6 +26,8 @@ fi
 echo updating code...
 sudo bash -c "(cd /root && rm -rf motuz.bak && mv motuz motuz.bak && mv motuz-temp motuz)"
 
+# source a file that has some secrets in it 
+. ./secrets.sh
 
 # TODO - make sure we are in the right branch?
 echo running redeploy script...

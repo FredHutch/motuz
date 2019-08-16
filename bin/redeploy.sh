@@ -7,6 +7,10 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ..
 
+
+# source secrets
+. /var/home/svc_cicd/secrets.sh
+
 sudo docker-compose down
 yes | sudo docker system prune -a
 sudo docker image ls -a # should show nothing
