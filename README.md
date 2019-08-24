@@ -322,7 +322,7 @@ If you visit the endpoint in a web browser, you will see a Swagger front end tha
 cURL example (replace `myusername` and `mypassword` with your username and password):
 
 ```
-curl -X POST "https://motuz.fredhutch.org/api/auth/login/" \
+curl -X POST "https://example.com/api/auth/login/" \
   -H  "accept: application/json" -H  "Content-Type: application/json" \
   -d "{  \"username\": \"myusername\",  \"password\": \"mypassword\"}"
 ```
