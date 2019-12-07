@@ -99,6 +99,7 @@ class NewCopyJobDialog extends React.Component {
                                                 name="copy_links"
                                                 type="checkbox"
                                                 className="form-control"
+                                                defaultChecked={true}
                                             />
                                         </div>
                                         <div className="col-1"></div>
