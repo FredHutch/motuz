@@ -20,6 +20,7 @@ dto = api.model('copy-job', {
     'dst_cloud_id': fields.Integer(required=False, example=2),
     'dst_resource_path': fields.String(required=True, example='/trash'),
     'owner': fields.String(required=True, example='owner'),
+    'copy_links': fields.Boolean(required=True, example=True),
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),

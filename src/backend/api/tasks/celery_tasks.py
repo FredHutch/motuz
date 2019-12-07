@@ -28,6 +28,7 @@ def copy_job(self, task_id=None):
             dst_data=copy_job.dst_cloud,
             dst_resource_path=copy_job.dst_resource_path,
             user=copy_job.owner,
+            copy_links=copy_job.copy_links,
             job_id=task_id,
         )
 

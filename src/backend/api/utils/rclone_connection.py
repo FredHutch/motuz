@@ -101,7 +101,15 @@ class RcloneConnection(AbstractConnection):
 
 
 
-    def copy(self, src_data, src_resource_path, dst_data, dst_resource_path, user, job_id=None):
+    def copy(self,
+            src_data,
+            src_resource_path,
+            dst_data,
+            dst_resource_path,
+            user,
+            copy_links,
+            job_id=None
+    ):
         credentials = {}
 
         if src_data is None: # Local
@@ -116,6 +124,11 @@ class RcloneConnection(AbstractConnection):
             credentials.update(self._formatCredentials(dst_data, name='dst'))
             dst = 'dst:{}'.format(dst_resource_path)
 
+        if copy_links:
+            option_copy_links = '--copy-links'
+        else:
+            option_copy_links = ''
+
         command = [
             'sudo',
             '-E',
@@ -124,9 +137,12 @@ class RcloneConnection(AbstractConnection):
             'copyto',
             src,
             dst,
+            option_copy_links,
             '--progress',
             '--stats', '2s',
         ]
+
+        command = [cmd for cmd in command if len(cmd) > 0]
 
         bash_command = "{} {}".format(
             ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),

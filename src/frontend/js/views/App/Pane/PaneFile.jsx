@@ -29,7 +29,7 @@ class PaneFile extends React.Component {
                         name={type === 'dir' ? 'file-directory' : 'file'}
                         className='mr-2'
                     />
-                    {name}
+                    <span>{name}</span>
                 </div>
                 <div
                     className={classnames({

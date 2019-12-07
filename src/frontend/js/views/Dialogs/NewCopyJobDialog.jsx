@@ -84,6 +84,27 @@ class NewCopyJobDialog extends React.Component {
                                     </div>
                                     <div className="col-1"></div>
                                 </div>
+
+                                <details>
+                                    <summary className='text-primary h5 mt-5 mb-2'>
+                                        Advanced
+                                    </summary>
+
+                                    <div className="row form-group">
+                                        <div className="col-4 text-right">
+                                            <b>Follow symlinks</b>
+                                        </div>
+                                        <div className="col-7">
+                                            <input
+                                                name="copy_links"
+                                                type="checkbox"
+                                                className="form-control"
+                                            />
+                                        </div>
+                                        <div className="col-1"></div>
+                                    </div>
+                                </details>
+
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -112,11 +133,12 @@ class NewCopyJobDialog extends React.Component {
 
         const data = {
             "description": formData['description'] || '',
+            "copy_links": formData['copy_links'] || false,
             "src_cloud_id": propsData['source_cloud'].id,
             "src_resource_path": propsData['src_resource_path'],
             "dst_cloud_id": propsData['destination_cloud'].id,
             "dst_resource_path": propsData['destination_path'],
-            "owner": "owner"
+            "owner": "owner", // TODO: Figure out why this was hard coded
         }
 
         if (data['src_cloud_id'] === 0) {
