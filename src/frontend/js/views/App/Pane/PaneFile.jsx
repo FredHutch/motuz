@@ -27,7 +27,7 @@ class PaneFile extends React.Component {
                 >
                     <Icon
                         name={type === 'dir' ? 'file-directory' : 'file'}
-                        className='mr-2'
+                        className='mr-2 octicon'
                     />
                     <span>{name}</span>
                 </div>
