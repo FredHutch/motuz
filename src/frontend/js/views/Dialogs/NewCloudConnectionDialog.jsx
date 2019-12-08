@@ -64,7 +64,16 @@ class NewCloudConnectionDialog extends React.Component {
                     ref={this.formRef}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>New Cloud Connection</Modal.Title>
+                        <Modal.Title>
+                            New Cloud Connection
+                            <a
+                                target="_blank"
+                                href="https://sciwiki.fredhutch.org/compdemos/motuz/#add-a-new-cloud-connection-to-motuz"
+                                className='ml-2'
+                            >
+                                <Icon name='question' verticalAlign='middle'></Icon>
+                            </a>
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <CloudConnectionDialogFields

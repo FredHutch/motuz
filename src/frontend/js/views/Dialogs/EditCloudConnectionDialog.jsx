@@ -24,7 +24,16 @@ class EditCloudConnectionDialog extends React.Component {
                     ref={this.formRef}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit Cloud Connection</Modal.Title>
+                        <Modal.Title>
+                            Edit Cloud Connection
+                            <a
+                                target="_blank"
+                                href="https://sciwiki.fredhutch.org/compdemos/motuz/#add-a-new-cloud-connection-to-motuz"
+                                className='ml-2'
+                            >
+                                <Icon name='question' verticalAlign='middle'></Icon>
+                            </a>
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <CloudConnectionDialogFields data={this.props.data} errors={this.props.errors}/>
