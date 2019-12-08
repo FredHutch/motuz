@@ -69,7 +69,8 @@ class NewCloudConnectionDialog extends React.Component {
                     <Modal.Body>
                             <CloudConnectionDialogFields
                                 data={{
-                                    s3_region: 'us-west-2'
+                                    s3_region: 'us-west-2',
+                                    sftp_port: '22',
                                 }}
                                 errors={errors}
                                 verifySuccess={(verifyFinished && verifySuccess)}

@@ -47,6 +47,11 @@ dto = api.model('connection', {
     'gcp_object_acl': fields.String(required=False, example='authenticatedRead'),
     'gcp_bucket_acl': fields.String(required=False, example='authenticatedRead'),
 
+    'sftp_host': fields.String(required=False, example='localhost'),
+    'sftp_port': fields.String(required=False, example='22'),
+    'sftp_user': fields.String(required=False, example='username'),
+    'sftp_pass': PrivateString(required=False, example='p@ssw0rd'),
+
     # examples above have the correct length, but characters are made up
 })
 

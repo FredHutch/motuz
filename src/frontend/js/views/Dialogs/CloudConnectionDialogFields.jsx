@@ -19,6 +19,10 @@ const CONNECTION_TYPES = [
         label: 'Swift',
         value: 'swift',
     },
+    {
+        label: 'SFTP',
+        value: 'sftp',
+    },
 ]
 
 class CloudConnectionDialogFields extends React.PureComponent {
@@ -69,20 +73,11 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     is_valid={this.props.verifySuccess}
                 />
 
-                <CloudConnectionField
-                    label='Bucket Name'
-                    input={{
-                        name: 'bucket',
-                        defaultValue: this.props.data.bucket,
-                    }}
-                    error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
-                />
-
                 {type === 's3' && this._renderS3Section()}
                 {type === 'azureblob' && this._renderAzureSection()}
                 {type === 'swift' && this._renderSwiftSection()}
                 {type === 'google cloud storage' && this._renderGCPSection()}
+                {type === 'sftp' && this._renderSFTPSection()}
             </div>
         );
     }
@@ -94,6 +89,15 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderS3Section() {
         return (
             <React.Fragment>
+                <CloudConnectionField
+                    label='Bucket Name'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                    }}
+                    error={this.props.errors.bucket}
+                    is_valid={this.props.verifySuccess}
+                />
                 <CloudConnectionField
                     label='Region'
                     input={{
@@ -153,6 +157,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderAzureSection() {
         return (
             <React.Fragment>
+                <CloudConnectionField
+                    label='Bucket Name'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                    }}
+                    error={this.props.errors.bucket}
+                    is_valid={this.props.verifySuccess}
+                />
+
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
                 <CloudConnectionField
@@ -183,6 +197,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
     _renderSwiftSection() {
         return (
             <React.Fragment>
+                <CloudConnectionField
+                    label='Bucket Name'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                    }}
+                    error={this.props.errors.bucket}
+                    is_valid={this.props.verifySuccess}
+                />
+
                 <CloudConnectionField
                     label='Auth URL'
                     input={{
@@ -234,6 +258,16 @@ class CloudConnectionDialogFields extends React.PureComponent {
         return (
             <React.Fragment>
                 <CloudConnectionField
+                    label='Bucket Name'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                    }}
+                    error={this.props.errors.bucket}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
                     label='Project Number'
                     input={{
                         name: 'gcp_project_number',
@@ -282,6 +316,59 @@ class CloudConnectionDialogFields extends React.PureComponent {
         )
     }
 
+    _renderSFTPSection() {
+        return (
+            <React.Fragment>
+                <CloudConnectionField
+                    label='Host'
+                    input={{
+                        name: 'sftp_host',
+                        defaultValue: this.props.data.sftp_host,
+                        required: true,
+                    }}
+                    error={this.props.errors.sftp_host}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
+                    label='Port'
+                    input={{
+                        name: 'sftp_port',
+                        defaultValue: this.props.data.sftp_port,
+                        required: true,
+                    }}
+                    error={this.props.errors.sftp_port}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='Username'
+                    input={{
+                        name: 'sftp_user',
+                        defaultValue: this.props.data.sftp_user,
+                        required: true,
+                    }}
+                    error={this.props.errors.sftp_user}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
+                    label='Password'
+                    input={{
+                        name: 'sftp_pass',
+                        defaultValue: this.props.data.sftp_pass,
+                        type: 'password',
+                        required: true,
+                    }}
+                    error={this.props.errors.sftp_pass}
+                    is_valid={this.props.verifySuccess}
+                />
+            </React.Fragment>
+        )
+    }
+
 }
 
 CloudConnectionDialogFields.defaultProps = {
@@ -311,7 +398,6 @@ class CloudConnectionField extends React.PureComponent {
                 <div className="col-8">
                     {this.props.children || (
                         <input
-                            {...this.props.input}
                             type="text"
                             className={classnames({
                                 'form-control': true,
@@ -319,6 +405,7 @@ class CloudConnectionField extends React.PureComponent {
                                 'is-invalid': error,
                             })}
                             autoComplete='off'
+                            {...this.props.input}
                         />
                     )}
                     <span className="invalid-feedback">

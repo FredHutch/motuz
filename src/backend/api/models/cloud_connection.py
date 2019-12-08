@@ -44,6 +44,12 @@ class CloudConnection(db.Model):
     gcp_object_acl = db.Column(db.String, nullable=True)
     gcp_bucket_acl = db.Column(db.String, nullable=True)
 
+    # SFTP
+    sftp_host = db.Column(db.String, nullable=True)
+    sftp_port = db.Column(db.String, nullable=True)
+    sftp_user = db.Column(db.String, nullable=True)
+    sftp_pass = db.Column(db.String, nullable=True)
+
 
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
