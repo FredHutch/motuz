@@ -67,8 +67,6 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(path),
         ]
 
-        print(command)
-
         try:
             result = self._execute(command, credentials)
             files = json.loads(result)
