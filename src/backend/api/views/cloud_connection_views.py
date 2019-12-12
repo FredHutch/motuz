@@ -52,6 +52,8 @@ dto = api.model('connection', {
     'sftp_user': fields.String(required=False, example='username'),
     'sftp_pass': PrivateString(required=False, example='p@ssw0rd'),
 
+    'dropbox_token': PrivateString(required=False, example='{"access_token":"hStGBm-oRDsqJksiRspOnbsDiu","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"}'),
+
     # examples above have the correct length, but characters are made up
 })
 

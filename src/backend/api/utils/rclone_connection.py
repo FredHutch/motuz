@@ -67,6 +67,8 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(path),
         ]
 
+        print(command)
+
         try:
             result = self._execute(command, credentials)
             files = json.loads(result)
@@ -300,6 +302,12 @@ class RcloneConnection(AbstractConnection):
                 value_functor=self._obscure,
             )
 
+        elif data.type == 'dropbox':
+            _addCredential(
+                '{}_TOKEN'.format(prefix),
+                'dropbox_token',
+            )
+
         else:
             logging.error("Connection type unknown: {}".format(data.type))
 
@@ -480,6 +488,9 @@ def sanitize(string):
 
         # SFTP
         (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1{***}\3"),
+
+        # Dropbox
+        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1{***}\3"),
     ]
 
     for regex, replace in sanitizations_regs:

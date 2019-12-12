@@ -50,6 +50,8 @@ class CloudConnection(db.Model):
     sftp_user = db.Column(db.String, nullable=True)
     sftp_pass = db.Column(db.String, nullable=True)
 
+    # Dropbox
+    dropbox_token = db.Column(db.String, nullable=True)
 
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
