@@ -23,6 +23,10 @@ const CONNECTION_TYPES = [
         label: 'SFTP',
         value: 'sftp',
     },
+    {
+        label: 'Dropbox',
+        value: 'dropbox',
+    },
 ]
 
 class CloudConnectionDialogFields extends React.PureComponent {
@@ -78,6 +82,7 @@ class CloudConnectionDialogFields extends React.PureComponent {
                 {type === 'swift' && this._renderSwiftSection()}
                 {type === 'google cloud storage' && this._renderGCPSection()}
                 {type === 'sftp' && this._renderSFTPSection()}
+                {type === 'dropbox' && this._renderDropboxSection()}
             </div>
         );
     }
@@ -365,6 +370,57 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     error={this.props.errors.sftp_pass}
                     is_valid={this.props.verifySuccess}
                 />
+            </React.Fragment>
+        )
+    }
+
+    _renderDropboxSection() {
+        return (
+            <React.Fragment>
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='Token'
+                    input={{
+                        name: 'dropbox_token',
+                        defaultValue: this.props.data.dropbox_token,
+                        required: true,
+                    }}
+                    error={this.props.errors.dropbox_token}
+                    is_valid={this.props.verifySuccess}
+                />
+
+
+                <details>
+                    <summary className='text-primary h5 mt-5 mb-2'>
+                        Instructions
+                    </summary>
+
+                    <ul>
+                        <li className='mb-1'>
+                            Open a terminal
+                        </li>
+                        <li className='mb-1'>
+                            Paste the following command
+                        </li>
+                        <li className='mb-1'>
+                            <pre className='mb-1'>
+                                rclone authorize "dropbox"
+                            </pre>
+                        </li>
+                        <li className='mb-1'>
+                            Authorize rclone on Dropbox
+                        </li>
+                        <li className='mb-1'>
+                            Copy the token and paste it in the box above. The token should be of the form
+                        </li>
+                        <li className='mb-1'>
+                            <pre>
+                                {"{"}"access_token":"HdysS-asdAKDJSLAKDJASDKAJWEKADJSALDKajsldkjwdoiasjdiasdasdas_dt3","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"{"}"}
+                            </pre>
+                        </li>
+                    </ul>
+                </details>
             </React.Fragment>
         )
     }

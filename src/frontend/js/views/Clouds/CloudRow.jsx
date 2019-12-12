@@ -43,6 +43,9 @@ class CloudRow extends React.Component {
             headers.push(
                 "sftp_user",
             )
+        } else if (data.type === "dropbox") {
+            // We do not have an ID here
+            headers.push("")
         } else {
             console.error(`Unknown Connection Type ${data.type}`)
         }
