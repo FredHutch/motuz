@@ -29,7 +29,18 @@ const CONNECTION_TYPES = [
     },
 ]
 
-class CloudConnectionDialogFields extends React.PureComponent {
+const AZURE_CONNECTION_TYPES = [
+    {
+        label: 'Account & Key',
+        value: 'key',
+    },
+    {
+        label: 'Shared Access Signature (SAS)',
+        value: 'sas',
+    },
+]
+
+class CloudConnectionDialogFields extends React.Component {
     constructor(props) {
         super(props);
         this.state = CloudConnectionDialogFields.initialState;
@@ -153,13 +164,42 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     />
                 </details>
 
-
-
             </React.Fragment>
         )
     }
 
     _renderAzureSection() {
+        return (
+            <React.Fragment>
+                <div className="row form-group required">
+                    <div className="col-4 text-right control-label">
+                        <b>Azure Connection Type</b>
+                    </div>
+                    <div className="col-8">
+                        <select
+                            className="form-control"
+                            // Do not specify "name", we do not want this in the request
+                            value={this.state.subtype}
+                            onChange={(event => this.setState({subtype: event.target.value}))}
+                        >
+                            <option disabled key='' style={{display: 'none'}} />
+                            {AZURE_CONNECTION_TYPES.map(d => (
+                                <option
+                                    key={d.value}
+                                    value={d.value}
+                                >{d.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {this.state.subtype === 'key' && this._renderAzureKeySubsection()}
+                {this.state.subtype === 'sas' && this._renderAzureSasSubsection()}
+            </React.Fragment>
+        )
+    }
+
+    _renderAzureKeySubsection() {
         return (
             <React.Fragment>
                 <CloudConnectionField
@@ -196,6 +236,20 @@ class CloudConnectionDialogFields extends React.PureComponent {
                     is_valid={this.props.verifySuccess}
                 />
             </React.Fragment>
+        )
+    }
+
+    _renderAzureSasSubsection() {
+        return (
+            <CloudConnectionField
+                label='Shared Access Signature (SAS) URL'
+                input={{
+                    name: 'azure_sas_url',
+                    defaultValue: this.props.data.azure_sas_url,
+                }}
+                error={this.props.errors.azure_sas_url}
+                is_valid={this.props.verifySuccess}
+            />
         )
     }
 
@@ -434,6 +488,7 @@ CloudConnectionDialogFields.defaultProps = {
 
 CloudConnectionDialogFields.initialState = {
     type: '',
+    subtype: '',
 }
 
 
@@ -447,7 +502,7 @@ class CloudConnectionField extends React.PureComponent {
         } = this.props;
 
         return (
-            <div className={`row form-group ${this.props.input.required && 'required'}`}>
+            <div className={`row form-group ${input.required && 'required'}`}>
                 <div className="col-4 text-right control-label">
                     <b>{label}</b>
                 </div>

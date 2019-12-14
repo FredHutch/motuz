@@ -35,6 +35,7 @@ dto = api.model('connection', {
 
     'azure_account': fields.String(required=False, example='my_azure_account'),
     'azure_key': PrivateString(required=False, example='qe21euoidjlkadj283u2398rudy8d87adh3dasdkahsd23ey239eaduhawd812e1uidhwdkjdh2es_asdASDAS=='),
+    'azure_sas_url': PrivateString(required=False, example='https://yourstorage.blob.core.windows.net/?sig=hSjdsakwrhasweqweaijdopvbxiudoSOIDAdsduoiqwejsad'),
 
     'swift_user': fields.String(required=False, example='swift_username'),
     'swift_key': PrivateString(required=False, example='asd*aqeaSDASDASDlkas.u'),
