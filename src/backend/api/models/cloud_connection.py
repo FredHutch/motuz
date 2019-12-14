@@ -54,6 +54,11 @@ class CloudConnection(db.Model):
     # Dropbox
     dropbox_token = db.Column(db.String, nullable=True)
 
+    # Microsoft OneDrive
+    onedrive_token = db.Column(db.String, nullable=True)
+    onedrive_drive_id = db.Column(db.String, nullable=True)
+    onedrive_drive_type = db.Column(db.String, nullable=True)
+
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
 

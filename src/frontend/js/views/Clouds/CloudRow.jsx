@@ -24,28 +24,19 @@ class CloudRow extends React.Component {
             "bucket",
         ]
         if (data.type === "s3") {
-            headers.push(
-                "s3_access_key_id",
-            );
+            headers.push("s3_access_key_id")
         } else if (data.type === "azureblob") {
-            headers.push(
-                "azure_account",
-            )
+            headers.push("azure_account")
         } else if (data.type === "swift") {
-            headers.push(
-                "swift_user",
-            )
+            headers.push("swift_user")
         } else if (data.type === "google cloud storage") {
-            headers.push(
-                "gcp_client_id",
-            )
+            headers.push("gcp_client_id")
         } else if (data.type === "sftp") {
-            headers.push(
-                "sftp_user",
-            )
+            headers.push("sftp_user")
         } else if (data.type === "dropbox") {
-            // We do not have an ID here
-            headers.push("")
+            headers.push("") // We do not have an ID here
+        } else if (data.type === "onedrive") {
+            headers.push("onedrive_drive_id")
         } else {
             console.error(`Unknown Connection Type ${data.type}`)
         }

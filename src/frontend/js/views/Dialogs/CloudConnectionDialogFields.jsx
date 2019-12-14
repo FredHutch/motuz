@@ -24,8 +24,12 @@ const CONNECTION_TYPES = [
         value: 'sftp',
     },
     {
-        label: 'Dropbox',
+        label: 'Dropbox (beta)',
         value: 'dropbox',
+    },
+    {
+        label: 'Microsoft OneDrive (beta)',
+        value: 'onedrive',
     },
 ]
 
@@ -94,6 +98,7 @@ class CloudConnectionDialogFields extends React.Component {
                 {type === 'google cloud storage' && this._renderGCPSection()}
                 {type === 'sftp' && this._renderSFTPSection()}
                 {type === 'dropbox' && this._renderDropboxSection()}
+                {type === 'onedrive' && this._renderOnedriveSection()}
             </div>
         );
     }
@@ -472,6 +477,83 @@ class CloudConnectionDialogFields extends React.Component {
                             <pre>
                                 {"{"}"access_token":"HdysS-asdAKDJSLAKDJASDKAJWEKADJSALDKajsldkjwdoiasjdiasdasdas_dt3","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"{"}"}
                             </pre>
+                        </li>
+                    </ul>
+                </details>
+            </React.Fragment>
+        )
+    }
+
+    _renderOnedriveSection() {
+        return (
+            <React.Fragment>
+                <CloudConnectionField
+                    label='Drive ID'
+                    input={{
+                        name: 'onedrive_drive_id',
+                        defaultValue: this.props.data.onedrive_drive_id,
+                        required: true,
+                    }}
+                    error={this.props.errors.onedrive_drive_id}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
+                    label='Drive Type'
+                    input={{
+                        name: 'onedrive_drive_type',
+                        defaultValue: this.props.data.onedrive_drive_type,
+                        required: true,
+                    }}
+                    error={this.props.errors.onedrive_drive_type}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='Token'
+                    input={{
+                        name: 'onedrive_token',
+                        defaultValue: this.props.data.onedrive_token,
+                        required: true,
+                    }}
+                    error={this.props.errors.onedrive_token}
+                    is_valid={this.props.verifySuccess}
+                />
+
+
+                <details>
+                    <summary className='text-primary h5 mt-5 mb-2'>
+                        Instructions
+                    </summary>
+
+                    <ul>
+                        <li className='mb-1'>
+                            Open a terminal
+                        </li>
+                        <li className='mb-1'>
+                            Paste the following command into the terminal
+                        </li>
+                        <li className='mb-1'>
+                            <pre className='mb-1'>
+                                rclone config
+                            </pre>
+                        </li>
+                        <li className='mb-1'>
+                            Select new -> give any name -> OneDrive
+                        </li>
+                        <li className='mb-1'>
+                            Leave <tt>client_id</tt> and <tt>client_secret</tt> blank, no advanced configs
+                        </li>
+                        <li className='mb-1'>
+                            Select <tt>yes</tt> for auto config, then follow instructions
+                        </li>
+                        <li className='mb-1'>
+                            Open <tt>~/.config/rclone/rclone.conf</tt>
+                        </li>
+                        <li className='mb-1'>
+                            Find the necessary information into the corresponding section
                         </li>
                     </ul>
                 </details>
