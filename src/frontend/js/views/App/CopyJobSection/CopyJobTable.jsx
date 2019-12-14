@@ -103,7 +103,7 @@ class CopyJobTable extends React.Component {
                     key={job.id}
                 >
                     {headers.map((header, j) => (
-                        <td key={j}>
+                        <td key={j} className='align-middle'>
                             {jobFields[header]}
                         </td>
                     ))}
