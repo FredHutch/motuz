@@ -55,6 +55,10 @@ dto = api.model('connection', {
 
     'dropbox_token': PrivateString(required=False, example='{"access_token":"hStGBm-oRDsqJksiRspOnbsDiu","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"}'),
 
+    'onedrive_token': PrivateString(required=False, example='{"access_token":"youraccesstoken","token_type":"Bearer","refresh_token":"yourrefreshtoken","expiry":"2018-08-26T22:39:52.486512262+08:00"}'),
+    'onedrive_drive_id': fields.String(required=False, example='b!Eqwertyuiopasdfghjklzxcvbnm-7mnbvcxzlkjhgfdsapoiuytrewqk'),
+    'onedrive_drive_type': fields.String(required=False, example='business'),
+
     # examples above have the correct length, but characters are made up
 })
 

@@ -310,6 +310,20 @@ class RcloneConnection(AbstractConnection):
                 'dropbox_token',
             )
 
+        elif data.type == 'onedrive':
+            _addCredential(
+                '{}_TOKEN'.format(prefix),
+                'onedrive_token',
+            )
+            _addCredential(
+                '{}_DRIVE_ID'.format(prefix),
+                'onedrive_drive_id',
+            )
+            _addCredential(
+                '{}_DRIVE_TYPE'.format(prefix),
+                'onedrive_drive_type',
+            )
+
         else:
             logging.error("Connection type unknown: {}".format(data.type))
 
@@ -499,7 +513,7 @@ def sanitize(string):
         # SFTP
         (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1{***}\3"),
 
-        # Dropbox
+        # Dropbox / Onedrive
         (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1{***}\3"),
     ]
 
