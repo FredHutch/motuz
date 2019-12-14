@@ -185,6 +185,11 @@ body {
     justify-content: center;
 }
 
+.form-label {
+    vertical-align: baseline-middle;
+    vertical-align: -webkit-baseline-middle;
+}
+
 /* Components */
 
 .component-resizable-divider {
