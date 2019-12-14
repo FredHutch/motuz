@@ -59,6 +59,10 @@ dto = api.model('connection', {
     'onedrive_drive_id': fields.String(required=False, example='b!Eqwertyuiopasdfghjklzxcvbnm-7mnbvcxzlkjhgfdsapoiuytrewqk'),
     'onedrive_drive_type': fields.String(required=False, example='business'),
 
+    'webdav_url': fields.String(required=False, example='https://example.com/remote.php/webdav/'),
+    'webdav_user': fields.String(required=False, example='email@example.com'),
+    'webdav_pass': PrivateString(required=False, example='p@ssw0rd'),
+
     # examples above have the correct length, but characters are made up
 })
 

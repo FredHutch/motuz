@@ -324,6 +324,21 @@ class RcloneConnection(AbstractConnection):
                 'onedrive_drive_type',
             )
 
+        elif data.type == 'webdav':
+            _addCredential(
+                '{}_URL'.format(prefix),
+                'webdav_url',
+            )
+            _addCredential(
+                '{}_USER'.format(prefix),
+                'webdav_user',
+            )
+            _addCredential(
+                '{}_PASS'.format(prefix),
+                'webdav_pass',
+                value_functor=self._obscure,
+            )
+
         else:
             logging.error("Connection type unknown: {}".format(data.type))
 
@@ -510,7 +525,7 @@ def sanitize(string):
         (r"(RCLONE_CONFIG_\S*_CLIENT_ID=')(\S*)(\S\S\S\S')", r"\1***\3"),
         (r"(RCLONE_CONFIG_\S*_SERVICE_ACCOUNT_CREDENTIALS=')([^']*)(')", r"\1{***}\3"),
 
-        # SFTP
+        # SFTP / WebDAV
         (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1{***}\3"),
 
         # Dropbox / Onedrive

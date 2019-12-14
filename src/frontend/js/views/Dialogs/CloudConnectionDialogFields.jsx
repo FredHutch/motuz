@@ -103,6 +103,7 @@ class CloudConnectionDialogFields extends React.Component {
                 {type === 'sftp' && this._renderSFTPSection()}
                 {type === 'dropbox' && this._renderDropboxSection()}
                 {type === 'onedrive' && this._renderOnedriveSection()}
+                {type === 'webdav' && this._renderWebdavSection()}
             </div>
         );
     }
@@ -561,6 +562,48 @@ class CloudConnectionDialogFields extends React.Component {
                         </li>
                     </ul>
                 </details>
+            </React.Fragment>
+        )
+    }
+
+    _renderWebdavSection() {
+        return (
+            <React.Fragment>
+                <CloudConnectionField
+                    label='Url'
+                    input={{
+                        name: 'webdav_url',
+                        defaultValue: this.props.data.webdav_url,
+                        required: true,
+                    }}
+                    error={this.props.errors.webdav_url}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
+
+                <CloudConnectionField
+                    label='Username'
+                    input={{
+                        name: 'webdav_user',
+                        defaultValue: this.props.data.webdav_user,
+                        required: true,
+                    }}
+                    error={this.props.errors.webdav_user}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
+                    label='Password'
+                    input={{
+                        name: 'webdav_pass',
+                        defaultValue: this.props.data.webdav_pass,
+                        type: 'password',
+                        required: true,
+                    }}
+                    error={this.props.errors.webdav_pass}
+                    is_valid={this.props.verifySuccess}
+                />
             </React.Fragment>
         )
     }

@@ -59,6 +59,11 @@ class CloudConnection(db.Model):
     onedrive_drive_id = db.Column(db.String, nullable=True)
     onedrive_drive_type = db.Column(db.String, nullable=True)
 
+    # WebDAV
+    webdav_url = db.Column(db.String, nullable=True)
+    webdav_user = db.Column(db.String, nullable=True)
+    webdav_pass = db.Column(db.String, nullable=True)
+
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
 
