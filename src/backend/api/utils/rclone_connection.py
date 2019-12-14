@@ -465,10 +465,17 @@ class RcloneConnection(AbstractConnection):
         status = self._job_status[job_id]
 
         match = re.search(r'(\d+)\%', status['GTransferred'])
-        if match is None:
-            self._job_percent[job_id] = -1
-        else:
+
+        if match is not None:
             self._job_percent[job_id] = match[1]
+            return
+
+        match = re.search(r'(\d+)\%', status['Transferred'])
+        if match is not None:
+            self._job_percent[job_id] = match[1]
+            return
+
+        self._job_percent[job_id] = -1
 
 
 
