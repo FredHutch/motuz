@@ -102,6 +102,9 @@ def _parse_ls(output):
         size = groups[4]
         filename = groups[8]
 
+        if filename == '.' or filename == '..':
+            continue
+
         if permissions[0] == 'l':
             type = "symlink"
         elif permissions[0] == 'd':
