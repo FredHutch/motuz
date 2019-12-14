@@ -31,6 +31,10 @@ const CONNECTION_TYPES = [
         label: 'Microsoft OneDrive (beta)',
         value: 'onedrive',
     },
+    {
+        label: 'WebDAV (beta)',
+        value: 'webdav',
+    },
 ]
 
 const AZURE_CONNECTION_TYPES = [
