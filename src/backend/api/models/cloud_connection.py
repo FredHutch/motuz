@@ -28,6 +28,7 @@ class CloudConnection(db.Model):
     # Azure fields
     azure_account = db.Column(db.String, nullable=True)
     azure_key = db.Column(db.String, nullable=True)
+    azure_sas_url = db.Column(db.String, nullable=True)
 
     # Swift V1 fields
     swift_user = db.Column(db.String, nullable=True)

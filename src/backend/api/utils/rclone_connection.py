@@ -240,6 +240,10 @@ class RcloneConnection(AbstractConnection):
                 '{}_KEY'.format(prefix),
                 'azure_key'
             )
+            _addCredential(
+                '{}_SAS_URL'.format(prefix),
+                'azure_sas_url'
+            )
 
         elif data.type == 'swift':
             _addCredential(
@@ -476,6 +480,7 @@ def sanitize(string):
 
         # Azure
         (r"(RCLONE_CONFIG_\S*_KEY=')(\S*)(')", r"\1***\3"),
+        (r"(RCLONE_CONFIG_\S*_SAS_URL=')(\S*)(')", r"\1***\3"),
 
         # Swift
         (r"(RCLONE_CONFIG_\S*_KEY=')(\S*)(')", r"\1***\3"),
