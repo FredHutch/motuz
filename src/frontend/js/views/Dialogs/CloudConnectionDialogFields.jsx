@@ -24,16 +24,16 @@ const CONNECTION_TYPES = [
         value: 'sftp',
     },
     {
+        label: 'WebDAV',
+        value: 'webdav',
+    },
+    {
         label: 'Dropbox (beta)',
         value: 'dropbox',
     },
     {
         label: 'Microsoft OneDrive (beta)',
         value: 'onedrive',
-    },
-    {
-        label: 'WebDAV (beta)',
-        value: 'webdav',
     },
 ]
 
