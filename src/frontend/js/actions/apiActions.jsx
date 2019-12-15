@@ -78,15 +78,27 @@ export const listFiles = (side, data) => ({
     }
 });
 
-export const listHomeFiles = () => ({
+export const listHomeFiles = (data) => ({
     [RSAA]: {
         endpoint: '/api/system/files/home/',
         method: 'POST',
         headers: withAuth({ 'Content-Type': 'application/json' }),
-        types: [ LIST_HOME_FILES_REQUEST, LIST_HOME_FILES_SUCCESS, LIST_HOME_FILES_FAILURE ],
+        types: [
+            {
+                type: LIST_HOME_FILES_REQUEST,
+                meta: {data},
+            },
+            {
+                type: LIST_HOME_FILES_SUCCESS,
+                meta: {data},
+            },
+            {
+                type: LIST_HOME_FILES_FAILURE,
+                meta: {data},
+            },
+        ],
     }
 });
-
 
 export const makeDirectory = (data) => {
     return async (dispatch, getState) => {

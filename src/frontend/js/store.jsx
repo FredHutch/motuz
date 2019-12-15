@@ -16,7 +16,7 @@ export default (history) => {
     const persistedReducer = persistReducer({
         key: 'polls',
         storage: storage,
-        whitelist: ['auth'],
+        whitelist: ['auth', 'settings'],
         transforms: [authFilter],
     }, rootReducer);
 

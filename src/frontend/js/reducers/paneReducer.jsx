@@ -33,7 +33,6 @@ const INITIAL_PANE = {
 
 const initialState = {
     homeDir: '~',
-    showHiddenFiles: false,
     focusPaneLeft: true,
     indexes: {
         left: 0,
@@ -128,14 +127,6 @@ export default (state=initialState, action) => {
         }
     }
 
-
-    case pane.TOGGLE_SHOW_HIDDEN_FILES: {
-        return {
-            ...state,
-            showHiddenFiles: !state.showHiddenFiles,
-        }
-    }
-
     case api.LIST_FILES_REQUEST:
     case api.LIST_HOME_FILES_REQUEST:
     {
@@ -145,9 +136,7 @@ export default (state=initialState, action) => {
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
-        const { connection_id } = data;
-
-        const { showHiddenFiles } = state;
+        const { connection_id, settings } = data;
 
         let {files, path} = action.payload;
 
@@ -158,7 +147,7 @@ export default (state=initialState, action) => {
         }
 
         files = fileManager.filterFiles(files, {
-            showHiddenFiles: state.showHiddenFiles,
+            showHiddenFiles: settings.showHiddenFiles,
         })
         files = fileManager.sortFiles(files);
 
@@ -203,13 +192,13 @@ export default (state=initialState, action) => {
 
     case api.LIST_HOME_FILES_SUCCESS: {
         const { payload } = action;
-        const { showHiddenFiles } = state;
+        const { data } = action.meta;
 
         let {files, path} = action.payload;
 
         files = fileManager.convertLocalFilesToMotuz(files)
         files = fileManager.filterFiles(files, {
-            showHiddenFiles: state.showHiddenFiles,
+            showHiddenFiles: data.settings.showHiddenFiles,
         })
         files = fileManager.sortFiles(files);
 

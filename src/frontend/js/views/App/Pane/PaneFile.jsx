@@ -11,7 +11,7 @@ class PaneFile extends React.Component {
     }
 
     render() {
-        const {type, name, size} = this.props;
+        const {type, name, size, useSiUnits} = this.props;
 
         return (
             <React.Fragment>
@@ -43,7 +43,7 @@ class PaneFile extends React.Component {
                     onMouseDown={event => this.props.onMouseDown(event)}
                 >
                     <em>
-                        {type === 'dir' ? 'Folder' : formatBytes(size)}
+                        {type === 'dir' ? 'Folder' : formatBytes(size, useSiUnits)}
                     </em>
                 </div>
             </React.Fragment>
@@ -59,6 +59,7 @@ PaneFile.defaultProps = {
     type: 'dir',
     name: '',
     size: 0,
+    useSiUnits: false,
     onClick: event => {},
     onDoubleClick: event => {},
     onMouseDown: event => {},

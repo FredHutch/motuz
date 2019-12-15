@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Modal, Button } from 'react-bootstrap'
+import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
@@ -115,11 +115,10 @@ class NewCopyJobDialog extends React.Component {
                                             <b className='form-label'>Follow symlinks</b>
                                         </div>
                                         <div className="col-7">
-                                            <input
-                                                name="copy_links"
-                                                type="checkbox"
-                                                className="form-control"
-                                                defaultChecked={true}
+                                            <Toggle
+                                                name='copy_links'
+                                                className='form-label'
+                                                defaultChecked={this.props.followSymlinksDefault}
                                             />
                                         </div>
                                         <div className="col-1"></div>
@@ -179,6 +178,7 @@ class NewCopyJobDialog extends React.Component {
 
 NewCopyJobDialog.defaultProps = {
     data: {},
+    followSymlinksDefault: false,
     onClose: () => {},
     onSubmit: (data) => {},
 }
@@ -189,6 +189,7 @@ import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
+    followSymlinksDefault: state.settings.followSymlinks,
 });
 
 const mapDispatchToProps = dispatch => ({

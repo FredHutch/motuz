@@ -14,6 +14,7 @@ import Alerts from 'views/Alerts/Alerts.jsx'
 
 import 'style.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toggle/style.css'
 
 import 'favicon.ico';
 

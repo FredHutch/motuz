@@ -5,7 +5,6 @@ export const SIDE_FOCUS = '@@pane/SIDE_FOCUS';
 export const FILE_FOCUS_INDEX = '@@pane/FILE_FOCUS_INDEX';
 export const DIRECTORY_CHANGE = '@@pane/DIRECTORY_CHANGE';
 export const HOST_CHANGE = '@@pane/HOST_CHANGE';
-export const TOGGLE_SHOW_HIDDEN_FILES = '@@pane/TOGGLE_SHOW_HIDDEN_FILES';
 
 
 export const fileFocusIndex = (side, index) => ({
@@ -34,6 +33,17 @@ export const hostChange = (side=null, host) => {
         return await dispatch(api.listFiles(side, {
             connection_id: host.id,
             path: pane.path,
+            settings: state.settings,
+        }))
+    }
+}
+
+export const initPanes = () => {
+    return async (dispatch, getState) => {
+        const state = getState()
+
+        return await dispatch(api.listHomeFiles({
+            settings: state.settings,
         }))
     }
 }
@@ -59,6 +69,7 @@ export const directoryChange = (side=null, path) => {
         return await dispatch(api.listFiles(side, {
             connection_id: host.id,
             path,
+            settings: state.settings,
         }));
     }
 }
@@ -74,15 +85,5 @@ export const refreshPanes = () => {
             dispatch(directoryChange('left', pathLeft)),
             dispatch(directoryChange('right', pathRight)),
         ]);
-    }
-}
-
-export const toggleShowHiddenFiles = () => {
-    return async (dispatch, getState) => {
-        dispatch({
-            type: TOGGLE_SHOW_HIDDEN_FILES,
-        })
-
-        dispatch(refreshPanes());
     }
 }
