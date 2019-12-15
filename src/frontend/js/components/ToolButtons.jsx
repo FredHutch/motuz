@@ -35,18 +35,6 @@ class ToolButtons extends React.Component {
 
                 <button
                     className="btn btn-outline-primary my-2 mx-1 my-sm-0"
-                    onClick={event => this.props.onToggleShowHiddenFiles()}
-                    alt='Press to toggle hidden files'
-                    title='Press to toggle hidden files'
-                    aria-label='Press to toggle hidden files'
-                >
-                    <Icon
-                        name={this.props.showHiddenFiles ? 'eye' : 'eye-closed'}
-                    />
-                </button>
-
-                <button
-                    className="btn btn-outline-primary my-2 mx-1 my-sm-0"
                     onClick={event => this.props.onShowSettingsDialog()}
                     alt='Press to change user settings'
                     title='Press to change user settings'
@@ -65,12 +53,11 @@ ToolButtons.defaultProps = {
     showHiddenFiles: true,
     onShowMkdirDialog: () => {},
     onRefresh: () => {},
-    onToggleShowHiddenFiles: () => {},
     onShowSettingsDialog: () => {},
 }
 
 import {connect} from 'react-redux';
-import {toggleShowHiddenFiles, refreshPanes} from 'actions/paneActions.jsx';
+import {refreshPanes} from 'actions/paneActions.jsx';
 import {showMkdirDialog, showSettingsDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
@@ -80,7 +67,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onShowMkdirDialog: () => dispatch(showMkdirDialog()),
     onRefresh: () => dispatch(refreshPanes()),
-    onToggleShowHiddenFiles: () => dispatch(toggleShowHiddenFiles()),
     onShowSettingsDialog: () => dispatch(showSettingsDialog()),
 });
 

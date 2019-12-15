@@ -33,7 +33,6 @@ const INITIAL_PANE = {
 
 const initialState = {
     homeDir: '~',
-    showHiddenFiles: false,
     focusPaneLeft: true,
     indexes: {
         left: 0,
@@ -125,14 +124,6 @@ export default (state=initialState, action) => {
                     side,
                 )
             }
-        }
-    }
-
-
-    case pane.TOGGLE_SHOW_HIDDEN_FILES: {
-        return {
-            ...state,
-            showHiddenFiles: !state.showHiddenFiles,
         }
     }
 
