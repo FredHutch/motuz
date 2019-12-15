@@ -13,8 +13,9 @@ export default function formatBytes(d, useSiUnits=false) {
     }
     let magnitude = 0;
     while (d >= base) {
-        d = Math.floor(d / base);
+        d /= base
         magnitude += 1
     }
+    d = Math.round(d);
     return `${d} ${unitSizes[magnitude]}`;
 }
