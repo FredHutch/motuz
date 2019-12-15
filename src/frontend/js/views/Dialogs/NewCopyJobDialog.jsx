@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Modal, Button } from 'react-bootstrap'
+import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
@@ -115,10 +115,9 @@ class NewCopyJobDialog extends React.Component {
                                             <b className='form-label'>Follow symlinks</b>
                                         </div>
                                         <div className="col-7">
-                                            <input
-                                                name="copy_links"
-                                                type="checkbox"
-                                                className="form-control"
+                                            <Toggle
+                                                name='copy_links'
+                                                className='form-label'
                                                 defaultChecked={this.props.followSymlinksDefault}
                                             />
                                         </div>
