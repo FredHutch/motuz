@@ -36,7 +36,7 @@ class SettingsDialog extends React.Component {
                                         <Toggle
                                             name='showHiddenFiles'
                                             defaultChecked={this.props.data.showHiddenFiles}
-                                      />
+                                        />
                                     </div>
                                 </div>
 
@@ -48,7 +48,7 @@ class SettingsDialog extends React.Component {
                                         <Toggle
                                             name='useSiUnits'
                                             defaultChecked={this.props.data.useSiUnits}
-                                      />
+                                        />
                                     </div>
                                 </div>
 
@@ -62,7 +62,7 @@ class SettingsDialog extends React.Component {
                                         <Toggle
                                             name='followSymlinks'
                                             defaultChecked={this.props.data.followSymlinks}
-                                      />
+                                        />
                                     </div>
                                 </div>
 
