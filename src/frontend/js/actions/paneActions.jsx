@@ -34,6 +34,7 @@ export const hostChange = (side=null, host) => {
         return await dispatch(api.listFiles(side, {
             connection_id: host.id,
             path: pane.path,
+            settings: state.settings,
         }))
     }
 }
@@ -59,6 +60,7 @@ export const directoryChange = (side=null, path) => {
         return await dispatch(api.listFiles(side, {
             connection_id: host.id,
             path,
+            settings: state.settings,
         }));
     }
 }

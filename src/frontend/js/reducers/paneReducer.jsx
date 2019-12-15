@@ -145,9 +145,7 @@ export default (state=initialState, action) => {
     case api.LIST_FILES_SUCCESS: {
         const { payload } = action;
         const { side, data } = action.meta;
-        const { connection_id } = data;
-
-        const { showHiddenFiles } = state;
+        const { connection_id, settings } = data;
 
         let {files, path} = action.payload;
 
@@ -158,7 +156,7 @@ export default (state=initialState, action) => {
         }
 
         files = fileManager.filterFiles(files, {
-            showHiddenFiles: state.showHiddenFiles,
+            showHiddenFiles: settings.showHiddenFiles,
         })
         files = fileManager.sortFiles(files);
 
