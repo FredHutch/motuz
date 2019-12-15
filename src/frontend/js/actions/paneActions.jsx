@@ -39,6 +39,16 @@ export const hostChange = (side=null, host) => {
     }
 }
 
+export const initPanes = () => {
+    return async (dispatch, getState) => {
+        const state = getState()
+
+        return await dispatch(api.listHomeFiles({
+            settings: state.settings,
+        }))
+    }
+}
+
 export const directoryChange = (side=null, path) => {
     return async (dispatch, getState) => {
         const state = getState();

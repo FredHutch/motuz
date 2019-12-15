@@ -49,14 +49,15 @@ App.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {listHomeFiles, listCloudConnections} from 'actions/apiActions.jsx'
+import {initPanes} from 'actions/paneActions.jsx'
+import {listCloudConnections} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
     onMount: () => {
-        dispatch(listHomeFiles()),
+        dispatch(initPanes()),
         dispatch(listCloudConnections());
     }
 });

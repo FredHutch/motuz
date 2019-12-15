@@ -201,13 +201,13 @@ export default (state=initialState, action) => {
 
     case api.LIST_HOME_FILES_SUCCESS: {
         const { payload } = action;
-        const { showHiddenFiles } = state;
+        const { data } = action.meta;
 
         let {files, path} = action.payload;
 
         files = fileManager.convertLocalFilesToMotuz(files)
         files = fileManager.filterFiles(files, {
-            showHiddenFiles: state.showHiddenFiles,
+            showHiddenFiles: data.settings.showHiddenFiles,
         })
         files = fileManager.sortFiles(files);
 
