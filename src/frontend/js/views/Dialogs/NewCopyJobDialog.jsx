@@ -119,7 +119,7 @@ class NewCopyJobDialog extends React.Component {
                                                 name="copy_links"
                                                 type="checkbox"
                                                 className="form-control"
-                                                defaultChecked={true}
+                                                defaultChecked={this.props.followSymlinksDefault}
                                             />
                                         </div>
                                         <div className="col-1"></div>
@@ -179,6 +179,7 @@ class NewCopyJobDialog extends React.Component {
 
 NewCopyJobDialog.defaultProps = {
     data: {},
+    followSymlinksDefault: false,
     onClose: () => {},
     onSubmit: (data) => {},
 }
@@ -189,6 +190,7 @@ import {createCopyJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
+    followSymlinksDefault: state.settings.followSymlinks,
 });
 
 const mapDispatchToProps = dispatch => ({
