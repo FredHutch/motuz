@@ -5,6 +5,7 @@ import EditCopyJobDialog from 'views/Dialogs/EditCopyJobDialog.jsx';
 import NewCloudConnectionDialog from 'views/Dialogs/NewCloudConnectionDialog.jsx';
 import EditCloudConnectionDialog from 'views/Dialogs/EditCloudConnectionDialog.jsx';
 import MkdirDialog from 'views/Dialogs/MkdirDialog.jsx';
+import SettingsDialog from 'views/Dialogs/SettingsDialog.jsx';
 
 class Dialogs extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class Dialogs extends React.Component {
                 {this.props.dialogs.displayNewCloudConnectionDialog && <NewCloudConnectionDialog />}
                 {this.props.dialogs.displayEditCloudConnectionDialog && <EditCloudConnectionDialog />}
                 {this.props.dialogs.displayMkdirDialog && <MkdirDialog />}
+                {this.props.dialogs.displaySettingsDialog && <SettingsDialog />}
             </React.Fragment>
         );
     }

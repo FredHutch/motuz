@@ -29,6 +29,9 @@ const initialState = {
     mkdirDialogData: {
         loading: false,
     },
+
+    displaySettingsDialog: false,
+    settingsDialogData: {},
 };
 
 export default (state=initialState, action) => {
@@ -174,6 +177,20 @@ export default (state=initialState, action) => {
             ...state,
             displayMkdirDialog: false,
             mkdirDialogData: initialState.mkdirDialogData,
+        }
+    }
+
+    case dialog.SHOW_SETTINGS_DIALOG: {
+        return {
+            ...state,
+            displaySettingsDialog: true,
+        }
+    }
+
+    case dialog.HIDE_SETTINGS_DIALOG: {
+        return {
+            ...state,
+            displaySettingsDialog: false,
         }
     }
 

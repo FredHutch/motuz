@@ -25,6 +25,9 @@ export const HIDE_EDIT_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_EDIT_CLOUD_CONNE
 export const SHOW_MKDIR_DIALOG = '@@dialog/SHOW_MKDIR_DIALOG';
 export const HIDE_MKDIR_DIALOG = '@@dialog/HIDE_MKDIR_DIALOG';
 
+export const SHOW_SETTINGS_DIALOG = '@@dialog/SHOW_SETTINGS_DIALOG';
+export const HIDE_SETTINGS_DIALOG = '@@dialog/HIDE_SETTINGS_DIALOG';
+
 
 export const showNewCopyJobDialog = () => {
     return async (dispatch, getState) => {
@@ -106,4 +109,12 @@ export const showMkdirDialog = (data) => {
 
 export const hideMkdirDialog = () => ({
     type: HIDE_MKDIR_DIALOG,
+});
+
+export const showSettingsDialog = () => ({
+    type: SHOW_SETTINGS_DIALOG,
+});
+
+export const hideSettingsDialog = () => ({
+    type: HIDE_SETTINGS_DIALOG,
 });
