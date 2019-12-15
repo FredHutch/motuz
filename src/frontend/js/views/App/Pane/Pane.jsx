@@ -9,15 +9,14 @@ class Pane extends React.Component {
     }
 
     render() {
-        const {pane} = this.props;
-
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
                 key={i}
                 type={file.type}
                 name={file.name}
                 size={file.size}
-                active={this.props.active && i === pane.fileFocusIndex}
+                useSiUnits={this.props.useSiUnits}
+                active={this.props.active && i === this.props.pane.fileFocusIndex}
                 onMouseDown={() => this.props.onSelect(this.props.side, i)}
                 onDoubleClick={() => this.onEnter(this.props.side, i)}
             />
@@ -51,6 +50,7 @@ Pane.defaultProps = {
     files: [],
     pane: {},
     active: false,
+    useSiUnits: false,
     onSelect: (side, index) => {},
 }
 
@@ -58,6 +58,7 @@ import {connect} from 'react-redux';
 import {fileFocusIndex, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
+    useSiUnits: state.settings.useSiUnits,
 });
 
 const mapDispatchToProps = dispatch => ({
