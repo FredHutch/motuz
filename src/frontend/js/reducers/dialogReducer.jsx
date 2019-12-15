@@ -30,7 +30,7 @@ const initialState = {
         loading: false,
     },
 
-    displaySettingsDialog: true,
+    displaySettingsDialog: false,
     settingsDialogData: {},
 };
 

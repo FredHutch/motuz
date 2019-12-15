@@ -34,7 +34,8 @@ class SettingsDialog extends React.Component {
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
-                                          defaultChecked={this.props.showHiddenFiles}
+                                            name='showHiddenFiles'
+                                            defaultChecked={this.props.data.showHiddenFiles}
                                       />
                                     </div>
                                 </div>
@@ -45,7 +46,8 @@ class SettingsDialog extends React.Component {
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
-                                          defaultChecked={this.props.useSiUnits}
+                                            name='useSiUnits'
+                                            defaultChecked={this.props.data.useSiUnits}
                                       />
                                     </div>
                                 </div>
@@ -58,7 +60,8 @@ class SettingsDialog extends React.Component {
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
-                                          defaultChecked={this.props.followSymlinks}
+                                            name='followSymlinks'
+                                            defaultChecked={this.props.data.followSymlinks}
                                       />
                                     </div>
                                 </div>
@@ -89,30 +92,35 @@ class SettingsDialog extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        const form_data = serializeForm(event.target)
+        const data = serializeForm(event.target)
 
-        this.props.onSubmit(data);
+        this.props.onSubmit(data)
+        this.props.onClose()
     }
 
 }
 
 SettingsDialog.defaultProps = {
-    showHiddenFiles: false,
-    useSiUnits: false,
-    followSymlinks: false,
-
+    data: {
+        showHiddenFiles: false,
+        useSiUnits: false,
+        followSymlinks: false,
+    },
     onClose: () => {},
     onSubmit: (data) => {},
 }
 
 import {connect} from 'react-redux';
 import {hideSettingsDialog} from 'actions/dialogActions.jsx'
+import {updateSettings} from 'actions/settingsActions.jsx'
 
 const mapStateToProps = state => ({
+    data: state.settings,
 });
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideSettingsDialog()),
+    onSubmit: data => dispatch(updateSettings(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsDialog);
