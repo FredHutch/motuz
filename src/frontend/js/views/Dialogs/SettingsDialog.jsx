@@ -16,6 +16,7 @@ class SettingsDialog extends React.Component {
             <div className='dialog-copy-job'>
                 <Modal
                     show={true}
+                    size="lg"
                     onHide={() => this.handleClose()}
                 >
                     <form action="#" onSubmit={(event) => this.handleSubmit(event)}>
@@ -25,18 +26,43 @@ class SettingsDialog extends React.Component {
                         <Modal.Body>
                             <div className="container">
 
-                                <h5 className="text-primary mb-2">Details</h5>
+                                <h5 className="text-primary mb-2">Files</h5>
 
                                 <div className="row form-group">
                                     <div className="col-6 text-right">
-                                        <b>Source</b>
+                                        <b>Show Hidden Files</b>
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
-                                          defaultChecked={true}
+                                          defaultChecked={this.props.showHiddenFiles}
                                       />
                                     </div>
                                 </div>
+
+                                <div className="row form-group">
+                                    <div className="col-6 text-right">
+                                        <b>Use SI units for File Sizes</b>
+                                    </div>
+                                    <div className="col-6 text-left">
+                                        <Toggle
+                                          defaultChecked={this.props.useSiUnits}
+                                      />
+                                    </div>
+                                </div>
+
+                                <h5 className="text-primary mb-2">Transfers</h5>
+
+                                <div className="row form-group">
+                                    <div className="col-6 text-right">
+                                        <b>Follow Symlinks</b>
+                                    </div>
+                                    <div className="col-6 text-left">
+                                        <Toggle
+                                          defaultChecked={this.props.followSymlinks}
+                                      />
+                                    </div>
+                                </div>
+
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -71,7 +97,10 @@ class SettingsDialog extends React.Component {
 }
 
 SettingsDialog.defaultProps = {
-    data: {},
+    showHiddenFiles: false,
+    useSiUnits: false,
+    followSymlinks: false,
+
     onClose: () => {},
     onSubmit: (data) => {},
 }
