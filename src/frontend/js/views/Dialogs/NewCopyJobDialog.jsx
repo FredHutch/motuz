@@ -30,16 +30,24 @@ class NewCopyJobDialog extends React.Component {
 
                                 <div className="row">
                                     <div className="col-4 text-right">
-                                        <b>Cloud</b>
+                                        <b className='form-label'>Cloud</b>
                                     </div>
-                                    <div className="col-7">{data['source_cloud'].name}</div>
+                                    <div className="col-7">
+                                        <span className="form-label">
+                                            {data['source_cloud'].name}
+                                        </span>
+                                    </div>
                                     <div className="col-1"></div>
                                 </div>
                                 <div className="row">
                                     <div className="col-4 text-right">
-                                        <b>Resource</b>
+                                        <b className='form-label'>Resource</b>
                                     </div>
-                                    <div className="col-7">{data['src_resource_path']}</div>
+                                    <div className="col-7">
+                                        <span className="form-label">
+                                            {data['src_resource_path']}
+                                        </span>
+                                    </div>
                                     <div className="col-1"></div>
                                 </div>
 
@@ -47,16 +55,24 @@ class NewCopyJobDialog extends React.Component {
 
                                 <div className="row">
                                     <div className="col-4 text-right">
-                                        <b>Cloud</b>
+                                        <b className='form-label'>Cloud</b>
                                     </div>
-                                    <div className="col-7">{data['destination_cloud'].name}</div>
+                                    <div className="col-7">
+                                        <span className="form-label">
+                                            {data['destination_cloud'].name}
+                                        </span>
+                                    </div>
                                     <div className="col-1"></div>
                                 </div>
                                 <div className="row">
                                     <div className="col-4 text-right">
-                                        <b>Path</b>
+                                        <b className='form-label'>Path</b>
                                     </div>
-                                    <div className="col-7">{data['destination_path']}</div>
+                                    <div className="col-7">
+                                        <span className="form-label">
+                                            {data['destination_path']}
+                                        </span>
+                                    </div>
                                     <div className="col-1"></div>
                                 </div>
 
@@ -64,15 +80,19 @@ class NewCopyJobDialog extends React.Component {
 
                                 <div className="row form-group">
                                     <div className="col-4 text-right">
-                                        <b>Owner</b>
+                                        <b className='form-label'>Owner</b>
                                     </div>
-                                    <div className="col-7">{data['owner']}</div>
+                                    <div className="col-7">
+                                        <span className="form-label">
+                                            {data['owner']}
+                                        </span>
+                                    </div>
                                     <div className="col-1"></div>
                                 </div>
 
                                 <div className="row form-group">
                                     <div className="col-4 text-right">
-                                        <b>Description</b>
+                                        <b className='form-label'>Description</b>
                                     </div>
                                     <div className="col-7">
                                         <input
@@ -92,7 +112,7 @@ class NewCopyJobDialog extends React.Component {
 
                                     <div className="row form-group">
                                         <div className="col-4 text-right">
-                                            <b>Follow symlinks</b>
+                                            <b className='form-label'>Follow symlinks</b>
                                         </div>
                                         <div className="col-7">
                                             <input
