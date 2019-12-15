@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap'
+import Toggle from 'react-toggle'
 
-import UriResource from 'components/UriResource.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
 class SettingsDialog extends React.Component {
@@ -16,7 +16,6 @@ class SettingsDialog extends React.Component {
             <div className='dialog-copy-job'>
                 <Modal
                     show={true}
-                    size="lg"
                     onHide={() => this.handleClose()}
                 >
                     <form action="#" onSubmit={(event) => this.handleSubmit(event)}>
@@ -25,6 +24,19 @@ class SettingsDialog extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
+
+                                <h5 className="text-primary mb-2">Details</h5>
+
+                                <div className="row form-group">
+                                    <div className="col-6 text-right">
+                                        <b>Source</b>
+                                    </div>
+                                    <div className="col-6 text-left">
+                                        <Toggle
+                                          defaultChecked={true}
+                                      />
+                                    </div>
+                                </div>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
