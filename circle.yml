@@ -28,4 +28,4 @@ deployment:
 general:
   branches:
     only:
-     - master
+     - prod
