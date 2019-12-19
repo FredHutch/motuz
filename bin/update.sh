@@ -10,7 +10,7 @@ set -o pipefail
 
 # clone the repo, capturing the latest changes.
 sudo bash -c "(cd /root &&  rm -rf motuz-temp motuz-bak &&  git clone https://github.com/FredHutch/motuz.git motuz-temp)"
-sudo bash -c "(cd /root/motuz && git checkout prod)"
+sudo bash -c "(cd /root/motuz-temp && git checkout prod)"
 
 # check if rclone is running
 if sudo bash -c "pgrep -l rclone"|grep -q rclone; then
