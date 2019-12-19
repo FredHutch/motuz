@@ -17,7 +17,7 @@ test:
 
 deployment:
   prod:
-    branch: master
+    branch: prod
     commands:
       - aws s3 cp s3://motuz-test/cicd/id_rsa .
       - chmod 0400 ./id_rsa
