@@ -87,7 +87,7 @@ class NewCloudConnectionDialog extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="mr-auto">
-                            <Button variant="info" onClick={() => this.handleVerify()}>
+                            <Button variant="info" onClick={(e) => this.handleVerify(e)}>
                                 Verify Connection
                             </Button>
                             {verificationStatusButton}
@@ -109,10 +109,15 @@ class NewCloudConnectionDialog extends React.Component {
         this.props.onClose();
     }
 
-    handleVerify() {
+    handleVerify(event) {
         const form = this.formRef.current;
-        const data = serializeForm(form)
 
+        if (!form.checkValidity()) {
+            form.reportValidity()
+            return
+        }
+
+        const data = serializeForm(form)
         this.props.onVerify(data);
     }
 

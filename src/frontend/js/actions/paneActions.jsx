@@ -54,12 +54,8 @@ export const directoryChange = (side=null, path) => {
         const pane = getCurrentPane(state.pane, side);
         const host = pane.host;
 
-        if (host.id !== 0) {
-            // Cloud paths should not have a leading slash
-            path = path.replace(/^\/+/, '');
-            if (path === '.' || path === '') {
-                path = '/'
-            }
+        if (path === '.' || path === '') {
+            path = '/'
         }
 
         dispatch({
