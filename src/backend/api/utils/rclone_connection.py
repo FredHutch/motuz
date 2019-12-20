@@ -40,6 +40,8 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(bucket),
         ]
 
+        self._logCommand(command, credentials)
+
         try:
             result = self._execute(command, credentials)
             return {
@@ -67,6 +69,8 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(path),
         ]
 
+        self._logCommand(command, credentials)
+
         try:
             result = self._execute(command, credentials)
             files = json.loads(result)
@@ -90,6 +94,8 @@ class RcloneConnection(AbstractConnection):
             'touch',
             'current:{}/.keep'.format(path),
         ]
+
+        self._logCommand(command, credentials)
 
         try:
             result = self._execute(command, credentials)
@@ -144,12 +150,7 @@ class RcloneConnection(AbstractConnection):
 
         command = [cmd for cmd in command if len(cmd) > 0]
 
-        bash_command = "{} {}".format(
-            ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),
-            ' '.join(command),
-        )
-
-        logging.info(sanitize(bash_command))
+        self._logCommand(command, credentials)
 
         if job_id is None:
             job_id = self._get_next_job_id()
@@ -185,6 +186,14 @@ class RcloneConnection(AbstractConnection):
 
     def copy_exitstatus(self, job_id):
         return self._job_exitstatus.get(job_id, -1)
+
+
+    def _logCommand(self, command, credentials):
+        bash_command = "{} {}".format(
+            ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),
+            ' '.join(command),
+        )
+        logging.info(sanitize(bash_command))
 
 
     def _formatCredentials(self, data, name):
