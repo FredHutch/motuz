@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - prod
 
 jobs:
   build:
@@ -9,9 +12,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
+    - name: Deploy
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        aws s3 cp s3://motuz-test/cicd/id_rsa .
+        chmod 0400 ./id_rsa
+        scp -o StrictHostKeyChecking=no -i ./id_rsa bin/update.sh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:~
+        ssh -o StrictHostKeyChecking=no -i ./id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ./update.sh
+        rm -f ./id_rsa
+
