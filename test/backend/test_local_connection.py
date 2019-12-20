@@ -37,7 +37,6 @@ class TestLocalConnection(unittest.TestCase):
         assert len(result) == 1
 
 
-    @unittest.skip
     def test_parse_ls_many(self):
         input = [
             "-rw------- 1 ubuntu ubuntu  573 Nov 27 23:37 .bash_history",
@@ -52,11 +51,12 @@ class TestLocalConnection(unittest.TestCase):
             "-rw-r--r-- 1 ubuntu ubuntu    0 Nov 27 22:19 .sudo_as_admin_successful",
             "-rw------- 1 ubuntu ubuntu  867 Nov 27 22:27 .viminfo",
             "l????????? ? ?      ?         ?            ? shared",
+            "total 12"
         ]
         output = '\n'.join(input)
         result = _parse_ls(output)
 
-        assert len(result) == len(input)
+        assert len(result) == len(input) - 1
 
 if __name__ == '__main__':
     unittest.main()

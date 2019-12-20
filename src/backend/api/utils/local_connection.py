@@ -80,21 +80,42 @@ def _homepath_with_impersonation(user):
 
 def _parse_ls(output):
     """
-    Each line looks like
+    Each line looks like one of the following
+
     drwxr-xr-x      12      ubuntu  staff    384    Jul     6    15:42    ./
     permissions | position | user | group | size | month | day | time | filename
         0       |    1     |   2  |   3   |   4  |   5   |  6  |  7   |   8
+
+    drwxr-xr-x      12      ubuntu  staff    384    Jul     6    2018    ./
+    permissions | position | user | group | size | month | day | year | filename
+        0       |    1     |   2  |   3   |   4  |   5   |  6  |  7   |   8
+
+    l?????????       ?           ?     ?       ?                    ?   shared",
+    permissions | position | user | group | size | month   day   year | filename
+        0       |    1     |   2  |   3   |   4  |   5   |  6  |  7   |   8
     """
 
-    regex = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.+)'
-    #            0       1       2       3       4       5       6       7       8
+    # Case 1 and 2
+    regex1 = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.+)'
+    #             0       1       2       3       4       5       6       7       8
+
+    # Case 3
+    regex2 = r'^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\s)(\s)(\S+)\s+(.+)'
+    #             0       1       2       3       4       5   6   7       8
+
+    regexes = (regex1, regex2,)
 
     result = []
     for line in output.split('\n'):
-        match = re.search(regex, line)
-        if match is None:
-            if not line.startswith('total'):
-                logging.error("Could not parse line `{}`".format(line))
+        if line.startswith("total"):
+            continue
+
+        for regex in regexes:
+            match = re.search(regex, line)
+            if match is not None:
+                break
+        else:
+            logging.error("Could not parse line `{}`".format(line))
             continue
 
         groups = match.groups()
