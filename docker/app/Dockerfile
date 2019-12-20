@@ -9,8 +9,12 @@ RUN apt-get update -y
 
 RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 sudo
 
-RUN curl https://rclone.org/install.sh | bash
-
+# pin to a specific version of rclone.
+# if we decide to update, do it here:
+RUN curl -LO https://downloads.rclone.org/v1.50.2/rclone-v1.50.2-linux-amd64.zip
+RUN unzip rclone-v1.50.2-linux-amd64.zip
+RUN cp rclone-v1.50.2-linux-amd64/rclone /usr/local/bin/
+RUN rm -rf rclone-v1.50.2-linux-amd64.zip rclone-v1.50.2-linux-amd64/
 
 ENV PYTHONUNBUFFERED 1
 ENV DOCKER_CONTAINER 1
