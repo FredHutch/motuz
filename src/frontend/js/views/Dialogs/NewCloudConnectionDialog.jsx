@@ -87,7 +87,7 @@ class NewCloudConnectionDialog extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="mr-auto">
-                            <Button variant="info" onClick={(e) => this.handleVerify(e)}>
+                            <Button variant="info" onClick={() => this.handleVerify()}>
                                 Verify Connection
                             </Button>
                             {verificationStatusButton}
@@ -109,7 +109,7 @@ class NewCloudConnectionDialog extends React.Component {
         this.props.onClose();
     }
 
-    handleVerify(event) {
+    handleVerify() {
         const form = this.formRef.current;
 
         if (!form.checkValidity()) {
