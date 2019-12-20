@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap'
 
 import CloudConnectionDialogFields from 'views/Dialogs/CloudConnectionDialogFields.jsx';
 import serializeForm from 'utils/serializeForm.jsx';
+import Icon from 'components/Icon.jsx'
 
 
 class EditCloudConnectionDialog extends React.Component {
