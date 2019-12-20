@@ -331,6 +331,7 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 'bucket',
                         defaultValue: this.props.data.bucket,
+                        required: true,
                     }}
                     error={this.props.errors.bucket}
                     is_valid={this.props.verifySuccess}
@@ -341,6 +342,7 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 'gcp_project_number',
                         defaultValue: this.props.data.gcp_project_number,
+                        required: true,
                     }}
                     error={this.props.errors.gcp_project_number}
                     is_valid={this.props.verifySuccess}
@@ -407,6 +409,17 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.sftp_port}
+                    is_valid={this.props.verifySuccess}
+                />
+
+                <CloudConnectionField
+                    label='Initial Path'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                        placeholder: '/',
+                    }}
+                    error={this.props.errors.bucket}
                     is_valid={this.props.verifySuccess}
                 />
 

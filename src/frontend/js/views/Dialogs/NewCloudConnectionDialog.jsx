@@ -111,8 +111,13 @@ class NewCloudConnectionDialog extends React.Component {
 
     handleVerify() {
         const form = this.formRef.current;
-        const data = serializeForm(form)
 
+        if (!form.checkValidity()) {
+            form.reportValidity()
+            return
+        }
+
+        const data = serializeForm(form)
         this.props.onVerify(data);
     }
 
