@@ -412,6 +412,17 @@ class CloudConnectionDialogFields extends React.Component {
                     is_valid={this.props.verifySuccess}
                 />
 
+                <CloudConnectionField
+                    label='Initial Path'
+                    input={{
+                        name: 'bucket',
+                        defaultValue: this.props.data.bucket,
+                        placeholder: '/',
+                    }}
+                    error={this.props.errors.bucket}
+                    is_valid={this.props.verifySuccess}
+                />
+
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
 
                 <CloudConnectionField
