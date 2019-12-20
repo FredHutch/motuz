@@ -11,7 +11,7 @@ cd ..
 # source secrets
 . /var/home/svc_cicd/secrets.sh
 
-sudo docker-compose down
-yes | sudo docker system prune -a
-sudo docker image ls -a # should show nothing
-sudo docker-compose up -d
+sudo docker-compose pull database
+sudo docker-compose pull rabbitmq
+sudo docker-compose build nginx app celery
+sudo docker-compose restart
