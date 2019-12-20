@@ -48,6 +48,7 @@ services:
             - /efs/:/efs/
             - /fh/scratch/:/fh/scratch/
             - /fh/fast:/fh/fast:shared
+            - /shared:/shared:shared
 
         ports:
             - 5000:5000
