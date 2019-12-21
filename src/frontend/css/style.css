@@ -190,6 +190,10 @@ body {
     vertical-align: -webkit-baseline-middle;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 /* Components */
 
 .component-resizable-divider {

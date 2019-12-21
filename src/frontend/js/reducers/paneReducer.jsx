@@ -100,7 +100,7 @@ export default (state=initialState, action) => {
         const {side, host} = action.payload;
 
         let path = host.bucket || ''
-        path = path.replace(/^\/*/, '/') // Allow at most one leading slash
+        path = path.replace(/^\/*/, '/') // Enforce exactly one leading slash
 
         // TODO: Rclone does not allow leading slashes for gcp connections only
         if (host.type === "google cloud storage") {
