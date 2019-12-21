@@ -1,15 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom"
+import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap'
 
 import UserMenu from 'components/UserMenu.jsx'
 
-export default class Navbar extends React.PureComponent {
+export default class Navbar__ extends React.PureComponent {
     render() {
         return (
             <nav className="navbar navbar-expand-sm navbar-light bg-light">
-                <button aria-controls="basic-navbar-nav" type="button" aria-label="Toggle navigation" className="navbar-toggler">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
                 <div className="navbar-collapse collapse">
                     <div className="mr-auto w-25 navbar-nav">
                         <Link to='/'>
@@ -18,7 +16,11 @@ export default class Navbar extends React.PureComponent {
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
                     </div>
                     <div className="w-25 ml-auto">
-                        <UserMenu />
+                        <div className="navbar-collapse collapse order-3 dual-collapse2">
+                            <div className="navbar-nav ml-auto">
+                                <UserMenu />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>
