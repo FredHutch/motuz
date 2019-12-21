@@ -192,7 +192,6 @@ class CloudConnectionDialogFields extends React.Component {
                             value={this.state.subtype}
                             onChange={(event => this.setState({subtype: event.target.value}))}
                         >
-                            <option disabled key='' style={{display: 'none'}} />
                             {AZURE_CONNECTION_TYPES.map(d => (
                                 <option
                                     key={d.value}
@@ -630,7 +629,7 @@ CloudConnectionDialogFields.defaultProps = {
 
 CloudConnectionDialogFields.initialState = {
     type: '',
-    subtype: '',
+    subtype: 'key',
 }
 
 

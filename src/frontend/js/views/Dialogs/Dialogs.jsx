@@ -2,8 +2,8 @@ import React from 'react';
 
 import NewCopyJobDialog from 'views/Dialogs/NewCopyJobDialog.jsx';
 import EditCopyJobDialog from 'views/Dialogs/EditCopyJobDialog.jsx';
-import NewCloudConnectionDialog from 'views/Dialogs/NewCloudConnectionDialog.jsx';
-import EditCloudConnectionDialog from 'views/Dialogs/EditCloudConnectionDialog.jsx';
+import NewCloudConnectionDialog from 'views/Dialogs/CloudConnection/NewCloudConnectionDialog.jsx';
+import EditCloudConnectionDialog from 'views/Dialogs/CloudConnection/EditCloudConnectionDialog.jsx';
 import MkdirDialog from 'views/Dialogs/MkdirDialog.jsx';
 import SettingsDialog from 'views/Dialogs/SettingsDialog.jsx';
 

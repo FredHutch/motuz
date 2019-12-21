@@ -8,6 +8,10 @@ const initialState = {
     cloudErrors: {},
     jobs: [],
     jobErrors: {},
+    cloudConnectionVerification: {
+        loading: false,
+        success: null,
+    }
 };
 
 
@@ -149,20 +153,42 @@ export default (state=initialState, action) => {
     case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
         return {
             ...state,
+            cloudConnectionVerification: {
+                loading: true,
+                success: null,
+            },
+            cloudErrors: initialState.cloudErrors,
+        }
+    }
+    case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
+        return {
+            ...state,
+            cloudConnectionVerification: {
+                loading: false,
+                success: true,
+            },
+        }
+    }
+    case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
+        return {
+            ...state,
+            cloudConnectionVerification: {
+                loading: false,
+                success: false,
+            },
+            cloudErrors: action.payload.response.errors,
+        }
+    }
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    {
+        return {
+            ...state,
+            cloudConnectionVerification: initialState.cloudConnectionVerification,
             cloudErrors: initialState.cloudErrors,
         }
     }
 
-    case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
-        return state;
-    }
-
-    case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
-        return {
-            ...state,
-            cloudErrors: action.payload.response.errors,
-        }
-    }
 
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:

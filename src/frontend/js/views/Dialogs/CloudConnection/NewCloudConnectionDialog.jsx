@@ -2,7 +2,8 @@ import React from 'react';
 import classnames from 'classnames';
 import { Modal, Button } from 'react-bootstrap'
 
-import CloudConnectionDialogFields from 'views/Dialogs/CloudConnectionDialogFields.jsx';
+import CloudConnectionDialogFields from 'views/Dialogs/CloudConnection/CloudConnectionDialogFields.jsx';
+import VerifyStatusButton from 'views/Dialogs/CloudConnection/VerifyStatusButton.jsx'
 import Icon from 'components/Icon.jsx'
 import serializeForm from 'utils/serializeForm.jsx';
 
@@ -15,42 +16,6 @@ class NewCloudConnectionDialog extends React.Component {
 
     render() {
         const {errors} = this.props
-        const {verifySuccess, verifyLoading, verifyFinished} = this.props.data;
-
-        let verificationStatusButton = <div></div>
-        if (verifyLoading) {
-            verificationStatusButton = (
-                <Button
-                    variant='outline-warning'
-                    className='ml-2'
-                    disabled
-                >
-                    Verifying...
-                </Button>
-            )
-        } else if (verifyFinished && verifySuccess) {
-            verificationStatusButton = (
-                <Button
-                    variant='outline-success'
-                    className='ml-2'
-                    disabled
-                >
-                    <Icon name='check'/>
-                    <span> Correct </span>
-                </Button>
-            )
-        } else if (verifyFinished && !verifySuccess) {
-            verificationStatusButton = (
-                <Button
-                    variant='outline-danger'
-                    className='ml-2'
-                    disabled
-                >
-                    <Icon name='x'/>
-                    <span> Incorrect </span>
-                </Button>
-            )
-        }
 
         return (
             <Modal
@@ -82,7 +47,7 @@ class NewCloudConnectionDialog extends React.Component {
                                     sftp_port: '22',
                                 }}
                                 errors={errors}
-                                verifySuccess={(verifyFinished && verifySuccess)}
+                                verifySuccess={(this.props.cloudConnectionVerification.success === true)}
                             />
                     </Modal.Body>
                     <Modal.Footer>
@@ -90,7 +55,7 @@ class NewCloudConnectionDialog extends React.Component {
                             <Button variant="info" onClick={() => this.handleVerify()}>
                                 Verify Connection
                             </Button>
-                            {verificationStatusButton}
+                            <VerifyStatusButton {...this.props.cloudConnectionVerification} />
                         </div>
 
                         <Button variant="secondary" onClick={() => this.handleClose()}>
@@ -136,6 +101,10 @@ class NewCloudConnectionDialog extends React.Component {
 NewCloudConnectionDialog.defaultProps = {
     errors: {},
     data: {},
+    cloudConnectionVerification: {
+        loading: false,
+        success: null,
+    },
     onClose: () => {},
     onSubmit: (data) => {},
     onVerify: (data) => {},
@@ -148,6 +117,7 @@ import {createCloudConnection, verifyCloudConnection} from 'actions/apiActions.j
 const mapStateToProps = state => ({
     errors: state.api.cloudErrors,
     data: state.dialog.newCloudConnectionDialogData,
+    cloudConnectionVerification: state.api.cloudConnectionVerification,
 });
 
 const mapDispatchToProps = dispatch => ({
