@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import Icon from 'components/Icon.jsx'
 
 
-class VerifyStatusButton extends React.Component {
+class VerifyStatusButton extends React.PureComponent {
     render() {
         const {loading, success} = this.props;
 
@@ -38,15 +38,11 @@ class VerifyStatusButton extends React.Component {
             )
         }
     }
-
-    componentDidMount() {
-    }
 }
 
 VerifyStatusButton.defaultProps = {
     loading: false,
     success: null,
-
 }
 
 export default VerifyStatusButton;

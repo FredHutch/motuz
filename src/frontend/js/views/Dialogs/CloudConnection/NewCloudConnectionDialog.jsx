@@ -16,7 +16,6 @@ class NewCloudConnectionDialog extends React.Component {
 
     render() {
         const {errors} = this.props
-        const {success, loading} = this.props.cloudConnectionVerification
 
         return (
             <Modal
@@ -48,7 +47,7 @@ class NewCloudConnectionDialog extends React.Component {
                                     sftp_port: '22',
                                 }}
                                 errors={errors}
-                                verifySuccess={(success === true)}
+                                verifySuccess={(this.props.cloudConnectionVerification.success === true)}
                             />
                     </Modal.Body>
                     <Modal.Footer>
