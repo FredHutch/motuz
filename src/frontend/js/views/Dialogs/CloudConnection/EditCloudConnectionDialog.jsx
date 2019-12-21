@@ -1,23 +1,18 @@
 import React from 'react';
-import classnames from 'classnames';
 import { Modal, Button } from 'react-bootstrap'
 
-import CloudConnectionDialogFields from 'views/Dialogs/CloudConnectionDialogFields.jsx';
-import Icon from 'components/Icon.jsx'
+import CloudConnectionDialogFields from 'views/Dialogs/CloudConnection/CloudConnectionDialogFields.jsx';
+import VerifyStatusButton from 'views/Dialogs/CloudConnection/VerifyStatusButton.jsx'
 import serializeForm from 'utils/serializeForm.jsx';
-import VerifyStatusButton from 'views/Dialogs/VerifyStatusButton.jsx'
+import Icon from 'components/Icon.jsx'
 
-
-class NewCloudConnectionDialog extends React.Component {
+class EditCloudConnectionDialog extends React.Component {
     constructor(props) {
         super(props);
         this.formRef = React.createRef();
     }
 
     render() {
-        const {errors} = this.props
-        const {success, loading} = this.props.cloudConnectionVerification
-
         return (
             <Modal
                 show={true}
@@ -31,7 +26,7 @@ class NewCloudConnectionDialog extends React.Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            New Cloud Connection
+                            Edit Cloud Connection
                             <a
                                 target="_blank"
                                 href="https://sciwiki.fredhutch.org/compdemos/motuz/#add-a-new-cloud-connection-to-motuz"
@@ -43,27 +38,26 @@ class NewCloudConnectionDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                             <CloudConnectionDialogFields
-                                data={{
-                                    s3_region: 'us-west-2',
-                                    sftp_port: '22',
-                                }}
-                                errors={errors}
-                                verifySuccess={(success === true)}
+                                data={this.props.data}
+                                errors={this.props.errors}
+                                verifySuccess={(this.props.cloudConnectionVerification.success === true)}
                             />
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
+                            Delete Connection
+                        </Button>
                         <div className="mr-auto">
                             <Button variant="info" onClick={() => this.handleVerify()}>
                                 Verify Connection
                             </Button>
                             <VerifyStatusButton {...this.props.cloudConnectionVerification} />
                         </div>
-
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Cancel
                         </Button>
                         <Button variant="primary" type="submit">
-                            Create Cloud Connection
+                            Update Connection
                         </Button>
                     </Modal.Footer>
                 </form>
@@ -71,8 +65,21 @@ class NewCloudConnectionDialog extends React.Component {
         );
     }
 
+    componentDidMount() {
+
+    }
+
     handleClose() {
         this.props.onClose();
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const data = serializeForm(form)
+
+        this.props.onSubmit(data);
     }
 
     handleVerify() {
@@ -87,44 +94,45 @@ class NewCloudConnectionDialog extends React.Component {
         this.props.onVerify(data);
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
+    handleDelete() {
+        const form = this.formRef.current;
+        const data = serializeForm(form)
 
-        const data = serializeForm(event.target)
-        this.props.onSubmit(data);
+        if (confirm(`Are you sure you want to delete connection ${data.name}`)) {
+            this.props.onDelete(data);
+        }
     }
 
-    componentDidMount() {
-
-    }
 }
 
-NewCloudConnectionDialog.defaultProps = {
-    errors: {},
+EditCloudConnectionDialog.defaultProps = {
     data: {},
     cloudConnectionVerification: {
         loading: false,
         success: null,
     },
+    errors: {},
     onClose: () => {},
     onSubmit: (data) => {},
+    onDelete: (data) => {},
     onVerify: (data) => {},
 }
 
 import {connect} from 'react-redux';
-import {hideNewCloudConnectionDialog} from 'actions/dialogActions.jsx'
-import {createCloudConnection, verifyCloudConnection} from 'actions/apiActions.jsx'
+import {hideEditCloudConnectionDialog} from 'actions/dialogActions.jsx'
+import {updateCloudConnection, deleteCloudConnection, verifyCloudConnection} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
-    errors: state.api.cloudErrors,
-    data: state.dialog.newCloudConnectionDialogData,
+    data: state.dialog.editCloudConnectionDialogData,
     cloudConnectionVerification: state.api.cloudConnecetionVerification,
+    errors: state.api.cloudErrors,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideNewCloudConnectionDialog()),
-    onSubmit: data => dispatch(createCloudConnection(data)),
+    onClose: () => dispatch(hideEditCloudConnectionDialog()),
+    onSubmit: data => dispatch(updateCloudConnection(data)),
+    onDelete: data => dispatch(deleteCloudConnection(data)),
     onVerify: data => dispatch(verifyCloudConnection(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewCloudConnectionDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditCloudConnectionDialog);
