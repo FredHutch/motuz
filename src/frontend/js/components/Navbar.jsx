@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"
 
-import ToolButtons from 'components/ToolButtons.jsx'
 import UserMenu from 'components/UserMenu.jsx'
 
 export default class Navbar extends React.PureComponent {
@@ -18,11 +17,6 @@ export default class Navbar extends React.PureComponent {
                         </Link>
                         <Link to="/clouds" className="nav-link">Cloud Connections</Link>
                     </div>
-                    {window.location.pathname === '/' && (
-                        <div className="mx-auto">
-                            <ToolButtons/>
-                        </div>
-                    )}
                     <div className="w-25 ml-auto">
                         <UserMenu />
                     </div>
