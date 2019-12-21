@@ -41,6 +41,7 @@ class EditCloudConnectionDialog extends React.Component {
                                 data={this.props.data}
                                 errors={this.props.errors}
                                 verifySuccess={(this.props.cloudConnectionVerification.success === true)}
+                                isSanitized={true}
                             />
                     </Modal.Body>
                     <Modal.Footer>

@@ -93,7 +93,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.name}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 {type === 's3' && this._renderS3Section()}
@@ -122,7 +122,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.bucket,
                     }}
                     error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
                 <CloudConnectionField
                     label='Region'
@@ -131,7 +131,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.s3_region,
                     }}
                     error={this.props.errors.s3_region}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -144,7 +144,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.s3_access_key_id}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -155,7 +155,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.s3_secret_access_key}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
 
                 <details>
@@ -170,7 +171,7 @@ class CloudConnectionDialogFields extends React.Component {
                             defaultValue: this.props.data.s3_endpoint,
                         }}
                         error={this.props.errors.s3_endpoint}
-                        is_valid={this.props.verifySuccess}
+                        isValid={this.props.verifySuccess}
                     />
                 </details>
 
@@ -218,7 +219,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.bucket,
                     }}
                     error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -231,7 +232,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.azure_account}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -242,7 +243,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.azure_key}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
             </React.Fragment>
         )
@@ -257,7 +259,8 @@ class CloudConnectionDialogFields extends React.Component {
                     defaultValue: this.props.data.azure_sas_url,
                 }}
                 error={this.props.errors.azure_sas_url}
-                is_valid={this.props.verifySuccess}
+                isValid={this.props.verifySuccess}
+                isSanitized={this.props.isSanitized}
             />
         )
     }
@@ -272,7 +275,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.bucket,
                     }}
                     error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -282,7 +285,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.swift_auth,
                     }}
                     error={this.props.errors.swift_auth}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -292,7 +295,7 @@ class CloudConnectionDialogFields extends React.Component {
                         defaultValue: this.props.data.swift_tenant,
                     }}
                     error={this.props.errors.swift_tenant}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -305,18 +308,20 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.swift_user}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
                     label='Password / Key'
                     input={{
                         name: 'swift_key',
+                        type: 'password',
                         defaultValue: this.props.data.swift_key,
                         required: true,
                     }}
                     error={this.props.errors.swift_key}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
             </React.Fragment>
         )
@@ -333,7 +338,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -344,7 +349,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.gcp_project_number}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -357,7 +362,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.gcp_client_id}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -368,7 +373,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.gcp_service_account_credentials}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
 
                 <input
@@ -397,7 +403,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.sftp_host}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -408,7 +414,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.sftp_port}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -419,7 +425,7 @@ class CloudConnectionDialogFields extends React.Component {
                         placeholder: '/',
                     }}
                     error={this.props.errors.bucket}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -432,7 +438,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.sftp_user}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -444,7 +450,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.sftp_pass}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
             </React.Fragment>
         )
@@ -463,7 +470,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.dropbox_token}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
 
 
@@ -512,7 +520,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.onedrive_drive_id}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -523,7 +531,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.onedrive_drive_type}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -536,7 +544,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.onedrive_token}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
 
 
@@ -589,7 +598,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.webdav_url}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <h5 className='text-primary mt-5 mb-2'>Credentials</h5>
@@ -602,7 +611,7 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.webdav_user}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
                 />
 
                 <CloudConnectionField
@@ -614,7 +623,8 @@ class CloudConnectionDialogFields extends React.Component {
                         required: true,
                     }}
                     error={this.props.errors.webdav_pass}
-                    is_valid={this.props.verifySuccess}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
                 />
             </React.Fragment>
         )
@@ -625,6 +635,7 @@ class CloudConnectionDialogFields extends React.Component {
 CloudConnectionDialogFields.defaultProps = {
     verifySuccess: false,
     data: {},
+    isSanitized: false,
 }
 
 CloudConnectionDialogFields.initialState = {
@@ -639,7 +650,8 @@ class CloudConnectionField extends React.PureComponent {
             label,
             input,
             error,
-            is_valid,
+            isValid,
+            isSanitized,
         } = this.props;
 
         return (
@@ -653,10 +665,11 @@ class CloudConnectionField extends React.PureComponent {
                             type="text"
                             className={classnames({
                                 'form-control': true,
-                                'is-valid': is_valid,
+                                'is-valid': isValid,
                                 'is-invalid': error,
                             })}
                             autoComplete='off'
+                            placeholder={isSanitized ? '**********' : null}
                             {...this.props.input}
                         />
                     )}
@@ -667,6 +680,10 @@ class CloudConnectionField extends React.PureComponent {
             </div>
         )
     }
+}
+
+CloudConnectionField.defaultProps = {
+    isSanitized: false,
 }
 
 
