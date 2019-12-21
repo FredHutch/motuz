@@ -312,6 +312,7 @@ class CloudConnectionDialogFields extends React.Component {
                     label='Password / Key'
                     input={{
                         name: 'swift_key',
+                        type: 'password',
                         defaultValue: this.props.data.swift_key,
                         required: true,
                     }}
