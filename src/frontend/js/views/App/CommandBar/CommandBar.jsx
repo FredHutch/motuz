@@ -125,7 +125,7 @@ class CommandBar extends React.Component {
                         </button>
                         <button
                             className="btn btn-link my-2 mx-1 my-sm-0"
-                            onClick={event => this.props.onRefresh()}
+                            onClick={event => this.props.onRefresh(side)}
                             alt='Press to refresh panes'
                             title='Press to refresh panes'
                             aria-label='Press to refresh panes'
@@ -180,13 +180,13 @@ CommandBar.defaultProps = {
     onDirectoryChange: (side, path) => {},
     onShowNewCopyJobDialog: () => {},
     onShowMkdirDialog: (side) => {},
-    onRefresh: () => {},
+    onRefresh: (side) => {},
     onClick: side => {},
 }
 
 import {connect} from 'react-redux';
 import {showNewCopyJobDialog, showMkdirDialog} from 'actions/dialogActions.jsx'
-import {hostChange, directoryChange, sideFocus, refreshPanes} from 'actions/paneActions.jsx';
+import {hostChange, directoryChange, sideFocus, refreshPane} from 'actions/paneActions.jsx';
 
 
 const mapStateToProps = state => ({
@@ -199,7 +199,7 @@ const mapDispatchToProps = dispatch => ({
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
     onShowNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
     onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
-    onRefresh: () => dispatch(refreshPanes()),
+    onRefresh: (side) => dispatch(refreshPane(side)),
     onClick: side => dispatch(sideFocus(side)),
 });
 

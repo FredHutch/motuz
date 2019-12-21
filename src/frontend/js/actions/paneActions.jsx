@@ -70,6 +70,18 @@ export const directoryChange = (side=null, path) => {
     }
 }
 
+export const refreshPane = (side='left') => {
+    return async (dispatch, getState) => {
+        const state = getState();
+
+        const path = state.pane.panes[side][0].path;
+
+        await Promise.all([
+            dispatch(directoryChange(side, path)),
+        ]);
+    }
+}
+
 export const refreshPanes = () => {
     return async (dispatch, getState) => {
         const state = getState();
