@@ -109,11 +109,8 @@ class EditCopyJobDialog extends React.Component {
         );
     }
 
-    componentWillMount() {
-        this.props.fetchData(this.props.data.id);
-    }
-
     componentDidMount() {
+        this.props.fetchData(this.props.data.id);
         this._scheduleRefresh()
     }
 
