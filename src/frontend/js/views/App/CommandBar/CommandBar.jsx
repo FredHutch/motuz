@@ -21,6 +21,7 @@ class CommandBar extends React.Component {
     }
 
     render() {
+        const side = this.props.isLeft ? 'left' : 'right'
         const clouds = [
             LOCALHOST,
             ...this.props.clouds
@@ -57,7 +58,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.props.onDisplayNewCopyJobDialog()}
+                    onClick={() => this.props.onShowNewCopyJobDialog()}
                 > <b> &lt; </b> </button>
             </div>
         )
@@ -72,7 +73,7 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.props.onDisplayNewCopyJobDialog()}
+                    onClick={() => this.props.onShowNewCopyJobDialog()}
                 > <b> &gt; </b> </button>
             </div>
         );
@@ -114,7 +115,7 @@ class CommandBar extends React.Component {
                     <div className="col-12">
                         <button
                             className="btn btn-link px-0 my-2 mx-0 my-sm-0"
-                            onClick={event => this.props.onShowMkdirDialog()}
+                            onClick={event => this.props.onShowMkdirDialog(side)}
                             alt='Press to create folder'
                             title='Press to create folder'
                             aria-label='Press to create folder'
@@ -139,7 +140,6 @@ class CommandBar extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     onClick() {
@@ -178,13 +178,16 @@ CommandBar.defaultProps = {
     clouds: [],
     onHostChange: (side, host) => {},
     onDirectoryChange: (side, path) => {},
-    onDisplayNewCopyJobDialog: () => {},
+    onShowNewCopyJobDialog: () => {},
+    onShowMkdirDialog: (side) => {},
+    onRefresh: () => {},
     onClick: side => {},
 }
 
 import {connect} from 'react-redux';
-import {showNewCopyJobDialog} from 'actions/dialogActions.jsx'
-import {hostChange, directoryChange, sideFocus} from 'actions/paneActions.jsx';
+import {showNewCopyJobDialog, showMkdirDialog} from 'actions/dialogActions.jsx'
+import {hostChange, directoryChange, sideFocus, refreshPanes} from 'actions/paneActions.jsx';
+
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
@@ -192,9 +195,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onDisplayNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
+    onShowNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
+    onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
+    onRefresh: () => dispatch(refreshPanes()),
     onClick: side => dispatch(sideFocus(side)),
 });
 
