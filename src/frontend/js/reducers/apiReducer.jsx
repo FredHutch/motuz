@@ -179,6 +179,16 @@ export default (state=initialState, action) => {
             cloudErrors: action.payload.response.errors,
         }
     }
+    case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    {
+        return {
+            ...state,
+            cloudConnecetionVerification: initialState.cloudConnecetionVerification,
+            cloudErrors: initialState.cloudErrors,
+        }
+    }
+
 
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:

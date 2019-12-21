@@ -16,11 +16,7 @@ const initialState = {
     editCopyJobDialogData: {},
 
     displayNewCloudConnectionDialog: false,
-    newCloudConnectionDialogData: {
-        verifySuccess: false,
-        verifyLoading: false,
-        verifyFinished: false,
-    },
+    newCloudConnectionDialogData: {},
 
     displayEditCloudConnectionDialog: false,
     editCloudConnectionDialogData: {},
@@ -121,43 +117,6 @@ export default (state=initialState, action) => {
             ...state,
             displayEditCloudConnectionDialog: false,
             editCloudConnectionDialogData: initialState.editCloudConnectionDialogData,
-        }
-    }
-
-    case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
-        return {
-            ...state,
-            newCloudConnectionDialogData: {
-                ...state.newCloudConnectionDialogData,
-                verifyLoading: true,
-                verifyFinished: false,
-            }
-        }
-    }
-
-    case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
-        const {result} = action.payload;
-
-        return {
-            ...state,
-            newCloudConnectionDialogData: {
-                ...state.newCloudConnectionDialogData,
-                verifyLoading: false,
-                verifyFinished: true,
-                verifySuccess: result,
-            }
-        }
-    }
-
-    case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
-        return {
-            ...state,
-            newCloudConnectionDialogData: {
-                ...state.newCloudConnectionDialogData,
-                verifyLoading: false,
-                verifyFinished: true,
-                verifySuccess: false,
-            }
         }
     }
 
