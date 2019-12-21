@@ -24,6 +24,23 @@ def get_uid():
     }
 
 
+# no token_required
+def get_info():
+    rclone_version = (subprocess
+        .check_output("rclone --version", shell=True)
+        .decode('utf-8')
+        .strip()
+        .replace('\n', ' | ')
+        .replace('- ', '')
+    )
+
+    return {
+        "status": "healthy",
+        "date": str(datetime.datetime.now()),
+        "rclone_version": rclone_version,
+    }
+
+
 
 @token_required
 def ls(data):

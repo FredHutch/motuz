@@ -77,3 +77,18 @@ class SystemUid(Resource):
         except Exception as e:
             logging.exception(e, exc_info=True)
             api.abort(500, str(e))
+
+
+@api.route('/info/')
+class SystemUid(Resource):
+    def get(self):
+        """
+        Get information about current system
+        """
+        try:
+            return system_manager.get_info(), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
