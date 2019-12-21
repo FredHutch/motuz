@@ -118,7 +118,7 @@ import {createCloudConnection, verifyCloudConnection} from 'actions/apiActions.j
 const mapStateToProps = state => ({
     errors: state.api.cloudErrors,
     data: state.dialog.newCloudConnectionDialogData,
-    cloudConnectionVerification: state.api.cloudConnecetionVerification,
+    cloudConnectionVerification: state.api.cloudConnectionVerification,
 });
 
 const mapDispatchToProps = dispatch => ({

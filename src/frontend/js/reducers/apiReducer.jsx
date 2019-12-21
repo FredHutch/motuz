@@ -8,7 +8,7 @@ const initialState = {
     cloudErrors: {},
     jobs: [],
     jobErrors: {},
-    cloudConnecetionVerification: {
+    cloudConnectionVerification: {
         loading: false,
         success: null,
     }
@@ -153,7 +153,7 @@ export default (state=initialState, action) => {
     case api.VERIFY_CLOUD_CONNECTION_REQUEST: {
         return {
             ...state,
-            cloudConnecetionVerification: {
+            cloudConnectionVerification: {
                 loading: true,
                 success: null,
             },
@@ -163,7 +163,7 @@ export default (state=initialState, action) => {
     case api.VERIFY_CLOUD_CONNECTION_SUCCESS: {
         return {
             ...state,
-            cloudConnecetionVerification: {
+            cloudConnectionVerification: {
                 loading: false,
                 success: true,
             },
@@ -172,7 +172,7 @@ export default (state=initialState, action) => {
     case api.VERIFY_CLOUD_CONNECTION_FAILURE: {
         return {
             ...state,
-            cloudConnecetionVerification: {
+            cloudConnectionVerification: {
                 loading: false,
                 success: false,
             },
@@ -184,7 +184,7 @@ export default (state=initialState, action) => {
     {
         return {
             ...state,
-            cloudConnecetionVerification: initialState.cloudConnecetionVerification,
+            cloudConnectionVerification: initialState.cloudConnectionVerification,
             cloudErrors: initialState.cloudErrors,
         }
     }

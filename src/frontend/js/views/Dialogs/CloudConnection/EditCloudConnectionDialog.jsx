@@ -124,7 +124,7 @@ import {updateCloudConnection, deleteCloudConnection, verifyCloudConnection} fro
 
 const mapStateToProps = state => ({
     data: state.dialog.editCloudConnectionDialogData,
-    cloudConnectionVerification: state.api.cloudConnecetionVerification,
+    cloudConnectionVerification: state.api.cloudConnectionVerification,
     errors: state.api.cloudErrors,
 });
 
