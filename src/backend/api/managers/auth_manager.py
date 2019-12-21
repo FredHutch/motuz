@@ -1,17 +1,11 @@
 import logging
 import datetime
 from functools import wraps
-import pwd
-import json
 
-from flask import request
-from werkzeug.security import generate_password_hash, check_password_hash
 import flask_jwt_extended as flask_jwt
 
-from ..config import key
 from ..models import InvalidToken
 from ..application import db
-from ..exceptions import *
 from ..utils.pam import pam
 
 

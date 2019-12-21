@@ -5,7 +5,7 @@ from ..application import db
 
 class InvalidToken(db.Model):
     """
-    Token Model for storing JWT tokens
+    Token Model for storing revoked JWT tokens
     """
     __tablename__ = 'invalid_token'
 
@@ -20,8 +20,9 @@ class InvalidToken(db.Model):
     def __repr__(self):
         return '<token: {}>'.format(self.token)
 
+
     @staticmethod
-    def check_blacklist(auth_token):
+    def is_blacklisted(auth_token):
         """
         Check whether auth token has been blacklisted
         """
