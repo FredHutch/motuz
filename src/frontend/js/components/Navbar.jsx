@@ -1,10 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom"
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap'
 
 import UserMenu from 'components/UserMenu.jsx'
 
-export default class Navbar__ extends React.PureComponent {
+export default class Navbar extends React.PureComponent {
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
