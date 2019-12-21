@@ -4,6 +4,7 @@ import Creatable from 'react-select/creatable';
 import upath from 'upath';
 
 import Select from 'components/Select.jsx';
+import Icon from 'components/Icon.jsx';
 import constants from 'constants.jsx'
 
 
@@ -20,6 +21,7 @@ class CommandBar extends React.Component {
     }
 
     render() {
+        const side = this.props.isLeft ? 'left' : 'right'
         const clouds = [
             LOCALHOST,
             ...this.props.clouds
@@ -47,7 +49,7 @@ class CommandBar extends React.Component {
         const pathOptions = [...recentPaths].map(d => ({value: d, label: d}))
 
         const buttonArrowLeft = (
-            <div className="col-2 middle">
+            <div className="col-2 middle" style={{justifyContent: "flex-start"}}>
                 <button
                     className={classnames({
                         'btn': true,
@@ -56,13 +58,13 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.displayNewCopyJobDialog()}
+                    onClick={() => this.props.onShowNewCopyJobDialog()}
                 > <b> &lt; </b> </button>
             </div>
         )
 
         const buttonArrowRight = (
-            <div className="col-2 middle">
+            <div className="col-2 middle" style={{justifyContent: "flex-end"}}>
                 <button
                     className={classnames({
                         'btn': true,
@@ -71,52 +73,73 @@ class CommandBar extends React.Component {
                         'btn-lg': true,
                     })}
                     disabled={!this.props.active}
-                    onClick={() => this.displayNewCopyJobDialog()}
+                    onClick={() => this.props.onShowNewCopyJobDialog()}
                 > <b> &gt; </b> </button>
             </div>
         );
 
         return (
-            <div className='row' onClick={() => this.onClick()}>
-                {!this.props.isLeft && buttonArrowLeft}
-                <div className="col-10">
-                    <div className="row mb-1">
-                        <label className="col-2 col-form-label">Host</label>
-                        <div className="col-10">
-                            <Select
-                                className="form-control input-sm"
-                                value={this.props.host.id}
-                                onChange={(event)=> this.onHostChange(event.target.value)}
-                                options={cloudOptions}
-                            />
+            <div onClick={() => this.onClick()}>
+                <div className='row'>
+                    {!this.props.isLeft && buttonArrowLeft}
+                    <div className="col-10">
+                        <div className="row mb-1">
+                            <label className="col-2 col-form-label">Host</label>
+                            <div className="col-10">
+                                <Select
+                                    className="form-control input-sm"
+                                    value={this.props.host.id}
+                                    onChange={(event)=> this.onHostChange(event.target.value)}
+                                    options={cloudOptions}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <label className="col-2 col-form-label">Path</label>
+                            <div className="col-10">
+                                <Creatable
+                                    options={pathOptions}
+                                    onChange={(event) => this.onDirectoryChange(event)}
+                                    isValidNewOption={(value) => true}
+                                    createOptionPosition='first'
+                                    formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
+                                    noOptionsMessage={(inputValue) => null}
+                                    value={{label: this.props.path, value: this.props.path}}
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <label className="col-2 col-form-label">Path</label>
-                        <div className="col-10">
-                            <Creatable
-                                options={pathOptions}
-                                onChange={(event) => this.onDirectoryChange(event)}
-                                isValidNewOption={(value) => true}
-                                createOptionPosition='first'
-                                formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
-                                noOptionsMessage={(inputValue) => null}
-                                value={{label: this.props.path, value: this.props.path}}
-                            />
-                        </div>
+                    {this.props.isLeft && buttonArrowRight}
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <button
+                            className="btn btn-link px-0 my-2 mx-0 my-sm-0"
+                            onClick={event => this.props.onShowMkdirDialog(side)}
+                            alt='Press to create folder'
+                            title='Press to create folder'
+                            aria-label='Press to create folder'
+                        >
+                            <Icon name='file-submodule' className='mr-2'/>
+                            <span>Create Folder</span>
+                        </button>
+                        <button
+                            className="btn btn-link my-2 mx-1 my-sm-0"
+                            onClick={event => this.props.onRefresh(side)}
+                            alt='Press to refresh panes'
+                            title='Press to refresh panes'
+                            aria-label='Press to refresh panes'
+                        >
+                            <Icon name='sync' className='mr-2'/>
+                            <span>Refresh Window</span>
+                        </button>
                     </div>
                 </div>
-                {this.props.isLeft && buttonArrowRight}
             </div>
         );
     }
 
     componentDidMount() {
-
-    }
-
-    displayNewCopyJobDialog() {
-        this.props.onDisplayNewCopyJobDialog()
     }
 
     onClick() {
@@ -155,13 +178,16 @@ CommandBar.defaultProps = {
     clouds: [],
     onHostChange: (side, host) => {},
     onDirectoryChange: (side, path) => {},
-    onDisplayNewCopyJobDialog: () => {},
+    onShowNewCopyJobDialog: () => {},
+    onShowMkdirDialog: (side) => {},
+    onRefresh: (side) => {},
     onClick: side => {},
 }
 
 import {connect} from 'react-redux';
-import {showNewCopyJobDialog} from 'actions/dialogActions.jsx'
-import {hostChange, directoryChange, sideFocus} from 'actions/paneActions.jsx';
+import {showNewCopyJobDialog, showMkdirDialog} from 'actions/dialogActions.jsx'
+import {hostChange, directoryChange, sideFocus, refreshPane} from 'actions/paneActions.jsx';
+
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
@@ -169,9 +195,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onDisplayNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
     onHostChange: (side, host) => dispatch(hostChange(side, host)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
+    onShowNewCopyJobDialog: () => dispatch(showNewCopyJobDialog()),
+    onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
+    onRefresh: (side) => dispatch(refreshPane(side)),
     onClick: side => dispatch(sideFocus(side)),
 });
 

@@ -91,10 +91,10 @@ export const hideEditCloudConnectionDialog = () => ({
     type: HIDE_EDIT_CLOUD_CONNECTION_DIALOG,
 });
 
-export const showMkdirDialog = (data) => {
+export const showMkdirDialog = (side) => {
     return async (dispatch, getState) => {
         const state = getState();
-        const pane = getCurrentPane(state.pane);
+        const pane = getCurrentPane(state.pane, side);
 
         const {host, path} = pane;
 
