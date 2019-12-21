@@ -69,6 +69,7 @@ class EditCopyJobDialog extends React.Component {
                                     <UriResource
                                         protocol={data.src_cloud_type}
                                         path={data.src_resource_path}
+                                        canCopy={true}
                                     />
                                 </div>
                                 <div className="col-1"></div>
@@ -81,6 +82,7 @@ class EditCopyJobDialog extends React.Component {
                                     <UriResource
                                         protocol={data.dst_cloud_type}
                                         path={data.dst_resource_path}
+                                        canCopy={true}
                                     />
                                 </div>
                                 <div className="col-1"></div>
