@@ -32,18 +32,6 @@ class ToolButtons extends React.Component {
                         name='sync'
                     />
                 </button>
-
-                <button
-                    className="btn btn-outline-primary my-2 mx-1 my-sm-0"
-                    onClick={event => this.props.onShowSettingsDialog()}
-                    alt='Press to change user settings'
-                    title='Press to change user settings'
-                    aria-label='Press to change user settings'
-                >
-                    <Icon
-                        name='gear'
-                    />
-                </button>
             </React.Fragment>
         );
     }
@@ -53,12 +41,11 @@ ToolButtons.defaultProps = {
     showHiddenFiles: true,
     onShowMkdirDialog: () => {},
     onRefresh: () => {},
-    onShowSettingsDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import {refreshPanes} from 'actions/paneActions.jsx';
-import {showMkdirDialog, showSettingsDialog} from 'actions/dialogActions.jsx'
+import {showMkdirDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     showHiddenFiles: state.pane.showHiddenFiles,
@@ -67,7 +54,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onShowMkdirDialog: () => dispatch(showMkdirDialog()),
     onRefresh: () => dispatch(refreshPanes()),
-    onShowSettingsDialog: () => dispatch(showSettingsDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToolButtons);

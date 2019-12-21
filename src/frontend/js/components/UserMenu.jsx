@@ -1,18 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom"
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { NavDropdown } from 'react-bootstrap'
+
+import Icon from 'components/Icon.jsx'
 
 class UserMenu extends React.PureComponent {
     render() {
         return (
-            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <div className="navbar-collapse collapse order-3 dual-collapse2">
                 <div className="navbar-nav ml-auto">
-                    <NavDropdown direction='left' title={this.props.username}>
-                        <Link to="/logout" className='dropdown-item'>Logout</Link>
+                    <NavDropdown className='w-200' direction='left' title={this.props.username}>
+                        <Link to='#' onClick={(e) => this.onSettingsClick(e)} className='dropdown-item'>
+                            <Icon name='gear' className='mr-2'/>
+                            <span>Settings</span>
+                        </Link>
+                        <Link to="/logout" className='dropdown-item'>
+                            <Icon name='sign-out' className='mr-2'/>
+                            Logout
+                        </Link>
                     </NavDropdown>
                 </div>
             </div>
         );
+    }
+
+    onSettingsClick(e) {
+        this.props.onShowSettingsDialog()
     }
 }
 
@@ -20,16 +33,19 @@ class UserMenu extends React.PureComponent {
 
 UserMenu.defaultProps = {
     username: '',
+    onShowSettingsDialog: () => {},
 }
 
 import {connect} from 'react-redux';
 import { getCurrentUser } from 'reducers/authReducer.jsx';
+import {showSettingsDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     username: getCurrentUser(state.auth),
 });
 
 const mapDispatchToProps = dispatch => ({
+    onShowSettingsDialog: () => dispatch(showSettingsDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);
