@@ -56,9 +56,17 @@ class CopyJobTable extends React.Component {
             const dst_cloud_id = job['dst_cloud_id'] || 0
             const dst_cloud = cloudMapping[dst_cloud_id]
 
-            // TODO: We need this in the modal, but this object should ideally be immutable
-            job.src_cloud_type = src_cloud.type;
-            job.dst_cloud_type = dst_cloud.type;
+            if (src_cloud == undefined) {
+                job.src_cloud_type = "(deleted)"
+            } else {
+                job.src_cloud_type = src_cloud.type;
+            }
+
+            if (dst_cloud == undefined) {
+                job.dst_cloud_type = "(deleted)";
+            } else {
+                job.dst_cloud_type = dst_cloud.type;
+            }
 
             let color = 'default';
             if (job.progress_state === 'SUCCESS') {
@@ -75,10 +83,10 @@ class CopyJobTable extends React.Component {
                 </b>
             )
             const source = (
-                <UriResource protocol={src_cloud.type} path={job.src_resource_path} />
+                <UriResource protocol={job.src_cloud_type} path={job.src_resource_path} />
             )
             const destination = (
-                <UriResource protocol={dst_cloud.type} path={job.dst_resource_path} />
+                <UriResource protocol={job.dst_cloud_type} path={job.dst_resource_path} />
             )
             const progress = (
                 <ProgressBar
