@@ -5,7 +5,7 @@ from functools import wraps
 from sqlalchemy.exc import IntegrityError
 import flask_jwt_extended as flask_jwt
 
-from ..models import InvalidToken
+from ..models import RevokedToken
 from ..application import db, jwt
 from ..utils.pam import pam
 from ..exceptions import *
@@ -116,8 +116,8 @@ def revoke_token(token):
         }
 
     try:
-        invalid_token = InvalidToken(token=token['jti'])
-        db.session.add(invalid_token)
+        revoked_token = RevokedToken(token=token['jti'])
+        db.session.add(revoked_token)
         db.session.commit()
         return {
             'status': 'success',
@@ -143,7 +143,7 @@ def token_is_revoked(token):
     if 'jti' not in token:
         return True
 
-    res = InvalidToken.query.filter_by(token=str(token['jti'])).first()
+    res = RevokedToken.query.filter_by(token=str(token['jti'])).first()
     if res:
         return True
     else:
