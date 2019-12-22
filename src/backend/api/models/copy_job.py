@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from ..application import db
 from ..mixins.timestamp_mixin import TimestampMixin
@@ -28,12 +28,12 @@ class CopyJob(db.Model, TimestampMixin):
     src_cloud = relationship(
         "CloudConnection",
         foreign_keys=[src_cloud_id],
-        backref="src_copy_jobs",
+        backref=backref("src_copy_jobs", cascade="all,delete"),
     )
     dst_cloud = relationship(
         "CloudConnection",
         foreign_keys=[dst_cloud_id],
-        backref="dst_copy_jobs",
+        backref=backref("dst_copy_jobs", cascade="all,delete"),
     )
 
     def __repr__(self):

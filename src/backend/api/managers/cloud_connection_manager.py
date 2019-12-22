@@ -15,7 +15,11 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 def list():
     owner = get_logged_in_user(request)
 
-    cloud_connections = CloudConnection.query.filter_by(owner=owner).all()
+    cloud_connections = (CloudConnection.query
+        .filter_by(owner=owner)
+        .order_by(CloudConnection.id.asc())
+        .all()
+    )
     return cloud_connections
 
 
