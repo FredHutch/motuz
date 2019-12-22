@@ -9,7 +9,7 @@ class Pane extends React.Component {
     }
 
     render() {
-        console.log(this.props.pane.fileSelectedIndexes)
+        console.log(this.props.pane.fileMultiFocusIndexes)
 
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
@@ -20,7 +20,7 @@ class Pane extends React.Component {
                 useSiUnits={this.props.useSiUnits}
                 active={this.props.active && (
                     i === this.props.pane.fileFocusIndex ||
-                    this.props.pane.fileSelectedIndexes[i]
+                    this.props.pane.fileMultiFocusIndexes[i]
                 )}
                 onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
                 onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
@@ -74,7 +74,7 @@ Pane.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {fileFocusIndex, fileSelectIndexes, directoryChange} from 'actions/paneActions.jsx';
+import {fileFocusIndex, fileMultiFocusIndexes, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     useSiUnits: state.settings.useSiUnits,
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
-    onMultiSelect: (side, indexes) => dispatch(fileSelectIndexes(side, indexes)),
+    onMultiSelect: (side, indexes) => dispatch(fileMultiFocusIndexes(side, indexes)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path))
 });
 

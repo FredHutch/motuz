@@ -27,8 +27,8 @@ const INITIAL_PANE = {
     sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,
+    fileMultiFocusIndexes: {},
     history: [],
-    fileSelectedIndexes: {},
 }
 
 const initialState = {
@@ -67,22 +67,22 @@ export default (state=initialState, action) => {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
                     fileFocusIndex: index,
-                    fileSelectedIndexes: {},
+                    fileMultiFocusIndexes: {},
                 }, side)
             }
         }
     }
-    case pane.FILE_SELECT_INDEXES: {
+    case pane.FILE_MULTI_FOCUS_INDEXES: {
         const indexes = action.payload.indexes;
         const side = action.payload.side || getSide(state);
         const focusPaneLeft = side === 'left';
 
         const currPane = getCurrentPane(state, side)
-        const fileSelectedIndexes = {
-            ...currPane.fileSelectedIndexes,
+        const fileMultiFocusIndexes = {
+            ...currPane.fileMultiFocusIndexes,
         }
         for (let index of indexes) {
-            fileSelectedIndexes[index] = true
+            fileMultiFocusIndexes[index] = true
         }
 
         return {
@@ -91,7 +91,7 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...currPane,
-                    fileSelectedIndexes,
+                    fileMultiFocusIndexes,
                 }, side)
             }
         }
