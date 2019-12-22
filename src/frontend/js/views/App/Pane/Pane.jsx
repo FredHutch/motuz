@@ -9,8 +9,6 @@ class Pane extends React.Component {
     }
 
     render() {
-        console.log(this.props.pane.fileMultiFocusIndex)
-
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
                 key={i}
