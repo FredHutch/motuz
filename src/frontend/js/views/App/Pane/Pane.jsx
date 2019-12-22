@@ -17,8 +17,8 @@ class Pane extends React.Component {
                 size={file.size}
                 useSiUnits={this.props.useSiUnits}
                 active={this.props.active && i === this.props.pane.fileFocusIndex}
-                onMouseDown={() => this.props.onSelect(this.props.side, i)}
-                onDoubleClick={() => this.onEnter(this.props.side, i)}
+                onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
+                onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
             />
         ))
 
@@ -33,7 +33,20 @@ class Pane extends React.Component {
 
     }
 
-    onEnter(side, index) {
+    onFileClick(event, side, index) {
+        const isRangeSelection = event.shiftKey
+        const isMultiSelection = event.metaKey || event.ctrlKey
+
+        if (isMultiSelection) {
+
+        } else if (isRangeSelection) {
+
+        } else {
+            this.props.onSelect(side, index)
+        }
+    }
+
+    onFileDoubleClick(side, index) {
         const currPath = this.props.pane.path;
         const directoryToEnter = this.props.files[index]
         if (directoryToEnter.type !== 'dir') {
