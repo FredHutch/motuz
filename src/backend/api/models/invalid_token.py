@@ -19,15 +19,3 @@ class InvalidToken(db.Model):
 
     def __repr__(self):
         return '<token: {}>'.format(self.token)
-
-
-    @staticmethod
-    def is_blacklisted(auth_token):
-        """
-        Check whether auth token has been blacklisted
-        """
-        res = InvalidToken.query.filter_by(token=str(auth_token)).first()
-        if res:
-            return True
-        else:
-            return False

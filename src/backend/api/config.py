@@ -5,6 +5,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'please_change_this')
     JWT_SECRET_KEY = os.getenv('SECRET_KEY', 'please_change_this')
+    JWT_BLACKLIST_ENABLED = True
+    JWT_BLACKLIST_TOKEN_CHECKS = ['refresh']
     CELERY_BROKER_URL = 'amqp://'
     CELERY_RESULT_BACKEND = 'amqp://'
     DEBUG = False

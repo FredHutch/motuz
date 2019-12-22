@@ -2,11 +2,13 @@ import logging
 import datetime
 from functools import wraps
 
+from sqlalchemy.exc import IntegrityError
 import flask_jwt_extended as flask_jwt
 
 from ..models import InvalidToken
-from ..application import db
+from ..application import db, jwt
 from ..utils.pam import pam
+from ..exceptions import *
 
 
 
@@ -33,6 +35,16 @@ def token_required(fn):
 
         return fn(*args, **kwargs)
     return wrapper
+
+
+
+@jwt.token_in_blacklist_loader
+def _check_if_token_in_blacklist(token):
+    """
+    This function is automatically loaded and it does not need to be called.
+    https://flask-jwt-extended.readthedocs.io/en/stable/blacklist_and_token_revoking/
+    """
+    return token_is_revoked(token)
 
 
 
@@ -91,26 +103,48 @@ def refresh_token():
 
 @refresh_token_required
 def logout_user():
-    return {
-        'status': 'success',
-        'message': 'Token Revocation not implemented yet.'
-    }
+    token = flask_jwt.get_raw_jwt()
+    return revoke_token(token)
 
 
 
-def invalidate_token(token):
-    invalid_token = InvalidToken(token=token)
+def revoke_token(token):
+    if 'jti' not in token:
+        return {
+            'status': 'fail',
+            'message': '`jti` field not in the raw_jwt dict'
+        }
+
     try:
+        invalid_token = InvalidToken(token=token['jti'])
         db.session.add(invalid_token)
         db.session.commit()
-        response_object = {
+        return {
             'status': 'success',
-            'message': 'Successfully logged out.'
+            'message': 'Successfully logged out.',
         }
-        return response_object, 200
-    except Exception as e:
-        response_object = {
+    except IntegrityError as e:
+        return {
             'status': 'fail',
-            'message': e
+            'message': 'Already logged out',
         }
-        return response_object, 200
+    except Exception as e:
+        return {
+            'status': 'fail',
+            'message': str(e),
+        }
+
+
+
+def token_is_revoked(token):
+    """
+    Check whether auth token has been blacklisted
+    """
+    if 'jti' not in token:
+        return True
+
+    res = InvalidToken.query.filter_by(token=str(token['jti'])).first()
+    if res:
+        return True
+    else:
+        return False
