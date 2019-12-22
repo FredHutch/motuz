@@ -1,5 +1,6 @@
 import logging
 import datetime
+import time
 from functools import wraps
 
 from sqlalchemy.exc import IntegrityError
@@ -104,7 +105,9 @@ def refresh_token():
 @refresh_token_required
 def logout_user():
     token = flask_jwt.get_raw_jwt()
-    return revoke_token(token)
+    message = revoke_token(token)
+    clean_token_database()
+    return message
 
 
 
@@ -147,3 +150,17 @@ def token_is_revoked(token):
         return True
     else:
         return False
+
+
+
+def clean_token_database():
+    now_ts = int(time.time())
+
+    try:
+        # Opting for this version for performance (single round-trip)
+        query = RevokedToken.__table__.delete().where(RevokedToken.exp < now_ts)
+        db.session.execute(query)
+        db.session.commit()
+    except Exception as e:
+        logging.error("Could not clean up the token database")
+        logging.exception(e)

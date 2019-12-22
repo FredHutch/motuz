@@ -5,7 +5,6 @@ from ..application import db
 
 
 class CloudConnection(db.Model):
-    """ User Model for storing user related details """
     __tablename__ = "cloud_connection"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

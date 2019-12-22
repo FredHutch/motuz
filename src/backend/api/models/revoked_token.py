@@ -1,12 +1,7 @@
-import datetime
-
 from ..application import db
 
 
 class RevokedToken(db.Model):
-    """
-    Token Model for storing revoked JWT tokens
-    """
     __tablename__ = 'revoked_token'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

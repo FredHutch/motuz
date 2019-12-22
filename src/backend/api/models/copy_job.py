@@ -8,7 +8,6 @@ from ..models.cloud_connection import CloudConnection
 
 
 class CopyJob(db.Model, TimestampMixin):
-    """ User Model for storing user related details """
     __tablename__ = "copy_job"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
