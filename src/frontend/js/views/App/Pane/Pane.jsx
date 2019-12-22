@@ -16,10 +16,7 @@ class Pane extends React.Component {
                 name={file.name}
                 size={file.size}
                 useSiUnits={this.props.useSiUnits}
-                active={this.props.active && (
-                    i === this.props.pane.fileFocusIndex ||
-                    this.props.pane.fileMultiFocusIndexes[i]
-                )}
+                active={this.props.active && this.props.pane.fileMultiFocusIndexes[i]}
                 onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
                 onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
             />
