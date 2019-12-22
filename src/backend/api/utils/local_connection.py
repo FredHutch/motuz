@@ -38,7 +38,7 @@ class LocalConnection(AbstractConnection):
         user = data.owner
 
         try:
-            homePath = _homepath_with_impersonation(user)
+            homePath = _homepath_with_impersonation(user) + "/tmp"
             return self.ls(data, homePath)
         except Exception as e:
             logging.error("User does not have a home", exc_info=True)

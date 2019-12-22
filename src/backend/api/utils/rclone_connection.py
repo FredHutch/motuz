@@ -92,7 +92,7 @@ class RcloneConnection(AbstractConnection):
             '-u', user,
             'rclone',
             'touch',
-            'current:{}/.keep'.format(path),
+            'current:{}/.motuz_keep'.format(path),
         ]
 
         self._logCommand(command, credentials)

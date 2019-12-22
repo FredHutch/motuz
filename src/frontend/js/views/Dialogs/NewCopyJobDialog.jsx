@@ -26,57 +26,63 @@ class NewCopyJobDialog extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
-                                <h5 className="text-primary mb-2">Source</h5>
+                                {data.source_paths.map((sourcePath, i) => (
+                                    <React.Fragment key={sourcePath}>
+                                        <h5 className="text-primary mb-2">Source</h5>
 
-                                <div className="row">
-                                    <div className="col-4 text-right">
-                                        <b className='form-label'>Cloud</b>
-                                    </div>
-                                    <div className="col-7">
-                                        <span className="form-label">
-                                            {data['source_cloud'].name}
-                                        </span>
-                                    </div>
-                                    <div className="col-1"></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-4 text-right">
-                                        <b className='form-label'>Resource</b>
-                                    </div>
-                                    <div className="col-7">
-                                        <span className="form-label">
-                                            {data['src_resource_path']}
-                                        </span>
-                                    </div>
-                                    <div className="col-1"></div>
-                                </div>
+                                        <div className="row">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Cloud</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <span className="form-label">
+                                                    {data['source_cloud'].name}
+                                                </span>
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Resource</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <span className="form-label">
+                                                    {sourcePath}
+                                                </span>
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
 
-                                <h5 className="text-primary mt-5 mb-2">Destination</h5>
+                                        <h5 className="text-primary mt-4 mb-2">Destination</h5>
 
-                                <div className="row">
-                                    <div className="col-4 text-right">
-                                        <b className='form-label'>Cloud</b>
-                                    </div>
-                                    <div className="col-7">
-                                        <span className="form-label">
-                                            {data['destination_cloud'].name}
-                                        </span>
-                                    </div>
-                                    <div className="col-1"></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-4 text-right">
-                                        <b className='form-label'>Path</b>
-                                    </div>
-                                    <div className="col-7">
-                                        <span className="form-label">
-                                            {data['destination_path']}
-                                        </span>
-                                    </div>
-                                    <div className="col-1"></div>
-                                </div>
+                                        <div className="row">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Cloud</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <span className="form-label">
+                                                    {data['destination_cloud'].name}
+                                                </span>
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Path</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <span className="form-label">
+                                                    {data['destination_paths'][i]}
+                                                </span>
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
 
-                                <h5 className='text-primary mt-5 mb-2'>Details</h5>
+                                        <hr className='mt-4' />
+                                    </React.Fragment>
+                                ))}
+
+                                <h5 className='text-primary mb-2'>Details</h5>
 
                                 <div className="row form-group">
                                     <div className="col-4 text-right">
@@ -151,24 +157,27 @@ class NewCopyJobDialog extends React.Component {
         const propsData = this.props.data;
         const formData = serializeForm(event.target)
 
-        const data = {
-            "description": formData['description'] || '',
-            "copy_links": formData['copy_links'] || false,
-            "src_cloud_id": propsData['source_cloud'].id,
-            "src_resource_path": propsData['src_resource_path'],
-            "dst_cloud_id": propsData['destination_cloud'].id,
-            "dst_resource_path": propsData['destination_path'],
-            "owner": "owner", // TODO: Figure out why this was hard coded
-        }
+        for (let i in propsData.source_paths) {
+            const src_resource_path = propsData.source_paths[i]
+            const dst_resource_path = propsData.destination_paths[i]
+            const data = {
+                "description": formData['description'] || '',
+                "copy_links": formData['copy_links'] || false,
+                "src_cloud_id": propsData['source_cloud'].id,
+                "src_resource_path": src_resource_path,
+                "dst_cloud_id": propsData['destination_cloud'].id,
+                "dst_resource_path": dst_resource_path,
+            }
 
-        if (data['src_cloud_id'] === 0) {
-            delete data['src_cloud_id'];
-        }
-        if (data['dst_cloud_id'] === 0) {
-            delete data['dst_cloud_id'];
-        }
+            if (data['src_cloud_id'] === 0) {
+                delete data['src_cloud_id'];
+            }
+            if (data['dst_cloud_id'] === 0) {
+                delete data['dst_cloud_id'];
+            }
 
-        this.props.onSubmit(data);
+            this.props.onSubmit(data);
+        }
     }
 
     componentDidMount() {
