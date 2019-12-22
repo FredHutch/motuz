@@ -137,8 +137,8 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
-                    fileFocusIndex: initialState.fileFocusIndex,
-                    fileMultiFocusIndex: initialState.fileMultiFocusIndexes,
+                    fileFocusIndex: INITIAL_PANE.fileFocusIndex,
+                    fileMultiFocusIndexes: INITIAL_PANE.fileMultiFocusIndexes,
                     path,
                 }, side)
             },
@@ -171,8 +171,8 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
-                    fileFocusIndex: initialState.fileFocusIndex,
-                    fileMultiFocusIndex: initialState.fileMultiFocusIndexes,
+                    fileFocusIndex: INITIAL_PANE.fileFocusIndex,
+                    fileMultiFocusIndexes: INITIAL_PANE.fileMultiFocusIndexes,
                     path,
                     host,
                 }, side)
