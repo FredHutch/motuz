@@ -9,7 +9,7 @@ class Pane extends React.Component {
     }
 
     render() {
-        console.log(this.props.pane.fileMultiFocusIndexes)
+        console.log(this.props.pane.fileMultiFocusIndex)
 
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
@@ -20,7 +20,7 @@ class Pane extends React.Component {
                 useSiUnits={this.props.useSiUnits}
                 active={this.props.active && (
                     i === this.props.pane.fileFocusIndex ||
-                    this.props.pane.fileMultiFocusIndexes[i]
+                    this.props.pane.fileMultiFocusIndex[i]
                 )}
                 onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
                 onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
@@ -43,7 +43,7 @@ class Pane extends React.Component {
         const isMultiSelection = event.metaKey || event.ctrlKey
 
         if (isMultiSelection) {
-            this.props.onMultiSelect(side, [index])
+            this.props.onMultiSelect(side, index)
         } else if (isRangeSelection) {
             this.props.onRangeSelect(side, index)
         } else {
@@ -70,14 +70,14 @@ Pane.defaultProps = {
     active: false,
     useSiUnits: false,
     onSelect: (side, index) => {},
-    onMultiSelect: (side, indexes) => {},
+    onMultiSelect: (side, index) => {},
     onRangeSelect: (side, index) => {},
 }
 
 import {connect} from 'react-redux';
 import {
     fileFocusIndex,
-    fileMultiFocusIndexes,
+    fileMultiFocusIndex,
     fileRangeFocusIndex,
     directoryChange,
 } from 'actions/paneActions.jsx';
@@ -88,7 +88,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
-    onMultiSelect: (side, indexes) => dispatch(fileMultiFocusIndexes(side, indexes)),
+    onMultiSelect: (side, index) => dispatch(fileMultiFocusIndex(side, index)),
     onRangeSelect: (side, index) => dispatch(fileRangeFocusIndex(side, index)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });

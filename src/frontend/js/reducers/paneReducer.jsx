@@ -27,7 +27,7 @@ const INITIAL_PANE = {
     sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,
-    fileMultiFocusIndexes: {},
+    fileMultiFocusIndex: {},
     history: [],
 }
 
@@ -67,23 +67,21 @@ export default (state=initialState, action) => {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
                     fileFocusIndex: index,
-                    fileMultiFocusIndexes: {},
+                    fileMultiFocusIndex: {},
                 }, side)
             }
         }
     }
-    case pane.FILE_MULTI_FOCUS_INDEXES: {
-        const indexes = action.payload.indexes;
+    case pane.FILE_MULTI_FOCUS_INDEX: {
+        const index = action.payload.index;
         const side = action.payload.side || getSide(state);
         const focusPaneLeft = side === 'left';
 
         const currPane = getCurrentPane(state, side)
-        const fileMultiFocusIndexes = {
-            ...currPane.fileMultiFocusIndexes,
+        const fileMultiFocusIndex = {
+            ...currPane.fileMultiFocusIndex,
         }
-        for (let index of indexes) {
-            fileMultiFocusIndexes[index] = true
-        }
+        fileMultiFocusIndex[index] = true
 
         return {
             ...state,
@@ -91,7 +89,7 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...currPane,
-                    fileMultiFocusIndexes,
+                    fileMultiFocusIndex,
                 }, side)
             }
         }
@@ -102,13 +100,13 @@ export default (state=initialState, action) => {
         const focusPaneLeft = side === 'left';
 
         const currPane = getCurrentPane(state, side)
-        const fileMultiFocusIndexes = {
-            ...currPane.fileMultiFocusIndexes,
+        const fileMultiFocusIndex = {
+            ...currPane.fileMultiFocusIndex,
         }
         const start = Math.min(currPane.fileFocusIndex, index)
         const end = Math.max(currPane.fileFocusIndex, index)
         for (let i = start; i <= end; i++) {
-            fileMultiFocusIndexes[i] = true
+            fileMultiFocusIndex[i] = true
         }
 
         console.log(start, end)
@@ -119,7 +117,7 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...currPane,
-                    fileMultiFocusIndexes,
+                    fileMultiFocusIndex,
                 }, side)
             }
         }
