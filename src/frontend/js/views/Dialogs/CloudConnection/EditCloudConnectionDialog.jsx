@@ -99,7 +99,9 @@ class EditCloudConnectionDialog extends React.Component {
         const form = this.formRef.current;
         const data = serializeForm(form)
 
-        if (confirm(`Are you sure you want to delete connection ${data.name}`)) {
+        if (confirm(`Are you sure you want to delete connection ${data.name}?\n\n` +
+            `This will delete data for all copy jobs related to this connection.`
+        )) {
             this.props.onDelete(data);
         }
     }
