@@ -19,9 +19,6 @@ const INITIAL_PANE = {
         id: 0,
         name: constants.local_name,
         type: 'file',
-        access_key_id: '',
-        access_key_secret: '',
-        region: '',
     },
     path: '/',
     sortingColumn: 'name',
@@ -278,10 +275,12 @@ export default (state=initialState, action) => {
             panes: {
                 left: [{
                     ...getCurrentPane(state, 'left'),
+                    host: INITIAL_PANE.host,
                     path,
                 }],
                 right: [{
                     ...getCurrentPane(state, 'right'),
+                    host: INITIAL_PANE.host,
                     path,
                 }],
             },
