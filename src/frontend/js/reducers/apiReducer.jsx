@@ -181,6 +181,8 @@ export default (state=initialState, action) => {
     }
     case dialog.HIDE_NEW_CLOUD_CONNECTION_DIALOG:
     case dialog.HIDE_EDIT_CLOUD_CONNECTION_DIALOG:
+    case dialog.SHOW_NEW_CLOUD_CONNECTION_DIALOG:
+    case dialog.SHOW_EDIT_CLOUD_CONNECTION_DIALOG:
     {
         return {
             ...state,
