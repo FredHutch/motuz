@@ -14,7 +14,7 @@ export const fileFocusIndex = (side, index) => ({
     payload: {side, index},
 });
 
-export const fileMultiFocusIndex = (side, index) => ({
+export const fileMultiFocusIndexes = (side, index) => ({
     type: FILE_MULTI_FOCUS_INDEX,
     payload: {side, index},
 });

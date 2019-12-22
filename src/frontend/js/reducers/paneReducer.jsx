@@ -27,7 +27,7 @@ const INITIAL_PANE = {
     sortingColumn: 'name',
     sortingAsc: true,
     fileFocusIndex: 0,
-    fileMultiFocusIndex: {0: true},
+    fileMultiFocusIndexes: {0: true},
     history: [],
 }
 
@@ -67,7 +67,7 @@ export default (state=initialState, action) => {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
                     fileFocusIndex: index,
-                    fileMultiFocusIndex: {[index]: true},
+                    fileMultiFocusIndexes: {[index]: true},
                 }, side)
             }
         }
@@ -77,11 +77,11 @@ export default (state=initialState, action) => {
         const side = action.payload.side || getSide(state);
 
         const currPane = getCurrentPane(state, side)
-        const fileMultiFocusIndex = {...currPane.fileMultiFocusIndex}
+        const fileMultiFocusIndexes = {...currPane.fileMultiFocusIndexes}
         let fileFocusIndex = index
-        if (fileMultiFocusIndex[index]) { // Action is deselection
+        if (fileMultiFocusIndexes[index]) { // Action is deselection
             if (currPane.fileFocusIndex === index) { // The latest selected file
-                const keys = Object.keys(fileMultiFocusIndex).map(Number)
+                const keys = Object.keys(fileMultiFocusIndexes).map(Number)
                 if (keys.length <= 1) {
                     return state // At least one item should always be selected
                 }
@@ -89,9 +89,9 @@ export default (state=initialState, action) => {
             } else {
                 fileFocusIndex = currPane.fileFocusIndex
             }
-            delete fileMultiFocusIndex[index]
+            delete fileMultiFocusIndexes[index]
         } else { // Action is selection
-            fileMultiFocusIndex[index] = true
+            fileMultiFocusIndexes[index] = true
         }
 
         return {
@@ -100,7 +100,7 @@ export default (state=initialState, action) => {
                 ...setCurrentPane(state, {
                     ...currPane,
                     fileFocusIndex,
-                    fileMultiFocusIndex,
+                    fileMultiFocusIndexes,
                 }, side)
             }
         }
@@ -110,13 +110,13 @@ export default (state=initialState, action) => {
         const side = action.payload.side || getSide(state);
 
         const currPane = getCurrentPane(state, side)
-        const fileMultiFocusIndex = {
-            ...currPane.fileMultiFocusIndex,
+        const fileMultiFocusIndexes = {
+            ...currPane.fileMultiFocusIndexes,
         }
         const start = Math.min(currPane.fileFocusIndex, index)
         const end = Math.max(currPane.fileFocusIndex, index)
         for (let i = start; i <= end; i++) {
-            fileMultiFocusIndex[i] = true
+            fileMultiFocusIndexes[i] = true
         }
 
         return {
@@ -124,7 +124,7 @@ export default (state=initialState, action) => {
             panes: {
                 ...setCurrentPane(state, {
                     ...currPane,
-                    fileMultiFocusIndex,
+                    fileMultiFocusIndexes,
                 }, side)
             }
         }
