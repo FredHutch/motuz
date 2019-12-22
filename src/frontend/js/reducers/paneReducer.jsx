@@ -96,6 +96,34 @@ export default (state=initialState, action) => {
             }
         }
     }
+    case pane.FILE_RANGE_FOCUS_INDEX: {
+        const index = action.payload.index;
+        const side = action.payload.side || getSide(state);
+        const focusPaneLeft = side === 'left';
+
+        const currPane = getCurrentPane(state, side)
+        const fileMultiFocusIndexes = {
+            ...currPane.fileMultiFocusIndexes,
+        }
+        const start = Math.min(currPane.fileFocusIndex, index)
+        const end = Math.max(currPane.fileFocusIndex, index)
+        for (let i = start; i <= end; i++) {
+            fileMultiFocusIndexes[i] = true
+        }
+
+        console.log(start, end)
+
+        return {
+            ...state,
+            focusPaneLeft,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...currPane,
+                    fileMultiFocusIndexes,
+                }, side)
+            }
+        }
+    }
     case pane.DIRECTORY_CHANGE: {
         const { side, path } = action.payload;
 

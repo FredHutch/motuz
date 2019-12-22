@@ -45,7 +45,7 @@ class Pane extends React.Component {
         if (isMultiSelection) {
             this.props.onMultiSelect(side, [index])
         } else if (isRangeSelection) {
-
+            this.props.onRangeSelect(side, index)
         } else {
             this.props.onSelect(side, index)
         }
@@ -71,10 +71,16 @@ Pane.defaultProps = {
     useSiUnits: false,
     onSelect: (side, index) => {},
     onMultiSelect: (side, indexes) => {},
+    onRangeSelect: (side, index) => {},
 }
 
 import {connect} from 'react-redux';
-import {fileFocusIndex, fileMultiFocusIndexes, directoryChange} from 'actions/paneActions.jsx';
+import {
+    fileFocusIndex,
+    fileMultiFocusIndexes,
+    fileRangeFocusIndex,
+    directoryChange,
+} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     useSiUnits: state.settings.useSiUnits,
@@ -83,7 +89,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
     onMultiSelect: (side, indexes) => dispatch(fileMultiFocusIndexes(side, indexes)),
-    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path))
+    onRangeSelect: (side, index) => dispatch(fileRangeFocusIndex(side, index)),
+    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pane);
