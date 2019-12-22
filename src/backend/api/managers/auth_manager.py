@@ -1,18 +1,15 @@
 import logging
 import datetime
+import time
 from functools import wraps
-import pwd
-import json
 
-from flask import request
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
 import flask_jwt_extended as flask_jwt
 
-from ..config import key
-from ..models import InvalidToken
-from ..application import db
-from ..exceptions import *
+from ..models import RevokedToken
+from ..application import db, jwt
 from ..utils.pam import pam
+from ..exceptions import *
 
 
 
@@ -39,6 +36,16 @@ def token_required(fn):
 
         return fn(*args, **kwargs)
     return wrapper
+
+
+
+@jwt.token_in_blacklist_loader
+def _check_if_token_in_blacklist(token):
+    """
+    This function is automatically loaded and it does not need to be called.
+    https://flask-jwt-extended.readthedocs.io/en/stable/blacklist_and_token_revoking/
+    """
+    return token_is_revoked(token)
 
 
 
@@ -97,26 +104,63 @@ def refresh_token():
 
 @refresh_token_required
 def logout_user():
-    return {
-        'status': 'success',
-        'message': 'Token Revocation not implemented yet.'
-    }
+    token = flask_jwt.get_raw_jwt()
+    message = revoke_token(token)
+    clean_token_database()
+    return message
 
 
 
-def invalidate_token(token):
-    invalid_token = InvalidToken(token=token)
+def revoke_token(token):
     try:
-        db.session.add(invalid_token)
+        revoked_token = RevokedToken(
+            jti=token['jti'],
+            type=token['type'],
+            identity=token['identity'],
+            exp=token['exp'],
+        )
+        db.session.add(revoked_token)
         db.session.commit()
-        response_object = {
+        return {
             'status': 'success',
-            'message': 'Successfully logged out.'
+            'message': 'Successfully logged out.',
         }
-        return response_object, 200
-    except Exception as e:
-        response_object = {
+    except IntegrityError as e:
+        return {
             'status': 'fail',
-            'message': e
+            'message': 'Already logged out',
         }
-        return response_object, 200
+    except Exception as e:
+        return {
+            'status': 'fail',
+            'message': str(e),
+        }
+
+
+
+def token_is_revoked(token):
+    """
+    Check whether auth token has been blacklisted
+    """
+    if 'jti' not in token:
+        return True
+
+    res = RevokedToken.query.filter_by(jti=str(token['jti'])).first()
+    if res:
+        return True
+    else:
+        return False
+
+
+
+def clean_token_database():
+    now_ts = int(time.time())
+
+    try:
+        # Opting for this version for performance (single round-trip)
+        query = RevokedToken.__table__.delete().where(RevokedToken.exp < now_ts)
+        db.session.execute(query)
+        db.session.commit()
+    except Exception as e:
+        logging.error("Could not clean up the token database")
+        logging.exception(e)
