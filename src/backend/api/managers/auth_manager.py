@@ -109,14 +109,13 @@ def logout_user():
 
 
 def revoke_token(token):
-    if 'jti' not in token:
-        return {
-            'status': 'fail',
-            'message': '`jti` field not in the raw_jwt dict'
-        }
-
     try:
-        revoked_token = RevokedToken(token=token['jti'])
+        revoked_token = RevokedToken(
+            jti=token['jti'],
+            type=token['type'],
+            identity=token['identity'],
+            exp=token['exp'],
+        )
         db.session.add(revoked_token)
         db.session.commit()
         return {
@@ -143,7 +142,7 @@ def token_is_revoked(token):
     if 'jti' not in token:
         return True
 
-    res = RevokedToken.query.filter_by(token=str(token['jti'])).first()
+    res = RevokedToken.query.filter_by(jti=str(token['jti'])).first()
     if res:
         return True
     else:

@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('jti', sa.String(), nullable=False),
     sa.Column('type', sa.String(), nullable=False),
     sa.Column('identity', sa.String(), nullable=False),
-    sa.Column('exp', sa.DateTime(), nullable=False),
+    sa.Column('exp', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('jti')
     )
