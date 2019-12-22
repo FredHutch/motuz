@@ -12,10 +12,15 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 
 
 @token_required
-def list():
+def list(page_size=50, offset=0):
     owner = get_logged_in_user(request)
 
-    copy_jobs = CopyJob.query.filter_by(owner=owner).all()
+    copy_jobs = (CopyJob.query
+        .filter_by(owner=owner)
+        .order_by(CopyJob.id.desc())
+        .limit(page_size)
+        .all()
+    )
     return copy_jobs
 
 

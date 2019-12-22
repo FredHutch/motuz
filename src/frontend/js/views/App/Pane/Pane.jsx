@@ -16,9 +16,9 @@ class Pane extends React.Component {
                 name={file.name}
                 size={file.size}
                 useSiUnits={this.props.useSiUnits}
-                active={this.props.active && i === this.props.pane.fileFocusIndex}
-                onMouseDown={() => this.props.onSelect(this.props.side, i)}
-                onDoubleClick={() => this.onEnter(this.props.side, i)}
+                active={this.props.active && this.props.pane.fileMultiFocusIndexes[i]}
+                onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
+                onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
             />
         ))
 
@@ -33,7 +33,20 @@ class Pane extends React.Component {
 
     }
 
-    onEnter(side, index) {
+    onFileClick(event, side, index) {
+        const isRangeSelection = event.shiftKey
+        const isMultiSelection = event.metaKey || event.ctrlKey
+
+        if (isMultiSelection) {
+            this.props.onMultiSelect(side, index)
+        } else if (isRangeSelection) {
+            this.props.onRangeSelect(side, index)
+        } else {
+            this.props.onSelect(side, index)
+        }
+    }
+
+    onFileDoubleClick(side, index) {
         const currPath = this.props.pane.path;
         const directoryToEnter = this.props.files[index]
         if (directoryToEnter.type !== 'dir') {
@@ -52,10 +65,17 @@ Pane.defaultProps = {
     active: false,
     useSiUnits: false,
     onSelect: (side, index) => {},
+    onMultiSelect: (side, index) => {},
+    onRangeSelect: (side, index) => {},
 }
 
 import {connect} from 'react-redux';
-import {fileFocusIndex, directoryChange} from 'actions/paneActions.jsx';
+import {
+    fileFocusIndex,
+    fileMultiFocusIndexes,
+    fileRangeFocusIndex,
+    directoryChange,
+} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     useSiUnits: state.settings.useSiUnits,
@@ -63,7 +83,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
-    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path))
+    onMultiSelect: (side, index) => dispatch(fileMultiFocusIndexes(side, index)),
+    onRangeSelect: (side, index) => dispatch(fileRangeFocusIndex(side, index)),
+    onDirectoryChange: (side, path) => dispatch(directoryChange(side, path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Pane);

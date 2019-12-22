@@ -6,9 +6,9 @@ const initialState = {
     displayNewCopyJobDialog: false,
     newCopyJobDialogData: {
         source_cloud: {name: 'ERROR'},
-        src_resource_path: 'ERROR',
+        source_paths: ['ERROR'],
         destination_cloud: {name: 'ERROR'},
-        destination_path: 'ERROR',
+        destination_paths: ['ERROR'],
         owner: 'ERROR',
     },
 
