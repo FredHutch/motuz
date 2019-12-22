@@ -9,6 +9,8 @@ class Pane extends React.Component {
     }
 
     render() {
+        console.log(this.props.pane.fileSelectedIndexes)
+
         const paneFiles = this.props.files.map((file, i) => (
             <PaneFile
                 key={i}
@@ -16,7 +18,10 @@ class Pane extends React.Component {
                 name={file.name}
                 size={file.size}
                 useSiUnits={this.props.useSiUnits}
-                active={this.props.active && i === this.props.pane.fileFocusIndex}
+                active={this.props.active && (
+                    i === this.props.pane.fileFocusIndex ||
+                    this.props.pane.fileSelectedIndexes[i]
+                )}
                 onMouseDown={(event) => this.onFileClick(event, this.props.side, i)}
                 onDoubleClick={() => this.onFileDoubleClick(this.props.side, i)}
             />
@@ -38,7 +43,7 @@ class Pane extends React.Component {
         const isMultiSelection = event.metaKey || event.ctrlKey
 
         if (isMultiSelection) {
-
+            this.props.onMultiSelect(side, [index])
         } else if (isRangeSelection) {
 
         } else {
@@ -65,10 +70,11 @@ Pane.defaultProps = {
     active: false,
     useSiUnits: false,
     onSelect: (side, index) => {},
+    onMultiSelect: (side, indexes) => {},
 }
 
 import {connect} from 'react-redux';
-import {fileFocusIndex, directoryChange} from 'actions/paneActions.jsx';
+import {fileFocusIndex, fileSelectIndexes, directoryChange} from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     useSiUnits: state.settings.useSiUnits,
@@ -76,6 +82,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelect: (side, index) => dispatch(fileFocusIndex(side, index)),
+    onMultiSelect: (side, indexes) => dispatch(fileSelectIndexes(side, indexes)),
     onDirectoryChange: (side, path) => dispatch(directoryChange(side, path))
 });
 

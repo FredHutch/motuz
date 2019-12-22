@@ -67,6 +67,31 @@ export default (state=initialState, action) => {
                 ...setCurrentPane(state, {
                     ...getCurrentPane(state, side),
                     fileFocusIndex: index,
+                    fileSelectedIndexes: {},
+                }, side)
+            }
+        }
+    }
+    case pane.FILE_SELECT_INDEXES: {
+        const indexes = action.payload.indexes;
+        const side = action.payload.side || getSide(state);
+        const focusPaneLeft = side === 'left';
+
+        const currPane = getCurrentPane(state, side)
+        const fileSelectedIndexes = {
+            ...currPane.fileSelectedIndexes,
+        }
+        for (let index of indexes) {
+            fileSelectedIndexes[index] = true
+        }
+
+        return {
+            ...state,
+            focusPaneLeft,
+            panes: {
+                ...setCurrentPane(state, {
+                    ...currPane,
+                    fileSelectedIndexes,
                 }, side)
             }
         }
