@@ -46,8 +46,7 @@ services:
 
             # These mounts are specific to Fred Hutch:
             - /efs/:/efs/
-            - /fh/scratch/:/fh/scratch/
-            - /fh/fast:/fh/fast:shared
+            - /fh:/fh:shared
             - /shared:/shared:shared
 
         ports:
@@ -80,8 +79,7 @@ services:
 
             # Fred Hutch speciic mounts
             - /efs/:/efs/
-            - /fh/scratch:/fh/scratch
-            - /fh/fast:/fh/fast:shared
+            - /fh:/fh:shared
             - /shared:/shared:shared
 
 
