@@ -4,7 +4,6 @@ import Creatable from 'react-select/creatable';
 import Select from 'react-select';
 import upath from 'upath';
 
-// import Select from 'components/Select.jsx';
 import Icon from 'components/Icon.jsx';
 import constants from 'constants.jsx'
 

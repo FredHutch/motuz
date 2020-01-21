@@ -9,7 +9,6 @@ import Logout from 'views/Logout.jsx'
 import Clouds from 'views/Clouds/Clouds.jsx'
 import App from 'views/App/App.jsx'
 import Alerts from 'views/Alerts/Alerts.jsx'
-import Playground from 'views/Playground.jsx'
 
 import 'style.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,7 +26,6 @@ class Root extends React.PureComponent {
                     <PrivateRoute exact path="/clouds" component={Clouds} display={isAuthenticated} redirect='/login' />
                     <PrivateRoute exact path="/login" component={Login} display={!isAuthenticated} redirect='/' />
                     <PrivateRoute exact path="/logout" component={Logout} display={isAuthenticated} redirect='/' />
-                    <Route component={Playground} />
                     <Route component={PageNotFound}/>
                 </Switch>
                 <Dialogs />
