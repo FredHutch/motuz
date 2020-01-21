@@ -37,15 +37,9 @@ class CopyJobTable extends React.Component {
             }
         }
 
-        if (this.props.connections.length == 0) {
-            // Can happen if connections have not been fetched yet
-            return <div></div>
-        }
-
         this.props.connections.forEach(connection => {
             cloudMapping[connection.id] = connection
         })
-
 
         const tableRows = this.props.jobs.map((job, i) => {
             const progressValue = Math.round(job.progress_current / job.progress_total * 100);
@@ -57,13 +51,13 @@ class CopyJobTable extends React.Component {
             const dst_cloud = cloudMapping[dst_cloud_id]
 
             if (src_cloud == undefined) {
-                job.src_cloud_type = "(deleted)"
+                job.src_cloud_type = "(unknown)"
             } else {
                 job.src_cloud_type = src_cloud.type;
             }
 
             if (dst_cloud == undefined) {
-                job.dst_cloud_type = "(deleted)";
+                job.dst_cloud_type = "(unknown)";
             } else {
                 job.dst_cloud_type = dst_cloud.type;
             }
@@ -182,6 +176,7 @@ class CopyJobTable extends React.Component {
 CopyJobTable.defaultProps = {
     id: '',
     jobs: [],
+    connections: [],
     fetchData: () => {},
     refreshPanes: () => {},
     onStopJob: id => {},
