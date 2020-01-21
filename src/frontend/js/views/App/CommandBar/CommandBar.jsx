@@ -1,9 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
 import Creatable from 'react-select/creatable';
+import Select from 'react-select';
 import upath from 'upath';
 
-import Select from 'components/Select.jsx';
+// import Select from 'components/Select.jsx';
 import Icon from 'components/Icon.jsx';
 import constants from 'constants.jsx'
 
@@ -95,9 +96,8 @@ class CommandBar extends React.Component {
                             <label className="col-2 col-form-label">Host</label>
                             <div className="col-10">
                                 <Select
-                                    className="form-control input-sm"
-                                    value={this.props.host.id}
-                                    onChange={(event)=> this.onHostChange(event.target.value)}
+                                    value={{value: this.props.host.id, label: this.props.host.name}}
+                                    onChange={(option)=> this.onHostChange(option.value)}
                                     options={cloudOptions}
                                 />
                             </div>
