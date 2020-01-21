@@ -78,6 +78,14 @@ class CommandBar extends React.Component {
             </div>
         );
 
+        const formatOptionLabel = (data, {context}) => {
+            return (
+                <React.Fragment>
+                    {context === 'menu' && !data.__isNew__ && <Icon name="history" />} {data.label}
+                </React.Fragment>
+            )
+        }
+
         return (
             <div onClick={() => this.onClick()}>
                 <div className='row'>
@@ -100,11 +108,18 @@ class CommandBar extends React.Component {
                                 <Creatable
                                     options={pathOptions}
                                     onChange={(event) => this.onDirectoryChange(event)}
-                                    isValidNewOption={(value) => true}
-                                    createOptionPosition='first'
-                                    formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
-                                    noOptionsMessage={(inputValue) => null}
                                     value={{label: this.props.path, value: this.props.path}}
+
+                                    openMenuOnClick={false}
+                                    openMenuOnFocus={false}
+                                    blurInputOnSelect={true}
+                                    isValidNewOption={(value) => value}
+                                    createOptionPosition='first'
+                                    filterOption={(option, inputValue) => inputValue === "" || option.data.__isNew__}
+
+                                    formatCreateLabel={(inputValue) => `Go to ${inputValue}`}
+                                    formatOptionLabel={formatOptionLabel}
+                                    noOptionsMessage={(inputValue) => null}
                                 />
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CreatableSelect from 'react-select/creatable';
+import Creatable from 'react-select/creatable';
 
 import Select from 'components/Select.jsx';
 import Icon from 'components/Icon.jsx'
@@ -28,34 +28,19 @@ class Playground extends React.Component {
             )
         }
 
-        const handleFocus = (event) => {
-            // console.log(event)
-            // console.log(event.target)
-            // console.log(event.currentTarget)
-            // console.log('focusing', this.ref.current.state)
-            if (this.state.value) {
-                this.ref.current.setState({inputValue:this.state.value.label})
-            }
-        }
-
         return (
             <div className='col-6'>
-                <CreatableSelect
+                <Creatable
                     options={options}
-                    openMenuOnClick={false}
-                    onMenuOpen={() => console.log('open')}
-                    onMenuClose={() => console.log('close')}
-                    // noOptionsMessage={(inputValue) => null}
                     onChange={(value) => this.setState({value})}
                     value={this.state.value}
+                    openMenuOnClick={false}
+                    openMenuOnFocus={false}
                     blurInputOnSelect={true}
+                    noOptionsMessage={(inputValue) => null}
                     formatCreateLabel={(inputValue) => `Go to ${inputValue}`}
                     formatOptionLabel={formatOptionLabel}
-                    filterOption={(option, inputValue) => {
-                        return inputValue === "" || option.data.__isNew__
-                    }}
-                    ref={this.ref}
-                    onFocus={handleFocus}
+                    filterOption={(option, inputValue) => inputValue === "" || option.data.__isNew__}
                     isValidNewOption={(inputValue) => inputValue}
                 />
                 <button onClick={() => console.log(this.state.value)}>Click</button>
