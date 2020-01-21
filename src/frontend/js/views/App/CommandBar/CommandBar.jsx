@@ -1,9 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
 import Creatable from 'react-select/creatable';
+import Select from 'react-select';
 import upath from 'upath';
 
-import Select from 'components/Select.jsx';
 import Icon from 'components/Icon.jsx';
 import constants from 'constants.jsx'
 
@@ -78,6 +78,14 @@ class CommandBar extends React.Component {
             </div>
         );
 
+        const formatOptionLabel = (data, {context}) => {
+            return (
+                <React.Fragment>
+                    {context === 'menu' && !data.__isNew__ && <Icon name="history" />} {data.label}
+                </React.Fragment>
+            )
+        }
+
         return (
             <div onClick={() => this.onClick()}>
                 <div className='row'>
@@ -87,9 +95,8 @@ class CommandBar extends React.Component {
                             <label className="col-2 col-form-label">Host</label>
                             <div className="col-10">
                                 <Select
-                                    className="form-control input-sm"
-                                    value={this.props.host.id}
-                                    onChange={(event)=> this.onHostChange(event.target.value)}
+                                    value={{value: this.props.host.id, label: this.props.host.name}}
+                                    onChange={(option)=> this.onHostChange(option.value)}
                                     options={cloudOptions}
                                 />
                             </div>
@@ -100,11 +107,18 @@ class CommandBar extends React.Component {
                                 <Creatable
                                     options={pathOptions}
                                     onChange={(event) => this.onDirectoryChange(event)}
-                                    isValidNewOption={(value) => true}
-                                    createOptionPosition='first'
-                                    formatCreateLabel={(inputValue) => `Go to "${inputValue}"`}
-                                    noOptionsMessage={(inputValue) => null}
                                     value={{label: this.props.path, value: this.props.path}}
+
+                                    openMenuOnClick={false}
+                                    openMenuOnFocus={false}
+                                    blurInputOnSelect={true}
+                                    isValidNewOption={(value) => value}
+                                    createOptionPosition='first'
+                                    filterOption={(option, inputValue) => inputValue === "" || option.data.__isNew__}
+
+                                    formatCreateLabel={(inputValue) => `Go to ${inputValue}`}
+                                    formatOptionLabel={formatOptionLabel}
+                                    noOptionsMessage={(inputValue) => null}
                                 />
                             </div>
                         </div>
