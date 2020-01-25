@@ -62,8 +62,7 @@ def login_user(data):
     user_authentication = pam()
     user_authentication.authenticate(username, password)
 
-    # TODO: remove backdoor
-    if user_authentication.code != 0 and username not in ('aicioara'):
+    if user_authentication.code != 0:
         logging.error("Could not authenticate {}. Reason: `{}` (Code: {})".format(
             username, user_authentication.reason, user_authentication.code,
         ))
