@@ -128,7 +128,7 @@ class CommandBar extends React.Component {
                 <div className="row">
                     <div className="col-12">
                         <button
-                            className="btn btn-link px-0 my-2 mx-0 my-sm-0"
+                            className="btn btn-link px-0 ml-0 mr-2 my-0"
                             onClick={event => this.props.onShowMkdirDialog(side)}
                             alt='Press to create folder'
                             title='Press to create folder'
@@ -138,7 +138,7 @@ class CommandBar extends React.Component {
                             <span>Create Folder</span>
                         </button>
                         <button
-                            className="btn btn-link my-2 mx-1 my-sm-0"
+                            className="btn btn-link px-0 mx-2 my-0"
                             onClick={event => this.props.onRefresh(side)}
                             alt='Press to refresh panes'
                             title='Press to refresh panes'
@@ -146,6 +146,16 @@ class CommandBar extends React.Component {
                         >
                             <Icon name='sync' className='mr-2'/>
                             <span>Refresh Window</span>
+                        </button>
+                        <button
+                            className="btn btn-link px-0 mx-2 my-0"
+                            onClick={event => this.props.onCheck(side)}
+                            alt='Press to check md5sums'
+                            title='Press to check md5sums'
+                            aria-label='Press to check md5sums'
+                        >
+                            <Icon name='database' className='mr-2'/>
+                            <span>Check Integrity</span>
                         </button>
                     </div>
                 </div>
@@ -196,10 +206,11 @@ CommandBar.defaultProps = {
     onShowMkdirDialog: (side) => {},
     onRefresh: (side) => {},
     onClick: side => {},
+    onCheck: side => {},
 }
 
 import {connect} from 'react-redux';
-import {showNewCopyJobDialog, showMkdirDialog} from 'actions/dialogActions.jsx'
+import {showNewCopyJobDialog, showMkdirDialog, showIntegrityJobDialog} from 'actions/dialogActions.jsx'
 import {hostChange, directoryChange, sideFocus, refreshPane} from 'actions/paneActions.jsx';
 
 
@@ -215,6 +226,7 @@ const mapDispatchToProps = dispatch => ({
     onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
     onRefresh: (side) => dispatch(refreshPane(side)),
     onClick: side => dispatch(sideFocus(side)),
+    onCheck: () => dispatch(showIntegrityJobDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

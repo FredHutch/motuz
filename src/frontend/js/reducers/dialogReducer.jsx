@@ -15,6 +15,14 @@ const initialState = {
     displayEditCopyJobDialog: false,
     editCopyJobDialogData: {},
 
+    displayIntegrityJobDialogDialog: false,
+    integrityJobDialogDialogData: {
+        source_cloud: {name: 'ERROR'},
+        source_paths: ['ERROR'],
+        destination_cloud: {name: 'ERROR'},
+        destination_paths: ['ERROR'],
+    },
+
     displayNewCloudConnectionDialog: false,
     newCloudConnectionDialogData: {},
 
@@ -83,6 +91,25 @@ export default (state=initialState, action) => {
         }
     }
 
+    case dialog.SHOW_INTEGRITY_JOB_DIALOG: {
+        return {
+            ...state,
+            displayIntegrityJobDialog: true,
+            integrityJobDialogData: {
+                ...state.integrityJobDialogData,
+                ...action.payload.data,
+            }
+        }
+    }
+
+    case dialog.HIDE_INTEGRITY_JOB_DIALOG:
+    {
+        return {
+            ...state,
+            displayIntegrityJobDialog: false,
+            integrityJobDialogData: initialState.integrityJobDialogData,
+        }
+    }
 
     case dialog.SHOW_NEW_CLOUD_CONNECTION_DIALOG: {
         return {

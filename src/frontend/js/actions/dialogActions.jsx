@@ -16,6 +16,9 @@ export const HIDE_NEW_COPY_JOB_DIALOG = '@@dialog/HIDE_NEW_COPY_JOB_DIALOG';
 export const SHOW_EDIT_COPY_JOB_DIALOG = '@@dialog/SHOW_EDIT_COPY_JOB_DIALOG';
 export const HIDE_EDIT_COPY_JOB_DIALOG = '@@dialog/HIDE_EDIT_COPY_JOB_DIALOG';
 
+export const SHOW_INTEGRITY_JOB_DIALOG = '@@dialog/SHOW_INTEGRITY_JOB_DIALOG';
+export const HIDE_INTEGRITY_JOB_DIALOG = '@@dialog/HIDE_INTEGRITY_JOB_DIALOG';
+
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
 
@@ -79,6 +82,48 @@ export const showEditCopyJobDialog = (copyJob) => ({
 
 export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
+});
+
+export const showIntegrityJobDialog = (side) => {
+    return async (dispatch, getState) => {
+
+        const state = getState();
+
+        const srcSide = getSide(state.pane);
+        const srcPane = getCurrentPane(state.pane, srcSide);
+        const srcFiles = getCurrentFiles(state.pane, srcSide);
+
+        const dstSide = getOtherSide(srcSide);
+        const dstPane = getCurrentPane(state.pane, dstSide)
+
+        const srcResourcePaths = []
+        const dstResourcePaths = []
+
+        for (let key in srcPane.fileMultiFocusIndexes) {
+            const srcResourceName = srcFiles[Number(key)].name;
+            const srcResourcePath = upath.join(srcPane.path, srcResourceName)
+            const dstResourcePath = upath.join(dstPane.path, srcResourceName)
+
+            srcResourcePaths.push(srcResourcePath)
+            dstResourcePaths.push(dstResourcePath)
+        }
+
+        const data = {
+            source_cloud: srcPane.host,
+            source_paths: srcResourcePaths,
+            destination_cloud: dstPane.host,
+            destination_paths: dstResourcePaths,
+        }
+
+        dispatch({
+            type: SHOW_INTEGRITY_JOB_DIALOG,
+            payload: {data}
+        })
+    }
+};
+
+export const hideIntegrityJobDialog = () => ({
+    type: HIDE_INTEGRITY_JOB_DIALOG,
 });
 
 
