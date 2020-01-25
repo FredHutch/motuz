@@ -4,10 +4,6 @@ import { OverlayTrigger, Popover } from 'react-bootstrap'
 import Icon from 'components/Icon.jsx'
 
 class Info extends React.PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
             <OverlayTrigger

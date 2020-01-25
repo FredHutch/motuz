@@ -3,7 +3,6 @@ import { Modal, Button } from 'react-bootstrap'
 import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
-import Info from 'components/Info.jsx'
 import ToggleInfo from 'components/ToggleInfo.jsx'
 
 

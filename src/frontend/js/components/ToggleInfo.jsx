@@ -1,5 +1,4 @@
 import React from 'react';
-import { OverlayTrigger, Popover } from 'react-bootstrap'
 import Toggle from 'react-toggle'
 
 import Info from 'components/Info.jsx'
