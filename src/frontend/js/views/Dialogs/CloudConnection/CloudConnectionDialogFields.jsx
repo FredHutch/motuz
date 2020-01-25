@@ -48,6 +48,17 @@ const AZURE_CONNECTION_TYPES = [
     },
 ]
 
+const SFTP_CONNECTION_TYPES = [
+    {
+        label: 'Password',
+        value: 'password',
+    },
+    {
+        label: 'SSH Private Key',
+        value: 'key',
+    },
+]
+
 class CloudConnectionDialogFields extends React.Component {
     constructor(props) {
         super(props);
@@ -73,7 +84,7 @@ class CloudConnectionDialogFields extends React.Component {
                             className="form-control"
                             name="type"
                             value={type}
-                            onChange={(event => this.setState({type: event.target.value}))}
+                            onChange={event => this.onTypeChange(event.target.value)}
                         >
                             {CONNECTION_TYPES.map(d => (
                                 <option
@@ -184,7 +195,7 @@ class CloudConnectionDialogFields extends React.Component {
             <React.Fragment>
                 <div className="row form-group required">
                     <div className="col-4 text-right control-label">
-                        <b>Azure Connection Type</b>
+                        <b className='form-label'>Azure Connection Type</b>
                     </div>
                     <div className="col-8">
                         <select
@@ -441,6 +452,38 @@ class CloudConnectionDialogFields extends React.Component {
                     isValid={this.props.verifySuccess}
                 />
 
+                <div className="row form-group">
+                    <div className="col-4 text-right control-label">
+                        <b className='form-label'>Connection Protocol</b>
+                    </div>
+                    <div className="col-8">
+                        <select
+                            className="form-control"
+                            // Do not specify "name", we do not want this in the request
+                            value={this.state.subtype}
+                            onChange={(event => this.setState({subtype: event.target.value}))}
+                        >
+                            {SFTP_CONNECTION_TYPES.map(d => (
+                                <option
+                                    key={d.value}
+                                    value={d.value}
+                                >{d.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {this.state.subtype === 'password' && this._renderSFTPPasswordSubsection()}
+                {this.state.subtype === 'key' && this._renderSFTPKeySubsection()}
+
+
+            </React.Fragment>
+        )
+    }
+
+    _renderSFTPPasswordSubsection() {
+        return (
+            <React.Fragment>
                 <CloudConnectionField
                     label='Password'
                     input={{
@@ -456,6 +499,25 @@ class CloudConnectionDialogFields extends React.Component {
             </React.Fragment>
         )
     }
+
+    _renderSFTPKeySubsection() {
+        return (
+            <React.Fragment>
+                <CloudConnectionField
+                    label='SSH Private Key Path'
+                    input={{
+                        name: 'sftp_key_file',
+                        defaultValue: this.props.data.sftp_key_file,
+                        required: true,
+                    }}
+                    error={this.props.errors.sftp_key_file}
+                    isValid={this.props.verifySuccess}
+                    isSanitized={this.props.isSanitized}
+                />
+            </React.Fragment>
+        )
+    }
+
 
     _renderDropboxSection() {
         return (
@@ -628,6 +690,17 @@ class CloudConnectionDialogFields extends React.Component {
                 />
             </React.Fragment>
         )
+    }
+
+    onTypeChange(type) {
+        let {subtype} = this.state
+        if (type == 'sftp') {
+            subtype = 'password'
+        } else if (type == 'azureblob') {
+            subtype = 'key'
+        }
+
+        this.setState({type, subtype})
     }
 
 }

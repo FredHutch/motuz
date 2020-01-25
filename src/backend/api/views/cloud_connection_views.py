@@ -17,6 +17,10 @@ class PrivateString(fields.String):
         return None
 
 
+class PrivateOptionalString(OptionalString, PrivateString):
+    pass
+
+
 api = Namespace('connections', description='Connection related operations')
 
 dto = api.model('connection', {
@@ -51,7 +55,8 @@ dto = api.model('connection', {
     'sftp_host': fields.String(required=False, example='localhost'),
     'sftp_port': fields.String(required=False, example='22'),
     'sftp_user': fields.String(required=False, example='username'),
-    'sftp_pass': PrivateString(required=False, example='p@ssw0rd'),
+    'sftp_pass': PrivateOptionalString(required=False, example='p@ssw0rd'),
+    'sftp_key_file': OptionalString(required=False, example='/path/to/key.pem'),
 
     'dropbox_token': PrivateString(required=False, example='{"access_token":"hStGBm-oRDsqJksiRspOnbsDiu","token_type":"bearer","expiry":"0001-01-01T00:00:00Z"}'),
 

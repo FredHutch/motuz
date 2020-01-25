@@ -49,6 +49,7 @@ class CloudConnection(db.Model):
     sftp_port = db.Column(db.String, nullable=True)
     sftp_user = db.Column(db.String, nullable=True)
     sftp_pass = db.Column(db.String, nullable=True)
+    sftp_key_file = db.Column(db.String, nullable=True)
 
     # Dropbox
     dropbox_token = db.Column(db.String, nullable=True)
