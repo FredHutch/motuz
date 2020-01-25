@@ -3,6 +3,8 @@ import { Modal, Button } from 'react-bootstrap'
 import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
+import ToggleInfo from 'components/ToggleInfo.jsx'
+
 
 class SettingsDialog extends React.Component {
     constructor(props) {
@@ -10,8 +12,6 @@ class SettingsDialog extends React.Component {
     }
 
     render() {
-        const loading = false
-
         return (
             <div className='dialog-copy-job'>
                 <Modal
@@ -31,6 +31,11 @@ class SettingsDialog extends React.Component {
                                 <div className="row form-group">
                                     <div className="col-6 text-right">
                                         <b>Show Hidden Files</b>
+                                        <ToggleInfo
+                                            className='ml-2'
+                                            on="Show UNIX hidden files and directories. Hidden files are prefixed with dot (eg. .bashrc)"
+                                            off="Hide UNIX hidden files and directories. This is the default option on most systems."
+                                        />
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
@@ -43,6 +48,11 @@ class SettingsDialog extends React.Component {
                                 <div className="row form-group">
                                     <div className="col-6 text-right">
                                         <b>Use SI units for File Sizes</b>
+                                        <ToggleInfo
+                                            className='ml-2'
+                                            on="File sizes will use SI system (KB, MB, GB, TB). 1 KB = 1000 B. This is the default on macOS Finder."
+                                            off="File sizes will use the byte system (KiB, MiB, GiB, TiB). 1 KiB = 1024 B. This is the default on Windows Explorer."
+                                        />
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
@@ -57,6 +67,11 @@ class SettingsDialog extends React.Component {
                                 <div className="row form-group">
                                     <div className="col-6 text-right">
                                         <b>Follow Symlinks</b>
+                                        <ToggleInfo
+                                            className='ml-2'
+                                            on="When copying files, symlinks to directories will be resolved and followed, as if they were regular directories."
+                                            off="When copying files, symlinks to directories will be ignored."
+                                        />
                                     </div>
                                     <div className="col-6 text-left">
                                         <Toggle
@@ -72,7 +87,7 @@ class SettingsDialog extends React.Component {
                             <Button variant="secondary" onClick={() => this.handleClose()}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" type='submit' disabled={loading}>
+                            <Button variant="primary" type='submit' disabled={this.props.loading}>
                                 Save
                             </Button>
                         </Modal.Footer>
@@ -116,6 +131,7 @@ import {updateSettings} from 'actions/settingsActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.settings,
+    loading: false,
 });
 
 const mapDispatchToProps = dispatch => ({

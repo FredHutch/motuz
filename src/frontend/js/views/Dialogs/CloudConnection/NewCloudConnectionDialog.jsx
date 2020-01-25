@@ -41,15 +41,15 @@ class NewCloudConnectionDialog extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                            <CloudConnectionDialogFields
-                                data={{
-                                    s3_region: 'us-west-2',
-                                    sftp_port: '22',
-                                }}
-                                errors={errors}
-                                verifySuccess={(this.props.cloudConnectionVerification.success === true)}
-                                isSanitized={false}
-                            />
+                        <CloudConnectionDialogFields
+                            data={{
+                                s3_region: 'us-west-2',
+                                sftp_port: '22',
+                            }}
+                            errors={errors}
+                            verifySuccess={(this.props.cloudConnectionVerification.success === true)}
+                            isSanitized={false}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="mr-auto">

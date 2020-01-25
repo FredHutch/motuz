@@ -37,12 +37,12 @@ class EditCloudConnectionDialog extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                            <CloudConnectionDialogFields
-                                data={this.props.data}
-                                errors={this.props.errors}
-                                verifySuccess={(this.props.cloudConnectionVerification.success === true)}
-                                isSanitized={true}
-                            />
+                        <CloudConnectionDialogFields
+                            data={this.props.data}
+                            errors={this.props.errors}
+                            verifySuccess={(this.props.cloudConnectionVerification.success === true)}
+                            isSanitized={true}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="outline-danger mr-auto" onClick={() => this.handleDelete()}>
