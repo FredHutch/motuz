@@ -84,7 +84,7 @@ class CloudConnectionDialogFields extends React.Component {
                             className="form-control"
                             name="type"
                             value={type}
-                            onChange={(event => this.setState({type: event.target.value}))}
+                            onChange={event => this.onTypeChange(event.target.value)}
                         >
                             {CONNECTION_TYPES.map(d => (
                                 <option
@@ -690,6 +690,17 @@ class CloudConnectionDialogFields extends React.Component {
                 />
             </React.Fragment>
         )
+    }
+
+    onTypeChange(type) {
+        let {subtype} = this.state
+        if (type == 'sftp') {
+            subtype = 'password'
+        } else if (type == 'azureblob') {
+            subtype = 'key'
+        }
+
+        this.setState({type, subtype})
     }
 
 }
