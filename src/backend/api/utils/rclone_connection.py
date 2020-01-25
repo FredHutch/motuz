@@ -312,6 +312,10 @@ class RcloneConnection(AbstractConnection):
                 'sftp_pass',
                 value_functor=self._obscure,
             )
+            _addCredential(
+                '{}_KEY_FILE'.format(prefix),
+                'sftp_key_file',
+            )
 
         elif data.type == 'dropbox':
             _addCredential(
