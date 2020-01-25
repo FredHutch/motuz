@@ -88,22 +88,27 @@ export const refreshPane = (side='left') => {
 
         const path = state.pane.panes[side][0].path;
 
-        await Promise.all([
-            dispatch(directoryChange(side, path)),
-        ]);
+        await dispatch(directoryChange(side, path))
     }
 }
 
-export const refreshPanes = () => {
+export const refreshPanes = (path=null) => {
     return async (dispatch, getState) => {
         const state = getState();
+
+        const promises = []
 
         const pathLeft = state.pane.panes.left[0].path;
         const pathRight = state.pane.panes.right[0].path;
 
-        await Promise.all([
-            dispatch(directoryChange('left', pathLeft)),
-            dispatch(directoryChange('right', pathRight)),
-        ]);
+        if (path == null || path === pathLeft) {
+            promises.push(dispatch(directoryChange('left', pathLeft)))
+        }
+
+        if (path == null || path === pathRight) {
+            promises.push(dispatch(directoryChange('right', pathRight)))
+        }
+
+        await Promise.all(promises);
     }
 }
