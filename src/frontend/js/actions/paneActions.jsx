@@ -88,9 +88,7 @@ export const refreshPane = (side='left') => {
 
         const path = state.pane.panes[side][0].path;
 
-        await Promise.all([
-            dispatch(directoryChange(side, path)),
-        ]);
+        await dispatch(directoryChange(side, path))
     }
 }
 
