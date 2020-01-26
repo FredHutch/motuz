@@ -168,7 +168,6 @@ class RcloneConnection(AbstractConnection):
         return job_id
 
 
-
     def copy_text(self, job_id):
         return self._job_text[job_id]
 
@@ -186,6 +185,44 @@ class RcloneConnection(AbstractConnection):
 
     def copy_exitstatus(self, job_id):
         return self._job_exitstatus.get(job_id, -1)
+
+
+
+    def md5sum(self,
+            src_data,
+            src_resource_path,
+            user,
+            job_id
+    ):
+        credentials = {}
+
+        if src_data is None: # Local
+            src = src_resource_path
+        else:
+            credentials.update(self._formatCredentials(src_data, name='src'))
+            src = 'src:{}'.format(src_resource_path)
+
+        command = [
+            'sudo',
+            '-E',
+            '-u', user,
+            'rclone',
+            'md5sum',
+            src,
+        ]
+
+        command = [cmd for cmd in command if len(cmd) > 0]
+
+        self._logCommand(command, credentials)
+
+        self._stop_events[job_id] = threading.Event()
+
+        return {"text": "got here"}
+
+        try:
+            return self._execute(command, credentials)
+        except subprocess.CalledProcessError as e:
+            raise RcloneException(sanitize(str(e)))
 
 
     def _logCommand(self, command, credentials):

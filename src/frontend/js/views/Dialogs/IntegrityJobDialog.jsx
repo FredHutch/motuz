@@ -106,30 +106,27 @@ class IntegrityJobDialog extends React.Component {
         const propsData = this.props.data;
         const formData = serializeForm(event.target)
 
-        console.log(propsData)
-        console.log(formData)
+        for (let i in propsData.source_paths) {
+            const src_resource_path = propsData.source_paths[i]
+            const dst_resource_path = propsData.destination_paths[i]
+            const data = {
+                "src_cloud_id": propsData['source_cloud'].id,
+                "src_resource_path": src_resource_path,
+                "dst_cloud_id": propsData['destination_cloud'].id,
+                "dst_resource_path": dst_resource_path,
+            }
 
-        // for (let i in propsData.source_paths) {
-        //     const src_resource_path = propsData.source_paths[i]
-        //     const dst_resource_path = propsData.destination_paths[i]
-        //     const data = {
-        //         "description": formData['description'] || '',
-        //         "copy_links": formData['copy_links'] || false,
-        //         "src_cloud_id": propsData['source_cloud'].id,
-        //         "src_resource_path": src_resource_path,
-        //         "dst_cloud_id": propsData['destination_cloud'].id,
-        //         "dst_resource_path": dst_resource_path,
-        //     }
+            if (data['src_cloud_id'] === 0) {
+                delete data['src_cloud_id'];
+            }
+            if (data['dst_cloud_id'] === 0) {
+                delete data['dst_cloud_id'];
+            }
 
-        //     if (data['src_cloud_id'] === 0) {
-        //         delete data['src_cloud_id'];
-        //     }
-        //     if (data['dst_cloud_id'] === 0) {
-        //         delete data['dst_cloud_id'];
-        //     }
+            this.props.onSubmit(data);
 
-        //     this.props.onSubmit(data);
-        // }
+            break // TODO - allow multiple selection as well
+        }
     }
 }
 
@@ -141,7 +138,7 @@ IntegrityJobDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideIntegrityJobDialog} from 'actions/dialogActions.jsx'
+import {hideIntegrityJobDialog, showSettingsDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.integrityJobDialogData,
@@ -149,6 +146,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideIntegrityJobDialog()),
+    onSubmit: data => {
+        dispatch(hideIntegrityJobDialog())
+        dispatch(showSettingsDialog())
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(IntegrityJobDialog);

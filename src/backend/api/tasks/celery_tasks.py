@@ -87,3 +87,54 @@ def copy_job(self, task_id=None):
             'text': '',
             'error_text': str(e),
         }
+
+
+
+
+@celery.task(name='motuz.api.tasks.check_job', bind=True)
+def check_job(self, task_id, owner):
+    try:
+        start_time = time.time()
+
+        connection = RcloneConnection()
+
+        try:
+            result = connection.md5sum(
+                src_data=copy_job.src_cloud,
+                src_resource_path=copy_job.src_resource_path,
+                user=owner,
+                job_id=task_id,
+            )
+        except Exception as e:
+            self.update_state(state='FAILED', meta={
+                'error_text': repr(e),
+            })
+
+        # while not connection.copy_finished(task_id):
+        #     progress_current = connection.copy_percent(task_id)
+        #     copy_job.progress_current = progress_current
+        #     copy_job.progress_execution_time = int(time.time() - start_time)
+        #     db.session.commit()
+
+        #     self.update_state(state='PROGRESS', meta={
+        #         'text': connection.copy_text(task_id),
+        #         'error_text': connection.copy_error_text(task_id)
+        #     })
+
+        #     time.sleep(1)
+
+        # copy_job.progress_current = 100
+        # copy_job.progress_execution_time = int(time.time() - start_time)
+        # db.session.commit()
+
+        return {
+            'text': result,
+            'error_text': '',
+        }
+    except Exception as e:
+        logging.exception(e)
+
+        return {
+            'text': '',
+            'error_text': repr(e),
+        }

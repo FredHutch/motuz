@@ -63,6 +63,9 @@ def create_app(config_name='dev'):
     from .views.copy_job_views import api as copy_job_ns
     api.add_namespace(copy_job_ns)
 
+    from .views.check_job_views import api as check_job_ns
+    api.add_namespace(check_job_ns)
+
     from .views.cloud_connection_views import api as connection_ns
     api.add_namespace(connection_ns)
 
