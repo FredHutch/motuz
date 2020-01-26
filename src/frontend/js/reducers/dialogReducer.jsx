@@ -15,16 +15,16 @@ const initialState = {
     displayEditCopyJobDialog: false,
     editCopyJobDialogData: {},
 
-    displayIntegrityJobDialogDialog: false,
-    integrityJobDialogDialogData: {
+    displayIntegrityJobDialog: false,
+    integrityJobDialogData: {
         source_cloud: {name: 'ERROR'},
         source_paths: ['ERROR'],
         destination_cloud: {name: 'ERROR'},
         destination_paths: ['ERROR'],
     },
 
-    displayInspectIntegrityJobDialogDialog: false,
-    inspectIntegrityJobDialogDialogData: {
+    displayInspectIntegrityJobDialog: false,
+    inspectIntegrityJobDialogData: {
         left: [
             ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
             ['4cd7e7a1e1c493200b9dd1ac659f948b', 'hello.py'],
