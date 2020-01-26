@@ -29,7 +29,7 @@ class IntegrityJobDialog extends React.Component {
                                     <React.Fragment key={sourcePath}>
                                         {i !== 0 && <hr className='mt-4' />}
 
-                                        <h5 className="text-primary mb-2">Left</h5>
+                                        <h5 className="text-primary mb-2">Compare</h5>
 
                                         <div className="row">
                                             <div className="col-4 text-right">
@@ -54,7 +54,7 @@ class IntegrityJobDialog extends React.Component {
                                             <div className="col-1"></div>
                                         </div>
 
-                                        <h5 className="text-primary mt-4 mb-2">Right</h5>
+                                        <h5 className="text-primary mt-4 mb-2">With</h5>
 
                                         <div className="row">
                                             <div className="col-4 text-right">

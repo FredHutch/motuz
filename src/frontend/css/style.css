@@ -22,6 +22,18 @@ pre {
     width: 16px;
 }
 
+/* rc-tree addons */
+
+.rc-tree-treenode-switcher-open {
+    /* Will help with the right-floating of the md5 hashes */
+    position: relative;
+}
+
+.rc-tree-right {
+    position: absolute;
+    right: 0;
+}
+
 /* Login */
 
 .form-wrapper {
