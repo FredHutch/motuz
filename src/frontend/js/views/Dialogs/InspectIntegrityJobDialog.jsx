@@ -17,48 +17,44 @@ class InspectIntegrityJobDialog extends React.Component {
         console.log(data)
 
         const treeData1 = [
-          { key: '0-0', title: 'parent 1', children:
-            [
-              { key: '0-0-0', title: 'parent 1-1', children:
-                [
-                  { key: '0-0-0-0', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'delete' },
-                  { key: '0-0-0-1', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'insert' },
-                  { key: '0-0-0-2', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
-                  { key: '0-0-0-4', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa' },
-                ],
-              },
-              { key: '0-0-1', title: 'parent 1-2', children:
-                  [
-                    { key: '0-0-1-0', title: 'parent 1-2-0', disableCheckbox: true },
-                    { key: '0-0-1-1', title: 'parent 1-2-1' },
-                  ],
-              },
-            ],
-          },
+            { title: 'home', children: [
+                { title: 'user1', children: [
+                    { title: 'file1.txt', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
+                    { title: 'file2.txt', hash: 'cff7e86786af3a8b935fe400df121633', },
+                    { title: 'file3.txt', hash: '2c71089ec817281108e0e755602e53d1', type: 'insert' },
+                    { title: 'file4.txt', hash: '006d6d7b018ab527438aedc9bcbe0e3f', type: 'hidden' },
+                    { title: 'README.md', hash: '9657f83b32d8a23c740c2852b26b8e7d' },
+                ]},
+                { title: 'user2', children: [
+                    { title: 'sketches.jpg', hash: 'f44988f6977e2566a795f1b3c5c58523' },
+                    { title: 'sketches.png', hash: 'd482f76f6530eb93a9a368664a150439' },
+                ]},
+                { title: 'user3', children: [
+                    { title: 'file1.txt', hash: 'f44988f6977e2566a795f1b3c5c58523' },
+                    { title: 'file2.txt', hash: 'd482f76f6530eb93a9a368664a150439', type: 'missing' },
+                ]},
+            ]},
         ]
 
         const treeData2 = [
-          { key: '0-0', title: 'parent 1', children:
-            [
-              { key: '0-0-0', title: 'parent 1-1', children:
-                [
-                  { key: '0-0-0-0', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'delete' },
-                  { key: '0-0-0-1', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'insert' },
-                  { key: '0-0-0-2', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
-                  { key: '0-0-0-3', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
-                  { key: '0-0-0-4', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa' },
-                ],
-              },
-              { key: '0-0-1', title: 'parent 1-2', children:
-                  [
-                    { key: '0-0-1-0', title: 'parent 1-2-0', disableCheckbox: true },
-                    { key: '0-0-1-1', title: 'parent 1-2-1' },
-                  ],
-              },
-            ],
-          },
+            { title: 'home', children: [
+                { title: 'user1', children: [
+                    { title: 'file1.txt', hash: 'a63702c86927fd67fc2d59c5a0a8e830', type: 'modify' },
+                    { title: 'file2.txt', hash: 'cff7e86786af3a8b935fe400df121633', },
+                    { title: 'file3.txt', hash: '2c71089ec817281108e0e755602e53d1', type: 'hidden' },
+                    { title: 'file4.txt', hash: '006d6d7b018ab527438aedc9bcbe0e3f', type: 'insert' },
+                    { title: 'README.md', hash: '9657f83b32d8a23c740c2852b26b8e7d' },
+                ]},
+                { title: 'user2', children: [
+                    { title: 'sketches.jpg', hash: 'f44988f6977e2566a795f1b3c5c58523' },
+                    { title: 'sketches.png', hash: 'd482f76f6530eb93a9a368664a150439' },
+                ]},
+                { title: 'user3', children: [
+                    { title: 'file1.txt', hash: 'f44988f6977e2566a795f1b3c5c58523' },
+                    { title: 'file2.txt', hash: '', type: 'missing' },
+                ]},
+            ]},
         ]
-
 
         return (
             <div className='dialog-inspect-integrity'>
@@ -108,7 +104,7 @@ class InspectIntegrityJobDialog extends React.Component {
                                             Identical Files
                                         </span>
                                         ,
-                                        <span className='ml-2 p-1' style={styles['delete']}>
+                                        <span className='ml-2 p-1' style={styles['missing']}>
                                             Missing MD5 hash
                                         </span>
                                     </div>
@@ -126,23 +122,28 @@ class InspectIntegrityJobDialog extends React.Component {
         );
     }
 
-    _renderNodes(treeData) {
+    _renderNodes(treeData, level=0) {
         if (!treeData || treeData.length === 0) {
             return null;
         }
 
         return treeData.map((node, i) => (
             <TreeNode
-                key={node.key || i}
+                key={`${level}|${i}`}
                 style={styles[node.type]}
                 title={
                     <React.Fragment>
-                        <span>{node.title}</span>
-                        <span className="rc-tree-right">{node.hash}</span>
+                        <span
+                            style={{fontSize: '14px'}}
+                        >{node.title}</span>
+                        <span
+                            className="rc-tree-right text-monospace"
+                            style={{fontSize: '12px'}}
+                        >{node.hash}</span>
                     </React.Fragment>
                 }
             >
-                {this._renderNodes(node.children)}
+                {this._renderNodes(node.children, level + 1)}
             </TreeNode>
         ))
     }
@@ -163,9 +164,10 @@ InspectIntegrityJobDialog.defaultProps = {
 }
 
 const styles = {
-    'delete': { background: 'rgba(255, 0, 0, 0.1)' },
+    'missing': { background: 'rgba(255, 0, 0, 0.1)' },
     'insert': { background: 'rgba(0, 255, 0, 0.1)' },
     'modify': { background: 'rgba(0, 0, 255, 0.1)' },
+    'hidden': { color: 'white' },
 }
 
 import {connect} from 'react-redux';
