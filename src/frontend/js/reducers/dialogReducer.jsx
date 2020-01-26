@@ -23,6 +23,18 @@ const initialState = {
         destination_paths: ['ERROR'],
     },
 
+    displayInspectIntegrityJobDialogDialog: false,
+    inspectIntegrityJobDialogDialogData: {
+        left: [
+            ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
+            ['4cd7e7a1e1c493200b9dd1ac659f948b', 'hello.py'],
+        ],
+        right: [
+            ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
+            ['4cd7e7a1e1c493200b9dd1ac659f948d', 'hello.py'],
+        ],
+    },
+
     displayNewCloudConnectionDialog: false,
     newCloudConnectionDialogData: {},
 
@@ -102,12 +114,30 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.HIDE_INTEGRITY_JOB_DIALOG:
-    {
+    case dialog.HIDE_INTEGRITY_JOB_DIALOG: {
         return {
             ...state,
             displayIntegrityJobDialog: false,
             integrityJobDialogData: initialState.integrityJobDialogData,
+        }
+    }
+
+    case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG: {
+        return {
+            ...state,
+            displayInspectIntegrityJobDialog: true,
+            inspectIntegrityJobDialogData: {
+                ...state.inspectIntegrityJobDialogData,
+                ...action.payload,
+            }
+        }
+    }
+
+    case dialog.HIDE_INSPECT_INTEGRITY_JOB_DIALOG: {
+        return {
+            ...state,
+            displayInspectIntegrityJobDialog: false,
+            inspectIntegrityJobDialogData: initialState.inspectIntegrityJobDialogData,
         }
     }
 

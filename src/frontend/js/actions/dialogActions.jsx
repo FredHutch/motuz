@@ -19,6 +19,9 @@ export const HIDE_EDIT_COPY_JOB_DIALOG = '@@dialog/HIDE_EDIT_COPY_JOB_DIALOG';
 export const SHOW_INTEGRITY_JOB_DIALOG = '@@dialog/SHOW_INTEGRITY_JOB_DIALOG';
 export const HIDE_INTEGRITY_JOB_DIALOG = '@@dialog/HIDE_INTEGRITY_JOB_DIALOG';
 
+export const SHOW_INSPECT_INTEGRITY_JOB_DIALOG = '@@dialog/SHOW_INSPECT_INTEGRITY_JOB_DIALOG';
+export const HIDE_INSPECT_INTEGRITY_JOB_DIALOG = '@@dialog/HIDE_INSPECT_INTEGRITY_JOB_DIALOG';
+
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
 
@@ -126,6 +129,16 @@ export const hideIntegrityJobDialog = () => ({
     type: HIDE_INTEGRITY_JOB_DIALOG,
 });
 
+export const showInspectIntegrityJobDialog = (data) => {
+    return {
+        type: SHOW_INSPECT_INTEGRITY_JOB_DIALOG,
+        // payload: data,
+    }
+};
+
+export const hideInspectIntegrityJobDialog = () => ({
+    type: HIDE_INSPECT_INTEGRITY_JOB_DIALOG,
+});
 
 export const showNewCloudConnectionDialog = () => ({
     type: SHOW_NEW_CLOUD_CONNECTION_DIALOG,

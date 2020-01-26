@@ -138,7 +138,7 @@ IntegrityJobDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideIntegrityJobDialog, showSettingsDialog} from 'actions/dialogActions.jsx'
+import {hideIntegrityJobDialog, showInspectIntegrityJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.integrityJobDialogData,
@@ -148,7 +148,7 @@ const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideIntegrityJobDialog()),
     onSubmit: data => {
         dispatch(hideIntegrityJobDialog())
-        dispatch(showSettingsDialog())
+        dispatch(showInspectIntegrityJobDialog())
     }
 });
 
