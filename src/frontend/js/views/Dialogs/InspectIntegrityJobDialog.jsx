@@ -16,12 +16,15 @@ class InspectIntegrityJobDialog extends React.Component {
 
         console.log(data)
 
-        const treeData = [
+        const treeData1 = [
           { key: '0-0', title: 'parent 1', children:
             [
               { key: '0-0-0', title: 'parent 1-1', children:
                 [
-                  { key: '0-0-0-0', title: 'parent 1-1-0', hash: 'asdsad' },
+                  { key: '0-0-0-0', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'delete' },
+                  { key: '0-0-0-1', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'insert' },
+                  { key: '0-0-0-2', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
+                  { key: '0-0-0-4', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa' },
                 ],
               },
               { key: '0-0-1', title: 'parent 1-2', children:
@@ -32,14 +35,36 @@ class InspectIntegrityJobDialog extends React.Component {
               },
             ],
           },
-        ];
+        ]
+
+        const treeData2 = [
+          { key: '0-0', title: 'parent 1', children:
+            [
+              { key: '0-0-0', title: 'parent 1-1', children:
+                [
+                  { key: '0-0-0-0', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'delete' },
+                  { key: '0-0-0-1', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'insert' },
+                  { key: '0-0-0-2', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
+                  { key: '0-0-0-3', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
+                  { key: '0-0-0-4', title: 'parent 1-1-0', hash: 'd621730bdf867a3453fb6b51a4ba0faa' },
+                ],
+              },
+              { key: '0-0-1', title: 'parent 1-2', children:
+                  [
+                    { key: '0-0-1-0', title: 'parent 1-2-0', disableCheckbox: true },
+                    { key: '0-0-1-1', title: 'parent 1-2-1' },
+                  ],
+              },
+            ],
+          },
+        ]
 
 
         return (
             <div className='dialog-inspect-integrity'>
                 <Modal
                     show={true}
-                    size="lg"
+                    size="xl"
                     onHide={() => this.handleClose()}
                 >
                     <form action="#">
@@ -48,13 +73,46 @@ class InspectIntegrityJobDialog extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
-                                <Tree
-                                    showLine
-                                    defaultExpandAll
-                                    selectable={false}
-                                >
-                                    {this._renderNodes(treeData)}
-                                </Tree>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <Tree
+                                            showLine
+                                            defaultExpandAll
+                                            selectable={false}
+                                        >
+                                            {this._renderNodes(treeData1)}
+                                        </Tree>
+                                    </div>
+                                    <div className="col-6">
+                                        <Tree
+                                            showLine
+                                            defaultExpandAll
+                                            selectable={false}
+                                        >
+                                            {this._renderNodes(treeData2)}
+                                        </Tree>
+                                    </div>
+                                </div>
+                                <div className="row mt-5">
+                                    <div className="col-12">
+                                        <b>Legend:</b>
+                                        <span className='ml-2 p-1' style={styles['insert']}>
+                                            New File
+                                        </span>
+                                        ,
+                                        <span className='ml-2 p-1' style={styles['modify']}>
+                                            Different files
+                                        </span>
+                                        ,
+                                        <span className='ml-2'>
+                                            Identical Files
+                                        </span>
+                                        ,
+                                        <span className='ml-2 p-1' style={styles['delete']}>
+                                            Missing MD5 hash
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -68,52 +126,26 @@ class InspectIntegrityJobDialog extends React.Component {
         );
     }
 
-    _renderTreeRow(title, hash) {
-        return (
-            <TreeNode title={
-                <React.Fragment>
-                    <span>{title}</span>
-                    <span className="rc-tree-right">{hash}</span>
-                </React.Fragment>
-            } />
-        )
-    }
-
     _renderNodes(treeData) {
         if (!treeData || treeData.length === 0) {
             return null;
         }
 
-        return treeData.map((node, i) => {
-            return (
-                <TreeNode key={node.key || i} title={
+        return treeData.map((node, i) => (
+            <TreeNode
+                key={node.key || i}
+                style={styles[node.type]}
+                title={
                     <React.Fragment>
                         <span>{node.title}</span>
                         <span className="rc-tree-right">{node.hash}</span>
                     </React.Fragment>
-                }>
-                    {this._renderNodes(node.children)}
-                </TreeNode>
-            )
-        })
+                }
+            >
+                {this._renderNodes(node.children)}
+            </TreeNode>
+        ))
     }
-
-
-    // <TreeNode title="parent 1" key="0-0">
-    //     <TreeNode title='asd' key="0-0-0">
-    //         <TreeNode title="leaf" key="0-0-0-0" style={{ background: 'rgba(255, 0, 0, 0.1)' }} />
-    //         {this._renderTreeRow('Hello World', 'foo')}
-    //     </TreeNode>
-    //     <TreeNode title="parent 1-1" key="0-0-1">
-    //         <TreeNode title="parent 1-1-0" key="0-0-1-0" />
-    //         <TreeNode title="parent 1-1-1" key="0-0-1-1" />
-    //     </TreeNode>
-    //     <TreeNode title="parent 1-2" key="0-0-2" disabled>
-    //         <TreeNode title="parent 1-2-0" key="0-0-2-0" />
-    //         <TreeNode title="parent 1-2-1" key="0-0-2-1" />
-    //     </TreeNode>
-    // </TreeNode>
-
 
     handleClose() {
         this.props.onClose();
@@ -128,6 +160,12 @@ class InspectIntegrityJobDialog extends React.Component {
 InspectIntegrityJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
+}
+
+const styles = {
+    'delete': { background: 'rgba(255, 0, 0, 0.1)' },
+    'insert': { background: 'rgba(0, 255, 0, 0.1)' },
+    'modify': { background: 'rgba(0, 0, 255, 0.1)' },
 }
 
 import {connect} from 'react-redux';
