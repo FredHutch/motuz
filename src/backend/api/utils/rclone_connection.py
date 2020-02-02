@@ -189,18 +189,18 @@ class RcloneConnection(AbstractConnection):
 
 
     def md5sum(self,
-            src_data,
-            src_resource_path,
+            data,
+            resource_path,
             user,
             job_id
     ):
         credentials = {}
 
-        if src_data is None: # Local
-            src = src_resource_path
+        if data is None: # Local
+            src = resource_path
         else:
-            credentials.update(self._formatCredentials(src_data, name='src'))
-            src = 'src:{}'.format(src_resource_path)
+            credentials.update(self._formatCredentials(data, name='src'))
+            src = 'src:{}'.format(resource_path)
 
         command = [
             'sudo',
@@ -215,14 +215,26 @@ class RcloneConnection(AbstractConnection):
 
         self._logCommand(command, credentials)
 
-        self._stop_events[job_id] = threading.Event()
-
-        return {"text": "got here"}
-
         try:
-            return self._execute(command, credentials)
+            output = self._execute(command, credentials)
         except subprocess.CalledProcessError as e:
             raise RcloneException(sanitize(str(e)))
+
+        result = []
+        for line in output.split('\n'):
+            # The output of the command is 32 md5sum characters,
+            # followed by 2 spaces
+            # followed by the filename
+            groups = re.search(
+                r'^({})\s\s(.*)'.format('.' * 32), # 32 character md5sum
+                line,
+            )
+            result.append({
+                'Name': groups[2],
+                'md5chksum': groups[1].strip() or None,
+            })
+
+        return result
 
 
     def _logCommand(self, command, credentials):
@@ -590,6 +602,15 @@ def sanitize(string):
 
 
 def main():
+    """
+    Can run as
+    export MOTUZ_REGION='<add-here>'
+    export MOTUZ_ACCESS_KEY_ID='<add-here>'
+    export MOTUZ_SECRET_ACCESS_KEY='<add-here>'
+
+    python -m utils.rclone_connection
+    """
+
     import time
     import os
 
@@ -599,28 +620,38 @@ def main():
     data = CloudConnection()
     data.__dict__ = {
         'type': 's3',
-        'region': os.environ['MOTUZ_REGION'],
-        'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
-        'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
+        'owner': 'aicioara',
+        's3_region': os.environ['MOTUZ_REGION'],
+        's3_access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
+        's3_secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     }
 
     connection = RcloneConnection()
 
-    # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
-    job_id = 123
+    # result = connection.ls(data, '/motuz-test/')
+    # print(result)
+    # return
+
     import random
-    connection.copy(
-        src_data=None, # Local
-        src_resource_path='/tmp/motuz/mb_blob.bin',
-        dst_data=data,
-        dst_resource_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
-        job_id=job_id
+    response = connection.md5sum(
+        data,
+        'motuz-test/plain2/',
+        'aicioara',
+        random.randint(1, 10000000)
     )
+    import json
+    print(json.dumps(response))
 
+    # connection.copy(
+    #     src_data=None, # Local
+    #     src_resource_path='/tmp/motuz/mb_blob.bin',
+    #     dst_data=data,
+    #     dst_resource_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
+    # )
 
-    while not connection.copy_finished(job_id):
-        print(connection.copy_percent(job_id))
-        time.sleep(0.1)
+    # while not connection.copy_finished(job_id):
+    #     print(connection.copy_percent(job_id))
+    #     time.sleep(0.1)
 
 
 
