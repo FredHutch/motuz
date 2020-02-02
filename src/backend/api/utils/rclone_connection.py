@@ -423,6 +423,7 @@ class RcloneConnection(AbstractConnection):
         """
         return self._execute(["rclone", "obscure", password])
 
+
     def _execute(self, command, env={}):
         full_env = os.environ.copy()
         full_env.update(env)
@@ -453,7 +454,7 @@ class RcloneConnection(AbstractConnection):
         thread.start()
 
 
-    def __execute_interactive(self, command, env={}, job_id=0):
+    def __execute_interactive(self, command, env, job_id):
         stop_event = self._stop_events[job_id]
         full_env = os.environ.copy()
         full_env.update(env)
@@ -508,15 +509,15 @@ class RcloneConnection(AbstractConnection):
 
             key, value = match.groups()
             self._job_status[job_id][key] = value
-            self.__process_status(job_id)
+            self.__process_copy_status(job_id)
 
         self._job_percent[job_id] = 100
-        self.__process_status(job_id)
+        self.__process_copy_status(job_id)
 
         exitstatus = process.poll()
         self._job_exitstatus[job_id] = exitstatus
 
-        for _ in range(1000):
+        for _ in range(100000):
             line = process.stderr.readline().decode('utf-8')
             if len(line) == 0:
                 break
@@ -528,12 +529,12 @@ class RcloneConnection(AbstractConnection):
         stop_event.set() # Just in case
 
 
-    def __process_status(self, job_id):
-        self.__process_text(job_id)
-        self.__process_percent(job_id)
+    def __process_copy_status(self, job_id):
+        self.__process_copy_text(job_id)
+        self.__process_copy_percent(job_id)
 
 
-    def __process_text(self, job_id):
+    def __process_copy_text(self, job_id):
         headers = [
             'GTransferred',
             'Errors',
@@ -552,7 +553,7 @@ class RcloneConnection(AbstractConnection):
         self._job_text[job_id] = text
 
 
-    def __process_percent(self, job_id):
+    def __process_copy_percent(self, job_id):
         status = self._job_status[job_id]
 
         match = re.search(r'(\d+)\%', status['GTransferred'])
@@ -588,10 +589,10 @@ def sanitize(string):
         (r"(RCLONE_CONFIG_\S*_SERVICE_ACCOUNT_CREDENTIALS=')([^']*)(')", r"\1{***}\3"),
 
         # SFTP / WebDAV
-        (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1{***}\3"),
+        (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1***\3"),
 
         # Dropbox / Onedrive
-        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1{***}\3"),
+        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1***\3"),
     ]
 
     for regex, replace in sanitizations_regs:
