@@ -91,17 +91,20 @@ def copy_job(self, task_id=None):
 
 
 
-@celery.task(name='motuz.api.tasks.check_job', bind=True)
-def check_job(self, task_id, owner):
+@celery.task(name='motuz.api.tasks.md5sum_job', bind=True)
+def md5sum_job(self, task_id, owner, data):
     try:
         start_time = time.time()
 
         connection = RcloneConnection()
 
+        from pprint import pprint as pp
+        pp(data)
+
         try:
             result = connection.md5sum(
-                src_data=copy_job.src_cloud,
-                src_resource_path=copy_job.src_resource_path,
+                data=data['cloud'],
+                resource_path=data['resource_path'],
                 user=owner,
                 job_id=task_id,
             )
@@ -109,6 +112,11 @@ def check_job(self, task_id, owner):
             self.update_state(state='FAILED', meta={
                 'error_text': repr(e),
             })
+
+            return {
+                'error_text': repr(e),
+            }
+
 
         # while not connection.copy_finished(task_id):
         #     progress_current = connection.copy_percent(task_id)

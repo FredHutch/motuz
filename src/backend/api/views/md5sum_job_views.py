@@ -4,18 +4,18 @@ import random
 from flask import request
 from flask_restplus import Resource, Namespace, fields
 
-from ..managers import check_job_manager
+from ..managers import md5sum_job_manager
 from .. import tasks
 from ..exceptions import HTTP_EXCEPTION
 
 
 
-api = Namespace('check-jobs', description='CheckJob related operations')
+api = Namespace('md5sum-jobs', description='CheckJob related operations')
 
-dto = api.model('check-job', {
+dto = api.model('md5sum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
-    'src_cloud_id': fields.Integer(required=False, example=1),
-    'src_resource_path': fields.String(required=True, example='/tmp'),
+    'cloud_id': fields.Integer(required=False, example=1),
+    'resource_path': fields.String(required=True, example='/tmp'),
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),
@@ -26,7 +26,7 @@ dto = api.model('check-job', {
 
 
 @api.route('/')
-class CopyJobList(Resource):
+class Md5sumJobList(Resource):
 
     @api.expect(dto, validate=True)
     @api.marshal_with(dto, code=201)
@@ -35,7 +35,7 @@ class CopyJobList(Resource):
         Create a new Check Job
         """
         try:
-            return check_job_manager.create(request.json), 201
+            return md5sum_job_manager.create(request.json), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -47,7 +47,7 @@ class CopyJobList(Resource):
 @api.route('/<id>')
 @api.param('id', 'The Check Job Identifier')
 @api.response(404, 'Check Job not found.')
-class CopyJob(Resource):
+class Md5sumJob(Resource):
 
     @api.marshal_with(dto, code=200)
     def get(self, id):
@@ -55,7 +55,7 @@ class CopyJob(Resource):
         Get a specific Check Job
         """
         try:
-            return check_job_manager.retrieve(id), 200
+            return md5sum_job_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -67,7 +67,7 @@ class CopyJob(Resource):
 @api.route('/<id>/stop/')
 @api.param('id', 'The Check Job Identifier')
 @api.response(404, 'Check Job not found.')
-class CopyJob(Resource):
+class Md5sumJob(Resource):
 
     @api.marshal_with(dto, code=202)
     def put(self, id):
@@ -75,7 +75,7 @@ class CopyJob(Resource):
         Stop the Check Job
         """
         try:
-            return check_job_manager.stop(id), 202
+            return md5sum_job_manager.stop(id), 202
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:

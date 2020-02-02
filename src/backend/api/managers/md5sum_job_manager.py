@@ -18,9 +18,10 @@ def create(data):
     # owner = get_logged_in_user(request)
 
     random_id = '%030x' % random.randrange(16**30)
-    tasks.check_job.apply_async(task_id=str(random_id), kwargs={
+    tasks.md5sum_job.apply_async(task_id=str(random_id), kwargs={
         'task_id': random_id,
         'owner': owner,
+        'data': data,
     })
 
     return {
@@ -28,31 +29,30 @@ def create(data):
     }
 
 
-@token_required
+# @token_required
 def retrieve(task_id):
     try:
-        task = tasks.check_job.AsyncResult(str(task_id))
+        task = tasks.md5sum_job.AsyncResult(str(task_id))
         return {
-            'text': task.info.get('text', ''),
-            'error_text': task.info.get('error_text', ''),
+            'progress_text': task.info.get('text', ''),
+            'progress_error_text': task.info.get('error_text', ''),
         }
-    except Exception:
+    except Exception as e:
         return {
-            "text": "TODO",
-            "error_text": "FIXME",
+            'progress_error_text': str(e),
         }
 
 
 @token_required
 def stop(id):
-    check_job = retrieve(id)
+    md5sum_job = retrieve(id)
 
-    task = tasks.check_job.AsyncResult(str(check_job.id))
+    task = tasks.md5sum_job.AsyncResult(str(md5sum_job.id))
     task.revoke(terminate=True)
 
-    check_job = CopyJob.query.get(id) # Avoid race conditions
-    if check_job.progress_state == 'PROGRESS':
-        check_job.progress_state = 'STOPPED'
+    md5sum_job = CopyJob.query.get(id) # Avoid race conditions
+    if md5sum_job.progress_state == 'PROGRESS':
+        md5sum_job.progress_state = 'STOPPED'
         db.session.commit()
 
-    return check_job
+    return md5sum_job
