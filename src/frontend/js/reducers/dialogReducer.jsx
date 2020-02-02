@@ -23,7 +23,7 @@ const initialState = {
         destination_paths: ['ERROR'],
     },
 
-    displayInspectIntegrityJobDialog: true,
+    displayInspectIntegrityJobDialog: false,
     inspectIntegrityJobDialogData: {
         left: [
             ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
