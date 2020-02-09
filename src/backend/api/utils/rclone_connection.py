@@ -9,9 +9,12 @@ import time
 import os
 
 from .abstract_connection import AbstractConnection, RcloneException
+from .hashsum_job_queue import HashsumJobQueue
 
 class RcloneConnection(AbstractConnection):
     def __init__(self):
+        self._hashsum_job_queue = HashsumJobQueue()
+
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
         self._job_text = defaultdict(str)
@@ -235,6 +238,26 @@ class RcloneConnection(AbstractConnection):
             })
 
         return result
+
+
+    # TODO: these _job_texts are clashing with copy jobs
+    def hashsum_text(self, job_id):
+        return self._job_text[job_id]
+
+    def hashsum_error_text(self, job_id):
+        return self._job_error_text[job_id]
+
+    def hashsum_percent(self, job_id):
+        return self._job_percent[job_id]
+
+    def hashsum_stop(self, job_id):
+        self._stop_events[job_id].set()
+
+    def hashsum_finished(self, job_id):
+        return self._stop_events[job_id].is_set()
+
+    def hashsum_exitstatus(self, job_id):
+        return self._job_exitstatus.get(job_id, -1)
 
 
     def _logCommand(self, command, credentials):
