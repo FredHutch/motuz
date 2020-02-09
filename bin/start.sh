@@ -9,6 +9,9 @@ cd ..
 # Initialize Database
 ./bin/utils/database_install.sh
 
+# Shut down anything that might still be running
+docker-compose down
+
 # Start the application
 docker-compose up --scale database_init=0 -d
 
