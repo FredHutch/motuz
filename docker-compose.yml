@@ -1,9 +1,9 @@
-version: '3'
+version: '3.1'
 
 services:
 
-    nginx:
-        container_name: nginx
+    motuz_nginx:
+        container_name: motuz_nginx
         network_mode: host
         build:
             context: .
@@ -19,8 +19,8 @@ services:
             driver: syslog
 
 
-    app:
-        container_name: app
+    motuz_app:
+        container_name: motuz_app
         network_mode: host
         build:
             context: .
@@ -51,7 +51,7 @@ services:
             - /fh/secure:/fh/secure:shared
             - /fh/scratch/:/fh/scratch/
             - /fh/silver:/fh/silver:shared
-            
+
             - /shared:/shared:shared
 
         ports:
@@ -59,8 +59,8 @@ services:
             - 5001:5001
 
 
-    celery:
-        container_name: celery
+    motuz_celery:
+        container_name: motuz_celery
         network_mode: host
         build:
             context: .
@@ -95,11 +95,11 @@ services:
 
         hostname: 0.0.0.0
         depends_on:
-            - app
+            - motuz_app
 
 
-    rabbitmq:
-        container_name: rabbitmq
+    motuz_rabbitmq:
+        container_name: motuz_rabbitmq
         network_mode: host
         image: rabbitmq:3.7.16
         ports:
@@ -110,8 +110,8 @@ services:
         hostname: 0.0.0.0
 
 
-    database:
-        container_name: database
+    motuz_database:
+        container_name: motuz_database
         network_mode: host
         environment:
           POSTGRES_PASSWORD:
@@ -121,3 +121,29 @@ services:
         hostname: 0.0.0.0
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
+
+
+    motuz_database_init:
+        container_name: motuz_database_init
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./docker/database_init/Dockerfile
+        volumes:
+            - /docker/volumes/postgres:/var/lib/postgresql/data
+        secrets:
+            - MOTUZ_DATABASE_USER
+            - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_NAME
+        hostname: 0.0.0.0
+
+
+
+secrets:
+    MOTUZ_DATABASE_USER:
+        file: /docker/secrets/MOTUZ_DATABASE_USER
+    MOTUZ_DATABASE_PASSWORD:
+        file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
+    MOTUZ_DATABASE_NAME:
+        file: /docker/secrets/MOTUZ_DATABASE_NAME
+

@@ -10,7 +10,7 @@ cd ..
 ./bin/utils/database_install.sh
 
 # Start the application
-docker-compose up -d
+docker-compose up --scale motuz_database_init=0 -d
 
 echo "
 Application is building, initializing and starting...
