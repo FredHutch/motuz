@@ -90,19 +90,19 @@ def copy_job(self, task_id=None):
 
 
 @celery.task(name='motuz.api.tasks.hashsum_job', bind=True)
-def hashsum_job(self, task_id, owner, data):
+def hashsum_job(self, task_id):
     try:
         start_time = time.time()
 
-        copy_job = HashsumJob.query.get(task_id)
-        copy_job.progress_state = 'PROGRESS'
+        hashsum_job = HashsumJob.query.get(task_id)
+        hashsum_job.progress_state = 'PROGRESS'
         db.session.commit()
 
         connection = RcloneConnection()
         result = connection.md5sum(
-            data=copy_job.cloud,
-            resource_path=copy_job.resource_path,
-            user=owner,
+            data=hashsum_job.cloud,
+            resource_path=hashsum_job.resource_path,
+            user=hashsum_job.owner,
             job_id=task_id,
         )
 

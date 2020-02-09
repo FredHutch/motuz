@@ -211,25 +211,11 @@ class RcloneConnection(AbstractConnection):
         self._logCommand(command, credentials)
 
         try:
-            output = self._execute(command, credentials)
-        except subprocess.CalledProcessError as e:
+            self._hashsum_job_queue.push(command, credentials, job_id)
+        except RcloneException as e:
             raise RcloneException(sanitize(str(e)))
 
-        result = []
-        for line in output.split('\n'):
-            # The output of the command is 32 md5sum characters,
-            # followed by 2 spaces
-            # followed by the filename
-            groups = re.search(
-                r'^({})\s\s(.*)'.format('.' * 32), # 32 character md5sum
-                line,
-            )
-            result.append({
-                'Name': groups[2],
-                'md5chksum': groups[1].strip() or None,
-            })
-
-        return result
+        return job_id
 
 
     def hashsum_text(self, job_id):

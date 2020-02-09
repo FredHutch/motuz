@@ -103,7 +103,7 @@ class HashsumJobQueue:
                 r'^({})\s\s(.*)'.format('.' * 32), # 32 character md5sum
                 line,
             )
-            self._result_status[job_id] += json.dumps({
+            self._job_status[job_id] += json.dumps({
                 'Name': groups[2],
                 'md5chksum': groups[1].strip() or None,
             })
