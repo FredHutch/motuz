@@ -14,7 +14,7 @@ class HashsumJobQueue:
     def __init__(self):
         self._job_status = defaultdict(list) # Mapping from id to list of dict
 
-        self._job_text = defaultdict(str)
+        self._job_text = {}
         self._job_error_text = defaultdict(str)
         self._job_percent = defaultdict(int)
         self._job_exitstatus = {}
@@ -38,7 +38,7 @@ class HashsumJobQueue:
 
 
     def hashsum_text(self, job_id):
-        return self._job_text[job_id]
+        return self._job_status[job_id]
 
     def hashsum_error_text(self, job_id):
         return self._job_error_text[job_id]
@@ -131,8 +131,3 @@ class HashsumJobQueue:
     def __process_copy_status(self, job_id):
         status = self._job_status[job_id]
 
-        text = '\n'.join(
-            json.dumps(item)
-            for item in status
-        )
-        self._job_text[job_id] = text

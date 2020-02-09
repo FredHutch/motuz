@@ -12,13 +12,22 @@ from ..exceptions import HTTP_EXCEPTION
 
 api = Namespace('hashsum-jobs', description='CheckJob related operations')
 
+progress_test = {
+
+}
+
+hashsum_job_output = api.model('hashsum-job-output', {
+    'Name': fields.String(readonly=True),
+    'md5chksum': fields.String(readonly=True),
+})
+
 dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
     'cloud_id': fields.Integer(required=False, example=1),
     'resource_path': fields.String(required=True, example='/tmp'),
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
-    'progress_text': fields.String(readonly=True, example='Multi\nLine\nText'),
+    'progress_text': fields.List(fields.Nested(hashsum_job_output), readonly=True),
     'progress_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
     'progress_error': fields.String(readonly=True),
     'progress_execution_time': fields.Integer(readonly=True, example=3600),
@@ -55,6 +64,7 @@ class HashsumJob(Resource):
         Get a specific Check Job
         """
         try:
+            import pdb; pdb.set_trace();
             return hashsum_job_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
