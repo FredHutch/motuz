@@ -12,7 +12,7 @@ from .abstract_connection import AbstractConnection, RcloneException
 
 class HashsumJobQueue:
     def __init__(self):
-        self._job_status = defaultdict(str)
+        self._job_status = defaultdict(list) # Mapping from id to list of dict
 
         self._job_text = defaultdict(str)
         self._job_error_text = defaultdict(str)
@@ -103,14 +103,15 @@ class HashsumJobQueue:
                 r'^({})\s\s(.*)'.format('.' * 32), # 32 character md5sum
                 line,
             )
-            self._job_status[job_id] += json.dumps({
+            self._job_status[job_id].append({
                 'Name': groups[2],
                 'md5chksum': groups[1].strip() or None,
             })
+            self.__process_copy_status(job_id)
 
-            self._job_percent[job_id] += 1
 
         self._job_percent[job_id] = 100
+        self.__process_copy_status(job_id)
 
         exitstatus = process.poll()
         self._job_exitstatus[job_id] = exitstatus
@@ -128,41 +129,10 @@ class HashsumJobQueue:
 
 
     def __process_copy_status(self, job_id):
-        self.__process_copy_text(job_id)
-        self.__process_copy_percent(job_id)
-
-
-    def __process_copy_text(self, job_id):
-        headers = [
-            'GTransferred',
-            'Errors',
-            'Checks',
-            'Transferred',
-            'Elapsed time',
-            'Transferring',
-        ]
-
         status = self._job_status[job_id]
 
         text = '\n'.join(
-            '{:>12}: {}'.format(header, status[header])
-            for header in headers
+            json.dumps(item)
+            for item in status
         )
         self._job_text[job_id] = text
-
-
-    def __process_copy_percent(self, job_id):
-        status = self._job_status[job_id]
-
-        match = re.search(r'(\d+)\%', status['GTransferred'])
-
-        if match is not None:
-            self._job_percent[job_id] = match[1]
-            return
-
-        match = re.search(r'(\d+)\%', status['Transferred'])
-        if match is not None:
-            self._job_percent[job_id] = match[1]
-            return
-
-        self._job_percent[job_id] = -1
