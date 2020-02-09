@@ -11,7 +11,7 @@ cd ..
 # source secrets
 . /var/home/svc_cicd/secrets.sh
 
-sudo docker-compose pull database
-sudo docker-compose pull rabbitmq
-sudo docker-compose build nginx app celery
+sudo docker-compose pull motuz_database
+sudo docker-compose pull motuz_rabbitmq
+sudo docker-compose build motuz_nginx motuz_app motuz_celery
 sudo docker-compose restart

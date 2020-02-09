@@ -10,7 +10,7 @@
 ![Motuz transfer in progress](docs/img/image_transfer.png)
 
 <!--  The TOC below is created/maintained by
-      the `Markdown TOC` extension to the 
+      the `Markdown TOC` extension to the
       Visual Studio Code editor.
  -->
 
@@ -48,7 +48,7 @@
 
 ## Quickstart
 
-Quickly get Motuz up and running so you 
+Quickly get Motuz up and running so you
 can explore it. To set up a production instance,
 see [Setting up production](#setting-up-production).
 
@@ -56,7 +56,7 @@ On a Linux machine, do the following:
 
 1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 2. Create a folder called docker in your root directory `sudo mkdir  /docker`.
-3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have 
+3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have
 SSL certificates, you can temporarily use
 [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
 4. Run the start script
@@ -77,11 +77,11 @@ SSL certificates, you can temporarily use
 
 ## Setting up production
 
-The following instructions could be used on 
+The following instructions could be used on
 an on-premises system or an EC2 instance.
 For on-premises installations, we have found
 that bare metal hardware has faster networking
-than virtual machines. 
+than virtual machines.
 
 
 We recommend using a machine running Ubuntu 18.04 (Bionic).
@@ -95,12 +95,12 @@ There are two options for authentication:
 Motuz will let you log in as any (non-root) user who is in
 `/etc/passwd` on the local system.
 
-To use this option, you should make sure the 
-users you want to use exist in `/etc/passwd`. 
+To use this option, you should make sure the
+users you want to use exist in `/etc/passwd`.
 
 If your system does not
 have an appropriate user, create one
-with `useradd` and set its password 
+with `useradd` and set its password
 with `passwd`.
 
 #### Authenticate against Active Directory
@@ -122,7 +122,7 @@ sudo apt-get install -y krb5-user libpam-krb5
 ```
 
 
-### Requirements 
+### Requirements
 
 Git and rsyslog are required regardless of authentication method.
 Install them as follows:
@@ -136,7 +136,7 @@ sudo apt-get install -y git rsyslog
 ### Docker and docker-compose
 
 Docker is also required. Install it according to
-[these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Do NOT simply run `apt-get install` to install Docker. You must follow these 
+[these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Do NOT simply run `apt-get install` to install Docker. You must follow these
 instructions to install Docker from Docker's own
 repositories.
 
@@ -148,7 +148,7 @@ the [releases page](https://github.com/docker/compose/releases) on GitHub. Instr
 ### Shared Filesystems (optional)
 
 If you want to expose shared filesystems to Motuz
-users, you'll need to install NFS and mount all the 
+users, you'll need to install NFS and mount all the
 filesystems that you want to expose. For production
 machines these mounts should be added to `/etc/fstab`.
 
@@ -168,10 +168,10 @@ cd motuz
 ### Set up HTTPS certificate
 
 Obtain an SSL certificate for your domain.
-This will consist of a `.key` file and 
-a `.crt` file. 
+This will consist of a `.key` file and
+a `.crt` file.
 
-These files must be placed in the directory `/root/certs`. Create that 
+These files must be placed in the directory `/root/certs`. Create that
 directory if it doesn't already exist.
 
 Copy the certificate (.crt) file to
@@ -189,12 +189,12 @@ use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-
 
 ### Running Motuz the first time
 
-First, initialize the database as described 
+First, initialize the database as described
 the "Initializing the Database" [section](README.md#initializing-the-database) of the README.
 (At some point, we expect this step to go away.)
 
 
-If you haven't already, change to 
+If you haven't already, change to
 the directory where you cloned the
 Motuz repository.
 
@@ -206,14 +206,14 @@ Motuz is started on a machine.
 ./start.sh
 ```
 
-This will take a few moments. 
+This will take a few moments.
 
 After the stack comes up, assuming your machine
 is set up in DNS as hostname.example.com, you should be able to access Motuz at the following URL:
 
 `https://hostname.example.com/`
 
-If you used a self-signed SSL certificate, your 
+If you used a self-signed SSL certificate, your
 browser will warn you that proceeding is not secure.
 
 
@@ -254,7 +254,7 @@ back up. It will result in short (-2min) downtime.
 2. Initialize app
 
 ```bash
-./bin/init.sh
+./bin/init_dev.sh
 ```
 
 ### Start
