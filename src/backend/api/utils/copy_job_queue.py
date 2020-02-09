@@ -10,9 +10,9 @@ import os
 
 from .abstract_connection import AbstractConnection, RcloneException
 
-class HashsumJobQueue:
+class CopyJobQueue:
     def __init__(self):
-        self._job_status = defaultdict(str)
+        self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
         self._job_text = defaultdict(str)
         self._job_error_text = defaultdict(str)
@@ -37,22 +37,22 @@ class HashsumJobQueue:
         return job_id
 
 
-    def hashsum_text(self, job_id):
+    def copy_text(self, job_id):
         return self._job_text[job_id]
 
-    def hashsum_error_text(self, job_id):
+    def copy_error_text(self, job_id):
         return self._job_error_text[job_id]
 
-    def hashsum_percent(self, job_id):
+    def copy_percent(self, job_id):
         return self._job_percent[job_id]
 
-    def hashsum_stop(self, job_id):
+    def copy_stop(self, job_id):
         self._stop_events[job_id].set()
 
-    def hashsum_finished(self, job_id):
+    def copy_finished(self, job_id):
         return self._stop_events[job_id].is_set()
 
-    def hashsum_exitstatus(self, job_id):
+    def copy_exitstatus(self, job_id):
         return self._job_exitstatus.get(job_id, -1)
 
 
@@ -84,6 +84,9 @@ class HashsumJobQueue:
             stderr=subprocess.PIPE,
         )
 
+        reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
+        reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
+
         while not stop_event.is_set():
             line = process.stdout.readline().decode('utf-8')
 
@@ -96,21 +99,37 @@ class HashsumJobQueue:
 
             line = line.strip()
 
-            # The output of the command is 32 md5sum characters,
-            # followed by 2 spaces
-            # followed by the filename
-            groups = re.search(
-                r'^({})\s\s(.*)'.format('.' * 32), # 32 character md5sum
-                line,
-            )
-            self._result_status[job_id] += json.dumps({
-                'Name': groups[2],
-                'md5chksum': groups[1].strip() or None,
-            })
+            q1 = line.find(reset_sequence1)
+            if q1 != -1:
+                line = line[q1 + len(reset_sequence1):]
 
-            self._job_percent[job_id] += 1
+            q2 = line.find(reset_sequence2)
+            if q2 != -1:
+                line = line[q2 + len(reset_sequence1):]
+
+            line = line.replace(reset_sequence1, '')
+            line = line.replace(reset_sequence2, '')
+
+            match = re.search(r'(ERROR.*)', line)
+            if match is not None:
+                error = match.groups()[0]
+                logging.error(error)
+                self._job_error_text[job_id] += error
+                self._job_error_text[job_id] += '\n'
+                continue
+
+            match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
+            if match is None:
+                logging.info("No match in {}".format(line))
+                time.sleep(0.5)
+                continue
+
+            key, value = match.groups()
+            self._job_status[job_id][key] = value
+            self.__process_copy_status(job_id)
 
         self._job_percent[job_id] = 100
+        self.__process_copy_status(job_id)
 
         exitstatus = process.poll()
         self._job_exitstatus[job_id] = exitstatus
@@ -123,7 +142,7 @@ class HashsumJobQueue:
             self._job_error_text[job_id] += line
             self._job_error_text[job_id] += '\n'
 
-        logging.info("Hashsum process exited with exit status {}".format(exitstatus))
+        logging.info("Copy process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case
 
 
