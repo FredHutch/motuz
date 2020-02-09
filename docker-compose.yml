@@ -15,9 +15,6 @@ services:
         ports:
             - 443:443
             - 80:80
-        logging:
-            driver: syslog
-
 
     app:
         container_name: motuz_app
