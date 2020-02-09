@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship, backref
 
 from ..application import db
 from ..mixins.timestamp_mixin import TimestampMixin
-from ..models.cloud_connection import CloudConnection
 
 
 class CopyJob(db.Model, TimestampMixin):
