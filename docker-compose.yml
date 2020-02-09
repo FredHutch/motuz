@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
 
-    motuz_nginx:
+    nginx:
         container_name: motuz_nginx
         network_mode: host
         build:
@@ -19,7 +19,7 @@ services:
             driver: syslog
 
 
-    motuz_app:
+    app:
         container_name: motuz_app
         network_mode: host
         build:
@@ -65,7 +65,7 @@ services:
             - 5001:5001
 
 
-    motuz_celery:
+    celery:
         container_name: motuz_celery
         network_mode: host
         build:
@@ -107,10 +107,10 @@ services:
 
         hostname: 0.0.0.0
         depends_on:
-            - motuz_app
+            - app
 
 
-    motuz_rabbitmq:
+    rabbitmq:
         container_name: motuz_rabbitmq
         network_mode: host
         image: rabbitmq:3.7.16
@@ -122,7 +122,7 @@ services:
         hostname: 0.0.0.0
 
 
-    motuz_database:
+    database:
         container_name: motuz_database
         network_mode: host
         environment:
@@ -135,7 +135,7 @@ services:
             - /docker/volumes/postgres:/var/lib/postgresql/data
 
 
-    motuz_database_init:
+    database_init:
         container_name: motuz_database_init
         network_mode: host
         build:
