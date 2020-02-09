@@ -5,11 +5,11 @@
 FROM postgres:11.3
 
 COPY \
-    ./docker/database_init/database_init.sh \
+    ./docker/database_init/database_init-entrypoint.sh \
     ./docker/database_init/pg_hba.conf \
     ./docker/wait-for-it.sh \
     ./docker/load-secrets.sh \
     /app/
 
 WORKDIR /app
-CMD /app/database_init.sh
+CMD /app/database_init-entrypoint.sh

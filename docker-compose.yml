@@ -54,6 +54,11 @@ services:
 
             - /shared:/shared:shared
 
+        secrets:
+            - MOTUZ_DATABASE_USER
+            - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_NAME
+
         ports:
             - 5000:5000
             - 5001:5001
@@ -91,6 +96,11 @@ services:
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
 
+
+        secrets:
+            - MOTUZ_DATABASE_USER
+            - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_NAME
 
 
         hostname: 0.0.0.0
@@ -146,4 +156,3 @@ secrets:
         file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
     MOTUZ_DATABASE_NAME:
         file: /docker/secrets/MOTUZ_DATABASE_NAME
-
