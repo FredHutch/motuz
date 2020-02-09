@@ -4,15 +4,15 @@ import random
 from flask import request
 from flask_restplus import Resource, Namespace, fields
 
-from ..managers import md5sum_job_manager
+from ..managers import hashsum_job_manager
 from .. import tasks
 from ..exceptions import HTTP_EXCEPTION
 
 
 
-api = Namespace('md5sum-jobs', description='CheckJob related operations')
+api = Namespace('hashsum-jobs', description='CheckJob related operations')
 
-dto = api.model('md5sum-job', {
+dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
     'cloud_id': fields.Integer(required=False, example=1),
     'resource_path': fields.String(required=True, example='/tmp'),
@@ -26,7 +26,7 @@ dto = api.model('md5sum-job', {
 
 
 @api.route('/')
-class Md5sumJobList(Resource):
+class HashsumJobList(Resource):
 
     @api.expect(dto, validate=True)
     @api.marshal_with(dto, code=201)
@@ -35,7 +35,7 @@ class Md5sumJobList(Resource):
         Create a new Check Job
         """
         try:
-            return md5sum_job_manager.create(request.json), 201
+            return hashsum_job_manager.create(request.json), 201
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -47,7 +47,7 @@ class Md5sumJobList(Resource):
 @api.route('/<id>')
 @api.param('id', 'The Check Job Identifier')
 @api.response(404, 'Check Job not found.')
-class Md5sumJob(Resource):
+class HashsumJob(Resource):
 
     @api.marshal_with(dto, code=200)
     def get(self, id):
@@ -55,7 +55,7 @@ class Md5sumJob(Resource):
         Get a specific Check Job
         """
         try:
-            return md5sum_job_manager.retrieve(id), 200
+            return hashsum_job_manager.retrieve(id), 200
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
@@ -67,7 +67,7 @@ class Md5sumJob(Resource):
 @api.route('/<id>/stop/')
 @api.param('id', 'The Check Job Identifier')
 @api.response(404, 'Check Job not found.')
-class Md5sumJob(Resource):
+class HashsumJob(Resource):
 
     @api.marshal_with(dto, code=202)
     def put(self, id):
@@ -75,7 +75,7 @@ class Md5sumJob(Resource):
         Stop the Check Job
         """
         try:
-            return md5sum_job_manager.stop(id), 202
+            return hashsum_job_manager.stop(id), 202
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:

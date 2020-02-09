@@ -6,7 +6,7 @@ import re
 from os import path as os_path
 
 from .. import celery
-from ..models import CopyJob, CloudConnection
+from ..models import CopyJob, HashsumJob, CloudConnection
 from ..application import db
 
 from ..utils.rclone_connection import RcloneConnection
@@ -89,60 +89,76 @@ def copy_job(self, task_id=None):
         }
 
 
-
-
-@celery.task(name='motuz.api.tasks.md5sum_job', bind=True)
-def md5sum_job(self, task_id, owner, data):
+@celery.task(name='motuz.api.tasks.hashsum_job', bind=True)
+def hashsum_job(self, task_id, owner, data):
     try:
         start_time = time.time()
 
+        copy_job = HashsumJob.query.get(task_id)
+        copy_job.progress_state = 'PROGRESS'
+        db.session.commit()
+
         connection = RcloneConnection()
+        result = connection.md5sum(
+            data=copy_job.cloud,
+            resource_path=copy_job.resource_path,
+            user=owner,
+            job_id=task_id,
+        )
 
-        from pprint import pprint as pp
-        pp(data)
+        while not connection.hashsum_finished(task_id):
+            progress_current = connection.hashsum_percent(task_id)
+            hashsum_job.progress_current = progress_current
+            hashsum_job.progress_execution_time = int(time.time() - start_time)
+            db.session.commit()
 
-        try:
-            result = connection.md5sum(
-                data=data['cloud'],
-                resource_path=data['resource_path'],
-                user=owner,
-                job_id=task_id,
-            )
-        except Exception as e:
-            self.update_state(state='FAILED', meta={
-                'error_text': repr(e),
+            self.update_state(state='PROGRESS', meta={
+                'text': connection.hashsum_text(task_id),
+                'error_text': connection.hashsum_error_text(task_id)
             })
 
-            return {
-                'error_text': repr(e),
-            }
+            time.sleep(1)
 
 
-        # while not connection.copy_finished(task_id):
-        #     progress_current = connection.copy_percent(task_id)
-        #     copy_job.progress_current = progress_current
-        #     copy_job.progress_execution_time = int(time.time() - start_time)
-        #     db.session.commit()
+        exitstatus = connection.hashsum_exitstatus(task_id)
+        if exitstatus == -1:
+            logging.error("Hashsum Job did not set its status")
+            hashsum_job.progress_state = 'UNSET'
+        elif exitstatus == 0:
+            hashsum_job.progress_state = 'SUCCESS'
+        else:
+            hashsum_job.progress_state = 'FAILED'
 
-        #     self.update_state(state='PROGRESS', meta={
-        #         'text': connection.copy_text(task_id),
-        #         'error_text': connection.copy_error_text(task_id)
-        #     })
 
-        #     time.sleep(1)
-
-        # copy_job.progress_current = 100
-        # copy_job.progress_execution_time = int(time.time() - start_time)
-        # db.session.commit()
+        hashsum_job.progress_current = 100
+        hashsum_job.progress_execution_time = int(time.time() - start_time)
+        db.session.commit()
 
         return {
-            'text': result,
-            'error_text': '',
+            'text': connection.hashsum_text(task_id),
+            'error_text': connection.hashsum_error_text(task_id)
         }
+
     except Exception as e:
         logging.exception(e)
 
+        try:
+            hashsum_job.progress_current = 100
+            hashsum_job.progress_state = 'FAILED'
+        except:
+            pass
+
+        try:
+            hashsum_job.progress_execution_time = int(time.time() - start_time)
+        except:
+            pass
+
+        try:
+            db.session.commit()
+        except:
+            pass
+
         return {
             'text': '',
-            'error_text': repr(e),
+            'error_text': str(e),
         }
