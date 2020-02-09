@@ -4,18 +4,10 @@ set -e
 
 
 readonly REQUIRED_ENV_VARS=(
-  "DB_USER"
-  "DB_PASSWORD"
-  "DB_DATABASE"
-  "POSTGRES_USER"
-  "POSTGRES_PASSWORD"
+  "MOTUZ_DATABASE_USER"
+  "MOTUZ_DATABASE_PASSWORD"
+  "MOTUZ_DATABASE_NAME"
 )
-
-
-init() {
-  check_env_vars_set
-  init_user_and_db
-}
 
 
 # Checks if all of the required environment
@@ -37,22 +29,26 @@ Aborting."
 
 
 # Performs the initialization in the already-started PostgreSQL
-# using the preconfigured POSTGRE_USER user.
+# using the preconfigured postgres user.
 init_user_and_db() {
-  psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-    CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';
-    CREATE DATABASE $DB_DATABASE;
-    GRANT ALL PRIVILEGES ON DATABASE $DB_DATABASE TO $DB_USER;
+  psql -v ON_ERROR_STOP=1 --username "postgres" <<-EOSQL
+    CREATE USER $MOTUZ_DATABASE_USER WITH PASSWORD '$MOTUZ_DATABASE_PASSWORD';
+    CREATE DATABASE $MOTUZ_DATABASE_NAME;
+    GRANT ALL PRIVILEGES ON DATABASE $MOTUZ_DATABASE_NAME TO $MOTUZ_DATABASE_USER;
 EOSQL
 }
 
+source ./load-secrets.sh
 
+check_env_vars_set
+
+# Entrypoint in the official docker image for postgres
 docker-entrypoint.sh postgres &
 
 # Wait for the database to be ready
 ./wait-for-it.sh 0.0.0.0:5432 -t 0
 
-init "$@"
+init_user_and_db
 
 # Shut the door behind us, do not allow further alterations or reads to the database
 # except from motuz_user for motuz_database

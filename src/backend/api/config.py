@@ -2,9 +2,18 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# Preventing lazy loading of mandatory variables
+try:
+    MOTUZ_FLASK_SECRET_KEY = os.environ['MOTUZ_FLASK_SECRET_KEY']
+    MOTUZ_DATABASE_USER = os.environ['MOTUZ_DATABASE_USER']
+    MOTUZ_DATABASE_PASSWORD = os.environ['MOTUZ_DATABASE_PASSWORD']
+    MOTUZ_DATABASE_NAME = os.environ['MOTUZ_DATABASE_NAME']
+except KeyError as e:
+    raise KeyError("Environment variable {} not set".format(e.args[0]))
+
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'please_change_this')
-    JWT_SECRET_KEY = os.getenv('SECRET_KEY', 'please_change_this')
+    SECRET_KEY = MOTUZ_FLASK_SECRET_KEY
+    JWT_SECRET_KEY = MOTUZ_FLASK_SECRET_KEY
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ['refresh']
     CELERY_BROKER_URL = 'amqp://'
@@ -15,11 +24,11 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'.format(
-        USER='motuz_user',
-        PASSWORD='motuz_password',
+        USER=MOTUZ_DATABASE_USER,
+        PASSWORD=MOTUZ_DATABASE_PASSWORD,
+        DATABASE=MOTUZ_DATABASE_NAME,
         HOST='0.0.0.0',
         PORT='5432',
-        DATABASE='motuz',
     )
 
     # https://flask-sqlalchemy.palletsprojects.com/en/2.x/signals/
