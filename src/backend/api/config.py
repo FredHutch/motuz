@@ -10,6 +10,7 @@ try:
     MOTUZ_DATABASE_PASSWORD = os.environ['MOTUZ_DATABASE_PASSWORD']
     MOTUZ_DATABASE_NAME = os.environ['MOTUZ_DATABASE_NAME']
     MOTUZ_DATABASE_HOST = os.environ['MOTUZ_DATABASE_HOST']
+    MOTUZ_DATABASE_PROTOCOL = os.environ['MOTUZ_DATABASE_PROTOCOL']
 except KeyError as e:
     raise KeyError("Environment variable {} not set".format(e.args[0]))
 
@@ -22,7 +23,8 @@ class Config:
     JWT_BLACKLIST_TOKEN_CHECKS = ['refresh']
     CELERY_BROKER_URL = 'amqp://'
     CELERY_RESULT_BACKEND = 'amqp://'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{USER}:{PASSWORD}@{HOST}/{DATABASE}'.format(
+    SQLALCHEMY_DATABASE_URI = '{PROTOCOL}://{USER}:{PASSWORD}@{HOST}/{DATABASE}'.format(
+        PROTOCOL=MOTUZ_DATABASE_PROTOCOL,
         USER=MOTUZ_DATABASE_USER,
         PASSWORD=MOTUZ_DATABASE_PASSWORD,
         DATABASE=MOTUZ_DATABASE_NAME,
