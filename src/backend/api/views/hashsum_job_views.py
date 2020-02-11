@@ -18,8 +18,8 @@ dto = api.model('hashsum-job', {
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_text': fields.List(fields.Nested(api.model('hashsum-job-output', {
-        'Name': fields.String(),
-        'md5chksum': fields.String(),
+        'Name': fields.String(example='docker-compose.yml'),
+        'md5chksum': fields.String(example='cea965d0c05b29b2adc970a79d408b67'),
     })), readonly=True),
     'progress_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
     'progress_error': fields.String(readonly=True),
