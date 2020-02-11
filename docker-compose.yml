@@ -127,8 +127,6 @@ services:
     database:
         container_name: motuz_database
         network_mode: host
-        environment:
-          POSTGRES_PASSWORD:
         image: postgres:11.3
         ports:
             - 5432:5432
