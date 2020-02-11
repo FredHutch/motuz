@@ -10,6 +10,7 @@ from flask import request
 
 from ..exceptions import *
 from ..managers.auth_manager import token_required, get_logged_in_user
+from ..application import db
 from ..managers import cloud_connection_manager
 from ..utils.rclone_connection import RcloneConnection
 from ..utils.local_connection import LocalConnection
@@ -26,19 +27,37 @@ def get_uid():
 
 # no token_required
 def get_info():
-    rclone_version = (subprocess
-        .check_output("rclone --version", shell=True)
-        .decode('utf-8')
-        .strip()
-        .replace('\n', ' | ')
-        .replace('- ', '')
-    )
+    payload = {}
 
-    return {
-        "status": "healthy",
-        "date": str(datetime.datetime.now()),
-        "rclone_version": rclone_version,
-    }
+    try:
+        payload['rclone_version'] = (subprocess
+            .check_output("rclone --version", shell=True)
+            .decode('utf-8')
+            .strip()
+            .replace('\n', ' | ')
+            .replace('- ', '')
+        )
+    except:
+        payload['rclone_version'] = "ERROR"
+
+    try:
+        payload['date'] = str(datetime.datetime.now())
+    except:
+        payload['date'] = "ERROR"
+
+    try:
+        payload['database_host'] = db.engine.url.host
+    except:
+        payload['database_host'] = 'ERROR'
+
+    try:
+        payload['status'] = 'healthy' if all([
+            payload[key] != 'ERROR' for key in payload
+        ]) else 'unhealthy'
+    except:
+        payload['status'] = 'unhealthy'
+
+    return payload
 
 
 
