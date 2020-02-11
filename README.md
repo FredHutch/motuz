@@ -55,11 +55,17 @@ see [Setting up production](#setting-up-production).
 On a Linux machine, do the following:
 
 1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. Create a folder called docker in your root directory `sudo mkdir  /docker`.
-3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have
-SSL certificates, you can temporarily use
-[self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
-4. Run the start script
+2. Create a folder called docker in your root directory `sudo install -d -o $USER -m 755 /docker`.
+3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
+4. Create the following two secret files and remember the passwords
+
+```bash
+mkdir -p /docker/secrets
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+```
+
+5. Run the start script
 
 ```bash
 ./start.sh
@@ -116,7 +122,7 @@ you must create those users and set their passwords *before* installing Kerberos
 To authenticate against Active Directory, install the required packages
 as follows:
 
-```
+```bash
 sudo apt-get update -y
 sudo apt-get install -y krb5-user libpam-krb5
 ```
@@ -127,7 +133,7 @@ sudo apt-get install -y krb5-user libpam-krb5
 Git and rsyslog are required regardless of authentication method.
 Install them as follows:
 
-```
+```bash
 sudo apt-get update -y
 sudo apt-get install -y git rsyslog
 ```
@@ -160,7 +166,7 @@ and `celery` services.
 
 Clone the repository as follows:
 
-```
+```bash
 git clone https://github.com/FredHutch/motuz.git
 cd motuz
 ```
@@ -202,7 +208,7 @@ Then run the `start.sh` script. This script
 is *only* meant to be run the first time
 Motuz is started on a machine.
 
-```
+```bash
 ./start.sh
 ```
 
@@ -216,7 +222,6 @@ is set up in DNS as hostname.example.com, you should be able to access Motuz at 
 If you used a self-signed SSL certificate, your
 browser will warn you that proceeding is not secure.
 
-
 ### Redeploying
 
 If you want to stop and restart motuz, for example
@@ -225,19 +230,41 @@ to deploy new code, use the `bin/redeploy.sh` script.
 For example, if you want to deploy recent changes
 to the Motuz code base, first grab the latest code:
 
-```
+```bash
 git pull
 ```
 
 Then run the redeployment script:
 
-```
+```bash
 bin/redeploy.sh
 ```
 
 This will stop Motuz, rebuild Docker images, run
 database migrations if necessary, and bring Motuz
 back up. It will result in short (-2min) downtime.
+
+
+### Using a custom database
+
+The [.env](/.env) file provides a set of default variables that can be overwritten with environment variables. This can be leveraged to use a custom database.
+
+```bash
+export MOTUZ_DATABASE_PROTOCOL=postgresql
+export MOTUZ_DATABASE_NAME=your_database_name
+export MOTUZ_DATABASE_HOST=your-host.com:5432
+export MOTUZ_DATABASE_USER=your_user
+echo -n "your_password" > /docker/secrets/MOTUZ_DATABASE_PASSWORD
+
+./start.sh
+```
+
+The config above is the equivalent of connecting to
+
+```
+postgresql://your_user:your_password@your-host.com:5432/your_database_name
+```
+
 
 
 ## Developer Installation

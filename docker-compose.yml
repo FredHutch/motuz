@@ -53,16 +53,18 @@ services:
             - /fh/silver:/fh/silver:shared
 
             - /shared:/shared:shared
-
-        secrets:
-            - MOTUZ_DATABASE_USER
-            - MOTUZ_DATABASE_PASSWORD
-            - MOTUZ_DATABASE_NAME
-            - MOTUZ_FLASK_SECRET_KEY
-
         ports:
             - 5000:5000
             - 5001:5001
+
+        environment:
+            - MOTUZ_DATABASE_NAME # from ./.env
+            - MOTUZ_DATABASE_HOST # from ./.env
+            - MOTUZ_DATABASE_USER # from ./.env
+        secrets:
+            - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_FLASK_SECRET_KEY
+
 
 
     celery:
@@ -97,13 +99,13 @@ services:
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
 
-
+        environment:
+            - MOTUZ_DATABASE_NAME # from ./.env
+            - MOTUZ_DATABASE_HOST # from ./.env
+            - MOTUZ_DATABASE_USER # from ./.env
         secrets:
-            - MOTUZ_DATABASE_USER
             - MOTUZ_DATABASE_PASSWORD
-            - MOTUZ_DATABASE_NAME
             - MOTUZ_FLASK_SECRET_KEY
-
 
         hostname: 0.0.0.0
         depends_on:
@@ -125,8 +127,6 @@ services:
     database:
         container_name: motuz_database
         network_mode: host
-        environment:
-          POSTGRES_PASSWORD:
         image: postgres:11.3
         ports:
             - 5432:5432
@@ -143,20 +143,18 @@ services:
             dockerfile: ./docker/database_init/Dockerfile
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
+        environment:
+            - MOTUZ_DATABASE_NAME # from ./.env
+            - MOTUZ_DATABASE_HOST # from ./.env
+            - MOTUZ_DATABASE_USER # from ./.env
         secrets:
-            - MOTUZ_DATABASE_USER
             - MOTUZ_DATABASE_PASSWORD
-            - MOTUZ_DATABASE_NAME
         hostname: 0.0.0.0
 
 
 
 secrets:
-    MOTUZ_DATABASE_USER:
-        file: /docker/secrets/MOTUZ_DATABASE_USER
     MOTUZ_DATABASE_PASSWORD:
         file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
-    MOTUZ_DATABASE_NAME:
-        file: /docker/secrets/MOTUZ_DATABASE_NAME
     MOTUZ_FLASK_SECRET_KEY:
         file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
