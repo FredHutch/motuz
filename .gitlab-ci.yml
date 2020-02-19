@@ -1,0 +1,16 @@
+image: "ubuntu:18.04"
+
+before_script:
+  - echo hello from gitlab ci
+  - echo here is the next line
+  - echo remote host is $REMOTE_HOST and the sky is blue
+
+foo:
+  script:
+    - echo hello from foo
+    - echo foo line 2
+
+bar:
+  script:
+    - echo hello from bar
+    - echo bar line 2
