@@ -13,11 +13,12 @@ class HashsumJobTable extends React.Component {
     }
 
     render() {
+        console.log(this.props)
+
         const headers = [
             'id',
             'source',
             'destination',
-            'time',
             'state',
             'progress',
         ]
@@ -25,8 +26,7 @@ class HashsumJobTable extends React.Component {
         const headerNames = {
             'id': 'ID',
             'source': 'Source',
-            'destination': 'Destination',
-            'time': 'Time',
+            'destination': 'Placeholder',
             'state': 'State',
             'progress': 'Progress',
         }
@@ -50,24 +50,16 @@ class HashsumJobTable extends React.Component {
         })
 
         const tableRows = this.props.jobs.map((job, i) => {
-            const progressValue = Math.round(job.progress_current / job.progress_total * 100);
+            // const progressValue = Math.round(job.progress_current / job.progress_total * 100);
+            const progressValue = 100
 
-            const src_cloud_id = job['src_cloud_id'] || 0
+            const src_cloud_id = job['cloud_id'] || 0
             const src_cloud = cloudMapping[src_cloud_id]
-
-            const dst_cloud_id = job['dst_cloud_id'] || 0
-            const dst_cloud = cloudMapping[dst_cloud_id]
 
             if (src_cloud == undefined) {
                 job.src_cloud_type = "(unknown)"
             } else {
                 job.src_cloud_type = src_cloud.type;
-            }
-
-            if (dst_cloud == undefined) {
-                job.dst_cloud_type = "(unknown)";
-            } else {
-                job.dst_cloud_type = dst_cloud.type;
             }
 
             let color = 'default';
@@ -85,11 +77,9 @@ class HashsumJobTable extends React.Component {
                 </b>
             )
             const source = (
-                <UriResource protocol={job.src_cloud_type} path={job.src_resource_path} />
+                <UriResource protocol={job.src_cloud_type} path={job.resource_path} />
             )
-            const destination = (
-                <UriResource protocol={job.dst_cloud_type} path={job.dst_resource_path} />
-            )
+            const destination = <div>Unknown</div>
             const progress = (
                 <ProgressBar
                     now={progressValue}
@@ -100,7 +90,7 @@ class HashsumJobTable extends React.Component {
 
             const jobFields = {
                 ...job,
-                time: parseTime(job.progress_execution_time),
+                // time: parseTime(job.progress_execution_time),
                 state,
                 source,
                 destination,
@@ -125,17 +115,6 @@ class HashsumJobTable extends React.Component {
             .filter(d => d.progress_state === 'PROGRESS')
             .map(d => d.id)
         )
-
-        let shouldRefreshPanes = false;
-        this.previousJobsInProgress.forEach(jobId => {
-            if (!currentJobsInProgress.has(jobId)) {
-                shouldRefreshPanes = true;
-            }
-        })
-        if (shouldRefreshPanes) {
-            this.props.refreshPanes();
-        }
-        this.previousJobsInProgress = currentJobsInProgress;
 
         if (currentJobsInProgress.size > 0) {
             this.scheduleRefresh(currentJobsInProgress);
@@ -186,26 +165,23 @@ HashsumJobTable.defaultProps = {
     jobs: [],
     connections: [],
     fetchData: () => {},
-    refreshPanes: () => {},
     onStopJob: id => {},
     onShowDetails: (copyJob) => {},
 }
 
 import {connect} from 'react-redux';
-import { listCopyJobs, stopCopyJob } from 'actions/apiActions.jsx'
+import { listHashsumJobs, stopHashsumJob } from 'actions/apiActions.jsx'
 import { showEditCopyJobDialog } from 'actions/dialogActions.jsx';
-import { refreshPanes } from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
-    jobs: state.api.jobs,
+    jobs: state.api.hashsumJobs,
     connections: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: () => dispatch(listCopyJobs()),
-    refreshPanes: () => dispatch(refreshPanes()),
-    onStopJob: id => dispatch(stopCopyJob(id)),
-    onShowDetails: (copyJob) => dispatch(showEditCopyJobDialog(copyJob)),
+    fetchData: () => dispatch(listHashsumJobs()),
+    // onStopJob: id => dispatch(stopHashsumJob(id)),
+    // onShowDetails: (hashsumJob) => dispatch(showEditHashsumJobDialog(hashsumJob)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HashsumJobTable);

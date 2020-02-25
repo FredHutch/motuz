@@ -30,6 +30,20 @@ dto = api.model('hashsum-job', {
 @api.route('/')
 class HashsumJobList(Resource):
 
+    @api.marshal_list_with(dto)
+    def get(self):
+        """
+        List all Check Jobs
+        """
+        try:
+            return hashsum_job_manager.list()
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
+
+
     @api.expect(dto, validate=True)
     @api.marshal_with(dto, code=201)
     def post(self):
