@@ -87,7 +87,7 @@ export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
 });
 
-export const showIntegrityJobDialog = () => {
+export const showNewHashsumJobDialog = () => {
     return async (dispatch, getState) => {
         const state = getState();
 
@@ -124,18 +124,18 @@ export const showIntegrityJobDialog = () => {
     }
 };
 
-export const hideIntegrityJobDialog = () => ({
+export const hideNewHashsumJobDialog = () => ({
     type: HIDE_INTEGRITY_JOB_DIALOG,
 });
 
-export const showInspectIntegrityJobDialog = (data) => {
+export const showEditHashsumJobDialog = (data) => {
     return {
         type: SHOW_INSPECT_INTEGRITY_JOB_DIALOG,
         // payload: data,
     }
 };
 
-export const hideInspectIntegrityJobDialog = () => ({
+export const hideEditHashsumJobDialog = () => ({
     type: HIDE_INSPECT_INTEGRITY_JOB_DIALOG,
 });
 

@@ -6,7 +6,7 @@ import 'rc-tree/assets/index.css';
 
 import serializeForm from 'utils/serializeForm.jsx'
 
-class InspectIntegrityJobDialog extends React.Component {
+class EditHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -158,7 +158,7 @@ class InspectIntegrityJobDialog extends React.Component {
     }
 }
 
-InspectIntegrityJobDialog.defaultProps = {
+EditHashsumJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
 }
@@ -171,14 +171,14 @@ const styles = {
 }
 
 import {connect} from 'react-redux';
-import {hideInspectIntegrityJobDialog} from 'actions/dialogActions.jsx'
+import {hideEditHashsumJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.inspectIntegrityJobDialogData,
+    data: state.dialog.inspectNewHashsumJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideInspectIntegrityJobDialog()),
+    onClose: () => dispatch(hideEditHashsumJobDialog()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(InspectIntegrityJobDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditHashsumJobDialog);

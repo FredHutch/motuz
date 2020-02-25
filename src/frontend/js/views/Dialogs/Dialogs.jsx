@@ -2,8 +2,8 @@ import React from 'react';
 
 import NewCopyJobDialog from 'views/Dialogs/NewCopyJobDialog.jsx';
 import EditCopyJobDialog from 'views/Dialogs/EditCopyJobDialog.jsx';
-import IntegrityJobDialog from 'views/Dialogs/IntegrityJobDialog.jsx';
-import InspectIntegrityJobDialog from 'views/Dialogs/InspectIntegrityJobDialog.jsx';
+import NewHashsumJobDialog from 'views/Dialogs/NewHashsumJobDialog.jsx';
+import EditHashsumJobDialog from 'views/Dialogs/EditHashsumJobDialog.jsx';
 import NewCloudConnectionDialog from 'views/Dialogs/CloudConnection/NewCloudConnectionDialog.jsx';
 import EditCloudConnectionDialog from 'views/Dialogs/CloudConnection/EditCloudConnectionDialog.jsx';
 import MkdirDialog from 'views/Dialogs/MkdirDialog.jsx';
@@ -19,8 +19,8 @@ class Dialogs extends React.PureComponent {
             <React.Fragment>
                 {this.props.dialogs.displayNewCopyJobDialog && <NewCopyJobDialog />}
                 {this.props.dialogs.displayEditCopyJobDialog && <EditCopyJobDialog />}
-                {this.props.dialogs.displayIntegrityJobDialog && <IntegrityJobDialog />}
-                {this.props.dialogs.displayInspectIntegrityJobDialog && <InspectIntegrityJobDialog />}
+                {this.props.dialogs.displayNewHashsumJobDialog && <NewHashsumJobDialog />}
+                {this.props.dialogs.displayEditHashsumJobDialog && <EditHashsumJobDialog />}
                 {this.props.dialogs.displayNewCloudConnectionDialog && <NewCloudConnectionDialog />}
                 {this.props.dialogs.displayEditCloudConnectionDialog && <EditCloudConnectionDialog />}
                 {this.props.dialogs.displayMkdirDialog && <MkdirDialog />}

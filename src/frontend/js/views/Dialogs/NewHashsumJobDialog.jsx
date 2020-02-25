@@ -4,7 +4,7 @@ import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
 
-class IntegrityJobDialog extends React.Component {
+class NewHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -130,7 +130,7 @@ class IntegrityJobDialog extends React.Component {
     }
 }
 
-IntegrityJobDialog.defaultProps = {
+NewHashsumJobDialog.defaultProps = {
     data: {},
     followSymlinksDefault: false,
     onClose: () => {},
@@ -138,18 +138,18 @@ IntegrityJobDialog.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {hideIntegrityJobDialog, showInspectIntegrityJobDialog} from 'actions/dialogActions.jsx'
+import {hideNewHashsumJobDialog, showEditHashsumJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.integrityJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onClose: () => dispatch(hideIntegrityJobDialog()),
+    onClose: () => dispatch(hideNewHashsumJobDialog()),
     onSubmit: data => {
-        dispatch(hideIntegrityJobDialog())
-        dispatch(showInspectIntegrityJobDialog())
+        dispatch(hideNewHashsumJobDialog())
+        dispatch(showEditHashsumJobDialog())
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(IntegrityJobDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(NewHashsumJobDialog);

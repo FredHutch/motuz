@@ -210,7 +210,7 @@ CommandBar.defaultProps = {
 }
 
 import {connect} from 'react-redux';
-import {showNewCopyJobDialog, showMkdirDialog, showIntegrityJobDialog} from 'actions/dialogActions.jsx'
+import {showNewCopyJobDialog, showMkdirDialog, showNewHashsumJobDialog} from 'actions/dialogActions.jsx'
 import {hostChange, directoryChange, sideFocus, refreshPane} from 'actions/paneActions.jsx';
 
 
@@ -226,7 +226,7 @@ const mapDispatchToProps = dispatch => ({
     onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
     onRefresh: (side) => dispatch(refreshPane(side)),
     onClick: side => dispatch(sideFocus(side)),
-    onCheck: () => dispatch(showIntegrityJobDialog()),
+    onCheck: () => dispatch(showNewHashsumJobDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

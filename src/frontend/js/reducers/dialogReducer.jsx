@@ -15,7 +15,7 @@ const initialState = {
     displayEditCopyJobDialog: false,
     editCopyJobDialogData: {},
 
-    displayIntegrityJobDialog: false,
+    displayNewHashsumJobDialog: false,
     integrityJobDialogData: {
         source_cloud: {name: 'ERROR'},
         source_paths: ['ERROR'],
@@ -23,8 +23,8 @@ const initialState = {
         destination_paths: ['ERROR'],
     },
 
-    displayInspectIntegrityJobDialog: false,
-    inspectIntegrityJobDialogData: {
+    displayEditHashsumJobDialog: false,
+    inspectNewHashsumJobDialogData: {
         left: [
             ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
             ['4cd7e7a1e1c493200b9dd1ac659f948b', 'hello.py'],
@@ -106,7 +106,7 @@ export default (state=initialState, action) => {
     case dialog.SHOW_INTEGRITY_JOB_DIALOG: {
         return {
             ...state,
-            displayIntegrityJobDialog: true,
+            displayNewHashsumJobDialog: true,
             integrityJobDialogData: {
                 ...state.integrityJobDialogData,
                 ...action.payload.data,
@@ -117,7 +117,7 @@ export default (state=initialState, action) => {
     case dialog.HIDE_INTEGRITY_JOB_DIALOG: {
         return {
             ...state,
-            displayIntegrityJobDialog: false,
+            displayNewHashsumJobDialog: false,
             integrityJobDialogData: initialState.integrityJobDialogData,
         }
     }
@@ -125,9 +125,9 @@ export default (state=initialState, action) => {
     case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG: {
         return {
             ...state,
-            displayInspectIntegrityJobDialog: true,
-            inspectIntegrityJobDialogData: {
-                ...state.inspectIntegrityJobDialogData,
+            displayEditHashsumJobDialog: true,
+            inspectNewHashsumJobDialogData: {
+                ...state.inspectNewHashsumJobDialogData,
                 ...action.payload,
             }
         }
@@ -136,8 +136,8 @@ export default (state=initialState, action) => {
     case dialog.HIDE_INSPECT_INTEGRITY_JOB_DIALOG: {
         return {
             ...state,
-            displayInspectIntegrityJobDialog: false,
-            inspectIntegrityJobDialogData: initialState.inspectIntegrityJobDialogData,
+            displayEditHashsumJobDialog: false,
+            inspectNewHashsumJobDialogData: initialState.inspectNewHashsumJobDialogData,
         }
     }
 
