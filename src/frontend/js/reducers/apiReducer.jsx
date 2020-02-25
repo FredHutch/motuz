@@ -7,6 +7,7 @@ const initialState = {
     clouds: [],
     cloudErrors: {},
     jobs: [],
+    hashsumJobs: [],
     jobErrors: {},
     cloudConnectionVerification: {
         loading: false,
@@ -80,6 +81,75 @@ export default (state=initialState, action) => {
         }
     }
     case api.STOP_COPY_JOB_FAILURE: {
+        return state;
+    }
+
+
+
+
+    case api.LIST_HASHSUM_JOBS_REQUEST: {
+        return state;
+    }
+    case api.LIST_HASHSUM_JOBS_SUCCESS: {
+        const hashsumJobs = action.payload;
+        hashsumJobs.sort((a, b) => b.id - a.id)
+        return {
+            ...state,
+            hashsumJobs,
+        }
+    }
+    case api.LIST_HASHSUM_JOBS_FAILURE: {
+        return state;
+    }
+    case api.RETRIEVE_HASHSUM_JOB_REQUEST: {
+        return state;
+    }
+    case api.RETRIEVE_HASHSUM_JOB_SUCCESS: {
+        const newHashsumJob = action.payload;
+        const hashsumJobs = [...state.hashsumJobs]
+        const index = hashsumJobs.findIndex(d => d.id === newHashsumJob.id)
+        hashsumJobs[index] = newHashsumJob;
+
+        return {
+            ...state,
+            hashsumJobs,
+        }
+    }
+    case api.RETRIEVE_HASHSUM_JOB_FAILURE: {
+        return state;
+    }
+    case api.CREATE_HASHSUM_JOB_REQUEST: {
+        return state;
+    }
+    case api.CREATE_HASHSUM_JOB_SUCCESS: {
+        const newHashsumJob = action.payload;
+
+        return {
+            ...state,
+            hashsumJobs: [
+                newHashsumJob,
+                ...state.hashsumJobs,
+            ],
+        }
+    }
+    case api.CREATE_HASHSUM_JOB_FAILURE: {
+        return state;
+    }
+    case api.STOP_HASHSUM_JOB_REQUEST: {
+        return state;
+    }
+    case api.STOP_HASHSUM_JOB_SUCCESS: {
+        const newHashsumJob = action.payload;
+        const hashsumJobs = [...state.hashsumJobs]
+        const index = hashsumJobs.findIndex(d => d.id === newHashsumJob.id)
+        hashsumJobs[index] = newHashsumJob;
+
+        return {
+            ...state,
+            hashsumJobs,
+        }
+    }
+    case api.STOP_HASHSUM_JOB_FAILURE: {
         return state;
     }
 

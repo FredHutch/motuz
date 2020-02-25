@@ -34,6 +34,24 @@ export const STOP_COPY_JOB_REQUEST = '@@api/STOP_COPY_JOB_REQUEST';
 export const STOP_COPY_JOB_SUCCESS = '@@api/STOP_COPY_JOB_SUCCESS';
 export const STOP_COPY_JOB_FAILURE = '@@api/STOP_COPY_JOB_FAILURE';
 
+
+export const LIST_HASHSUM_JOBS_REQUEST = '@@api/LIST_HASHSUM_JOBS_REQUEST';
+export const LIST_HASHSUM_JOBS_SUCCESS = '@@api/LIST_HASHSUM_JOBS_SUCCESS';
+export const LIST_HASHSUM_JOBS_FAILURE = '@@api/LIST_HASHSUM_JOBS_FAILURE';
+
+export const RETRIEVE_HASHSUM_JOB_REQUEST = '@@api/RETRIEVE_HASHSUM_JOB_REQUEST';
+export const RETRIEVE_HASHSUM_JOB_SUCCESS = '@@api/RETRIEVE_HASHSUM_JOB_SUCCESS';
+export const RETRIEVE_HASHSUM_JOB_FAILURE = '@@api/RETRIEVE_HASHSUM_JOB_FAILURE';
+
+export const CREATE_HASHSUM_JOB_REQUEST = '@@api/CREATE_HASHSUM_JOB_REQUEST';
+export const CREATE_HASHSUM_JOB_SUCCESS = '@@api/CREATE_HASHSUM_JOB_SUCCESS';
+export const CREATE_HASHSUM_JOB_FAILURE = '@@api/CREATE_HASHSUM_JOB_FAILURE';
+
+export const STOP_HASHSUM_JOB_REQUEST = '@@api/STOP_HASHSUM_JOB_REQUEST';
+export const STOP_HASHSUM_JOB_SUCCESS = '@@api/STOP_HASHSUM_JOB_SUCCESS';
+export const STOP_HASHSUM_JOB_FAILURE = '@@api/STOP_HASHSUM_JOB_FAILURE';
+
+
 export const LIST_CLOUD_CONNECTIONS_REQUEST = '@@api/LIST_CLOUD_CONNECTIONS_REQUEST';
 export const LIST_CLOUD_CONNECTIONS_SUCCESS = '@@api/LIST_CLOUD_CONNECTIONS_SUCCESS';
 export const LIST_CLOUD_CONNECTIONS_FAILURE = '@@api/LIST_CLOUD_CONNECTIONS_FAILURE';
@@ -181,6 +199,60 @@ export const stopCopyJob = (id) => ({
     }
 });
 
+
+
+export const listHashsumJobs = () => ({
+    [RSAA]: {
+        endpoint: `/api/hashsum-jobs/`,
+        method: 'GET',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ LIST_HASHSUM_JOBS_REQUEST, LIST_HASHSUM_JOBS_SUCCESS, LIST_HASHSUM_JOBS_FAILURE ],
+    }
+});
+
+export const retrieveHashsumJob = (id) => ({
+    [RSAA]: {
+        endpoint: `/api/hashsum-jobs/${id}`,
+        method: 'GET',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ RETRIEVE_HASHSUM_JOB_REQUEST, RETRIEVE_HASHSUM_JOB_SUCCESS, RETRIEVE_HASHSUM_JOB_FAILURE ],
+    }
+});
+
+export const createHashsumJob = (data) => {
+    return {};
+    return async (dispatch, getState) => {
+        const state = getState();
+        const dirname = upath.dirname(data.dst_resource_path)
+        const basename = upath.basename(data.src_resource_path)
+        if (fileExists(state.pane, dirname, basename) && !confirm(
+            `${basename} already exists at destination. Overwrite?`
+        )) {
+            return;
+        }
+        await dispatch(_createHashsumJob(data));
+    }
+}
+
+export const _createHashsumJob = (data) => ({
+    [RSAA]: {
+        endpoint: `/api/hashsum-jobs/`, // TODO: Why is there a trailing slash here?
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ CREATE_HASHSUM_JOB_REQUEST, CREATE_HASHSUM_JOB_SUCCESS, CREATE_HASHSUM_JOB_FAILURE ],
+    }
+});
+
+export const stopHashsumJob = (id) => ({
+    [RSAA]: {
+        endpoint: `/api/hashsum-jobs/${id}/stop/`, // TODO: Why is there a trailing slash here?
+        method: 'PUT',
+        headers: withAuth({ 'Content-Type': 'application/json' }),
+        types: [ STOP_HASHSUM_JOB_REQUEST, STOP_HASHSUM_JOB_SUCCESS, STOP_HASHSUM_JOB_FAILURE ],
+    }
+});
+
 export const listCloudConnections = (data) => ({
     [RSAA]: {
         endpoint: `/api/connections/`, // TODO: Why is there a trailing slash here?
@@ -189,6 +261,7 @@ export const listCloudConnections = (data) => ({
         types: [ LIST_CLOUD_CONNECTIONS_REQUEST, LIST_CLOUD_CONNECTIONS_SUCCESS, LIST_CLOUD_CONNECTIONS_FAILURE ],
     }
 });
+
 
 export const createCloudConnection = (data) => {
     delete data.id;
