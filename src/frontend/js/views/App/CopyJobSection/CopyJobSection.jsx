@@ -10,7 +10,7 @@ const MINIMUM_SECTION_HEIGHT = 28; // px
 const DEFAULT_SECTION_HEIGHT = 136; // px
 
 
-class CopyJobSection extends React.Component {
+class CopyJobSection extends React.PureComponent {
     constructor(props) {
         super(props);
         this.container = React.createRef();
@@ -34,7 +34,8 @@ class CopyJobSection extends React.Component {
                     value={this.state.value}
                     onChange={value => this.setState({value})}
                 />
-                <HashsumJobTable />
+                {this.state.value === 0 && <CopyJobTable />}
+                {this.state.value === 1 && <HashsumJobTable />}
             </div>
         );
     }
