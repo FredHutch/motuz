@@ -5,54 +5,36 @@ import CopyJobTable from 'views/App/CopyJobSection/CopyJobTable.jsx'
 import ResizableDivider from 'components/ResizableDivider.jsx'
 import Icon from 'components/Icon.jsx'
 
-class CopyJobSectionHeader extends React.Component {
+class CopyJobSectionHeader extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = CopyJobSectionHeader.initialState;
     }
 
     render() {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    fontSize: "12px",
-                    padding: ".3rem",
-                    backgroundColor: "rgba(0,0,0,.05)",
-                }}
-            >
+            <div id='copy-job-section-header'>
                 <div
-                    style={{
-                        cursor: "pointer",
-                    }}
                     className={classnames({
+                        'section-tab': true,
                         'pr-4': true,
-                        'font-weight-bold': this.state.toggle,
-                        'text-primary': !this.state.toggle,
+                        'active': this.props.value === 0,
                     })}
-                    onClick={() => this.setState({toggle: !this.state.toggle})}
+                    onClick={() => this.props.onChange(0)}
                 >
                     Transfers
                 </div>
                 <div
-                    style={{
-                        cursor: "pointer",
-                    }}
                     className={classnames({
+                        'section-tab': true,
                         'pr-4': true,
-                        'font-weight-bold': !this.state.toggle,
-                        'text-primary': this.state.toggle,
+                        'active': this.props.value === 1,
                     })}
-                    onClick={() => this.setState({toggle: !this.state.toggle})}
+                    onClick={() => this.props.onChange(1)}
                 >
                     Verifications
                 </div>
                 <div
-                    style={{
-                        cursor: "pointer",
-                    }}
-                    className='ml-auto text-primary'
+                    className='ml-auto section-tab'
                     onClick={() => this.props.onResizeToggle()}
                 >
                     <span>
@@ -74,10 +56,8 @@ class CopyJobSectionHeader extends React.Component {
 CopyJobSectionHeader.defaultProps = {
     onResizeToggle: () => {},
     isMinimized: false,
-}
-
-CopyJobSectionHeader.initialState = {
-    toggle: true,
+    value: 0,
+    onChange: () => {},
 }
 
 export default CopyJobSectionHeader;

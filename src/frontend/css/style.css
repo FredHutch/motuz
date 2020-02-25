@@ -179,6 +179,25 @@ pre {
     user-select: none;
 }
 
+#copy-job-section-header {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    padding: .3rem;
+    background-color: rgba(0,0,0,.05);
+}
+
+#copy-job-section-header .section-tab {
+    color: #007bff;
+    cursor: pointer;
+}
+
+#copy-job-section-header .section-tab.active {
+    color: inherit;
+    cursor: default;
+    font-weight: bold;
+}
+
 /* Status Bar */
 
 #zone-status-bar {
