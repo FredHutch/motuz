@@ -100,6 +100,11 @@ class EditCopyJobDialog extends React.Component {
                                 Stop Job
                             </Button>
                         )}
+                        {!isInProgress && (
+                            <Button className='mr-auto' variant="info" onClick={() => this.showIntegrityJobDialog()}>
+                                Check Integrity
+                            </Button>
+                        )}
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Close
                         </Button>
@@ -166,6 +171,13 @@ class EditCopyJobDialog extends React.Component {
         }
     }
 
+    showIntegrityJobDialog() {
+        console.log(this.props.data)
+
+        this.props.onClose();
+        this.props.onShowIntegrityJobDialog()
+    }
+
     _scheduleRefresh() {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
@@ -190,11 +202,13 @@ EditCopyJobDialog.defaultProps = {
     fetchData: (id) => {},
     onClose: () => {},
     onStopJob: id => {},
+    onShowIntegrityJobDialog: () => {},
 }
 
 import {connect} from 'react-redux';
-import {hideEditCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hideEditCopyJobDialog, showIntegrityJobDialog} from 'actions/dialogActions.jsx'
 import {retrieveCopyJob, stopCopyJob} from 'actions/apiActions.jsx';
+
 
 const mapStateToProps = state => ({
     data: state.dialog.editCopyJobDialogData,
@@ -205,6 +219,7 @@ const mapDispatchToProps = dispatch => ({
     fetchData: (id) => dispatch(retrieveCopyJob(id)),
     onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
+    onShowIntegrityJobDialog: () => dispatch(showIntegrityJobDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCopyJobDialog);

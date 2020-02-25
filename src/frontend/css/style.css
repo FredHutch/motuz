@@ -122,7 +122,7 @@ pre {
 
 #zone-job-progress {
     grid-area: jobProgress;
-    height: 96px;
+    height: 136px;
 }
 
 #zone-status-bar {

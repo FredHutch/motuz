@@ -5,7 +5,7 @@ import UriResource from 'components/UriResource.jsx'
 import parseTime from 'utils/parseTime.jsx'
 
 
-class CopyJobTable extends React.Component {
+class HashsumJobTable extends React.Component {
     constructor(props) {
         super(props);
         this.timeout = null;
@@ -15,7 +15,6 @@ class CopyJobTable extends React.Component {
     render() {
         const headers = [
             'id',
-            'description',
             'source',
             'destination',
             'time',
@@ -25,7 +24,6 @@ class CopyJobTable extends React.Component {
 
         const headerNames = {
             'id': 'ID',
-            'description': 'Description',
             'source': 'Source',
             'destination': 'Destination',
             'time': 'Time',
@@ -183,7 +181,7 @@ class CopyJobTable extends React.Component {
     }
 }
 
-CopyJobTable.defaultProps = {
+HashsumJobTable.defaultProps = {
     id: '',
     jobs: [],
     connections: [],
@@ -210,4 +208,4 @@ const mapDispatchToProps = dispatch => ({
     onShowDetails: (copyJob) => dispatch(showEditCopyJobDialog(copyJob)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CopyJobTable);
+export default connect(mapStateToProps, mapDispatchToProps)(HashsumJobTable);

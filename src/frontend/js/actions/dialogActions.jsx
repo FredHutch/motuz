@@ -87,9 +87,8 @@ export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
 });
 
-export const showIntegrityJobDialog = (side) => {
+export const showIntegrityJobDialog = () => {
     return async (dispatch, getState) => {
-
         const state = getState();
 
         const srcSide = getSide(state.pane);
