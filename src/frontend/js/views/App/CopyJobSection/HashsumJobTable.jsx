@@ -23,8 +23,8 @@ class HashsumJobTable extends React.Component {
 
         const headerNames = {
             'id': 'ID',
-            'source': 'Source',
-            'destination': 'Placeholder',
+            'source': 'Compare',
+            'destination': 'With',
             'state': 'State',
             'progress': 'Progress',
         }
@@ -51,13 +51,22 @@ class HashsumJobTable extends React.Component {
             // const progressValue = Math.round(job.progress_current / job.progress_total * 100);
             const progressValue = 100
 
-            const src_cloud_id = job['cloud_id'] || 0
+            const src_cloud_id = job['src_cloud_id'] || 0
             const src_cloud = cloudMapping[src_cloud_id]
 
             if (src_cloud == undefined) {
                 job.src_cloud_type = "(unknown)"
             } else {
                 job.src_cloud_type = src_cloud.type;
+            }
+
+            const dst_cloud_id = job['dst_cloud_id'] || 0
+            const dst_cloud = cloudMapping[dst_cloud_id]
+
+            if (dst_cloud == undefined) {
+                job.dst_cloud_type = "(unknown)"
+            } else {
+                job.dst_cloud_type = dst_cloud.type;
             }
 
             let color = 'default';
@@ -75,9 +84,11 @@ class HashsumJobTable extends React.Component {
                 </b>
             )
             const source = (
-                <UriResource protocol={job.src_cloud_type} path={job.resource_path} />
+                <UriResource protocol={job.src_cloud_type} path={job.src_resource_path} />
             )
-            const destination = <div>Unknown</div>
+            const destination = (
+                <UriResource protocol={job.dst_cloud_type} path={job.dst_resource_path} />
+            )
             const progress = (
                 <ProgressBar
                     now={progressValue}
