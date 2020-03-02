@@ -20,13 +20,13 @@ class HashsumJob(db.Model, TimestampMixin):
     progress_error = db.Column(db.String, nullable=True)
     progress_execution_time = db.Column(db.Integer, nullable=False, server_default="0")
 
-    cloud = relationship(
+    src_cloud = relationship(
         "CloudConnection",
         foreign_keys=[src_cloud_id],
         backref=backref("src_hashsum_jobs", cascade="all,delete"),
     )
 
-    cloud = relationship(
+    dst_cloud = relationship(
         "CloudConnection",
         foreign_keys=[dst_cloud_id],
         backref=backref("dst_hashsum_jobs", cascade="all,delete"),

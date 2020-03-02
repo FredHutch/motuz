@@ -98,45 +98,26 @@ def hashsum_job(self, task_id):
         hashsum_job.progress_state = 'PROGRESS'
         db.session.commit()
 
-        connection = RcloneConnection()
-        result = connection.md5sum(
-            data=hashsum_job.src_cloud,
-            resource_path=hashsum_job.src_resource_path,
-            user=hashsum_job.owner,
-            job_id=task_id,
-        )
-
-        while not connection.hashsum_finished(task_id):
-            progress_current = connection.hashsum_percent(task_id)
-            hashsum_job.progress_current = progress_current
+        result_src = _hashsum_job_single(self, hashsum_job, side='src', start_time=start_time)
+        if not result_src["success"]:
             hashsum_job.progress_execution_time = int(time.time() - start_time)
             db.session.commit()
+            return result_src["payload"]
 
-            self.update_state(state='PROGRESS', meta={
-                'text': connection.hashsum_text(task_id),
-                'error_text': connection.hashsum_error_text(task_id)
-            })
+        result_dst = _hashsum_job_single(self, hashsum_job, side='dst', start_time=start_time)
+        if not result_dst["success"]:
+            hashsum_job.progress_execution_time = int(time.time() - start_time)
+            db.session.commit()
+            return result_dst["payload"]
 
-            time.sleep(1)
-
-
-        exitstatus = connection.hashsum_exitstatus(task_id)
-        if exitstatus == -1:
-            logging.error("Hashsum Job did not set its status")
-            hashsum_job.progress_state = 'UNSET'
-        elif exitstatus == 0:
-            hashsum_job.progress_state = 'SUCCESS'
-        else:
-            hashsum_job.progress_state = 'FAILED'
-
-
+        hashsum_job.progress_state = 'SUCCESS'
         hashsum_job.progress_current = 100
         hashsum_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
         return {
-            'text': connection.hashsum_text(task_id),
-            'error_text': connection.hashsum_error_text(task_id)
+            **result_src["payload"],
+            **result_dst["payload"],
         }
 
     except Exception as e:
@@ -159,6 +140,77 @@ def hashsum_job(self, task_id):
             pass
 
         return {
-            'text': '',
             'error_text': str(e),
         }
+
+
+def _hashsum_job_single(self, hashsum_job, *, start_time, side):
+    """
+    @param hashsum_job: HashsumJob
+    @param side: string - 'src' or 'dst'
+    @param start_time: int
+
+    @return: dict {
+        "success",
+        "payload",
+    }
+    """
+    if side not in ("src", "dst"):
+        raise ValueError("_hashsum_job_single side should be either 'src' or 'dst'")
+
+    rclone_connection_id = f"{hashsum_job.id}_{side}"
+
+    connection = RcloneConnection()
+    result = connection.md5sum(
+        data=getattr(hashsum_job, f'{side}_cloud'),
+        resource_path=getattr(hashsum_job, f'{side}_resource_path'),
+        user=hashsum_job.owner,
+        job_id=rclone_connection_id,
+    )
+
+    while not connection.hashsum_finished(rclone_connection_id):
+        progress_current = connection.hashsum_percent(rclone_connection_id)
+        hashsum_job.progress_current = int(
+            progress_current * 0.5 + (0.5 if side == 'dst' else 0)
+        )
+        hashsum_job.progress_execution_time = int(time.time() - start_time)
+        db.session.commit()
+
+        self.update_state(state='PROGRESS', meta={
+            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+            f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+        })
+
+        time.sleep(1)
+
+    exitstatus = connection.hashsum_exitstatus(rclone_connection_id)
+    if exitstatus == -1:
+        logging.error("Hashsum Job did not set its status")
+
+        hashsum_job.progress_state = 'UNSET'
+        hashsum_job.progress_current = 100
+        return {
+            "success": False,
+            "payload": {
+                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+            },
+        }
+    elif exitstatus != 0:
+        hashsum_job.progress_state = 'FAILED'
+        hashsum_job.progress_current = 100
+        return {
+            "success": False,
+            "payload": {
+                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+            },
+        }
+
+    return {
+        "success": True,
+        "payload": {
+            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+            f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+            }
+    }

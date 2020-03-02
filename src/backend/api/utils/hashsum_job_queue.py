@@ -20,7 +20,6 @@ class HashsumJobQueue:
         self._job_exitstatus = {}
 
         self._stop_events = {} # Mapping from id to threading.Event
-        self._latest_job_id = 0
 
 
     def push(self, command, env, job_id):

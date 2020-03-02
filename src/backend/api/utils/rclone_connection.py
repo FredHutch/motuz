@@ -501,14 +501,16 @@ def main():
     # return
 
     import random
-    response = connection.md5sum(
+    import json
+    id = connection.md5sum(
         data,
-        'motuz-test/plain2/',
+        'motuz-test/test/',
         'aicioara',
         random.randint(1, 10000000)
     )
-    import json
-    print(json.dumps(response))
+    for _ in range(10):
+        print(json.dumps(connection.hashsum_text(id)))
+        time.sleep(1)
 
     # connection.copy(
     #     src_data=None, # Local
