@@ -142,7 +142,6 @@ class EditHashsumJobDialog extends React.Component {
             const parts = entry.Name.split('/')
             this._generateTreeLeaf(tree, parts, entry.md5chksum)
         }
-        console.log(tree)
         return tree;
     }
 
