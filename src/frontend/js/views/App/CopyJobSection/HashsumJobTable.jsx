@@ -174,7 +174,6 @@ HashsumJobTable.defaultProps = {
     jobs: [],
     connections: [],
     fetchData: () => {},
-    onStopJob: id => {},
     onShowDetails: (copyJob) => {},
 }
 
@@ -189,7 +188,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listHashsumJobs()),
-    // onStopJob: id => dispatch(stopHashsumJob(id)),
     // onShowDetails: (hashsumJob) => dispatch(showEditHashsumJobDialog(hashsumJob)),
 });
 

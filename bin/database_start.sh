@@ -11,6 +11,9 @@ cd ..
 # docker run -it --entrypoint='bash' --net='host' postgres:11.3
 # psql -h 0.0.0.0 -U postgres -d postgres
 # password: docker
+#
+# Alternative
+# psql ${MOTUZ_DATABASE_PROTOCOL}://${MOTUZ_DATABASE_USER}:${MOTUZ_DATABASE_PASSWORD}@${MOTUZ_DATABASE_HOST}/${MOTUZ_DATABASE_NAME}
 
 docker run --rm \
     --name local_motuz_database \
