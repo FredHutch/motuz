@@ -138,7 +138,7 @@ export const hideNewHashsumJobDialog = () => ({
 export const showEditHashsumJobDialog = (data) => {
     return {
         type: SHOW_INSPECT_INTEGRITY_JOB_DIALOG,
-        // payload: data,
+        payload: data,
     }
 };
 

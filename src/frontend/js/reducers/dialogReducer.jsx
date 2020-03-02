@@ -122,14 +122,14 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG: {
+    case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG:
+    case api.RETRIEVE_HASHSUM_JOB_SUCCESS:
+    case api.STOP_HASHSUM_JOB_SUCCESS:
+    {
         return {
             ...state,
             displayEditHashsumJobDialog: true,
-            editHashsumJobDialogData: {
-                ...state.editHashsumJobDialogData,
-                ...action.payload,
-            }
+            editHashsumJobDialogData: action.payload,
         }
     }
 

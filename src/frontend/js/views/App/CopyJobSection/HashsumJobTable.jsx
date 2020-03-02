@@ -174,12 +174,12 @@ HashsumJobTable.defaultProps = {
     jobs: [],
     connections: [],
     fetchData: () => {},
-    onShowDetails: (copyJob) => {},
+    onShowDetails: (hashsumJob) => {},
 }
 
 import {connect} from 'react-redux';
 import { listHashsumJobs, stopHashsumJob } from 'actions/apiActions.jsx'
-import { showEditCopyJobDialog } from 'actions/dialogActions.jsx';
+import { showEditHashsumJobDialog } from 'actions/dialogActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.hashsumJobs,
@@ -188,7 +188,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchData: () => dispatch(listHashsumJobs()),
-    // onShowDetails: (hashsumJob) => dispatch(showEditHashsumJobDialog(hashsumJob)),
+    onShowDetails: (hashsumJob) => dispatch(showEditHashsumJobDialog(hashsumJob)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HashsumJobTable);

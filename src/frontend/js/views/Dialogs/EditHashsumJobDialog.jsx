@@ -14,6 +14,8 @@ class EditHashsumJobDialog extends React.Component {
     render() {
         const { data } = this.props;
 
+        console.log(this.props.data)
+
         const treeData1 = [
             { title: 'home', children: [
                 { title: 'user1', children: [
@@ -146,6 +148,10 @@ class EditHashsumJobDialog extends React.Component {
         ))
     }
 
+    componentDidMount() {
+        this.props.fetchData(this.props.data.id);
+    }
+
     handleClose() {
         this.props.onClose();
     }
@@ -159,6 +165,7 @@ class EditHashsumJobDialog extends React.Component {
 EditHashsumJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
+    fetchData: (id) => {},
 }
 
 const styles = {
@@ -170,6 +177,7 @@ const styles = {
 
 import {connect} from 'react-redux';
 import {hideEditHashsumJobDialog} from 'actions/dialogActions.jsx'
+import {retrieveHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.editHashsumJobDialogData,
@@ -177,6 +185,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideEditHashsumJobDialog()),
+    fetchData: (id) => {dispatch(retrieveHashsumJob(id))},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditHashsumJobDialog);
