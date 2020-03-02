@@ -13,8 +13,6 @@ class HashsumJobTable extends React.Component {
     }
 
     render() {
-        console.log(this.props)
-
         const headers = [
             'id',
             'source',

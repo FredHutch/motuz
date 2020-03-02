@@ -87,7 +87,14 @@ export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
 });
 
-export const showNewHashsumJobDialog = () => {
+export const showNewHashsumJobDialog = (data) => {
+    if (data != null) {
+        return {
+            type: SHOW_INTEGRITY_JOB_DIALOG,
+            payload: {data},
+        }
+    }
+
     return async (dispatch, getState) => {
         const state = getState();
 

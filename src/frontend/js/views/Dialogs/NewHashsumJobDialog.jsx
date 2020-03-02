@@ -141,7 +141,7 @@ import {connect} from 'react-redux';
 import {hideNewHashsumJobDialog, showEditHashsumJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.integrityJobDialogData,
+    data: state.dialog.newHashsumJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({

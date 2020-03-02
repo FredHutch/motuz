@@ -16,7 +16,7 @@ const initialState = {
     editCopyJobDialogData: {},
 
     displayNewHashsumJobDialog: false,
-    integrityJobDialogData: {
+    newHashsumJobDialogData: {
         source_cloud: {name: 'ERROR'},
         source_paths: ['ERROR'],
         destination_cloud: {name: 'ERROR'},
@@ -24,7 +24,7 @@ const initialState = {
     },
 
     displayEditHashsumJobDialog: false,
-    inspectNewHashsumJobDialogData: {
+    editHashsumJobDialogData: {
         left: [
             ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
             ['4cd7e7a1e1c493200b9dd1ac659f948b', 'hello.py'],
@@ -107,8 +107,8 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayNewHashsumJobDialog: true,
-            integrityJobDialogData: {
-                ...state.integrityJobDialogData,
+            newHashsumJobDialogData: {
+                ...state.newHashsumJobDialogData,
                 ...action.payload.data,
             }
         }
@@ -118,7 +118,7 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayNewHashsumJobDialog: false,
-            integrityJobDialogData: initialState.integrityJobDialogData,
+            newHashsumJobDialogData: initialState.newHashsumJobDialogData,
         }
     }
 
@@ -126,8 +126,8 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayEditHashsumJobDialog: true,
-            inspectNewHashsumJobDialogData: {
-                ...state.inspectNewHashsumJobDialogData,
+            editHashsumJobDialogData: {
+                ...state.editHashsumJobDialogData,
                 ...action.payload,
             }
         }
@@ -137,7 +137,7 @@ export default (state=initialState, action) => {
         return {
             ...state,
             displayEditHashsumJobDialog: false,
-            inspectNewHashsumJobDialogData: initialState.inspectNewHashsumJobDialogData,
+            editHashsumJobDialogData: initialState.editHashsumJobDialogData,
         }
     }
 

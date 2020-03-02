@@ -147,21 +147,21 @@ class CommandBar extends React.Component {
                             <Icon name='sync' className='mr-2'/>
                             <span>Refresh Window</span>
                         </button>
-                        <button
-                            className="btn btn-link px-0 mx-2 my-0"
-                            onClick={event => this.props.onCheck(side)}
-                            alt='Press to check md5sums'
-                            title='Press to check md5sums'
-                            aria-label='Press to check md5sums'
-                        >
-                            <Icon name='database' className='mr-2'/>
-                            <span>Check Integrity</span>
-                        </button>
                     </div>
                 </div>
             </div>
         );
     }
+                        // <button
+                        //     className="btn btn-link px-0 mx-2 my-0"
+                        //     onClick={event => this.props.onCheck(side)}
+                        //     alt='Press to check md5sums'
+                        //     title='Press to check md5sums'
+                        //     aria-label='Press to check md5sums'
+                        // >
+                        //     <Icon name='database' className='mr-2'/>
+                        //     <span>Check Integrity</span>
+                        // </button>
 
     componentDidMount() {
     }

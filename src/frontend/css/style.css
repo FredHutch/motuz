@@ -179,12 +179,22 @@ pre {
     user-select: none;
 }
 
+#zone-job-progress .table-striped tbody tr:nth-of-type(odd) {
+    background-color: white;
+}
+
+#zone-job-progress .table-striped tbody tr:nth-of-type(even),
+#zone-job-progress .table-striped thead tr {
+    background-color: rgba(0,0,0,.05);
+}
+
 #copy-job-section-header {
     display: flex;
     flex-direction: row;
     font-size: 12px;
     padding: .3rem;
-    background-color: rgba(0,0,0,.05);
+    border-top: 1px solid #cccccc;
+    /*background-color: rgba(0,0,0,.05);*/
 }
 
 #copy-job-section-header .section-tab {

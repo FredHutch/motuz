@@ -19,14 +19,16 @@ class EditCopyJobDialog extends React.Component {
         const progress = Math.floor(data.progress_current / data.progress_total * 100);
         const executionTime = parseTime(data.progress_execution_time);
 
+        const isSuccess = data.progress_state === 'SUCCESS'
         const isInProgress = data.progress_state === 'PROGRESS'
+        const isIncomplete = data.progress_state === 'FAILED' || data.progress_state === 'STOPPED'
 
         let color = 'default';
-        if (data.progress_state === 'SUCCESS') {
+        if (isSuccess) {
             color = 'success'
-        } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
+        } else if (isIncomplete) {
             color = 'danger'
-        } else if (data.progress_state === 'PROGRESS') {
+        } else if (isInProgress) {
             color = 'primary'
         }
 
@@ -100,9 +102,14 @@ class EditCopyJobDialog extends React.Component {
                                 Stop Job
                             </Button>
                         )}
-                        {!isInProgress && (
+                        {!isInProgress && isSuccess && (
                             <Button className='mr-auto' variant="info" onClick={() => this.showNewHashsumJobDialog()}>
                                 Check Integrity
+                            </Button>
+                        )}
+                        {!isInProgress && !isSuccess && (
+                            <Button className='mr-auto' variant="success" onClick={() => this.showNewHashsumJobDialog()}>
+                                Retry
                             </Button>
                         )}
                         <Button variant="secondary" onClick={() => this.handleClose()}>
@@ -172,10 +179,28 @@ class EditCopyJobDialog extends React.Component {
     }
 
     showNewHashsumJobDialog() {
-        console.log(this.props.data)
-
+        const data = {
+            source_cloud: {
+                id: this.props.data.src_cloud_id,
+                name: this.props.data.src_cloud_type, // TODO: fix
+                type: this.props.data.src_cloud_type,
+            },
+            source_paths: [this.props.data.src_resource_path],
+            destination_cloud: {
+                id: this.props.data.dst_cloud_id,
+                name: this.props.data.dst_cloud_type, // TODO: fix
+                type: this.props.data.dst_cloud_type,
+            },
+            destination_paths: [this.props.data.dst_resource_path],
+        }
         this.props.onClose();
-        this.props.onShowNewHashsumJobDialog()
+        this.props.onShowNewHashsumJobDialog(data)
+    }
+
+    showNewCopyJobDialog() {
+        data = {
+
+        }
     }
 
     _scheduleRefresh() {
@@ -202,7 +227,7 @@ EditCopyJobDialog.defaultProps = {
     fetchData: (id) => {},
     onClose: () => {},
     onStopJob: id => {},
-    onShowNewHashsumJobDialog: () => {},
+    onShowNewHashsumJobDialog: (data) => {},
 }
 
 import {connect} from 'react-redux';
@@ -219,7 +244,7 @@ const mapDispatchToProps = dispatch => ({
     fetchData: (id) => dispatch(retrieveCopyJob(id)),
     onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
-    onShowNewHashsumJobDialog: () => dispatch(showNewHashsumJobDialog()),
+    onShowNewHashsumJobDialog: (data) => dispatch(showNewHashsumJobDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCopyJobDialog);

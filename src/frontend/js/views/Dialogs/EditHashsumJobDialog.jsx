@@ -14,8 +14,6 @@ class EditHashsumJobDialog extends React.Component {
     render() {
         const { data } = this.props;
 
-        console.log(data)
-
         const treeData1 = [
             { title: 'home', children: [
                 { title: 'user1', children: [
@@ -174,7 +172,7 @@ import {connect} from 'react-redux';
 import {hideEditHashsumJobDialog} from 'actions/dialogActions.jsx'
 
 const mapStateToProps = state => ({
-    data: state.dialog.inspectNewHashsumJobDialogData,
+    data: state.dialog.editHashsumJobDialogData,
 });
 
 const mapDispatchToProps = dispatch => ({
