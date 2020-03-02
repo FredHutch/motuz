@@ -27,14 +27,15 @@ def list(page_size=50, offset=0):
 
 
 
-# @token_required
+@token_required
 def create(data):
-    owner = "aicioara"
-    # owner = get_logged_in_user(request)
+    owner = get_logged_in_user(request)
 
     hashsum_job = HashsumJob(**{
-        'cloud_id': data.get('cloud_id', None),
-        'resource_path': data.get('resource_path', None),
+        'src_cloud_id': data.get('src_cloud_id', None),
+        'src_resource_path': data.get('src_resource_path', None),
+        'dst_cloud_id': data.get('dst_cloud_id', None),
+        'dst_resource_path': data.get('dst_resource_path', None),
         'progress_current': 0,
         'progress_total': 100,
         'progress_state': "PROGRESS",
@@ -52,15 +53,14 @@ def create(data):
     return hashsum_job
 
 
-# @token_required
+@token_required
 def retrieve(id):
     hashsum_job = HashsumJob.query.get(id)
 
     if hashsum_job is None:
         raise HTTP_404_NOT_FOUND('Hashsum Job with id {} not found'.format(id))
 
-    # owner = get_logged_in_user(request)
-    owner = "aicioara"
+    owner = get_logged_in_user(request)
 
     if hashsum_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Hashsum Job with id {} not found'.format(id))
@@ -75,7 +75,7 @@ def retrieve(id):
     return hashsum_job
 
 
-# @token_required
+@token_required
 def stop(id):
     hashsum_job = retrieve(id)
 

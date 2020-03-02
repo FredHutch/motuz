@@ -100,8 +100,8 @@ def hashsum_job(self, task_id):
 
         connection = RcloneConnection()
         result = connection.md5sum(
-            data=hashsum_job.cloud,
-            resource_path=hashsum_job.resource_path,
+            data=hashsum_job.src_cloud,
+            resource_path=hashsum_job.src_resource_path,
             user=hashsum_job.owner,
             job_id=task_id,
         )

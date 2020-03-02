@@ -13,8 +13,10 @@ api = Namespace('hashsum-jobs', description='CheckJob related operations')
 
 dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
-    'cloud_id': fields.Integer(required=False, example=1),
-    'resource_path': fields.String(required=True, example='/tmp'),
+    'src_cloud_id': fields.Integer(required=False, example=1),
+    'src_resource_path': fields.String(required=True, example='/tmp'),
+    'dst_cloud_id': fields.Integer(required=False, example=2),
+    'dst_resource_path': fields.String(required=True, example='/temp'),
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_text': fields.List(fields.Nested(api.model('hashsum-job-output', {

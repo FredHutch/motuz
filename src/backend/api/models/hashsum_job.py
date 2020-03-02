@@ -1,5 +1,3 @@
-import datetime
-
 from sqlalchemy.orm import relationship, backref
 
 from ..application import db
@@ -10,8 +8,10 @@ class HashsumJob(db.Model, TimestampMixin):
     __tablename__ = "hashsum_job"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
-    resource_path = db.Column(db.String)
+    src_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
+    src_resource_path = db.Column(db.String)
+    dst_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
+    dst_resource_path = db.Column(db.String)
     owner = db.Column(db.String)
 
     progress_state = db.Column(db.String, nullable=True)
@@ -22,8 +22,14 @@ class HashsumJob(db.Model, TimestampMixin):
 
     cloud = relationship(
         "CloudConnection",
-        foreign_keys=[cloud_id],
-        backref=backref("hashsum_jobs", cascade="all,delete"),
+        foreign_keys=[src_cloud_id],
+        backref=backref("src_hashsum_jobs", cascade="all,delete"),
+    )
+
+    cloud = relationship(
+        "CloudConnection",
+        foreign_keys=[dst_cloud_id],
+        backref=backref("dst_hashsum_jobs", cascade="all,delete"),
     )
 
     def __repr__(self):

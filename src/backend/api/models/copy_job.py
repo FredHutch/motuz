@@ -1,5 +1,3 @@
-import datetime
-
 from sqlalchemy.orm import relationship, backref
 
 from ..application import db

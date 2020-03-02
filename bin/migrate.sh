@@ -8,7 +8,7 @@ cd ..
 
 source venv/bin/activate
 cd src/backend/
-python manage.py db migrate
+python manage.py db migrate || true
 
 echo -e "\n\nPress ENTER to execute migration. Ctrl+C to abort"
 read
