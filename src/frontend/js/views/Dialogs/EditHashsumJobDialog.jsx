@@ -12,49 +12,10 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const left = this.props.data.progress_src_text || [];
+        const right = this.props.data.progress_dst_text || [];
 
-        console.log(this.props.data)
-
-        const treeData1 = [
-            { title: 'home', children: [
-                { title: 'user1', children: [
-                    { title: 'file1.txt', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
-                    { title: 'file2.txt', hash: 'cff7e86786af3a8b935fe400df121633', },
-                    { title: 'file3.txt', hash: '2c71089ec817281108e0e755602e53d1', type: 'insert' },
-                    { title: 'file4.txt', hash: '006d6d7b018ab527438aedc9bcbe0e3f', type: 'hidden' },
-                    { title: 'README.md', hash: '9657f83b32d8a23c740c2852b26b8e7d' },
-                ]},
-                { title: 'user2', children: [
-                    { title: 'sketches.jpg', hash: 'f44988f6977e2566a795f1b3c5c58523' },
-                    { title: 'sketches.png', hash: 'd482f76f6530eb93a9a368664a150439' },
-                ]},
-                { title: 'user3', children: [
-                    { title: 'file1.txt', hash: 'f44988f6977e2566a795f1b3c5c58523' },
-                    { title: 'file2.txt', hash: 'd482f76f6530eb93a9a368664a150439', type: 'missing' },
-                ]},
-            ]},
-        ]
-
-        const treeData2 = [
-            { title: 'home', children: [
-                { title: 'user1', children: [
-                    { title: 'file1.txt', hash: 'a63702c86927fd67fc2d59c5a0a8e830', type: 'modify' },
-                    { title: 'file2.txt', hash: 'cff7e86786af3a8b935fe400df121633', },
-                    { title: 'file3.txt', hash: '2c71089ec817281108e0e755602e53d1', type: 'hidden' },
-                    { title: 'file4.txt', hash: '006d6d7b018ab527438aedc9bcbe0e3f', type: 'insert' },
-                    { title: 'README.md', hash: '9657f83b32d8a23c740c2852b26b8e7d' },
-                ]},
-                { title: 'user2', children: [
-                    { title: 'sketches.jpg', hash: 'f44988f6977e2566a795f1b3c5c58523' },
-                    { title: 'sketches.png', hash: 'd482f76f6530eb93a9a368664a150439' },
-                ]},
-                { title: 'user3', children: [
-                    { title: 'file1.txt', hash: 'f44988f6977e2566a795f1b3c5c58523' },
-                    { title: 'file2.txt', hash: '', type: 'missing' },
-                ]},
-            ]},
-        ]
+        let {treeLeft, treeRight} = this._processData(left, right)
 
         return (
             <div className='dialog-inspect-integrity'>
@@ -70,22 +31,24 @@ class EditHashsumJobDialog extends React.Component {
                         <Modal.Body>
                             <div className="container">
                                 <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-6 overflow-hidden">
                                         <Tree
+                                            key={Math.random()}
                                             showLine
                                             defaultExpandAll
                                             selectable={false}
                                         >
-                                            {this._renderNodes(treeData1)}
+                                            {this._renderNodes(treeLeft)}
                                         </Tree>
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col-6 overflow-hidden">
                                         <Tree
+                                            key={Math.random()}
                                             showLine
                                             defaultExpandAll
                                             selectable={false}
                                         >
-                                            {this._renderNodes(treeData2)}
+                                            {this._renderNodes(treeRight)}
                                         </Tree>
                                     </div>
                                 </div>
@@ -134,11 +97,10 @@ class EditHashsumJobDialog extends React.Component {
                 title={
                     <React.Fragment>
                         <span
-                            style={{fontSize: '14px'}}
+                            className="rc-tree-left"
                         >{node.title}</span>
                         <span
                             className="rc-tree-right text-monospace"
-                            style={{fontSize: '12px'}}
                         >{node.hash}</span>
                     </React.Fragment>
                 }
@@ -156,10 +118,51 @@ class EditHashsumJobDialog extends React.Component {
         this.props.onClose();
     }
 
-    // This will be moved to happen on data fetch for performance reasons
-    _preprocessData(data) {
-        const {left, right} = data;
+    _processData(left, right) {
+        const treeLeft = this._generateTree(left)
+        const treeRight = this._generateTree(right)
+
+        return {
+            treeLeft,
+            treeRight,
+        }
     }
+
+    /**
+     * Trees are of the form
+     * [
+     *     { title: 'user1', children: [
+     *         { title: 'file1.txt', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
+     *     },
+     * ]
+     */
+    _generateTree(data) {
+        const tree = []
+        for (let entry of data) {
+            const parts = entry.Name.split('/')
+            this._generateTreeLeaf(tree, parts, entry.md5chksum)
+        }
+        console.log(tree)
+        return tree;
+    }
+
+    _generateTreeLeaf(branches, parts, md5chksum) {
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            let branch = branches.find(d => d.title === part)
+            if (!branch) {
+                branch = {title: part, children: []}
+                branches.push(branch)
+            }
+            if (i === parts.length - 1) {
+                branch.hash = md5chksum
+                delete branch.children
+            } else {
+                branches = branch.children
+            }
+        }
+    }
+
 }
 
 EditHashsumJobDialog.defaultProps = {
