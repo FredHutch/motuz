@@ -104,7 +104,7 @@ class NewHashsumJobDialog extends React.Component {
         event.preventDefault();
 
         const propsData = this.props.data;
-        const formData = serializeForm(event.target)
+        const formData = serializeForm(event.target);
 
         for (let i in propsData.source_paths) {
             const src_resource_path = propsData.source_paths[i]
@@ -116,17 +116,22 @@ class NewHashsumJobDialog extends React.Component {
                 "dst_resource_path": dst_resource_path,
             }
 
-            if (data['src_cloud_id'] === 0) {
+            if (!data['src_cloud_id']) {
                 delete data['src_cloud_id'];
             }
-            if (data['dst_cloud_id'] === 0) {
+            if (!data['dst_cloud_id']) {
                 delete data['dst_cloud_id'];
             }
 
-            this.props.onSubmit(data);
+            this.onSubmit(data);
 
             break // TODO - allow multiple selection as well
         }
+    }
+
+    onSubmit(data) {
+        console.log(data)
+        this.props.onSubmit(data)
     }
 }
 
@@ -139,6 +144,7 @@ NewHashsumJobDialog.defaultProps = {
 
 import {connect} from 'react-redux';
 import {hideNewHashsumJobDialog, showEditHashsumJobDialog} from 'actions/dialogActions.jsx'
+import {createHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.newHashsumJobDialogData,
@@ -148,7 +154,7 @@ const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideNewHashsumJobDialog()),
     onSubmit: data => {
         dispatch(hideNewHashsumJobDialog())
-        dispatch(showEditHashsumJobDialog())
+        dispatch(createHashsumJob(data))
     }
 });
 

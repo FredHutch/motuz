@@ -219,22 +219,7 @@ export const retrieveHashsumJob = (id) => ({
     }
 });
 
-export const createHashsumJob = (data) => {
-    return {};
-    return async (dispatch, getState) => {
-        const state = getState();
-        const dirname = upath.dirname(data.dst_resource_path)
-        const basename = upath.basename(data.src_resource_path)
-        if (fileExists(state.pane, dirname, basename) && !confirm(
-            `${basename} already exists at destination. Overwrite?`
-        )) {
-            return;
-        }
-        await dispatch(_createHashsumJob(data));
-    }
-}
-
-export const _createHashsumJob = (data) => ({
+export const createHashsumJob = (data) => ({
     [RSAA]: {
         endpoint: `/api/hashsum-jobs/`, // TODO: Why is there a trailing slash here?
         method: 'POST',

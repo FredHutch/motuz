@@ -74,7 +74,7 @@ CopyJobSection.defaultProps = {
 
 CopyJobSection.initialState = {
     height: DEFAULT_SECTION_HEIGHT,
-    value: 1,
+    value: 0,
 }
 
 export default CopyJobSection;

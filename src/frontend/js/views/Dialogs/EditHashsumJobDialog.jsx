@@ -121,6 +121,7 @@ class EditHashsumJobDialog extends React.Component {
     _processData(left, right) {
         const treeLeft = this._generateTree(left)
         const treeRight = this._generateTree(right)
+        this._compareTrees(treeLeft, treeRight)
 
         return {
             treeLeft,
@@ -160,6 +161,10 @@ class EditHashsumJobDialog extends React.Component {
                 branches = branch.children
             }
         }
+    }
+
+    _compareTrees(treeLeft, treeRight) {
+        // TODO
     }
 
 }
