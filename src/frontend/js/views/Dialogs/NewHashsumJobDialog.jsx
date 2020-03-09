@@ -130,7 +130,6 @@ class NewHashsumJobDialog extends React.Component {
     }
 
     onSubmit(data) {
-        console.log(data)
         this.props.onSubmit(data)
     }
 }

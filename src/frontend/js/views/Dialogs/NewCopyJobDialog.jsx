@@ -176,8 +176,7 @@ class NewCopyJobDialog extends React.Component {
                 delete data['dst_cloud_id'];
             }
 
-            console.log(data)
-            // this.props.onSubmit(data);
+            this.props.onSubmit(data);
         }
     }
 

@@ -93,13 +93,13 @@ class EditHashsumJobDialog extends React.Component {
         return treeData.map((node, i) => (
             <TreeNode
                 key={`${level}|${i}`}
-                style={styles[node.type]}
                 title={
                     <React.Fragment>
                         <span
                             className="rc-tree-left"
                         >{node.title}</span>
                         <span
+                            style={styles[node.type]}
                             className="rc-tree-right text-monospace"
                         >{node.hash}</span>
                     </React.Fragment>
@@ -119,6 +119,9 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     _processData(left, right) {
+        left.sort()
+        right.sort()
+
         const treeLeft = this._generateTree(left)
         const treeRight = this._generateTree(right)
         this._compareTrees(treeLeft, treeRight)
@@ -140,7 +143,8 @@ class EditHashsumJobDialog extends React.Component {
     _generateTree(data) {
         const tree = []
         for (let entry of data) {
-            const parts = entry.Name.split('/')
+            // TODO: Figure out why this is sometimes failing
+            const parts = entry && entry.Name ? entry.Name.split('/') : []
             this._generateTreeLeaf(tree, parts, entry.md5chksum)
         }
         return tree;
@@ -164,7 +168,46 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     _compareTrees(treeLeft, treeRight) {
-        // TODO
+        treeLeft = treeLeft || []
+        treeRight = treeRight || []
+
+        let i = 0
+        let j = 0
+        while (i < treeLeft.length && j < treeRight.length) {
+            if (treeLeft[i].title === treeRight[j].title) {
+                if (this._isLeaf(treeLeft[i]) && this._isLeaf(treeRight[j])) {
+                    if (treeLeft[i].hash !== treeRight[j].hash) {
+                        treeLeft[i].type = treeRight[j].type = 'modify';
+                    }
+                } else {
+                    this._compareTrees(treeLeft[i].children, treeRight[j].children)
+                }
+            }
+            else if (treeLeft[i].title < treeRight[j].title) {
+                treeLeft[i].type = 'insert'
+                treeRight.splice(i, 0, {type: 'hidden'})
+            } else {
+                treeRight[j].type = 'insert'
+                treeLeft.splice(j, 0, {type: 'hidden'})
+            }
+            i++; j++;
+        }
+
+        while (i < treeLeft.length) {
+            treeLeft[i].type = 'insert'
+            treeRight.splice(i, 0, {type: 'hidden'})
+            i++; j++;
+        }
+
+        while (j < treeRight.length) {
+            treeRight[j].type = 'insert'
+            treeLeft.splice(j, 0, {type: 'hidden'})
+            i++; j++;
+        }
+    }
+
+    _isLeaf(treeNode) {
+        return !!treeNode.hash
     }
 
 }
