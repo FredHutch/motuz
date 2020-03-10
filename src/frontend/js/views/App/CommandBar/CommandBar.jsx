@@ -152,19 +152,6 @@ class CommandBar extends React.Component {
             </div>
         );
     }
-                        // <button
-                        //     className="btn btn-link px-0 mx-2 my-0"
-                        //     onClick={event => this.props.onCheck(side)}
-                        //     alt='Press to check md5sums'
-                        //     title='Press to check md5sums'
-                        //     aria-label='Press to check md5sums'
-                        // >
-                        //     <Icon name='database' className='mr-2'/>
-                        //     <span>Check Integrity</span>
-                        // </button>
-
-    componentDidMount() {
-    }
 
     onClick() {
         if (!this.props.active) {
@@ -206,11 +193,10 @@ CommandBar.defaultProps = {
     onShowMkdirDialog: (side) => {},
     onRefresh: (side) => {},
     onClick: side => {},
-    onCheck: side => {},
 }
 
 import {connect} from 'react-redux';
-import {showNewCopyJobDialog, showMkdirDialog, showNewHashsumJobDialog} from 'actions/dialogActions.jsx'
+import {showNewCopyJobDialog, showMkdirDialog} from 'actions/dialogActions.jsx'
 import {hostChange, directoryChange, sideFocus, refreshPane} from 'actions/paneActions.jsx';
 
 
@@ -226,7 +212,6 @@ const mapDispatchToProps = dispatch => ({
     onShowMkdirDialog: (side) => dispatch(showMkdirDialog(side)),
     onRefresh: (side) => dispatch(refreshPane(side)),
     onClick: side => dispatch(sideFocus(side)),
-    onCheck: () => dispatch(showNewHashsumJobDialog()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommandBar);

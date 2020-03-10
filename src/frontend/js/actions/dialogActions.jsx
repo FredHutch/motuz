@@ -88,46 +88,9 @@ export const hideEditCopyJobDialog = () => ({
 });
 
 export const showNewHashsumJobDialog = (data) => {
-    if (data != null) {
-        return {
-            type: SHOW_INTEGRITY_JOB_DIALOG,
-            payload: {data},
-        }
-    }
-
-    return async (dispatch, getState) => {
-        const state = getState();
-
-        const srcSide = getSide(state.pane);
-        const srcPane = getCurrentPane(state.pane, srcSide);
-        const srcFiles = getCurrentFiles(state.pane, srcSide);
-
-        const dstSide = getOtherSide(srcSide);
-        const dstPane = getCurrentPane(state.pane, dstSide)
-
-        const srcResourcePaths = []
-        const dstResourcePaths = []
-
-        for (let key in srcPane.fileMultiFocusIndexes) {
-            const srcResourceName = srcFiles[Number(key)].name;
-            const srcResourcePath = upath.join(srcPane.path, srcResourceName)
-            const dstResourcePath = upath.join(dstPane.path, srcResourceName)
-
-            srcResourcePaths.push(srcResourcePath)
-            dstResourcePaths.push(dstResourcePath)
-        }
-
-        const data = {
-            source_cloud: srcPane.host,
-            source_paths: srcResourcePaths,
-            destination_cloud: dstPane.host,
-            destination_paths: dstResourcePaths,
-        }
-
-        dispatch({
-            type: SHOW_INTEGRITY_JOB_DIALOG,
-            payload: {data}
-        })
+    return {
+        type: SHOW_INTEGRITY_JOB_DIALOG,
+        payload: {data},
     }
 };
 

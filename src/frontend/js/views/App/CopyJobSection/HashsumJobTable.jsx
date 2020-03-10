@@ -17,6 +17,7 @@ class HashsumJobTable extends React.Component {
             'id',
             'source',
             'destination',
+            'time',
             'state',
             'progress',
         ]
@@ -25,6 +26,7 @@ class HashsumJobTable extends React.Component {
             'id': 'ID',
             'source': 'Compare',
             'destination': 'With',
+            'time': 'Time',
             'state': 'State',
             'progress': 'Progress',
         }
@@ -48,8 +50,7 @@ class HashsumJobTable extends React.Component {
         })
 
         const tableRows = this.props.jobs.map((job, i) => {
-            // const progressValue = Math.round(job.progress_current / job.progress_total * 100);
-            const progressValue = 100
+            const progressValue = Math.round(job.progress_current / job.progress_total * 100);
 
             const src_cloud_id = job['src_cloud_id'] || 0
             const src_cloud = cloudMapping[src_cloud_id]
@@ -99,7 +100,7 @@ class HashsumJobTable extends React.Component {
 
             const jobFields = {
                 ...job,
-                // time: parseTime(job.progress_execution_time),
+                time: parseTime(job.progress_execution_time),
                 state,
                 source,
                 destination,

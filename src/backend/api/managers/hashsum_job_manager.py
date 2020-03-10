@@ -1,16 +1,12 @@
-import json
 import logging
-import datetime
-import random
 
 from flask import request
 
 from .. import tasks
 from ..application import db
 from ..exceptions import *
-from ..models import HashsumJob, CloudConnection
+from ..models import HashsumJob
 from ..managers.auth_manager import token_required, get_logged_in_user
-
 
 
 @token_required
@@ -24,7 +20,6 @@ def list(page_size=50, offset=0):
         .all()
     )
     return hashsum_jobs
-
 
 
 @token_required

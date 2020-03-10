@@ -1,13 +1,11 @@
-import json
 import logging
-import datetime
 
 from flask import request
 
 from .. import tasks
 from ..application import db
 from ..exceptions import *
-from ..models import CopyJob, CloudConnection
+from ..models import CopyJob
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 
