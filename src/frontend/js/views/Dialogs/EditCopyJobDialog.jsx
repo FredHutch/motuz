@@ -107,8 +107,8 @@ class EditCopyJobDialog extends React.Component {
                                 Check Integrity
                             </Button>
                         )}
-                        {!isInProgress && !isSuccess && false && (
-                            <Button className='mr-auto' variant="success" onClick={() => this.showNewHashsumJobDialog()}>
+                        {!isInProgress && !isSuccess && (
+                            <Button className='mr-auto' variant="success" onClick={() => this.showNewCopyJobDialog()}>
                                 Retry
                             </Button>
                         )}
@@ -210,6 +210,10 @@ class EditCopyJobDialog extends React.Component {
         }
         this.props.onClose();
         this.props.onShowNewHashsumJobDialog(data)
+    }
+
+    showNewCopyJobDialog() {
+        console.log('here')
     }
 
     _scheduleRefresh() {

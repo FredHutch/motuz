@@ -8,7 +8,6 @@ import {
     getCurrentFiles,
     setCurrentFiles,
 } from 'managers/paneManager.jsx'
-import { getCurrentUser } from 'reducers/authReducer.jsx';
 
 export const SHOW_NEW_COPY_JOB_DIALOG = '@@dialog/SHOW_NEW_COPY_JOB_DIALOG';
 export const HIDE_NEW_COPY_JOB_DIALOG = '@@dialog/HIDE_NEW_COPY_JOB_DIALOG';
@@ -63,7 +62,6 @@ export const showNewCopyJobDialog = () => {
             source_paths: srcResourcePaths,
             destination_cloud: dstPane.host,
             destination_paths: dstResourcePaths,
-            owner: getCurrentUser(state.auth),
         }
 
         dispatch({
