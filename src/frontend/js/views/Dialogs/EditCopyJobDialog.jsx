@@ -197,12 +197,6 @@ class EditCopyJobDialog extends React.Component {
         this.props.onShowNewHashsumJobDialog(data)
     }
 
-    showNewCopyJobDialog() {
-        data = {
-
-        }
-    }
-
     _scheduleRefresh() {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();

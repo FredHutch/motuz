@@ -9,6 +9,7 @@ import serializeForm from 'utils/serializeForm.jsx'
 class EditHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.timeout = null;
     }
 
     render() {
@@ -112,6 +113,15 @@ class EditHashsumJobDialog extends React.Component {
 
     componentDidMount() {
         this.props.fetchData(this.props.data.id);
+        this._scheduleRefresh()
+    }
+
+    componentDidUpdate() {
+        this._scheduleRefresh()
+    }
+
+    componentWillUnmount() {
+        this._clearTimeout()
     }
 
     handleClose() {
@@ -208,6 +218,23 @@ class EditHashsumJobDialog extends React.Component {
 
     _isLeaf(treeNode) {
         return !!treeNode.hash
+    }
+
+    _scheduleRefresh() {
+        const refreshDelay = 1000; // 1s
+        this._clearTimeout();
+        this.timeout = setTimeout(() => {
+            if (this.props.data.progress_state === 'PROGRESS') {
+                this.props.fetchData(this.props.data.id);
+            }
+        }, refreshDelay)
+    }
+
+    _clearTimeout() {
+        if (this.timeout) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
     }
 
 }
