@@ -107,8 +107,8 @@ class EditCopyJobDialog extends React.Component {
                                 Check Integrity
                             </Button>
                         )}
-                        {!isInProgress && !isSuccess && false && (
-                            <Button className='mr-auto' variant="success" onClick={() => this.showNewHashsumJobDialog()}>
+                        {!isInProgress && !isSuccess && (
+                            <Button className='mr-auto' variant="success" onClick={() => this.showNewCopyJobDialog()}>
                                 Retry
                             </Button>
                         )}
@@ -179,6 +179,20 @@ class EditCopyJobDialog extends React.Component {
     }
 
     showNewHashsumJobDialog() {
+        const data = this._generateDialogData();
+        this.props.onClose();
+        this.props.onShowNewHashsumJobDialog(data)
+    }
+
+    showNewCopyJobDialog() {
+        if (confirm("You may overwrite files at the destination. Are you sure you want to continue?")) {
+            const data = this._generateDialogData();
+            this.props.onClose()
+            this.props.onShowNewCopyJobDialog(data)
+        }
+    }
+
+    _generateDialogData() {
         const cloudMapping = {
             0: { name: 'rhino' },
         }
@@ -196,7 +210,7 @@ class EditCopyJobDialog extends React.Component {
         const src_cloud_name = (src_cloud == undefined ? "(unknown)" : src_cloud.name);
         const dst_cloud_name = (dst_cloud == undefined ? "(unknown)" : dst_cloud.name);
 
-        const data = {
+        return {
             source_cloud: {
                 id: src_cloud_id,
                 name: src_cloud_name,
@@ -208,8 +222,6 @@ class EditCopyJobDialog extends React.Component {
             },
             destination_paths: [this.props.data.dst_resource_path],
         }
-        this.props.onClose();
-        this.props.onShowNewHashsumJobDialog(data)
     }
 
     _scheduleRefresh() {
@@ -237,10 +249,15 @@ EditCopyJobDialog.defaultProps = {
     onClose: () => {},
     onStopJob: id => {},
     onShowNewHashsumJobDialog: (data) => {},
+    onShowNewCopyJobDialog: (data) => {},
 }
 
 import {connect} from 'react-redux';
-import {hideEditCopyJobDialog, showNewHashsumJobDialog} from 'actions/dialogActions.jsx'
+import {
+    hideEditCopyJobDialog,
+    showNewHashsumJobDialog,
+    showNewCopyJobDialog,
+} from 'actions/dialogActions.jsx'
 import {retrieveCopyJob, stopCopyJob} from 'actions/apiActions.jsx';
 
 
@@ -254,6 +271,7 @@ const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
     onShowNewHashsumJobDialog: (data) => dispatch(showNewHashsumJobDialog(data)),
+    onShowNewCopyJobDialog: (data) => dispatch(showNewCopyJobDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCopyJobDialog);

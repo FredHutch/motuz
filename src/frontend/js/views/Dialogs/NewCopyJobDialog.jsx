@@ -90,7 +90,7 @@ class NewCopyJobDialog extends React.Component {
                                     </div>
                                     <div className="col-7">
                                         <span className="form-label">
-                                            {data['owner']}
+                                            {this.props.username}
                                         </span>
                                     </div>
                                     <div className="col-1"></div>
@@ -187,6 +187,7 @@ class NewCopyJobDialog extends React.Component {
 
 NewCopyJobDialog.defaultProps = {
     data: {},
+    username: 'ERROR',
     followSymlinksDefault: false,
     onClose: () => {},
     onSubmit: (data) => {},
@@ -195,9 +196,11 @@ NewCopyJobDialog.defaultProps = {
 import {connect} from 'react-redux';
 import {hideNewCopyJobDialog} from 'actions/dialogActions.jsx'
 import {createCopyJob} from 'actions/apiActions.jsx'
+import { getCurrentUser } from 'reducers/authReducer.jsx';
 
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
+    username: getCurrentUser(state.auth),
     followSymlinksDefault: state.settings.followSymlinks,
 });
 
