@@ -67,7 +67,6 @@ export const showNewCopyJobDialog = (data) => {
             destination_cloud: dstPane.host,
             destination_paths: dstResourcePaths,
         }
-        console.log(data)
 
         dispatch(_showNewCopyJobDialog(data))
     }
