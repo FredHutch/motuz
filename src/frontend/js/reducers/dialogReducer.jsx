@@ -24,16 +24,7 @@ const initialState = {
     },
 
     displayEditHashsumJobDialog: false,
-    editHashsumJobDialogData: {
-        left: [
-            ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
-            ['4cd7e7a1e1c493200b9dd1ac659f948b', 'hello.py'],
-        ],
-        right: [
-            ['d621730bdf867a3453fb6b51a4ba0faa', 'start.sh'],
-            ['4cd7e7a1e1c493200b9dd1ac659f948d', 'hello.py'],
-        ],
-    },
+    editHashsumJobDialogData: {},
 
     displayNewCloudConnectionDialog: false,
     newCloudConnectionDialogData: {},
@@ -64,9 +55,7 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.HIDE_NEW_COPY_JOB_DIALOG:
-    case api.CREATE_COPY_JOB_SUCCESS:
-    {
+    case dialog.HIDE_NEW_COPY_JOB_DIALOG: {
         return {
             ...state,
             displayNewCopyJobDialog: false,
@@ -75,6 +64,7 @@ export default (state=initialState, action) => {
     }
 
     case dialog.SHOW_EDIT_COPY_JOB_DIALOG:
+    case api.CREATE_COPY_JOB_SUCCESS:
     case api.RETRIEVE_COPY_JOB_SUCCESS:
     case api.STOP_COPY_JOB_SUCCESS:
     {
@@ -123,6 +113,7 @@ export default (state=initialState, action) => {
     }
 
     case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG:
+    case api.CREATE_HASHSUM_JOB_SUCCESS:
     case api.RETRIEVE_HASHSUM_JOB_SUCCESS:
     case api.STOP_HASHSUM_JOB_SUCCESS:
     {

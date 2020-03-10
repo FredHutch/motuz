@@ -176,11 +176,12 @@ export const createCopyJob = (data) => {
         )) {
             return;
         }
-        await dispatch(_createCopyJob(data));
+        dispatch(_createCopyJob(data));
+        await dispatch(dialog.hideNewCopyJobDialog())
     }
 }
 
-export const _createCopyJob = (data) => ({
+const _createCopyJob = (data) => ({
     [RSAA]: {
         endpoint: `/api/copy-jobs/`, // TODO: Why is there a trailing slash here?
         method: 'POST',
@@ -219,7 +220,14 @@ export const retrieveHashsumJob = (id) => ({
     }
 });
 
-export const createHashsumJob = (data) => ({
+export const createHashsumJob = (data) => {
+    return async (dispatch, getState) => {
+        dispatch(_createHashsumJob(data));
+        await dispatch(dialog.hideNewHashsumJobDialog)
+    }
+}
+
+const _createHashsumJob = (data) => ({
     [RSAA]: {
         endpoint: `/api/hashsum-jobs/`, // TODO: Why is there a trailing slash here?
         method: 'POST',

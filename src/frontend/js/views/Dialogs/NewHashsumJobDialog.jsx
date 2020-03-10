@@ -21,7 +21,7 @@ class NewHashsumJobDialog extends React.Component {
                 >
                     <form action="#" onSubmit={(event) => this.handleSubmit(event)}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Check Integrity</Modal.Title>
+                            <Modal.Title>Check Integrity (Beta)</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
@@ -138,7 +138,7 @@ NewHashsumJobDialog.defaultProps = {
     data: {},
     followSymlinksDefault: false,
     onClose: () => {},
-    onSubmit: (data) => {console.log(data)},
+    onSubmit: (data) => {},
 }
 
 import {connect} from 'react-redux';
