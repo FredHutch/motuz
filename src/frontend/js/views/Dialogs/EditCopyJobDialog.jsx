@@ -107,7 +107,7 @@ class EditCopyJobDialog extends React.Component {
                                 Check Integrity
                             </Button>
                         )}
-                        {!isInProgress && !isSuccess && (
+                        {!isInProgress && !isSuccess && false && (
                             <Button className='mr-auto' variant="success" onClick={() => this.showNewHashsumJobDialog()}>
                                 Retry
                             </Button>
@@ -179,17 +179,32 @@ class EditCopyJobDialog extends React.Component {
     }
 
     showNewHashsumJobDialog() {
+        const cloudMapping = {
+            0: { name: 'rhino' },
+        }
+
+        this.props.clouds.forEach(connection => {
+            cloudMapping[connection.id] = connection
+        })
+
+        const src_cloud_id = this.props.data['src_cloud_id'] || 0
+        const src_cloud = cloudMapping[src_cloud_id]
+
+        const dst_cloud_id = this.props.data['dst_cloud_id'] || 0
+        const dst_cloud = cloudMapping[dst_cloud_id]
+
+        const src_cloud_name = (src_cloud == undefined ? "(unknown)" : src_cloud.name);
+        const dst_cloud_name = (dst_cloud == undefined ? "(unknown)" : dst_cloud.name);
+
         const data = {
             source_cloud: {
-                id: this.props.data.src_cloud_id,
-                name: this.props.data.src_cloud_type, // TODO: fix
-                type: this.props.data.src_cloud_type,
+                id: src_cloud_id,
+                name: src_cloud_name,
             },
             source_paths: [this.props.data.src_resource_path],
             destination_cloud: {
                 id: this.props.data.dst_cloud_id,
-                name: this.props.data.dst_cloud_type, // TODO: fix
-                type: this.props.data.dst_cloud_type,
+                name: dst_cloud_name,
             },
             destination_paths: [this.props.data.dst_resource_path],
         }
@@ -217,7 +232,7 @@ class EditCopyJobDialog extends React.Component {
 
 EditCopyJobDialog.defaultProps = {
     data: {},
-    jobs: [],
+    clouds: [],
     fetchData: (id) => {},
     onClose: () => {},
     onStopJob: id => {},
@@ -231,7 +246,7 @@ import {retrieveCopyJob, stopCopyJob} from 'actions/apiActions.jsx';
 
 const mapStateToProps = state => ({
     data: state.dialog.editCopyJobDialogData,
-    jobs: state.api.jobs,
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({

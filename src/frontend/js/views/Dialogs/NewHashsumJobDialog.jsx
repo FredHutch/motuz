@@ -33,7 +33,7 @@ class NewHashsumJobDialog extends React.Component {
 
                                         <div className="row">
                                             <div className="col-4 text-right">
-                                                <b className='form-label'>Cloud</b>
+                                                <b className='form-label'>Connection</b>
                                             </div>
                                             <div className="col-7">
                                                 <span className="form-label">
@@ -58,7 +58,7 @@ class NewHashsumJobDialog extends React.Component {
 
                                         <div className="row">
                                             <div className="col-4 text-right">
-                                                <b className='form-label'>Cloud</b>
+                                                <b className='form-label'>Connection</b>
                                             </div>
                                             <div className="col-7">
                                                 <span className="form-label">
