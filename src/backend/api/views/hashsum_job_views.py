@@ -24,6 +24,8 @@ dto = api.model('hashsum-job', {
     'dst_resource_path': fields.String(required=True, example='/temp'),
 
     'progress_state': fields.String(readonly=True, example='PENDING'),
+    'progress_current': fields.Integer(readonly=True, example=45),
+    'progress_total': fields.Integer(readonly=True, example=100),
     'progress_error': fields.String(readonly=True),
     'progress_execution_time': fields.Integer(readonly=True, example=3600),
     'progress_src_text': fields.List(fields.Nested(job_output), readonly=True),

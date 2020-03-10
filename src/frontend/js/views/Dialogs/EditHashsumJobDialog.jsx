@@ -1,9 +1,9 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap'
-import Toggle from 'react-toggle'
+import { Modal, Button, ProgressBar } from 'react-bootstrap'
 import Tree, { TreeNode } from 'rc-tree'
 import 'rc-tree/assets/index.css';
 
+import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
 
 class EditHashsumJobDialog extends React.Component {
@@ -13,10 +13,30 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     render() {
-        const left = this.props.data.progress_src_text || [];
-        const right = this.props.data.progress_dst_text || [];
+        const { data } = this.props;
+
+        const left = data.progress_src_text || [];
+        const right = data.progress_dst_text || [];
 
         let {treeLeft, treeRight} = this._processData(left, right)
+
+        const description = data.description ? ` - ${data.description}` : ''
+        const progressErrorText = data.progress_error_text;
+        const progress = Math.floor(data.progress_current / data.progress_total * 100);
+        const executionTime = parseTime(data.progress_execution_time);
+
+        const isSuccess = data.progress_state === 'SUCCESS'
+        const isInProgress = data.progress_state === 'PROGRESS'
+        const isIncomplete = data.progress_state === 'FAILED' || data.progress_state === 'STOPPED'
+
+        let color = 'default';
+        if (isSuccess) {
+            color = 'success'
+        } else if (isIncomplete) {
+            color = 'danger'
+        } else if (isInProgress) {
+            color = 'primary'
+        }
 
         return (
             <div className='dialog-inspect-integrity'>
@@ -27,10 +47,27 @@ class EditHashsumJobDialog extends React.Component {
                 >
                     <form action="#">
                         <Modal.Header closeButton>
-                            <Modal.Title>Integrity Check Result</Modal.Title>
+                        <Modal.Title>
+                            <span>Integrity Check Result {data.id} - </span>
+                            <b className={`text-${color}`}>
+                                {data.progress_state}
+                            </b>
+                        </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
+                                <div className="form-group">
+                                    <div className="text-center">
+                                        <b className={`text-${color}`}>{executionTime}</b>
+                                    </div>
+                                    <ProgressBar
+                                        now={progress}
+                                        label={`${progress}%`}
+                                        variant={color}
+                                        style={{width: '100%', height: 30}}
+                                    />
+                                </div>
+
                                 <div className="row">
                                     <div className="col-6 overflow-hidden">
                                         <Tree

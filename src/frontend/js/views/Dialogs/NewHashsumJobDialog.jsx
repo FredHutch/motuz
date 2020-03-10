@@ -21,7 +21,7 @@ class NewHashsumJobDialog extends React.Component {
                 >
                     <form action="#" onSubmit={(event) => this.handleSubmit(event)}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Check Integrity (Beta)</Modal.Title>
+                            <Modal.Title>Check Integrity <b>(Experimental)</b></Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
