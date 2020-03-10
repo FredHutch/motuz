@@ -243,13 +243,13 @@ class EditHashsumJobDialog extends React.Component {
         while (i < treeLeft.length) {
             treeLeft[i].type = 'insert'
             treeRight.splice(i, 0, {type: 'hidden'})
-            i++; j++;
+            i++;;
         }
 
         while (j < treeRight.length) {
             treeRight[j].type = 'insert'
             treeLeft.splice(j, 0, {type: 'hidden'})
-            i++; j++;
+            j++;
         }
     }
 
