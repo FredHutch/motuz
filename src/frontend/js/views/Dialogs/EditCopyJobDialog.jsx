@@ -19,14 +19,16 @@ class EditCopyJobDialog extends React.Component {
         const progress = Math.floor(data.progress_current / data.progress_total * 100);
         const executionTime = parseTime(data.progress_execution_time);
 
+        const isSuccess = data.progress_state === 'SUCCESS'
         const isInProgress = data.progress_state === 'PROGRESS'
+        const isIncomplete = data.progress_state === 'FAILED' || data.progress_state === 'STOPPED'
 
         let color = 'default';
-        if (data.progress_state === 'SUCCESS') {
+        if (isSuccess) {
             color = 'success'
-        } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
+        } else if (isIncomplete) {
             color = 'danger'
-        } else if (data.progress_state === 'PROGRESS') {
+        } else if (isInProgress) {
             color = 'primary'
         }
 
@@ -100,6 +102,16 @@ class EditCopyJobDialog extends React.Component {
                                 Stop Job
                             </Button>
                         )}
+                        {!isInProgress && isSuccess && (
+                            <Button className='mr-auto' variant="info" onClick={() => this.showNewHashsumJobDialog()}>
+                                Check Integrity
+                            </Button>
+                        )}
+                        {!isInProgress && !isSuccess && false && (
+                            <Button className='mr-auto' variant="success" onClick={() => this.showNewHashsumJobDialog()}>
+                                Retry
+                            </Button>
+                        )}
                         <Button variant="secondary" onClick={() => this.handleClose()}>
                             Close
                         </Button>
@@ -166,6 +178,40 @@ class EditCopyJobDialog extends React.Component {
         }
     }
 
+    showNewHashsumJobDialog() {
+        const cloudMapping = {
+            0: { name: 'rhino' },
+        }
+
+        this.props.clouds.forEach(connection => {
+            cloudMapping[connection.id] = connection
+        })
+
+        const src_cloud_id = this.props.data['src_cloud_id'] || 0
+        const src_cloud = cloudMapping[src_cloud_id]
+
+        const dst_cloud_id = this.props.data['dst_cloud_id'] || 0
+        const dst_cloud = cloudMapping[dst_cloud_id]
+
+        const src_cloud_name = (src_cloud == undefined ? "(unknown)" : src_cloud.name);
+        const dst_cloud_name = (dst_cloud == undefined ? "(unknown)" : dst_cloud.name);
+
+        const data = {
+            source_cloud: {
+                id: src_cloud_id,
+                name: src_cloud_name,
+            },
+            source_paths: [this.props.data.src_resource_path],
+            destination_cloud: {
+                id: this.props.data.dst_cloud_id,
+                name: dst_cloud_name,
+            },
+            destination_paths: [this.props.data.dst_resource_path],
+        }
+        this.props.onClose();
+        this.props.onShowNewHashsumJobDialog(data)
+    }
+
     _scheduleRefresh() {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
@@ -186,25 +232,28 @@ class EditCopyJobDialog extends React.Component {
 
 EditCopyJobDialog.defaultProps = {
     data: {},
-    jobs: [],
+    clouds: [],
     fetchData: (id) => {},
     onClose: () => {},
     onStopJob: id => {},
+    onShowNewHashsumJobDialog: (data) => {},
 }
 
 import {connect} from 'react-redux';
-import {hideEditCopyJobDialog} from 'actions/dialogActions.jsx'
+import {hideEditCopyJobDialog, showNewHashsumJobDialog} from 'actions/dialogActions.jsx'
 import {retrieveCopyJob, stopCopyJob} from 'actions/apiActions.jsx';
+
 
 const mapStateToProps = state => ({
     data: state.dialog.editCopyJobDialogData,
-    jobs: state.api.jobs,
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchData: (id) => dispatch(retrieveCopyJob(id)),
     onClose: () => dispatch(hideEditCopyJobDialog()),
     onStopJob: id => dispatch(stopCopyJob(id)),
+    onShowNewHashsumJobDialog: (data) => dispatch(showNewHashsumJobDialog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCopyJobDialog);

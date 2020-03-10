@@ -9,9 +9,14 @@ import time
 import os
 
 from .abstract_connection import AbstractConnection, RcloneException
+from .hashsum_job_queue import HashsumJobQueue
+from .copy_job_queue import CopyJobQueue
 
 class RcloneConnection(AbstractConnection):
     def __init__(self):
+        self._hashsum_job_queue = HashsumJobQueue()
+        self._copy_job_queue = CopyJobQueue()
+
         self._job_status = defaultdict(functools.partial(defaultdict, str)) # Mapping from id to status dict
 
         self._job_text = defaultdict(str)
@@ -21,7 +26,6 @@ class RcloneConnection(AbstractConnection):
 
         self._stop_events = {} # Mapping from id to threading.Event
         self._latest_job_id = 0
-
 
 
     def verify(self, data):
@@ -114,7 +118,7 @@ class RcloneConnection(AbstractConnection):
             dst_resource_path,
             user,
             copy_links,
-            job_id=None
+            job_id
     ):
         credentials = {}
 
@@ -152,40 +156,85 @@ class RcloneConnection(AbstractConnection):
 
         self._logCommand(command, credentials)
 
-        if job_id is None:
-            job_id = self._get_next_job_id()
-        else:
-            if self._job_id_exists(job_id):
-                raise ValueError('rclone copy job with ID {} already exists'.fromat(job_id))
-
-        self._stop_events[job_id] = threading.Event()
-
         try:
-            self._execute_interactive(command, credentials, job_id)
-        except subprocess.CalledProcessError as e:
+            self._copy_job_queue.push(command, credentials, job_id)
+        except RcloneException as e:
             raise RcloneException(sanitize(str(e)))
 
         return job_id
 
 
-
     def copy_text(self, job_id):
-        return self._job_text[job_id]
+        return self._copy_job_queue.copy_text(job_id)
 
     def copy_error_text(self, job_id):
-        return self._job_error_text[job_id]
+        return self._copy_job_queue.copy_error_text(job_id)
 
     def copy_percent(self, job_id):
-        return self._job_percent[job_id]
+        return self._copy_job_queue.copy_percent(job_id)
 
     def copy_stop(self, job_id):
-        self._stop_events[job_id].set()
+        self._copy_job_queue.copy_stop(job_id)
 
     def copy_finished(self, job_id):
-        return self._stop_events[job_id].is_set()
+        return self._copy_job_queue.copy_finished(job_id)
 
     def copy_exitstatus(self, job_id):
-        return self._job_exitstatus.get(job_id, -1)
+        return self._copy_job_queue.copy_exitstatus(job_id)
+
+
+    def md5sum(self,
+            data,
+            resource_path,
+            user,
+            job_id
+    ):
+        credentials = {}
+
+        if data is None: # Local
+            src = resource_path
+        else:
+            credentials.update(self._formatCredentials(data, name='src'))
+            src = 'src:{}'.format(resource_path)
+
+        command = [
+            'sudo',
+            '-E',
+            '-u', user,
+            'rclone',
+            'md5sum',
+            src,
+        ]
+
+        command = [cmd for cmd in command if len(cmd) > 0]
+
+        self._logCommand(command, credentials)
+
+        try:
+            self._hashsum_job_queue.push(command, credentials, job_id)
+        except RcloneException as e:
+            raise RcloneException(sanitize(str(e)))
+
+        return job_id
+
+
+    def hashsum_text(self, job_id):
+        return self._hashsum_job_queue.hashsum_text(job_id)
+
+    def hashsum_error_text(self, job_id):
+        return self._hashsum_job_queue.hashsum_error_text(job_id)
+
+    def hashsum_percent(self, job_id):
+        return self._hashsum_job_queue.hashsum_percent(job_id)
+
+    def hashsum_stop(self, job_id):
+        self._hashsum_job_queue.hashsum_stop(job_id)
+
+    def hashsum_finished(self, job_id):
+        return self._hashsum_job_queue.hashsum_finished(job_id)
+
+    def hashsum_exitstatus(self, job_id):
+        return self._hashsum_job_queue.hashsum_exitstatus(job_id)
 
 
     def _logCommand(self, command, credentials):
@@ -358,12 +407,6 @@ class RcloneConnection(AbstractConnection):
         return credentials
 
 
-    def _get_next_job_id(self):
-        self._latest_job_id += 1
-        while self._job_id_exists(self._latest_job_id):
-            self._latest_job_id += 1
-        return self._latest_job_id
-
     def _job_id_exists(self, job_id):
         return job_id in self._job_status
 
@@ -373,6 +416,7 @@ class RcloneConnection(AbstractConnection):
         Calls `rclone obscure password` and returns the result
         """
         return self._execute(["rclone", "obscure", password])
+
 
     def _execute(self, command, env={}):
         full_env = os.environ.copy()
@@ -394,133 +438,6 @@ class RcloneConnection(AbstractConnection):
             raise RcloneException(stderr)
 
 
-    def _execute_interactive(self, command, env, job_id):
-        thread = threading.Thread(target=self.__execute_interactive, kwargs={
-            'command': command,
-            'env': env,
-            'job_id': job_id,
-        })
-        thread.daemon = True
-        thread.start()
-
-
-    def __execute_interactive(self, command, env={}, job_id=0):
-        stop_event = self._stop_events[job_id]
-        full_env = os.environ.copy()
-        full_env.update(env)
-
-        process = subprocess.Popen(
-            command,
-            env=full_env,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-
-        reset_sequence1 = '\x1b[2K\x1b[0' # + 'G'
-        reset_sequence2 = '\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[A\x1b[2K\x1b[0' # + 'G'
-
-        while not stop_event.is_set():
-            line = process.stdout.readline().decode('utf-8')
-
-            if len(line) == 0:
-                if process.poll() is not None:
-                    stop_event.set()
-                else:
-                    time.sleep(0.5)
-                continue
-
-            line = line.strip()
-
-            q1 = line.find(reset_sequence1)
-            if q1 != -1:
-                line = line[q1 + len(reset_sequence1):]
-
-            q2 = line.find(reset_sequence2)
-            if q2 != -1:
-                line = line[q2 + len(reset_sequence1):]
-
-            line = line.replace(reset_sequence1, '')
-            line = line.replace(reset_sequence2, '')
-
-            match = re.search(r'(ERROR.*)', line)
-            if match is not None:
-                error = match.groups()[0]
-                logging.error(error)
-                self._job_error_text[job_id] += error
-                self._job_error_text[job_id] += '\n'
-                continue
-
-            match = re.search(r'([A-Za-z ]+):\s*(.*)', line)
-            if match is None:
-                logging.info("No match in {}".format(line))
-                time.sleep(0.5)
-                continue
-
-            key, value = match.groups()
-            self._job_status[job_id][key] = value
-            self.__process_status(job_id)
-
-        self._job_percent[job_id] = 100
-        self.__process_status(job_id)
-
-        exitstatus = process.poll()
-        self._job_exitstatus[job_id] = exitstatus
-
-        for _ in range(1000):
-            line = process.stderr.readline().decode('utf-8')
-            if len(line) == 0:
-                break
-            line = line.strip()
-            self._job_error_text[job_id] += line
-            self._job_error_text[job_id] += '\n'
-
-        logging.info("Copy process exited with exit status {}".format(exitstatus))
-        stop_event.set() # Just in case
-
-
-    def __process_status(self, job_id):
-        self.__process_text(job_id)
-        self.__process_percent(job_id)
-
-
-    def __process_text(self, job_id):
-        headers = [
-            'GTransferred',
-            'Errors',
-            'Checks',
-            'Transferred',
-            'Elapsed time',
-            'Transferring',
-        ]
-
-        status = self._job_status[job_id]
-
-        text = '\n'.join(
-            '{:>12}: {}'.format(header, status[header])
-            for header in headers
-        )
-        self._job_text[job_id] = text
-
-
-    def __process_percent(self, job_id):
-        status = self._job_status[job_id]
-
-        match = re.search(r'(\d+)\%', status['GTransferred'])
-
-        if match is not None:
-            self._job_percent[job_id] = match[1]
-            return
-
-        match = re.search(r'(\d+)\%', status['Transferred'])
-        if match is not None:
-            self._job_percent[job_id] = match[1]
-            return
-
-        self._job_percent[job_id] = -1
-
-
-
 def sanitize(string):
     sanitizations_regs = [
         # s3
@@ -539,10 +456,10 @@ def sanitize(string):
         (r"(RCLONE_CONFIG_\S*_SERVICE_ACCOUNT_CREDENTIALS=')([^']*)(')", r"\1{***}\3"),
 
         # SFTP / WebDAV
-        (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1{***}\3"),
+        (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1***\3"),
 
         # Dropbox / Onedrive
-        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1{***}\3"),
+        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1***\3"),
     ]
 
     for regex, replace in sanitizations_regs:
@@ -553,6 +470,15 @@ def sanitize(string):
 
 
 def main():
+    """
+    Can run as
+    export MOTUZ_REGION='<add-here>'
+    export MOTUZ_ACCESS_KEY_ID='<add-here>'
+    export MOTUZ_SECRET_ACCESS_KEY='<add-here>'
+
+    python -m utils.rclone_connection
+    """
+
     import time
     import os
 
@@ -562,28 +488,40 @@ def main():
     data = CloudConnection()
     data.__dict__ = {
         'type': 's3',
-        'region': os.environ['MOTUZ_REGION'],
-        'access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
-        'secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
+        'owner': 'aicioara',
+        's3_region': os.environ['MOTUZ_REGION'],
+        's3_access_key_id': os.environ['MOTUZ_ACCESS_KEY_ID'],
+        's3_secret_access_key': os.environ['MOTUZ_SECRET_ACCESS_KEY'],
     }
 
     connection = RcloneConnection()
 
-    # result = connection.ls('/fh-ctr-mofuz-test/hello/world')
-    job_id = 123
+    # result = connection.ls(data, '/motuz-test/')
+    # print(result)
+    # return
+
     import random
-    connection.copy(
-        src_data=None, # Local
-        src_resource_path='/tmp/motuz/mb_blob.bin',
-        dst_data=data,
-        dst_resource_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
-        job_id=job_id
+    import json
+    id = connection.md5sum(
+        data,
+        'motuz-test/test/',
+        'aicioara',
+        random.randint(1, 10000000)
     )
+    for _ in range(10):
+        print(json.dumps(connection.hashsum_text(id)))
+        time.sleep(1)
 
+    # connection.copy(
+    #     src_data=None, # Local
+    #     src_resource_path='/tmp/motuz/mb_blob.bin',
+    #     dst_data=data,
+    #     dst_resource_path='/fh-ctr-mofuz-test/hello/world/{}'.format(random.randint(10, 10000)),
+    # )
 
-    while not connection.copy_finished(job_id):
-        print(connection.copy_percent(job_id))
-        time.sleep(0.1)
+    # while not connection.copy_finished(job_id):
+    #     print(connection.copy_percent(job_id))
+    #     time.sleep(0.1)
 
 
 

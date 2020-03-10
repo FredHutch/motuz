@@ -6,11 +6,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # Preventing lazy loading of mandatory variables
 try:
     MOTUZ_FLASK_SECRET_KEY = os.environ['MOTUZ_FLASK_SECRET_KEY']
+    MOTUZ_DATABASE_PROTOCOL = os.environ['MOTUZ_DATABASE_PROTOCOL']
     MOTUZ_DATABASE_USER = os.environ['MOTUZ_DATABASE_USER']
     MOTUZ_DATABASE_PASSWORD = os.environ['MOTUZ_DATABASE_PASSWORD']
     MOTUZ_DATABASE_NAME = os.environ['MOTUZ_DATABASE_NAME']
     MOTUZ_DATABASE_HOST = os.environ['MOTUZ_DATABASE_HOST']
-    MOTUZ_DATABASE_PROTOCOL = os.environ['MOTUZ_DATABASE_PROTOCOL']
 except KeyError as e:
     raise KeyError("Environment variable {} not set".format(e.args[0]))
 

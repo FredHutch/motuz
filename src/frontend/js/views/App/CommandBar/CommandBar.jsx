@@ -128,7 +128,7 @@ class CommandBar extends React.Component {
                 <div className="row">
                     <div className="col-12">
                         <button
-                            className="btn btn-link px-0 my-2 mx-0 my-sm-0"
+                            className="btn btn-link px-0 ml-0 mr-2 my-0"
                             onClick={event => this.props.onShowMkdirDialog(side)}
                             alt='Press to create folder'
                             title='Press to create folder'
@@ -138,7 +138,7 @@ class CommandBar extends React.Component {
                             <span>Create Folder</span>
                         </button>
                         <button
-                            className="btn btn-link my-2 mx-1 my-sm-0"
+                            className="btn btn-link px-0 mx-2 my-0"
                             onClick={event => this.props.onRefresh(side)}
                             alt='Press to refresh panes'
                             title='Press to refresh panes'
@@ -151,9 +151,6 @@ class CommandBar extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    componentDidMount() {
     }
 
     onClick() {

@@ -16,6 +16,12 @@ export const HIDE_NEW_COPY_JOB_DIALOG = '@@dialog/HIDE_NEW_COPY_JOB_DIALOG';
 export const SHOW_EDIT_COPY_JOB_DIALOG = '@@dialog/SHOW_EDIT_COPY_JOB_DIALOG';
 export const HIDE_EDIT_COPY_JOB_DIALOG = '@@dialog/HIDE_EDIT_COPY_JOB_DIALOG';
 
+export const SHOW_INTEGRITY_JOB_DIALOG = '@@dialog/SHOW_INTEGRITY_JOB_DIALOG';
+export const HIDE_INTEGRITY_JOB_DIALOG = '@@dialog/HIDE_INTEGRITY_JOB_DIALOG';
+
+export const SHOW_INSPECT_INTEGRITY_JOB_DIALOG = '@@dialog/SHOW_INSPECT_INTEGRITY_JOB_DIALOG';
+export const HIDE_INSPECT_INTEGRITY_JOB_DIALOG = '@@dialog/HIDE_INSPECT_INTEGRITY_JOB_DIALOG';
+
 export const SHOW_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/SHOW_NEW_CLOUD_CONNECTION_DIALOG';
 export const HIDE_NEW_CLOUD_CONNECTION_DIALOG = '@@dialog/HIDE_NEW_CLOUD_CONNECTION_DIALOG';
 
@@ -81,6 +87,27 @@ export const hideEditCopyJobDialog = () => ({
     type: HIDE_EDIT_COPY_JOB_DIALOG,
 });
 
+export const showNewHashsumJobDialog = (data) => {
+    return {
+        type: SHOW_INTEGRITY_JOB_DIALOG,
+        payload: {data},
+    }
+};
+
+export const hideNewHashsumJobDialog = () => ({
+    type: HIDE_INTEGRITY_JOB_DIALOG,
+});
+
+export const showEditHashsumJobDialog = (data) => {
+    return {
+        type: SHOW_INSPECT_INTEGRITY_JOB_DIALOG,
+        payload: data,
+    }
+};
+
+export const hideEditHashsumJobDialog = () => ({
+    type: HIDE_INSPECT_INTEGRITY_JOB_DIALOG,
+});
 
 export const showNewCloudConnectionDialog = () => ({
     type: SHOW_NEW_CLOUD_CONNECTION_DIALOG,

@@ -25,6 +25,7 @@
     "connected-react-router": "6.4.0",
     "jquery": "3.4.1",
     "jwt-decode": "2.2.0",
+    "rc-tree": "2.1.3",
     "react": "16.8.6",
     "react-bootstrap": "1.0.0-beta.8",
     "react-dom": "16.8.6",

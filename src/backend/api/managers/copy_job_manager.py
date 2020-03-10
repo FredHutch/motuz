@@ -1,13 +1,11 @@
-import json
 import logging
-import datetime
 
 from flask import request
 
 from .. import tasks
 from ..application import db
 from ..exceptions import *
-from ..models import CopyJob, CloudConnection
+from ..models import CopyJob
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 
@@ -64,12 +62,15 @@ def retrieve(id):
     if copy_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
-    try:
-        task = tasks.copy_job.AsyncResult(str(copy_job.id))
-        copy_job.progress_text = task.info.get('text', '')
-        copy_job.progress_error_text = task.info.get('error_text', '')
-    except Exception:
-        pass # Sometimes rabbitmq closes the connection!
+    for _ in range(2): # Sometimes rabbitmq closes the connection!
+        try:
+            task = tasks.copy_job.AsyncResult(str(copy_job.id))
+            copy_job.progress_text = task.info.get('text', '')
+            copy_job.progress_error_text = task.info.get('error_text', '')
+        except Exception:
+            pass
+    else:
+        logging.error("Rabbitmq closed the connection. Failing silently")
 
     return copy_job
 
