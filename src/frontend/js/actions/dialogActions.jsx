@@ -34,7 +34,11 @@ export const SHOW_SETTINGS_DIALOG = '@@dialog/SHOW_SETTINGS_DIALOG';
 export const HIDE_SETTINGS_DIALOG = '@@dialog/HIDE_SETTINGS_DIALOG';
 
 
-export const showNewCopyJobDialog = () => {
+export const showNewCopyJobDialog = (data) => {
+    if (data != null) {
+        return _showNewCopyJobDialog(data)
+    }
+
     return async (dispatch, getState) => {
         const state = getState();
 
@@ -63,13 +67,16 @@ export const showNewCopyJobDialog = () => {
             destination_cloud: dstPane.host,
             destination_paths: dstResourcePaths,
         }
+        console.log(data)
 
-        dispatch({
-            type: SHOW_NEW_COPY_JOB_DIALOG,
-            payload: {data}
-        })
+        dispatch(_showNewCopyJobDialog(data))
     }
 };
+
+export const _showNewCopyJobDialog = (data) => ({
+    type: SHOW_NEW_COPY_JOB_DIALOG,
+    payload: {data}
+});
 
 export const hideNewCopyJobDialog = () => ({
     type: HIDE_NEW_COPY_JOB_DIALOG,
