@@ -8,6 +8,7 @@ class NewCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.inputRef = React.createRef()
+        this.state = NewCopyJobDialog.initialState;
     }
 
     render() {
@@ -129,6 +130,38 @@ class NewCopyJobDialog extends React.Component {
                                         </div>
                                         <div className="col-1"></div>
                                     </div>
+
+                                    <div className="row form-group">
+                                        <div className="col-4 text-right">
+                                            <b className='form-label'>Email on completion</b>
+                                        </div>
+                                        <div className="col-7">
+                                            <Toggle
+                                                name='copy_links'
+                                                className='form-label'
+                                                checked={this.state.emailOnCompletion}
+                                                onChange={() => this.setState({emailOnCompletion: !this.state.emailOnCompletion})}
+                                            />
+                                        </div>
+                                        <div className="col-1"></div>
+                                    </div>
+
+                                    {this.state.emailOnCompletion && (
+                                        <div className="row form-group">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Email Address</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <input
+                                                    name="notification_email"
+                                                    type="email"
+                                                    className="form-control"
+                                                    required={true}
+                                                />
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
+                                    )}
                                 </details>
 
                             </div>
@@ -167,6 +200,7 @@ class NewCopyJobDialog extends React.Component {
                 "src_resource_path": src_resource_path,
                 "dst_cloud_id": propsData['destination_cloud'].id,
                 "dst_resource_path": dst_resource_path,
+                "notification_email": formData['notification_email'],
             }
 
             if (data['src_cloud_id'] === 0) {
@@ -191,6 +225,10 @@ NewCopyJobDialog.defaultProps = {
     followSymlinksDefault: false,
     onClose: () => {},
     onSubmit: (data) => {},
+}
+
+NewCopyJobDialog.initialState = {
+    emailOnCompletion: false,
 }
 
 import {connect} from 'react-redux';

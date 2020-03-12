@@ -3,9 +3,10 @@ from email.mime.text import MIMEText
 from email.header import Header
 import logging
 import smtplib
+import os
 
 class Email:
-    def __init__(self, *,
+    def __init__(self,
         MAIL_SERVER,
         MAIL_USERNAME=None,
         MAIL_PASSWORD=None,
@@ -21,7 +22,7 @@ class Email:
         self._MAIL_DEBUG = MAIL_DEBUG
 
 
-    def send(self, *, to, subject, body):
+    def send(self, to, subject, body):
         try:
             with smtplib.SMTP(self._MAIL_SERVER) as smtp:
                 if self._MAIL_USERNAME or self._MAIL_PASSWORD:
@@ -65,6 +66,7 @@ class Email:
                 MAIL_DEFAULT_SENDER='noreply@fredhutch.org',
             )
             email.send(to, subject, body)
+            logging.info("Sent notification email to {}".format(to))
         except Exception as e:
             logging.exception(e)
 

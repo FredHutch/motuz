@@ -31,6 +31,9 @@ def create(data):
         'src_resource_path': data.get('src_resource_path', None),
         'dst_cloud_id': data.get('dst_cloud_id', None),
         'dst_resource_path': data.get('dst_resource_path', None),
+
+        'notification_email': data.get('notification_email', None),
+
         'progress_current': 0,
         'progress_total': 100,
         'progress_state': "PROGRESS",
