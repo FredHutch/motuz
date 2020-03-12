@@ -130,7 +130,7 @@ def hashsum_job(self, task_id):
         db.session.commit()
 
         Email.send_notification(
-            to=copy_job.notification_email,
+            to=hashsum_job.notification_email,
             subject=f'Checksum Job with ID {task_id} completed!'
         )
 
@@ -160,7 +160,7 @@ def hashsum_job(self, task_id):
 
         try:
             Email.send_notification(
-                to=copy_job.notification_email,
+                to=hashsum_job.notification_email,
                 subject=f'Checksum Job with ID {task_id} failed!'
             )
         except:
