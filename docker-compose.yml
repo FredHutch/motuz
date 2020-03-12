@@ -105,9 +105,12 @@ services:
             - MOTUZ_DATABASE_NAME     # from ./.env
             - MOTUZ_DATABASE_HOST     # from ./.env
             - MOTUZ_DATABASE_USER     # from ./.env
+            - MOTUZ_SMTP_SERVER       # from ./.env
+            - MOTUZ_SMTP_USER         # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
             - MOTUZ_FLASK_SECRET_KEY
+            - MOTUZ_SMTP_PASSWORD
 
         hostname: 0.0.0.0
         depends_on:
@@ -161,3 +164,5 @@ secrets:
         file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
     MOTUZ_FLASK_SECRET_KEY:
         file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+    MOTUZ_SMTP_PASSWORD:
+        file: /docker/secrets/MOTUZ_SMTP_PASSWORD

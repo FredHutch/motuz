@@ -10,6 +10,7 @@ from ..models import CopyJob, HashsumJob, CloudConnection
 from ..application import db
 
 from ..utils.rclone_connection import RcloneConnection
+from ..utils.email_utils import Email
 
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
@@ -60,6 +61,11 @@ def copy_job(self, task_id=None):
         copy_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
+        Email.send_notification(
+            to=copy_job.notification_email,
+            subject=f'Copy Job with ID {task_id} completed!'
+        )
+
         return {
             'text': connection.copy_text(task_id),
             'error_text': connection.copy_error_text(task_id)
@@ -80,6 +86,14 @@ def copy_job(self, task_id=None):
 
         try:
             db.session.commit()
+        except:
+            pass
+
+        try:
+            Email.send_notification(
+                to=copy_job.notification_email,
+                subject=f'Copy Job with ID {task_id} failed!'
+            )
         except:
             pass
 
@@ -115,6 +129,11 @@ def hashsum_job(self, task_id):
         hashsum_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
+        Email.send_notification(
+            to=copy_job.notification_email,
+            subject=f'Checksum Job with ID {task_id} completed!'
+        )
+
         return {
             **result_src["payload"],
             **result_dst["payload"],
@@ -136,6 +155,14 @@ def hashsum_job(self, task_id):
 
         try:
             db.session.commit()
+        except:
+            pass
+
+        try:
+            Email.send_notification(
+                to=copy_job.notification_email,
+                subject=f'Checksum Job with ID {task_id} failed!'
+            )
         except:
             pass
 
@@ -212,5 +239,5 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         "payload": {
             f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
-            }
+        }
     }

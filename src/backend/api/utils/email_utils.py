@@ -1,6 +1,7 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import Header
+import logging
 import smtplib
 
 class Email:
@@ -42,6 +43,30 @@ class Email:
             raise EmailError("Email send FAILED: {}".format(repr(e)))
         except Exception as e:
             raise EmailError("Email sending FAILED {}".format(repr(e)))
+
+
+    @staticmethod
+    def send_notification(to, subject):
+        try:
+            if to is None:
+                return
+
+            MOTUZ_SMTP_SERVER = os.environ.get('MOTUZ_SMTP_SERVER')
+            if MOTUZ_SMTP_SERVER is None:
+                logging.error("env variable MOTUZ_SMTP_SERVER not set")
+                return
+
+            body = subject
+
+            email = Email(
+                MAIL_SERVER=MOTUZ_SMTP_SERVER,
+                MAIL_USERNAME=os.environ.get('MOTUZ_SMTP_USER'),
+                MAIL_PASSWORD=os.environ.get('MOTUZ_SMTP_PASSWORD'),
+                MAIL_DEFAULT_SENDER='noreply@fredhutch.org',
+            )
+            email.send(to, subject, body)
+        except Exception as e:
+            logging.exception(e)
 
 
 
