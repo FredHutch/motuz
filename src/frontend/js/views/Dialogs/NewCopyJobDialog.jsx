@@ -133,7 +133,7 @@ class NewCopyJobDialog extends React.Component {
 
                                     <div className="row form-group">
                                         <div className="col-4 text-right">
-                                            <b className='form-label'>Email on completion</b>
+                                            <b className='form-label'>Email Notifications</b>
                                         </div>
                                         <div className="col-7">
                                             <Toggle

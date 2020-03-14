@@ -9,6 +9,9 @@ import ToggleInfo from 'components/ToggleInfo.jsx'
 class SettingsDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            emailNotifications: props.data.emailNotifications,
+        };
     }
 
     render() {
@@ -66,7 +69,7 @@ class SettingsDialog extends React.Component {
 
                                 <div className="row form-group">
                                     <div className="col-6 text-right">
-                                        <b>Follow Symlinks</b>
+                                        <b>Always Follow Symlinks</b>
                                         <ToggleInfo
                                             className='ml-2'
                                             on="When copying files, symlinks to directories will be resolved and followed, as if they were regular directories."
@@ -80,6 +83,41 @@ class SettingsDialog extends React.Component {
                                         />
                                     </div>
                                 </div>
+
+                                <div className="row form-group">
+                                    <div className="col-6 text-right">
+                                        <b>Email Notifications</b>
+                                        <ToggleInfo
+                                            className='ml-2'
+                                            on="Automatically receive an email when jobs are complete."
+                                            off="No automatic emails are send on when jobs are complete, unless manually specified in the job itself."
+                                        />
+                                    </div>
+                                    <div className="col-6 text-left">
+                                        <Toggle
+                                            name='emailNotifications'
+                                            defaultChecked={this.props.data.emailNotifications}
+                                            onChange={(event) => this.setState({emailNotifications: event.target.checked})}
+                                        />
+                                    </div>
+                                </div>
+
+                                {this.state.emailNotifications && (
+                                    <div className="row form-group">
+                                        <div className="col-6 text-right">
+                                            <b className='form-label'>Email Address</b>
+                                        </div>
+                                        <div className="col-6">
+                                            <input
+                                                name="emailAddress"
+                                                type="email"
+                                                className="form-control"
+                                                required={true}
+                                                defaultValue={this.props.data.emailAddress}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
 
                             </div>
                         </Modal.Body>
@@ -120,6 +158,8 @@ SettingsDialog.defaultProps = {
         showHiddenFiles: false,
         useSiUnits: false,
         followSymlinks: false,
+        emailNotifications: false,
+        emailAddress: "",
     },
     onClose: () => {},
     onSubmit: (data) => {},

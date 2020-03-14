@@ -4,6 +4,8 @@ const initialState = {
     showHiddenFiles: false,
     useSiUnits: false,
     followSymlinks: false,
+    emailNotifications: false,
+    emailAddress: "",
 };
 
 
