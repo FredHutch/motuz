@@ -8,7 +8,9 @@ class NewCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.inputRef = React.createRef()
-        this.state = NewCopyJobDialog.initialState;
+        this.state = {
+            emailNotifications: props.emailNotificationsDefault,
+        };
     }
 
     render() {
@@ -137,16 +139,15 @@ class NewCopyJobDialog extends React.Component {
                                         </div>
                                         <div className="col-7">
                                             <Toggle
-                                                name='copy_links'
                                                 className='form-label'
-                                                checked={this.state.emailOnCompletion}
-                                                onChange={() => this.setState({emailOnCompletion: !this.state.emailOnCompletion})}
+                                                defaultChecked={this.props.emailNotificationsDefault}
+                                                onChange={(event) => this.setState({emailNotifications: event.target.checked})}
                                             />
                                         </div>
                                         <div className="col-1"></div>
                                     </div>
 
-                                    {this.state.emailOnCompletion && (
+                                    {this.state.emailNotifications && (
                                         <div className="row form-group">
                                             <div className="col-4 text-right">
                                                 <b className='form-label'>Email Address</b>
@@ -157,6 +158,7 @@ class NewCopyJobDialog extends React.Component {
                                                     type="email"
                                                     className="form-control"
                                                     required={true}
+                                                    defaultValue={this.props.emailAddressDefault}
                                                 />
                                             </div>
                                             <div className="col-1"></div>
@@ -222,13 +224,13 @@ class NewCopyJobDialog extends React.Component {
 NewCopyJobDialog.defaultProps = {
     data: {},
     username: 'ERROR',
+
     followSymlinksDefault: false,
+    emailNotificationsDefault: false,
+    emailAddressDefault: "",
+
     onClose: () => {},
     onSubmit: (data) => {},
-}
-
-NewCopyJobDialog.initialState = {
-    emailOnCompletion: false,
 }
 
 import {connect} from 'react-redux';
@@ -239,7 +241,10 @@ import { getCurrentUser } from 'reducers/authReducer.jsx';
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
     username: getCurrentUser(state.auth),
+
     followSymlinksDefault: state.settings.followSymlinks,
+    emailNotificationsDefault: state.settings.emailNotifications,
+    emailAddressDefault: state.settings.emailAddress,
 });
 
 const mapDispatchToProps = dispatch => ({
