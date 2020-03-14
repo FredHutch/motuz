@@ -256,6 +256,10 @@ export MOTUZ_DATABASE_HOST=your-host.com:5432
 export MOTUZ_DATABASE_USER=your_user
 echo -n "your_password" > /docker/secrets/MOTUZ_DATABASE_PASSWORD
 
+export MOTUZ_SMTP_SERVER='0.0.0.0:25'
+export MOTUZ_SMTP_USER='admin'
+echo -n "your_password" > /docker/secrets/MOTUZ_SMTP_PASSWORD
+
 ./start.sh
 ```
 

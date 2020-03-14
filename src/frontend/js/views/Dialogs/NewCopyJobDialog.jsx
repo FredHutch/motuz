@@ -8,6 +8,9 @@ class NewCopyJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.inputRef = React.createRef()
+        this.state = {
+            emailNotifications: props.emailNotificationsDefault,
+        };
     }
 
     render() {
@@ -129,6 +132,38 @@ class NewCopyJobDialog extends React.Component {
                                         </div>
                                         <div className="col-1"></div>
                                     </div>
+
+                                    <div className="row form-group">
+                                        <div className="col-4 text-right">
+                                            <b className='form-label'>Email Notifications</b>
+                                        </div>
+                                        <div className="col-7">
+                                            <Toggle
+                                                className='form-label'
+                                                defaultChecked={this.props.emailNotificationsDefault}
+                                                onChange={(event) => this.setState({emailNotifications: event.target.checked})}
+                                            />
+                                        </div>
+                                        <div className="col-1"></div>
+                                    </div>
+
+                                    {this.state.emailNotifications && (
+                                        <div className="row form-group">
+                                            <div className="col-4 text-right">
+                                                <b className='form-label'>Email Address</b>
+                                            </div>
+                                            <div className="col-7">
+                                                <input
+                                                    name="notification_email"
+                                                    type="email"
+                                                    className="form-control"
+                                                    required={true}
+                                                    defaultValue={this.props.emailAddressDefault}
+                                                />
+                                            </div>
+                                            <div className="col-1"></div>
+                                        </div>
+                                    )}
                                 </details>
 
                             </div>
@@ -167,6 +202,7 @@ class NewCopyJobDialog extends React.Component {
                 "src_resource_path": src_resource_path,
                 "dst_cloud_id": propsData['destination_cloud'].id,
                 "dst_resource_path": dst_resource_path,
+                "notification_email": formData['notification_email'],
             }
 
             if (data['src_cloud_id'] === 0) {
@@ -188,7 +224,11 @@ class NewCopyJobDialog extends React.Component {
 NewCopyJobDialog.defaultProps = {
     data: {},
     username: 'ERROR',
+
     followSymlinksDefault: false,
+    emailNotificationsDefault: false,
+    emailAddressDefault: "",
+
     onClose: () => {},
     onSubmit: (data) => {},
 }
@@ -201,7 +241,10 @@ import { getCurrentUser } from 'reducers/authReducer.jsx';
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
     username: getCurrentUser(state.auth),
+
     followSymlinksDefault: state.settings.followSymlinks,
+    emailNotificationsDefault: state.settings.emailNotifications,
+    emailAddressDefault: state.settings.emailAddress,
 });
 
 const mapDispatchToProps = dispatch => ({

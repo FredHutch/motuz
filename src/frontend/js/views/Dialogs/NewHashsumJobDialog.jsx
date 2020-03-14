@@ -7,6 +7,9 @@ import serializeForm from 'utils/serializeForm.jsx'
 class NewHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            emailNotifications: props.emailNotificationsDefault,
+        }
     }
 
     render() {
@@ -78,6 +81,44 @@ class NewHashsumJobDialog extends React.Component {
                                             </div>
                                             <div className="col-1"></div>
                                         </div>
+
+                                        <details>
+                                            <summary className='text-primary h5 mt-5 mb-2'>
+                                                Advanced
+                                            </summary>
+
+                                            <div className="row form-group">
+                                                <div className="col-4 text-right">
+                                                    <b className='form-label'>Email Notifications</b>
+                                                </div>
+                                                <div className="col-7">
+                                                    <Toggle
+                                                        className='form-label'
+                                                        defaultChecked={this.props.emailNotificationsDefault}
+                                                        onChange={(event) => this.setState({emailNotifications: event.target.checked})}
+                                                    />
+                                                </div>
+                                                <div className="col-1"></div>
+                                            </div>
+
+                                            {this.state.emailNotifications && (
+                                                <div className="row form-group">
+                                                    <div className="col-4 text-right">
+                                                        <b className='form-label'>Email Address</b>
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <input
+                                                            name="notification_email"
+                                                            type="email"
+                                                            className="form-control"
+                                                            required={true}
+                                                            defaultValue={this.props.emailAddressDefault}
+                                                        />
+                                                    </div>
+                                                    <div className="col-1"></div>
+                                                </div>
+                                            )}
+                                        </details>
                                     </React.Fragment>
                                 ))}
                             </div>
@@ -114,6 +155,7 @@ class NewHashsumJobDialog extends React.Component {
                 "src_resource_path": src_resource_path,
                 "dst_cloud_id": propsData['destination_cloud'].id,
                 "dst_resource_path": dst_resource_path,
+                "notification_email": formData['notification_email'],
             }
 
             if (!data['src_cloud_id']) {
@@ -137,9 +179,14 @@ class NewHashsumJobDialog extends React.Component {
 NewHashsumJobDialog.defaultProps = {
     data: {},
     followSymlinksDefault: false,
+
+    emailNotificationsDefault: false,
+    emailAddressDefault: "",
+
     onClose: () => {},
     onSubmit: (data) => {},
 }
+
 
 import {connect} from 'react-redux';
 import {hideNewHashsumJobDialog, showEditHashsumJobDialog} from 'actions/dialogActions.jsx'
@@ -147,6 +194,9 @@ import {createHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.newHashsumJobDialogData,
+
+    emailNotificationsDefault: state.settings.emailNotifications,
+    emailAddressDefault: state.settings.emailAddress,
 });
 
 const mapDispatchToProps = dispatch => ({

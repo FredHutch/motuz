@@ -23,6 +23,8 @@ dto = api.model('hashsum-job', {
     'dst_cloud_id': fields.Integer(required=False, example=2),
     'dst_resource_path': fields.String(required=True, example='/temp'),
 
+    'notification_email': fields.String(required=False, example='hello@example.com'),
+
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_current': fields.Integer(readonly=True, example=45),
     'progress_total': fields.Integer(readonly=True, example=100),
