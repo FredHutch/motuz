@@ -11,6 +11,7 @@ try:
     MOTUZ_DATABASE_PASSWORD = os.environ['MOTUZ_DATABASE_PASSWORD']
     MOTUZ_DATABASE_NAME = os.environ['MOTUZ_DATABASE_NAME']
     MOTUZ_DATABASE_HOST = os.environ['MOTUZ_DATABASE_HOST']
+    MOTUZ_DATABASE_REQUIRE_SSL = os.environ.get('MOTUZ_DATABASE_REQUIRE_SSL', 'false')
 except KeyError as e:
     raise KeyError("Environment variable {} not set".format(e.args[0]))
 
@@ -23,13 +24,19 @@ class Config:
     JWT_BLACKLIST_TOKEN_CHECKS = ['refresh']
     CELERY_BROKER_URL = 'amqp://'
     CELERY_RESULT_BACKEND = 'amqp://'
-    SQLALCHEMY_DATABASE_URI = '{PROTOCOL}://{USER}:{PASSWORD}@{HOST}/{DATABASE}'.format(
+
+    DATABASE_PARAMS = ''
+    if MOTUZ_DATABASE_REQUIRE_SSL.lower() in ('true', 't'):
+        DATABASE_PARAMS = '?sslmode=require'
+    SQLALCHEMY_DATABASE_URI = '{PROTOCOL}://{USER}:{PASSWORD}@{HOST}/{DATABASE}{PARAMS}'.format(
         PROTOCOL=MOTUZ_DATABASE_PROTOCOL,
         USER=MOTUZ_DATABASE_USER,
         PASSWORD=MOTUZ_DATABASE_PASSWORD,
-        DATABASE=MOTUZ_DATABASE_NAME,
         HOST=MOTUZ_DATABASE_HOST,
+        DATABASE=MOTUZ_DATABASE_NAME,
+        PARAMS=DATABASE_PARAMS,
     )
+
     DEBUG = False
     # https://flask-sqlalchemy.palletsprojects.com/en/2.x/signals/
     SQLALCHEMY_TRACK_MODIFICATIONS = False
