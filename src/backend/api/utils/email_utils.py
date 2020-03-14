@@ -11,20 +11,20 @@ class Email:
         MAIL_USER=None,
         MAIL_PASSWORD=None,
         MAIL_DEFAULT_SENDER=None,
-        MAIL_USE_TLS=False,
+        MAIL_REQUIRE_SSL=False,
         MAIL_DEBUG=False,
     ):
         self._MAIL_SERVER = MAIL_SERVER
         self._MAIL_USERNAME = MAIL_USER
         self._MAIL_PASSWORD = MAIL_PASSWORD
         self._MAIL_DEFAULT_SENDER = MAIL_DEFAULT_SENDER
-        self._MAIL_USE_TLS = MAIL_USE_TLS
+        self._MAIL_REQUIRE_SSL = MAIL_REQUIRE_SSL
         self._MAIL_DEBUG = MAIL_DEBUG
 
 
     def send(self, to, subject, body):
         try:
-            if self._MAIL_USE_TLS:
+            if self._MAIL_REQUIRE_SSL:
                 Connection = smtplib.SMTP_SSL
             else:
                 Connection = smtplib.SMTP
@@ -63,17 +63,17 @@ class Email:
             body = subject
 
             use_tls = False
-            MOTUZ_SMTP_USE_TLS = os.environ.get('MOTUZ_SMTP_USE_TLS')
-            if not MOTUZ_SMTP_USE_TLS:
+            MOTUZ_SMTP_REQUIRE_SSL = os.environ.get('MOTUZ_SMTP_REQUIRE_SSL')
+            if not MOTUZ_SMTP_REQUIRE_SSL:
                 use_tls = MOTUZ_SMTP_SERVER.split(':')[-1] in ('465')
             else:
-                use_tls = str(MOTUZ_SMTP_USE_TLS).lower() in ('true', 't')
+                use_tls = str(MOTUZ_SMTP_REQUIRE_SSL).lower() in ('true', 't')
 
             email = Email(
                 MAIL_SERVER=MOTUZ_SMTP_SERVER,
                 MAIL_USER=os.environ.get('MOTUZ_SMTP_USER'),
                 MAIL_PASSWORD=os.environ.get('MOTUZ_SMTP_PASSWORD'),
-                MAIL_USE_TLS=use_tls,
+                MAIL_REQUIRE_SSL=use_tls,
                 MAIL_DEFAULT_SENDER='noreply@fredhutch.org',
             )
             email.send(to, subject, body)

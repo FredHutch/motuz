@@ -110,7 +110,7 @@ services:
 
             - MOTUZ_SMTP_SERVER          # from ./.env
             - MOTUZ_SMTP_USER            # from ./.env
-            - MOTUZ_SMTP_USE_TLS         # from ./.env
+            - MOTUZ_SMTP_REQUIRE_SSL     # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
             - MOTUZ_FLASK_SECRET_KEY
