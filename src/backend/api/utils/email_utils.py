@@ -8,14 +8,14 @@ import os
 class Email:
     def __init__(self,
         MAIL_SERVER,
-        MAIL_USERNAME=None,
+        MAIL_USER=None,
         MAIL_PASSWORD=None,
         MAIL_DEFAULT_SENDER=None,
         MAIL_USE_TLS=False,
         MAIL_DEBUG=False,
     ):
         self._MAIL_SERVER = MAIL_SERVER
-        self._MAIL_USERNAME = MAIL_USERNAME
+        self._MAIL_USERNAME = MAIL_USER
         self._MAIL_PASSWORD = MAIL_PASSWORD
         self._MAIL_DEFAULT_SENDER = MAIL_DEFAULT_SENDER
         self._MAIL_USE_TLS = MAIL_USE_TLS
@@ -24,12 +24,15 @@ class Email:
 
     def send(self, to, subject, body):
         try:
-            with smtplib.SMTP(self._MAIL_SERVER) as smtp:
+            if self._MAIL_USE_TLS:
+                Connection = smtplib.SMTP_SSL
+            else:
+                Connection = smtplib.SMTP
+
+            with Connection(self._MAIL_SERVER) as smtp:
+                smtp.ehlo()
                 if self._MAIL_USERNAME or self._MAIL_PASSWORD:
                     smtp.login(self._MAIL_USERNAME, self._MAIL_PASSWORD)
-
-                if self._MAIL_USE_TLS:
-                    smtp.starttls()
 
                 if self._MAIL_DEBUG:
                     smtp.set_debuglevel(1)
@@ -59,10 +62,18 @@ class Email:
 
             body = subject
 
+            use_tls = False
+            MOTUZ_SMTP_USE_TLS = os.environ.get('MOTUZ_SMTP_USE_TLS')
+            if not MOTUZ_SMTP_USE_TLS:
+                use_tls = MOTUZ_SMTP_SERVER.split(':')[-1] in ('465')
+            else:
+                use_tls = str(MOTUZ_SMTP_USE_TLS).lower() in ('true', 't')
+
             email = Email(
                 MAIL_SERVER=MOTUZ_SMTP_SERVER,
-                MAIL_USERNAME=os.environ.get('MOTUZ_SMTP_USER'),
+                MAIL_USER=os.environ.get('MOTUZ_SMTP_USER'),
                 MAIL_PASSWORD=os.environ.get('MOTUZ_SMTP_PASSWORD'),
+                MAIL_USE_TLS=use_tls,
                 MAIL_DEFAULT_SENDER='noreply@fredhutch.org',
             )
             email.send(to, subject, body)
@@ -78,13 +89,18 @@ class EmailError(Exception):
 
 
 if __name__ == "__main__":
-    email = Email(
-        MAIL_SERVER='localhost:25',
-        MAIL_DEFAULT_SENDER='noreply@example.org',
-        MAIL_DEBUG=False,
-    )
-    email.send(
-        subject="Test",
-        to='hello@mail.com',
-        body="Hello World"
-    )
+    if os.environ.get('MOTUZ_SMTP_SERVER') is not None:
+        Email.send_notification('example@email.com', 'Copy Job with ID {{task_id}} completed!')
+    else:
+        email = Email(
+            MAIL_SERVER='smtp.gmail.com:465',
+            MAIL_DEFAULT_SENDER='example@gmail.com',
+            MAIL_USER='example@gmail.com',
+            MAIL_PASSWORD='123',
+            MAIL_DEBUG=True,
+        )
+        email.send(
+            subject="Test",
+            to='example@email.com',
+            body="Hello World"
+        )
