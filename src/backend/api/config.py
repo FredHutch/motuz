@@ -26,7 +26,7 @@ class Config:
     CELERY_RESULT_BACKEND = 'amqp://'
 
     DATABASE_PARAMS = ''
-    if MOTUZ_DATABASE_REQUIRE_SSL.lower() == 'true':
+    if MOTUZ_DATABASE_REQUIRE_SSL.lower() in ('true', 't'):
         DATABASE_PARAMS = '?sslmode=require'
     SQLALCHEMY_DATABASE_URI = '{PROTOCOL}://{USER}:{PASSWORD}@{HOST}/{DATABASE}{PARAMS}'.format(
         PROTOCOL=MOTUZ_DATABASE_PROTOCOL,
