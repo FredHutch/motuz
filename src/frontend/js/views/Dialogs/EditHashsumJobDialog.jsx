@@ -5,6 +5,7 @@ import 'rc-tree/assets/index.css';
 
 import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
+import { sortComparator } from 'utils/arrayUtils.jsx'
 
 class EditHashsumJobDialog extends React.Component {
     constructor(props) {
@@ -166,8 +167,8 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     _processData(left, right) {
-        left.sort()
-        right.sort()
+        left.sort((a, b) => sortComparator(a.Name, b.Name))
+        right.sort((a, b) => sortComparator(a.Name, b.Name))
 
         const treeLeft = this._generateTree(left)
         const treeRight = this._generateTree(right)
