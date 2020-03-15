@@ -93,7 +93,7 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_INTEGRITY_JOB_DIALOG: {
+    case dialog.SHOW_NEW_HASHSUM_JOB_DIALOG: {
         return {
             ...state,
             displayNewHashsumJobDialog: true,
@@ -104,7 +104,7 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.HIDE_INTEGRITY_JOB_DIALOG: {
+    case dialog.HIDE_NEW_HASHSUM_JOB_DIALOG: {
         return {
             ...state,
             displayNewHashsumJobDialog: false,
@@ -112,7 +112,7 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.SHOW_INSPECT_INTEGRITY_JOB_DIALOG:
+    case dialog.SHOW_EDIT_HASHSUM_JOB_DIALOG:
     case api.CREATE_HASHSUM_JOB_SUCCESS:
     case api.RETRIEVE_HASHSUM_JOB_SUCCESS:
     case api.STOP_HASHSUM_JOB_SUCCESS:
@@ -124,7 +124,7 @@ export default (state=initialState, action) => {
         }
     }
 
-    case dialog.HIDE_INSPECT_INTEGRITY_JOB_DIALOG: {
+    case dialog.HIDE_EDIT_HASHSUM_JOB_DIALOG: {
         return {
             ...state,
             displayEditHashsumJobDialog: false,

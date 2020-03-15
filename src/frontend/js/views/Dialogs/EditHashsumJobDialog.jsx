@@ -39,7 +39,7 @@ class EditHashsumJobDialog extends React.Component {
         }
 
         return (
-            <div className='dialog-inspect-integrity'>
+            <div>
                 <Modal
                     show={true}
                     size="xl"
