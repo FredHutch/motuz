@@ -65,6 +65,7 @@ services:
             - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_ENCRYPTION_KEY
             - MOTUZ_FLASK_SECRET_KEY
 
 
@@ -113,6 +114,7 @@ services:
             - MOTUZ_SMTP_REQUIRE_SSL     # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_ENCRYPTION_KEY
             - MOTUZ_FLASK_SECRET_KEY
             - MOTUZ_SMTP_PASSWORD
 
@@ -160,6 +162,7 @@ services:
             - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
+            - MOTUZ_DATABASE_ENCRYPTION_KEY
         hostname: 0.0.0.0
 
 
@@ -171,3 +174,5 @@ secrets:
         file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
     MOTUZ_SMTP_PASSWORD:
         file: /docker/secrets/MOTUZ_SMTP_PASSWORD
+    MOTUZ_DATABASE_ENCRYPTION_KEY:
+        file: /docker/secrets/MOTUZ_DATABASE_ENCRYPTION_KEY
