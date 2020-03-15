@@ -131,7 +131,7 @@ def hashsum_job(self, task_id):
 
         Email.send_notification(
             to=hashsum_job.notification_email,
-            subject=f'Motuz Checksum Job with ID {task_id} completed!'
+            subject=f'Motuz Hashsum Job with ID {task_id} completed!'
         )
 
         return {
@@ -161,7 +161,7 @@ def hashsum_job(self, task_id):
         try:
             Email.send_notification(
                 to=hashsum_job.notification_email,
-                subject=f'Motuz Checksum Job with ID {task_id} failed!'
+                subject=f'Motuz Hashsum Job with ID {task_id} failed!'
             )
         except:
             pass
