@@ -261,33 +261,42 @@ class EditHashsumJobDialog extends React.Component {
         treeLeft = treeLeft || []
         treeRight = treeRight || []
 
-        let isDifferent = false;
+        let diff = NodeType.IDENTICAL;
 
         let i = 0
         let j = 0
         while (i < treeLeft.length && j < treeRight.length) {
             if (treeLeft[i].title === treeRight[j].title) {
                 if (this._isLeaf(treeLeft[i]) && this._isLeaf(treeRight[j])) {
-                    if (treeLeft[i].hash !== treeRight[j].hash) {
+                    if (!treeLeft[i].hash || !treeRight[i].hash) {
+                        treeLeft[i].type = treeRight[j].type = 'missing';
+                        diff = Math.max(diff, NodeType.MISSING)
+                    } else if (treeLeft[i].hash !== treeRight[j].hash) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
-                        isDifferent = true;
+                        diff = Math.max(diff, NodeType.MODIFY)
+                    } else {
+                        // The leafs are the same
                     }
+                } else if (this._isLeaf(treeLeft[i]) || this._isLeaf(treeRight[j])) {
+                    treeLeft[i].type = treeRight[j].type = 'modify';
+                    diff = Math.max(diff, NodeType.MODIFY)
                 } else {
-                    const isSubtreeDifferent = this._compareTrees(treeLeft[i].children, treeRight[j].children)
-                    if (isSubtreeDifferent) {
+                    const subtreeDiff = this._compareTrees(treeLeft[i].children, treeRight[j].children)
+                    if (subtreeDiff === NodeType.MODIFY) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
-                        isDifferent = true;
+                    } else if (subtreeDiff === NodeType.MISSING) {
+                        treeLeft[i].type = treeRight[j].type = 'missing';
                     }
+                    diff = Math.max(diff, subtreeDiff)
                 }
-            }
-            else if (treeLeft[i].title < treeRight[j].title) {
+            } else if (treeLeft[i].title < treeRight[j].title) {
                 treeLeft[i].type = 'insert'
                 treeRight.splice(i, 0, {type: 'hidden'})
-                isDifferent = true;
+                diff = Math.max(diff, NodeType.MODIFY)
             } else {
                 treeRight[j].type = 'insert'
                 treeLeft.splice(j, 0, {type: 'hidden'})
-                isDifferent = true;
+                diff = Math.max(diff, NodeType.MODIFY)
             }
             i++; j++;
         }
@@ -295,21 +304,21 @@ class EditHashsumJobDialog extends React.Component {
         while (i < treeLeft.length) {
             treeLeft[i].type = 'insert'
             treeRight.splice(i, 0, {type: 'hidden'})
-            isDifferent = true;
+            diff = Math.max(diff, NodeType.MODIFY)
             i++;
         }
 
         while (j < treeRight.length) {
             treeRight[j].type = 'insert'
             treeLeft.splice(j, 0, {type: 'hidden'})
-            isDifferent = true;
+            diff = Math.max(diff, NodeType.MODIFY)
             j++;
         }
-        return isDifferent;
+        return diff;
     }
 
     _isLeaf(treeNode) {
-        return !!treeNode.hash
+        return !treeNode.children || !treeNode.children.length
     }
 
     _scheduleRefresh() {
@@ -339,6 +348,12 @@ EditHashsumJobDialog.defaultProps = {
 
 EditHashsumJobDialog.initialState = {
     expandedKeys: [],
+}
+
+const NodeType = {
+    IDENTICAL: 0,
+    MODIFY: 1,
+    MISSING: 2,
 }
 
 import {connect} from 'react-redux';

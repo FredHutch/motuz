@@ -93,8 +93,6 @@ class HashsumJobQueue:
                     time.sleep(0.5)
                 continue
 
-            line = line.strip()
-
             # The output of the command is 32 md5sum characters,
             # followed by 2 spaces
             # followed by the filename
