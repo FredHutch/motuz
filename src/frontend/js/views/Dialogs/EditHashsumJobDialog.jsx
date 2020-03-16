@@ -18,27 +18,62 @@ class EditHashsumJobDialog extends React.Component {
     render() {
         const { data } = this.props;
 
+        const cloudMapping = {
+            0: {
+                type: 'file',
+            }
+        }
+
+        this.props.clouds.forEach(connection => {
+            cloudMapping[connection.id] = connection
+        })
+
+        const src_cloud_id = data['src_cloud_id'] || 0
+        const src_cloud = cloudMapping[src_cloud_id]
+
+        if (src_cloud == undefined) {
+            data.src_cloud_type = "(unknown)"
+        } else {
+            data.src_cloud_type = src_cloud.type;
+        }
+
+        const dst_cloud_id = data['dst_cloud_id'] || 0
+        const dst_cloud = cloudMapping[dst_cloud_id]
+
+        if (dst_cloud == undefined) {
+            data.dst_cloud_type = "(unknown)"
+        } else {
+            data.dst_cloud_type = dst_cloud.type;
+        }
+
         const left = data.progress_src_text || [];
         const right = data.progress_dst_text || [];
 
-        let {treeLeft, treeRight} = this._processData(left, right)
+        const {treeLeft, treeRight, diff} = this._processData(left, right)
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
         const progress = Math.floor(data.progress_current / data.progress_total * 100);
         const executionTime = parseTime(data.progress_execution_time);
 
-        const isSuccess = data.progress_state === 'SUCCESS'
-        const isInProgress = data.progress_state === 'PROGRESS'
-        const isIncomplete = data.progress_state === 'FAILED' || data.progress_state === 'STOPPED'
+        let statusText = '';
+        let statusColor = 'default';
 
-        let color = 'default';
-        if (isSuccess) {
-            color = 'success'
-        } else if (isIncomplete) {
-            color = 'danger'
-        } else if (isInProgress) {
-            color = 'primary'
+        if (data.progress_state === 'PROGRESS') {
+            statusText = data.progress_state;
+            statusColor = 'primary';
+        } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
+            statusText = data.progress_state;
+            statusColor = 'danger';
+        } else if (data.progress_state === 'SUCCESS' && diff === NodeType.MISSING) {
+            statusText = 'CANNOT DETERMINE';
+            statusColor = 'danger'
+        } else if (data.progress_state === 'SUCCESS' && diff === NodeType.MODIFY) {
+            statusText = 'DIFFERENT';
+            statusColor = 'warning'
+        } else if (data.progress_state === 'SUCCESS' && diff === NodeType.IDENTICAL) {
+            statusText = 'IDENTICAL';
+            statusColor = 'success'
         }
 
         return (
@@ -52,21 +87,19 @@ class EditHashsumJobDialog extends React.Component {
                         <Modal.Header closeButton>
                         <Modal.Title>
                             <span>Integrity Check #{data.id} - </span>
-                            <b className={`text-${color}`}>
-                                {data.progress_state}
-                            </b>
+                            <b className={`text-${statusColor}`}>{statusText}</b>
                         </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
                                 <div className="form-group">
                                     <div className="text-center">
-                                        <b className={`text-${color}`}>{executionTime}</b>
+                                        <b className={`text-${statusColor}`}>{executionTime}</b>
                                     </div>
                                     <ProgressBar
                                         now={progress}
                                         label={`${progress}%`}
-                                        variant={color}
+                                        variant={statusColor}
                                         style={{width: '100%', height: 30}}
                                     />
                                 </div>
@@ -214,11 +247,12 @@ class EditHashsumJobDialog extends React.Component {
 
         const treeLeft = this._generateTree(left)
         const treeRight = this._generateTree(right)
-        this._compareTrees(treeLeft, treeRight)
+        const diff = this._compareTrees(treeLeft, treeRight)
 
         return {
             treeLeft,
             treeRight,
+            diff,
         }
     }
 
@@ -261,33 +295,42 @@ class EditHashsumJobDialog extends React.Component {
         treeLeft = treeLeft || []
         treeRight = treeRight || []
 
-        let isDifferent = false;
+        let diff = NodeType.IDENTICAL;
 
         let i = 0
         let j = 0
         while (i < treeLeft.length && j < treeRight.length) {
             if (treeLeft[i].title === treeRight[j].title) {
                 if (this._isLeaf(treeLeft[i]) && this._isLeaf(treeRight[j])) {
-                    if (treeLeft[i].hash !== treeRight[j].hash) {
+                    if (!treeLeft[i].hash || !treeRight[i].hash) {
+                        treeLeft[i].type = treeRight[j].type = 'missing';
+                        diff = Math.max(diff, NodeType.MISSING)
+                    } else if (treeLeft[i].hash !== treeRight[j].hash) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
-                        isDifferent = true;
+                        diff = Math.max(diff, NodeType.MODIFY)
+                    } else {
+                        // The leafs are the same
                     }
+                } else if (this._isLeaf(treeLeft[i]) || this._isLeaf(treeRight[j])) {
+                    treeLeft[i].type = treeRight[j].type = 'modify';
+                    diff = Math.max(diff, NodeType.MODIFY)
                 } else {
-                    const isSubtreeDifferent = this._compareTrees(treeLeft[i].children, treeRight[j].children)
-                    if (isSubtreeDifferent) {
+                    const subtreeDiff = this._compareTrees(treeLeft[i].children, treeRight[j].children)
+                    if (subtreeDiff === NodeType.MODIFY) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
-                        isDifferent = true;
+                    } else if (subtreeDiff === NodeType.MISSING) {
+                        treeLeft[i].type = treeRight[j].type = 'missing';
                     }
+                    diff = Math.max(diff, subtreeDiff)
                 }
-            }
-            else if (treeLeft[i].title < treeRight[j].title) {
+            } else if (treeLeft[i].title < treeRight[j].title) {
                 treeLeft[i].type = 'insert'
                 treeRight.splice(i, 0, {type: 'hidden'})
-                isDifferent = true;
+                diff = Math.max(diff, NodeType.MODIFY)
             } else {
                 treeRight[j].type = 'insert'
                 treeLeft.splice(j, 0, {type: 'hidden'})
-                isDifferent = true;
+                diff = Math.max(diff, NodeType.MODIFY)
             }
             i++; j++;
         }
@@ -295,21 +338,21 @@ class EditHashsumJobDialog extends React.Component {
         while (i < treeLeft.length) {
             treeLeft[i].type = 'insert'
             treeRight.splice(i, 0, {type: 'hidden'})
-            isDifferent = true;
+            diff = Math.max(diff, NodeType.MODIFY)
             i++;
         }
 
         while (j < treeRight.length) {
             treeRight[j].type = 'insert'
             treeLeft.splice(j, 0, {type: 'hidden'})
-            isDifferent = true;
+            diff = Math.max(diff, NodeType.MODIFY)
             j++;
         }
-        return isDifferent;
+        return diff;
     }
 
     _isLeaf(treeNode) {
-        return !!treeNode.hash
+        return !treeNode.children || !treeNode.children.length
     }
 
     _scheduleRefresh() {
@@ -333,6 +376,7 @@ class EditHashsumJobDialog extends React.Component {
 
 EditHashsumJobDialog.defaultProps = {
     data: {},
+    clouds: [],
     onClose: () => {},
     fetchData: (id) => {},
 }
@@ -341,12 +385,19 @@ EditHashsumJobDialog.initialState = {
     expandedKeys: [],
 }
 
+const NodeType = {
+    IDENTICAL: 0,
+    MODIFY: 1,
+    MISSING: 2,
+}
+
 import {connect} from 'react-redux';
 import {hideEditHashsumJobDialog} from 'actions/dialogActions.jsx'
 import {retrieveHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.editHashsumJobDialogData,
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
