@@ -181,6 +181,7 @@ class NewHashsumJobDialog extends React.Component {
                 "src_resource_path": src_resource_path,
                 "dst_cloud_id": propsData['destination_cloud'].id,
                 "dst_resource_path": dst_resource_path,
+                "option_download": formData['option_download'],
                 "notification_email": formData['notification_email'],
             }
 

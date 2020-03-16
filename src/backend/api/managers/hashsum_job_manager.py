@@ -32,6 +32,7 @@ def create(data):
         'dst_cloud_id': data.get('dst_cloud_id', None),
         'dst_resource_path': data.get('dst_resource_path', None),
 
+        'option_download': data.get('option_download', None),
         'notification_email': data.get('notification_email', None),
 
         'progress_current': 0,
