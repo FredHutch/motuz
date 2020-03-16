@@ -12,6 +12,7 @@ class EditHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.timeout = null;
+        this.state = EditHashsumJobDialog.initialState;
     }
 
     render() {
@@ -91,8 +92,9 @@ class EditHashsumJobDialog extends React.Component {
                                         <Tree
                                             key={Math.random()}
                                             showLine
-                                            defaultExpandAll
                                             selectable={false}
+                                            expandedKeys={this.state.expandedKeys}
+                                            onExpand={(expandedKeys) => this.setState({expandedKeys})}
                                         >
                                             {this._renderNodes(treeLeft)}
                                         </Tree>
@@ -101,8 +103,9 @@ class EditHashsumJobDialog extends React.Component {
                                         <Tree
                                             key={Math.random()}
                                             showLine
-                                            defaultExpandAll
                                             selectable={false}
+                                            expandedKeys={this.state.expandedKeys}
+                                            onExpand={(expandedKeys) => this.setState({expandedKeys})}
                                         >
                                             {this._renderNodes(treeRight)}
                                         </Tree>
@@ -324,6 +327,10 @@ EditHashsumJobDialog.defaultProps = {
     data: {},
     onClose: () => {},
     fetchData: (id) => {},
+}
+
+EditHashsumJobDialog.initialState = {
+    expandedKeys: [],
 }
 
 const styles = {
