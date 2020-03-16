@@ -1,3 +1,8 @@
+stuff:
+  script:
+    - echo we only deploy on commits to the prod branch
+
+
 deploy:
   only:
     refs:
