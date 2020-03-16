@@ -18,6 +18,34 @@ class EditHashsumJobDialog extends React.Component {
     render() {
         const { data } = this.props;
 
+        const cloudMapping = {
+            0: {
+                type: 'file',
+            }
+        }
+
+        this.props.clouds.forEach(connection => {
+            cloudMapping[connection.id] = connection
+        })
+
+        const src_cloud_id = data['src_cloud_id'] || 0
+        const src_cloud = cloudMapping[src_cloud_id]
+
+        if (src_cloud == undefined) {
+            data.src_cloud_type = "(unknown)"
+        } else {
+            data.src_cloud_type = src_cloud.type;
+        }
+
+        const dst_cloud_id = data['dst_cloud_id'] || 0
+        const dst_cloud = cloudMapping[dst_cloud_id]
+
+        if (dst_cloud == undefined) {
+            data.dst_cloud_type = "(unknown)"
+        } else {
+            data.dst_cloud_type = dst_cloud.type;
+        }
+
         const left = data.progress_src_text || [];
         const right = data.progress_dst_text || [];
 
@@ -348,6 +376,7 @@ class EditHashsumJobDialog extends React.Component {
 
 EditHashsumJobDialog.defaultProps = {
     data: {},
+    clouds: [],
     onClose: () => {},
     fetchData: (id) => {},
 }
@@ -368,6 +397,7 @@ import {retrieveHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.editHashsumJobDialogData,
+    clouds: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({

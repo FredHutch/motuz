@@ -189,7 +189,7 @@ NewHashsumJobDialog.defaultProps = {
 
 
 import {connect} from 'react-redux';
-import {hideNewHashsumJobDialog, showEditHashsumJobDialog} from 'actions/dialogActions.jsx'
+import {hideNewHashsumJobDialog} from 'actions/dialogActions.jsx'
 import {createHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
