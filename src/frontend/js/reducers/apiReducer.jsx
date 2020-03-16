@@ -1,7 +1,6 @@
 import * as auth from 'actions/authActions.jsx';
 import * as api from 'actions/apiActions.jsx';
 import * as dialog from 'actions/dialogActions.jsx';
-import reverseArray from 'utils/reverseArray.jsx';
 
 const initialState = {
     clouds: [],

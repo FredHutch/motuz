@@ -41,7 +41,7 @@ class EditCopyJobDialog extends React.Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            <span>Copy Job {data.id}{description} - </span>
+                            <span>Copy Job #{data.id}{description} - </span>
                             <b className={`text-${color}`}>
                                 {data.progress_state}
                             </b>

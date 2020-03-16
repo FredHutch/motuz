@@ -48,6 +48,22 @@ pre {
     display: inline !important;
 }
 
+.rc-node-color-modify > .rc-tree-node-content-wrapper {
+    background-color: rgba(0, 0, 255, 0.1);
+}
+
+.rc-node-color-insert > .rc-tree-node-content-wrapper {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.rc-node-color-missing > .rc-tree-node-content-wrapper {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.rc-node-color-hidden > .rc-tree-node-content-wrapper {
+    visibility: hidden;
+}
+
 /* Login */
 
 .form-wrapper {

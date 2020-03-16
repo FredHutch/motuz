@@ -5,11 +5,14 @@ import 'rc-tree/assets/index.css';
 
 import parseTime from 'utils/parseTime.jsx'
 import serializeForm from 'utils/serializeForm.jsx'
+import { sortComparator } from 'utils/arrayUtils.jsx'
+import UriResource from 'components/UriResource.jsx'
 
 class EditHashsumJobDialog extends React.Component {
     constructor(props) {
         super(props);
         this.timeout = null;
+        this.state = EditHashsumJobDialog.initialState;
     }
 
     render() {
@@ -48,7 +51,7 @@ class EditHashsumJobDialog extends React.Component {
                     <form action="#">
                         <Modal.Header closeButton>
                         <Modal.Title>
-                            <span>Integrity Check Result {data.id} - </span>
+                            <span>Integrity Check #{data.id} - </span>
                             <b className={`text-${color}`}>
                                 {data.progress_state}
                             </b>
@@ -69,12 +72,29 @@ class EditHashsumJobDialog extends React.Component {
                                 </div>
 
                                 <div className="row">
+                                    <div className="col-6 overflow-hidden text-center">
+                                        <UriResource
+                                            protocol={data.src_cloud_type}
+                                            path={data.src_resource_path}
+                                        />
+                                    </div>
+
+                                    <div className="col-6 overflow-hidden text-center">
+                                        <UriResource
+                                            protocol={data.dst_cloud_type}
+                                            path={data.dst_resource_path}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="row mt-3">
                                     <div className="col-6 overflow-hidden">
                                         <Tree
                                             key={Math.random()}
                                             showLine
-                                            defaultExpandAll
                                             selectable={false}
+                                            expandedKeys={this.state.expandedKeys}
+                                            onExpand={(expandedKeys) => this.setState({expandedKeys})}
                                         >
                                             {this._renderNodes(treeLeft)}
                                         </Tree>
@@ -83,8 +103,9 @@ class EditHashsumJobDialog extends React.Component {
                                         <Tree
                                             key={Math.random()}
                                             showLine
-                                            defaultExpandAll
                                             selectable={false}
+                                            expandedKeys={this.state.expandedKeys}
+                                            onExpand={(expandedKeys) => this.setState({expandedKeys})}
                                         >
                                             {this._renderNodes(treeRight)}
                                         </Tree>
@@ -110,6 +131,20 @@ class EditHashsumJobDialog extends React.Component {
                                         </span>
                                     </div>
                                 </div>
+                                <div className="row mt-3">
+                                    <div className="col-12">
+                                        <i>
+                                            <b>*</b> The md5sums above might have changed since the time this check was performed
+                                        </i>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <i>
+                                            <b>**</b> Under particular circumstances, the md5sums above might be incorrect
+                                        </i>
+                                    </div>
+                                </div>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -131,13 +166,13 @@ class EditHashsumJobDialog extends React.Component {
         return treeData.map((node, i) => (
             <TreeNode
                 key={`${level}|${i}`}
+                className={`rc-node-color-${node.type}`}
                 title={
                     <React.Fragment>
                         <span
                             className="rc-tree-left"
                         >{node.title}</span>
                         <span
-                            style={styles[node.type]}
                             className="rc-tree-right text-monospace"
                         >{node.hash}</span>
                     </React.Fragment>
@@ -166,8 +201,8 @@ class EditHashsumJobDialog extends React.Component {
     }
 
     _processData(left, right) {
-        left.sort()
-        right.sort()
+        left.sort((a, b) => sortComparator(a.Name, b.Name))
+        right.sort((a, b) => sortComparator(a.Name, b.Name))
 
         const treeLeft = this._generateTree(left)
         const treeRight = this._generateTree(right)
@@ -218,6 +253,8 @@ class EditHashsumJobDialog extends React.Component {
         treeLeft = treeLeft || []
         treeRight = treeRight || []
 
+        let isDifferent = false;
+
         let i = 0
         let j = 0
         while (i < treeLeft.length && j < treeRight.length) {
@@ -225,17 +262,24 @@ class EditHashsumJobDialog extends React.Component {
                 if (this._isLeaf(treeLeft[i]) && this._isLeaf(treeRight[j])) {
                     if (treeLeft[i].hash !== treeRight[j].hash) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
+                        isDifferent = true;
                     }
                 } else {
-                    this._compareTrees(treeLeft[i].children, treeRight[j].children)
+                    const isSubtreeDifferent = this._compareTrees(treeLeft[i].children, treeRight[j].children)
+                    if (isSubtreeDifferent) {
+                        treeLeft[i].type = treeRight[j].type = 'modify';
+                        isDifferent = true;
+                    }
                 }
             }
             else if (treeLeft[i].title < treeRight[j].title) {
                 treeLeft[i].type = 'insert'
                 treeRight.splice(i, 0, {type: 'hidden'})
+                isDifferent = true;
             } else {
                 treeRight[j].type = 'insert'
                 treeLeft.splice(j, 0, {type: 'hidden'})
+                isDifferent = true;
             }
             i++; j++;
         }
@@ -243,14 +287,17 @@ class EditHashsumJobDialog extends React.Component {
         while (i < treeLeft.length) {
             treeLeft[i].type = 'insert'
             treeRight.splice(i, 0, {type: 'hidden'})
-            i++;;
+            isDifferent = true;
+            i++;
         }
 
         while (j < treeRight.length) {
             treeRight[j].type = 'insert'
             treeLeft.splice(j, 0, {type: 'hidden'})
+            isDifferent = true;
             j++;
         }
+        return isDifferent;
     }
 
     _isLeaf(treeNode) {
@@ -282,6 +329,10 @@ EditHashsumJobDialog.defaultProps = {
     fetchData: (id) => {},
 }
 
+EditHashsumJobDialog.initialState = {
+    expandedKeys: [],
+}
+
 const styles = {
     'missing': { background: 'rgba(255, 0, 0, 0.1)' },
     'insert': { background: 'rgba(0, 255, 0, 0.1)' },
@@ -299,7 +350,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideEditHashsumJobDialog()),
-    fetchData: (id) => {dispatch(retrieveHashsumJob(id))},
+    fetchData: (id) => dispatch(retrieveHashsumJob(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditHashsumJobDialog);
