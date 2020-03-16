@@ -18,7 +18,6 @@ class HashsumJobTable extends React.Component {
             'source',
             'destination',
             'time',
-            'state',
             'progress',
         ]
 
@@ -27,7 +26,6 @@ class HashsumJobTable extends React.Component {
             'source': 'Compare',
             'destination': 'With',
             'time': 'Time',
-            'state': 'State',
             'progress': 'Progress',
         }
 
@@ -79,11 +77,6 @@ class HashsumJobTable extends React.Component {
                 color = 'primary'
             }
 
-            const state = (
-                <b className={`text-${color}`}>
-                    {job.progress_state}
-                </b>
-            )
             const source = (
                 <UriResource protocol={job.src_cloud_type} path={job.src_resource_path} />
             )
@@ -101,7 +94,6 @@ class HashsumJobTable extends React.Component {
             const jobFields = {
                 ...job,
                 time: parseTime(job.progress_execution_time),
-                state,
                 source,
                 destination,
                 progress,
