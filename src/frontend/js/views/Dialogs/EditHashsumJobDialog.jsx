@@ -114,20 +114,28 @@ class EditHashsumJobDialog extends React.Component {
                                 <div className="row mt-5">
                                     <div className="col-12">
                                         <b>Legend:</b>
-                                        <span className='ml-2 p-1' style={styles['insert']}>
-                                            New File
+                                        <span className="rc-node-color-insert ml-2">
+                                            <span className="rc-tree-node-content-wrapper p-1">
+                                                New File
+                                            </span>
                                         </span>
                                         ,
-                                        <span className='ml-2 p-1' style={styles['modify']}>
-                                            Different files
+                                        <span className="rc-node-color-modify ml-2">
+                                            <span className="rc-tree-node-content-wrapper p-1">
+                                                Different Files
+                                            </span>
                                         </span>
                                         ,
-                                        <span className='ml-2'>
-                                            Identical Files
+                                        <span className="rc-node-color-initial ml-2">
+                                            <span className="rc-tree-node-content-wrapper p-1">
+                                                Identical Files
+                                            </span>
                                         </span>
                                         ,
-                                        <span className='ml-2 p-1' style={styles['missing']}>
-                                            Missing MD5 hash
+                                        <span className="rc-node-color-missing ml-2">
+                                            <span className="rc-tree-node-content-wrapper p-1">
+                                                Missing MD5 Hash
+                                            </span>
                                         </span>
                                     </div>
                                 </div>
@@ -331,13 +339,6 @@ EditHashsumJobDialog.defaultProps = {
 
 EditHashsumJobDialog.initialState = {
     expandedKeys: [],
-}
-
-const styles = {
-    'missing': { background: 'rgba(255, 0, 0, 0.1)' },
-    'insert': { background: 'rgba(0, 255, 0, 0.1)' },
-    'modify': { background: 'rgba(0, 0, 255, 0.1)' },
-    'hidden': { color: 'white' },
 }
 
 import {connect} from 'react-redux';
