@@ -3,8 +3,8 @@ deploy:
     refs:
       - migrate-ci-to-gitlab # TODO change to prod
   script:
-    - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION aws s3 cp s3://motuz-test/cicd/id_rsa .
+    - echo AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${_AWS_SECRET_ACCESS_KEY} AWS_DEFAULT_REGION=${_AWS_DEFAULT_REGION} aws s3 cp s3://motuz-test/cicd/id_rsa .
     - echo chmod 0400 ./id_rsa
-    - echo scp -o StrictHostKeyChecking=no -i ./id_rsa bin/update.sh ${REMOTE_USER}@${REMOTE_HOST}:~
-    - echo ssh -o StrictHostKeyChecking=no -i ./id_rsa ${REMOTE_USER}@${REMOTE_HOST} ./update.sh
+    - echo scp -o StrictHostKeyChecking=no -i ./id_rsa bin/update.sh ${_REMOTE_USER}@${_REMOTE_HOST}:~
+    - echo ssh -o StrictHostKeyChecking=no -i ./id_rsa ${_REMOTE_USER}@${_REMOTE_HOST} ./update.sh
     - echo rm -f ./id_rsa
