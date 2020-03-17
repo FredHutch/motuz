@@ -49,6 +49,10 @@ class EditHashsumJobDialog extends React.Component {
         const left = data.progress_src_text || [];
         const right = data.progress_dst_text || [];
 
+        if (!data.progress_src_text || !data.progress_dst_text) {
+            data.progress_state = 'LOADING';
+        }
+
         const {treeLeft, treeRight, diff} = this._processData(left, right)
 
         const description = data.description ? ` - ${data.description}` : ''
@@ -59,7 +63,7 @@ class EditHashsumJobDialog extends React.Component {
         let statusText = '';
         let statusColor = 'default';
 
-        if (data.progress_state === 'PROGRESS') {
+        if (data.progress_state === 'PROGRESS' || data.progress_state === 'LOADING') {
             statusText = data.progress_state;
             statusColor = 'primary';
         } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
