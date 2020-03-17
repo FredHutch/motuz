@@ -193,6 +193,7 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         resource_path=getattr(hashsum_job, f'{side}_resource_path'),
         user=hashsum_job.owner,
         job_id=rclone_connection_id,
+        download=hashsum_job.option_download,
     )
 
     while not connection.hashsum_finished(rclone_connection_id):

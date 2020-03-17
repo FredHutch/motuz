@@ -187,12 +187,14 @@ class RcloneConnection(AbstractConnection):
             data,
             resource_path,
             user,
-            job_id
+            job_id,
+            download=False,
     ):
         credentials = {}
 
         if data is None: # Local
             src = resource_path
+            download = False
         else:
             credentials.update(self._formatCredentials(data, name='src'))
             src = 'src:{}'.format(resource_path)
@@ -206,12 +208,10 @@ class RcloneConnection(AbstractConnection):
             src,
         ]
 
-        command = [cmd for cmd in command if len(cmd) > 0]
-
         self._logCommand(command, credentials)
 
         try:
-            self._hashsum_job_queue.push(command, credentials, job_id)
+            self._hashsum_job_queue.push(command, credentials, job_id, download)
         except RcloneException as e:
             raise RcloneException(sanitize(str(e)))
 
@@ -506,11 +506,13 @@ def main():
         data,
         'motuz-test/test/',
         'aicioara',
-        random.randint(1, 10000000)
+        random.randint(1, 10000000),
+        download=True,
     )
-    for _ in range(10):
+    while not connection.hashsum_finished(id):
         print(json.dumps(connection.hashsum_text(id)))
         time.sleep(1)
+    print(json.dumps(connection.hashsum_text(id)))
 
     # connection.copy(
     #     src_data=None, # Local
