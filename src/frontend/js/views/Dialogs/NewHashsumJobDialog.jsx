@@ -3,6 +3,8 @@ import { Modal, Button } from 'react-bootstrap'
 import Toggle from 'react-toggle'
 
 import serializeForm from 'utils/serializeForm.jsx'
+import ToggleInfo from 'components/ToggleInfo.jsx'
+
 
 class NewHashsumJobDialog extends React.Component {
     constructor(props) {
@@ -89,7 +91,31 @@ class NewHashsumJobDialog extends React.Component {
 
                                             <div className="row form-group">
                                                 <div className="col-4 text-right">
+                                                    <b className='form-label'>Double Check</b>
+                                                    <ToggleInfo
+                                                        className='form-label ml-2'
+                                                        off="Quick check. This option relies on the MD5 sums that clouds record for files at the time of transfer. This check is sufficient for most users, but it is not guaranteed to be correct."
+                                                        on="Slow check. This option downloads all files from the cloud to ensure that the MD5 match. This option is guaranteed to always be correct."
+                                                    />
+                                                </div>
+                                                <div className="col-7">
+                                                    <Toggle
+                                                        name='option_download'
+                                                        className='form-label'
+                                                        defaultChecked={this.props.false}
+                                                    />
+                                                </div>
+                                                <div className="col-1"></div>
+                                            </div>
+
+                                            <div className="row form-group">
+                                                <div className="col-4 text-right">
                                                     <b className='form-label'>Email Notifications</b>
+                                                    <ToggleInfo
+                                                        className='form-label ml-2'
+                                                        on="Automatically receive an email when jobs are complete."
+                                                        off="No automatic emails are send on when jobs are complete, unless manually specified in the job itself."
+                                                    />
                                                 </div>
                                                 <div className="col-7">
                                                     <Toggle
@@ -155,6 +181,7 @@ class NewHashsumJobDialog extends React.Component {
                 "src_resource_path": src_resource_path,
                 "dst_cloud_id": propsData['destination_cloud'].id,
                 "dst_resource_path": dst_resource_path,
+                "option_download": formData['option_download'],
                 "notification_email": formData['notification_email'],
             }
 
@@ -178,8 +205,9 @@ class NewHashsumJobDialog extends React.Component {
 
 NewHashsumJobDialog.defaultProps = {
     data: {},
-    followSymlinksDefault: false,
 
+    followSymlinksDefault: false,
+    doubleCheckDefault: false,
     emailNotificationsDefault: false,
     emailAddressDefault: "",
 

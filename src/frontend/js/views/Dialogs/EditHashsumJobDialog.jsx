@@ -49,7 +49,11 @@ class EditHashsumJobDialog extends React.Component {
         const left = data.progress_src_text || [];
         const right = data.progress_dst_text || [];
 
-        const {treeLeft, treeRight, diff} = this._processData(left, right)
+        let {treeLeft, treeRight, diff} = this._processData(left, right)
+
+        if (!data.progress_src_text || !data.progress_dst_text) {
+            diff = NodeType.LOADING
+        }
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
@@ -58,10 +62,12 @@ class EditHashsumJobDialog extends React.Component {
 
         let statusText = '';
         let statusColor = 'default';
+        let isInProgress = false;
 
         if (data.progress_state === 'PROGRESS') {
             statusText = data.progress_state;
             statusColor = 'primary';
+            isInProgress = true;
         } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
             statusText = data.progress_state;
             statusColor = 'danger';
@@ -74,6 +80,9 @@ class EditHashsumJobDialog extends React.Component {
         } else if (data.progress_state === 'SUCCESS' && diff === NodeType.IDENTICAL) {
             statusText = 'IDENTICAL';
             statusColor = 'success'
+        } else if (data.progress_state === 'SUCCESS' && diff === NodeType.LOADING) {
+            statusText = 'LOADING';
+            statusColor = 'primary'
         }
 
         return (
@@ -189,6 +198,11 @@ class EditHashsumJobDialog extends React.Component {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
+                            {isInProgress && (
+                                <Button className='mr-auto' variant="danger" onClick={() => this.stopJob()}>
+                                    Stop Job
+                                </Button>
+                            )}
                             <Button variant="primary" onClick={() => this.handleClose()}>
                                 Close
                             </Button>
@@ -239,6 +253,12 @@ class EditHashsumJobDialog extends React.Component {
 
     handleClose() {
         this.props.onClose();
+    }
+
+    stopJob() {
+        if (confirm(`Are you sure you want to stop job ${this.props.data.id}`)) {
+            this.props.onStopJob(this.props.data.id)
+        }
     }
 
     _processData(left, right) {
@@ -379,6 +399,7 @@ EditHashsumJobDialog.defaultProps = {
     clouds: [],
     onClose: () => {},
     fetchData: (id) => {},
+    onStopJob: (id) => {},
 }
 
 EditHashsumJobDialog.initialState = {
@@ -386,6 +407,7 @@ EditHashsumJobDialog.initialState = {
 }
 
 const NodeType = {
+    LOADING: -1,
     IDENTICAL: 0,
     MODIFY: 1,
     MISSING: 2,
@@ -393,7 +415,7 @@ const NodeType = {
 
 import {connect} from 'react-redux';
 import {hideEditHashsumJobDialog} from 'actions/dialogActions.jsx'
-import {retrieveHashsumJob} from 'actions/apiActions.jsx'
+import {retrieveHashsumJob, stopHashsumJob} from 'actions/apiActions.jsx'
 
 const mapStateToProps = state => ({
     data: state.dialog.editHashsumJobDialogData,
@@ -403,6 +425,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideEditHashsumJobDialog()),
     fetchData: (id) => dispatch(retrieveHashsumJob(id)),
+    onStopJob: (id) => dispatch(stopHashsumJob(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditHashsumJobDialog);

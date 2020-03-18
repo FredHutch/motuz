@@ -14,6 +14,7 @@ class HashsumJob(db.Model, TimestampMixin):
     dst_resource_path = db.Column(db.String)
 
     # Options
+    option_download = db.Column(db.Boolean, nullable=False, server_default="f")
     notification_email = db.Column(db.String)
 
     owner = db.Column(db.String)
