@@ -39,7 +39,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            'rclone',
+            '/usr/local/bin/rclone',
             'lsjson',
             'current:{}'.format(bucket),
         ]
@@ -68,7 +68,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            'rclone',
+            '/usr/local/bin/rclone',
             'lsjson',
             'current:{}'.format(path),
         ]
@@ -94,7 +94,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            'rclone',
+            '/usr/local/bin/rclone',
             'touch',
             'current:{}/.motuz_keep'.format(path),
         ]
@@ -143,7 +143,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            'rclone',
+            '/usr/local/bin/rclone',
             'copyto',
             src,
             dst,
@@ -203,7 +203,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            'rclone',
+            '/usr/local/bin/rclone',
             'md5sum',
             src,
         ]
