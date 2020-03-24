@@ -7,8 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y
 
-RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 sudo
-
+RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 sudo sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob-makehomdir packagekit libpam-sss
 # pin to a specific version of rclone.
 # if we decide to update, do it here:
 RUN curl -LO https://downloads.rclone.org/v1.47.0/rclone-v1.47.0-linux-amd64.zip
