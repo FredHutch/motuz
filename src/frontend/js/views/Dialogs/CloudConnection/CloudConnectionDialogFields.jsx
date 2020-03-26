@@ -164,6 +164,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 's3_secret_access_key',
                         defaultValue: this.props.data.s3_secret_access_key,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.s3_secret_access_key}
                     isValid={this.props.verifySuccess}
@@ -252,6 +253,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'azure_key',
                         defaultValue: this.props.data.azure_key,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.azure_key}
                     isValid={this.props.verifySuccess}
@@ -382,6 +384,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'gcp_service_account_credentials',
                         defaultValue: this.props.data.gcp_service_account_credentials,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.gcp_service_account_credentials}
                     isValid={this.props.verifySuccess}
@@ -530,6 +533,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'dropbox_token',
                         defaultValue: this.props.data.dropbox_token,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.dropbox_token}
                     isValid={this.props.verifySuccess}
@@ -604,6 +608,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'onedrive_token',
                         defaultValue: this.props.data.onedrive_token,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.onedrive_token}
                     isValid={this.props.verifySuccess}
