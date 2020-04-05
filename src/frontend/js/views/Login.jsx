@@ -26,7 +26,7 @@ class Login extends React.Component {
                         width={102}
                         height={122}
                     />
-                    <h1 className="h1 mb-5 font-weight-normal">Motuz</h1>
+                    <h1 className="h1 mb-5 font-weight-normal">Motuz 2</h1>
 
                     <div className='form-group'>
                         <label htmlFor="inputEmail" className="sr-only">Username</label>
