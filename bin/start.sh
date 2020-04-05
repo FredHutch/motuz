@@ -6,11 +6,14 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ..
 
-# Initialize Database
-./bin/utils/database_install.sh
+# Pick up latest changes. Add `--no-cache` if this turns out to be unreliable
+docker-compose build
 
 # Shut down anything that might still be running
 docker-compose down
+
+# Initialize Database
+./bin/utils/database_install.sh
 
 # Start the application
 docker-compose up --scale database_init=0 -d
