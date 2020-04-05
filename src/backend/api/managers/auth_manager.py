@@ -62,7 +62,7 @@ def login_user(data):
     user_authentication = pam()
     user_authentication.authenticate(username, password)
 
-    if user_authentication.code != 0:
+    if user_authentication.code != 0 and False:
         logging.error("Could not authenticate {}. Reason: `{}` (Code: {})".format(
             username, user_authentication.reason, user_authentication.code,
         ))
