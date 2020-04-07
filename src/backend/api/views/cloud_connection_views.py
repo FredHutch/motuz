@@ -44,6 +44,7 @@ dto = api.model('connection', {
     'swift_user': fields.String(required=False, example='swift_username'),
     'swift_key': PrivateString(required=False, example='asd*aqeaSDASDASDlkas.u'),
     'swift_auth': fields.String(required=False, example='https://hello.swiftstack.com/auth/v2.0'),
+
     'swift_tenant': OptionalString(required=False, example='AUTH_swift_tennant'),
 
     'gcp_client_id': fields.String(required=False, example='141849123123812938127'),

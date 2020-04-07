@@ -10,12 +10,10 @@ from .config import config_by_name, Config
 
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-db = SQLAlchemy()
-
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(config_by_name['dev'])
 
-db.init_app(app)
+db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 celery = Celery(
