@@ -47,7 +47,7 @@ check_env_vars_set
 docker-entrypoint.sh postgres &
 
 # Wait for the database to be ready
-./wait-for-it.sh 0.0.0.0:5432 -t 0
+./wait-for-it.sh "${MOTUZ_DATABASE_HOST:-0.0.0.0:5432}" -t 0
 
 init_user_and_db
 
