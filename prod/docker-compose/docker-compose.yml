@@ -18,14 +18,13 @@ x-shared-volumes: &shared-volumes
         # based on the inode
         - /etc:/etc:ro
 
-        - /home:/home:shared
-
         # These mounts are specific to Fred Hutch:
+        - /home:/home:shared
         - /efs/:/efs/
         - /fh/economy:/fh/economy:shared
         - /fh/fast:/fh/fast:shared
-        - /fh/secure:/fh/secure:shared
         - /fh/scratch/:/fh/scratch/
+        - /fh/secure:/fh/secure:shared
         - /fh/silver:/fh/silver:shared
         - /shared:/shared:shared
 
@@ -46,7 +45,6 @@ services:
         container_name: motuz_app
         image: fredhutch/motuz_app
         network_mode: host
-        volumes:
         <<: *shared-volumes
         ports:
             - 5000:5000
