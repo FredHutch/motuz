@@ -1,5 +1,5 @@
 # Build as
-# docker build -t motuz_celery:latest -f docker/celery/Dockerfile .
+# docker build -t fredhutch/motuz_celery:latest -f docker/celery/Dockerfile .
 
 FROM motuz_app:latest
 

@@ -1,5 +1,5 @@
 # Build as
-# docker build -t motuz_nginx:latest -f docker/nginx/Dockerfile .
+# docker build -t fredhutch/motuz_nginx:latest -f docker/nginx/Dockerfile .
 
 
 FROM node:10.15.2 as build-stage

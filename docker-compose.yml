@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
     nginx:
-        container_name: motuz_nginx
+        container_name: fredhutch/motuz_nginx
         network_mode: host
         build:
             context: .
@@ -20,7 +20,7 @@ services:
 
 
     app:
-        container_name: motuz_app
+        container_name: fredhutch/motuz_app
         network_mode: host
         build:
             context: .
@@ -70,7 +70,7 @@ services:
 
 
     celery:
-        container_name: motuz_celery
+        container_name: fredhutch/motuz_celery
         network_mode: host
         build:
             context: .
@@ -122,7 +122,7 @@ services:
 
 
     rabbitmq:
-        container_name: motuz_rabbitmq
+        container_name: fredhutch/motuz_rabbitmq
         network_mode: host
         image: rabbitmq:3.7.16
         ports:
@@ -134,7 +134,7 @@ services:
 
 
     database:
-        container_name: motuz_database
+        container_name: fredhutch/motuz_database
         network_mode: host
         image: postgres:11.3
         ports:
@@ -145,7 +145,7 @@ services:
 
 
     database_init:
-        container_name: motuz_database_init
+        container_name: fredhutch/motuz_database_init
         network_mode: host
         build:
             context: .

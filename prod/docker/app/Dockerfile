@@ -1,5 +1,5 @@
 # Build as
-# docker build -t motuz_app:latest -f docker/app/Dockerfile .
+# docker build -t fredhutch/motuz_app:latest -f docker/app/Dockerfile .
 
 FROM python:3.7.3
 
