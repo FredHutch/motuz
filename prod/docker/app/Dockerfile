@@ -1,5 +1,5 @@
 # Build as
-# docker build -t fredhutch/motuz_app:latest -f docker/app/Dockerfile .
+# docker build -t fredhutch/motuz_app:latest -f prod/docker/app/Dockerfile .
 
 FROM python:3.7.3
 
@@ -33,9 +33,9 @@ RUN chmod 755 /root
 
 COPY ./src/backend /app/src/backend
 COPY \
-    ./docker/app/app-entrypoint.sh \
-    ./docker/wait-for-it.sh \
-    ./docker/load-secrets.sh \
+    ./prod/docker/app/app-entrypoint.sh \
+    ./prod/docker/wait-for-it.sh \
+    ./prod/docker/load-secrets.sh \
     /app/src/backend/
 
 WORKDIR /app/src/backend

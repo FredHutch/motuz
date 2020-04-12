@@ -1,5 +1,5 @@
 # Build as
-# docker build --no-cache=true -t motuz_test:latest -f docker/test/Dockerfile .
+# docker build --no-cache=true -t motuz_test:latest -f prod/docker/test/Dockerfile .
 # docker run -v /etc:/etc:ro -v /efs:/efs -it --net='host' motuz_test:latest
 
 
