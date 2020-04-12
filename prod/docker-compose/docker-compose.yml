@@ -3,8 +3,34 @@ version: '3.4'
 # See the fully generated file using
 # docker-compose config
 
-services:
+x-shared-volumes: &shared-volumes
+    volumes:
+        # Authentication
+        # passwd/group should be mounted into any container
+        # needing to share the user/group IDs
+        # This is the setup for Fred Hutch where we use Ubuntu; for Red Hat you would
+        # want to use SSSD.
+        - /var/run/nscd/socket:/var/run/nscd/socket
+        - /etc/krb5.conf:/etc/krb5.conf
+        - /etc/pam.d:/etc/pam.d
 
+        # Authentication cannot mount individual files, because the mapping is
+        # based on the inode
+        - /etc:/etc:ro
+
+        - /home:/home:shared
+
+        # These mounts are specific to Fred Hutch:
+        - /efs/:/efs/
+        - /fh/economy:/fh/economy:shared
+        - /fh/fast:/fh/fast:shared
+        - /fh/secure:/fh/secure:shared
+        - /fh/scratch/:/fh/scratch/
+        - /fh/silver:/fh/silver:shared
+        - /shared:/shared:shared
+
+
+services:
     nginx:
         container_name: motuz_nginx
         image: fredhutch/motuz_nginx
@@ -21,29 +47,7 @@ services:
         image: fredhutch/motuz_app
         network_mode: host
         volumes:
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            # This is the setup for Fred Hutch where we use Ubuntu; for Red Hat you would
-            # want to use SSSD.
-            - /var/run/nscd/socket:/var/run/nscd/socket
-            - /etc/krb5.conf:/etc/krb5.conf
-            - /etc/pam.d:/etc/pam.d
-
-            # Authentication cannot mount individual files, because the mapping is
-            # based on the inode
-            - /etc:/etc:ro
-
-            - /home:/home:shared
-
-            # These mounts are specific to Fred Hutch:
-            - /efs/:/efs/
-            - /fh/economy:/fh/economy:shared
-            - /fh/fast:/fh/fast:shared
-            - /fh/secure:/fh/secure:shared
-            - /fh/scratch/:/fh/scratch/
-            - /fh/silver:/fh/silver:shared
-            - /shared:/shared:shared
+        <<: *shared-volumes
         ports:
             - 5000:5000
         environment:
@@ -61,28 +65,7 @@ services:
         container_name: motuz_celery
         image: fredhutch/motuz_celery
         network_mode: host
-        volumes:
-            # # Authentication
-            # # passwd/group should be mounted into any container
-            # # needing to share the user/group IDs
-            - /var/run/nscd/socket:/var/run/nscd/socket
-            - /etc/krb5.conf:/etc/krb5.conf
-            - /etc/pam.d:/etc/pam.d
-
-            # # Authentication cannot mount individual files, because the mapping is
-            # # based on the inode
-            - /etc:/etc:ro
-
-            - /home:/home:shared
-
-            # Fred Hutch speciic mounts
-            - /efs/:/efs/
-            - /fh/economy:/fh/economy:shared
-            - /fh/fast:/fh/fast:shared
-            - /fh/secure:/fh/secure:shared
-            - /fh/scratch/:/fh/scratch/
-            - /fh/silver:/fh/silver:shared
-            - /shared:/shared:shared
+        <<: *shared-volumes
         environment:
             - MOTUZ_DATABASE_PROTOCOL    # from ./.env
             - MOTUZ_DATABASE_USER        # from ./.env
