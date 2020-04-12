@@ -26,7 +26,28 @@ Start kubeadm
 ```bash
 sudo kubeadm init --ignore-preflight-errors=NumCPU
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+[Optional] Stop kubeadm
+
+```bash
+sudo kubeadm reset
 ```
 
 ## Installing Helm
+
+TODO
+
+
+## Installing docker app
+
+```bash
+export DOCKER_CLI_EXPERIMENTAL=enabled
+export OSTYPE="$(uname | tr A-Z a-z)"
+curl -fsSL --output "/tmp/docker-app-${OSTYPE}.tar.gz" "https://github.com/docker/app/releases/download/v0.8.0/docker-app-${OSTYPE}.tar.gz"
+tar xf "/tmp/docker-app-${OSTYPE}.tar.gz" -C /tmp/
+mkdir -p ~/.docker/cli-plugins && cp "/tmp/docker-app-plugin-${OSTYPE}" ~/.docker/cli-plugins/docker-app
+
+```
