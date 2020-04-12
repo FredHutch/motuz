@@ -3,20 +3,20 @@ version: '3.4'
 services:
     nginx:
         build:
-            context: .
+            context: ../../
             dockerfile: ../docker/nginx/Dockerfile
 
     app:
         build:
-            context: .
+            context: ../../
             dockerfile: ../docker/app/Dockerfile
 
     celery:
         build:
-            context: .
+            context: ../../
             dockerfile: ../docker/celery/Dockerfile
 
     database_init:
         build:
-            context: .
+            context: ../../
             dockerfile: ../docker/database_init/Dockerfile
