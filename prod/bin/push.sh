@@ -42,7 +42,6 @@ done
 echo "To publish, press ENTER. To abort, press Ctrl+C"
 read
 
-exit 0
 
 docker login
 
