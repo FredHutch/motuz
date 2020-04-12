@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: prod/docker/nginx/Dockerfile
+
+    app:
+        build:
+            context: .
+            dockerfile: prod/docker/app/Dockerfile
+
+    celery:
+        build:
+            context: .
+            dockerfile: prod/docker/celery/Dockerfile
+
+    database_init:
+        build:
+            context: .
+            dockerfile: prod/docker/database_init/Dockerfile

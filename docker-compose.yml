@@ -1,31 +1,26 @@
-version: '3.1'
+version: '3.4'
 
-services:
+# See the fully generated file using
+# docker-compose config
 
-    nginx:
-        container_name: motuz_nginx
-        network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/nginx/Dockerfile
+
+x-variables:
+    - &database-environment
+        MOTUZ_DATABASE_PROTOCOL:    # from ./.env
+        MOTUZ_DATABASE_USER:        # from ./.env
+        MOTUZ_DATABASE_HOST:        # from ./.env
+        MOTUZ_DATABASE_NAME:        # from ./.env
+        MOTUZ_DATABASE_REQUIRE_SSL: # from ./.env
+    - &smtp-environment
+        MOTUZ_SMTP_SERVER:          # from ./.env
+        MOTUZ_SMTP_USER:            # from ./.env
+        MOTUZ_SMTP_REQUIRE_SSL:     # from ./.env
+    - &shared-volumes
         volumes:
-            - .:/code
-            - /tmp
-            - /root/certs:/certs/:ro
-        ports:
-            - 443:443
-            - 80:80
-        logging:
-            driver: syslog
-
-    app:
-        container_name: motuz_app
-        network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/app/Dockerfile
-        volumes:
-            - .:/code
+            # Using system users for authentication
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/group:/etc/group:ro
+            - /etc/shadow:/etc/shadow:ro
 
             # Authentication
             # passwd/group should be mounted into any container
@@ -40,83 +35,56 @@ services:
             # based on the inode
             - /etc:/etc:ro
 
-            - /home:/home:shared
-            - /tmp
 
-            # These mounts are specific to Fred Hutch:
-            - /efs/:/efs/
-            - /fh/economy:/fh/economy:shared
-            - /fh/fast:/fh/fast:shared
-            - /fh/secure:/fh/secure:shared
-            - /fh/scratch/:/fh/scratch/
-            - /fh/silver:/fh/silver:shared
+secrets:
+    MOTUZ_DATABASE_PASSWORD:
+        file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
+    MOTUZ_FLASK_SECRET_KEY:
+        file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+    MOTUZ_SMTP_PASSWORD:
+        file: /docker/secrets/MOTUZ_SMTP_PASSWORD
 
-            - /shared:/shared:shared
+
+services:
+    nginx:
+        container_name: motuz_nginx
+        image: fredhutch/motuz_nginx
+        network_mode: host
+        volumes:
+            - /root/certs:/certs/:ro
+        ports:
+            - 443:443
+            - 80:80
+
+
+    app:
+        container_name: motuz_app
+        image: fredhutch/motuz_app
+        network_mode: host
+        <<: *shared-volumes
         ports:
             - 5000:5000
-
         environment:
-            - MOTUZ_DATABASE_PROTOCOL    # from ./.env
-            - MOTUZ_DATABASE_USER        # from ./.env
-            - MOTUZ_DATABASE_HOST        # from ./.env
-            - MOTUZ_DATABASE_NAME        # from ./.env
-            - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
+            <<: *database-environment
         secrets:
             - MOTUZ_DATABASE_PASSWORD
             - MOTUZ_FLASK_SECRET_KEY
-
 
 
     celery:
         container_name: motuz_celery
+        image: fredhutch/motuz_celery
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/celery/Dockerfile
-        volumes:
-            - .:/code
-
-            # # Authentication
-            # # passwd/group should be mounted into any container
-            # # needing to share the user/group IDs
-            - /var/run/nscd/socket:/var/run/nscd/socket
-            - /etc/krb5.conf:/etc/krb5.conf
-            - /etc/pam.d:/etc/pam.d
-
-            # # Authentication cannot mount individual files, because the mapping is
-            # # based on the inode
-            - /etc:/etc:ro
-
-            - /home:/home:shared
-
-
-            # Fred Hutch speciic mounts
-            - /efs/:/efs/
-            - /fh/economy:/fh/economy:shared
-            - /fh/fast:/fh/fast:shared
-            - /fh/secure:/fh/secure:shared
-            - /fh/scratch/:/fh/scratch/
-            - /fh/silver:/fh/silver:shared
-            - /shared:/shared:shared
-
+        <<: *shared-volumes
         environment:
-            - MOTUZ_DATABASE_PROTOCOL    # from ./.env
-            - MOTUZ_DATABASE_USER        # from ./.env
-            - MOTUZ_DATABASE_HOST        # from ./.env
-            - MOTUZ_DATABASE_NAME        # from ./.env
-            - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
-
-            - MOTUZ_SMTP_SERVER          # from ./.env
-            - MOTUZ_SMTP_USER            # from ./.env
-            - MOTUZ_SMTP_REQUIRE_SSL     # from ./.env
+            <<: *database-environment
+            <<: *smtp-environment
         secrets:
             - MOTUZ_DATABASE_PASSWORD
             - MOTUZ_FLASK_SECRET_KEY
             - MOTUZ_SMTP_PASSWORD
-
-        hostname: 0.0.0.0
         depends_on:
-            - app
+            - app # Build dependency
 
 
     rabbitmq:
@@ -126,46 +94,25 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
-        expose:
-            - 5672
-        hostname: 0.0.0.0
 
 
     database:
         container_name: motuz_database
         network_mode: host
         image: postgres:11.3
-        ports:
-            - 5432:5432
-        hostname: 0.0.0.0
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
 
 
     database_init:
         container_name: motuz_database_init
+        image: fredhutch/motuz_database_init
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/database_init/Dockerfile
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
         environment:
-            - MOTUZ_DATABASE_PROTOCOL    # from ./.env
-            - MOTUZ_DATABASE_USER        # from ./.env
-            - MOTUZ_DATABASE_HOST        # from ./.env
-            - MOTUZ_DATABASE_NAME        # from ./.env
-            - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
+            <<: *database-environment
         secrets:
             - MOTUZ_DATABASE_PASSWORD
-        hostname: 0.0.0.0
-
-
-
-secrets:
-    MOTUZ_DATABASE_PASSWORD:
-        file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
-    MOTUZ_FLASK_SECRET_KEY:
-        file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
-    MOTUZ_SMTP_PASSWORD:
-        file: /docker/secrets/MOTUZ_SMTP_PASSWORD
