@@ -1,6 +1,7 @@
 version: '3.4'
 
-# https://docs.docker.com/compose/extends/
+# Edit this file to add configuration that is specific to your instance
+# Find additional documentation at https://docs.docker.com/compose/extends/
 
 x-shared-volumes: &shared-volumes
     volumes:
