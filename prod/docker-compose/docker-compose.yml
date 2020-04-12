@@ -98,7 +98,6 @@ services:
             - MOTUZ_FLASK_SECRET_KEY
             - MOTUZ_SMTP_PASSWORD
 
-        hostname: 0.0.0.0
         depends_on:
             - app
 
@@ -110,9 +109,6 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
-        expose:
-            - 5672
-        hostname: 0.0.0.0
 
 
     database:
@@ -121,7 +117,6 @@ services:
         image: postgres:11.3
         ports:
             - 5432:5432
-        hostname: 0.0.0.0
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
 
@@ -140,7 +135,6 @@ services:
             - MOTUZ_DATABASE_REQUIRE_SSL # from ./.env
         secrets:
             - MOTUZ_DATABASE_PASSWORD
-        hostname: 0.0.0.0
 
 
 
