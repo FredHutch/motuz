@@ -2,7 +2,6 @@ version: '3.1'
 
 services:
 
-
     nginx:
         container_name: motuz_nginx
         image: fredhutch/motuz_nginx
@@ -44,7 +43,6 @@ services:
             - /shared:/shared:shared
         ports:
             - 5000:5000
-
         environment:
             - MOTUZ_DATABASE_PROTOCOL    # from ./.env
             - MOTUZ_DATABASE_USER        # from ./.env
@@ -82,7 +80,6 @@ services:
             - /fh/scratch/:/fh/scratch/
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
-
         environment:
             - MOTUZ_DATABASE_PROTOCOL    # from ./.env
             - MOTUZ_DATABASE_USER        # from ./.env
@@ -97,9 +94,8 @@ services:
             - MOTUZ_DATABASE_PASSWORD
             - MOTUZ_FLASK_SECRET_KEY
             - MOTUZ_SMTP_PASSWORD
-
         depends_on:
-            - app
+            - app # Build dependency
 
 
     rabbitmq:
@@ -115,10 +111,10 @@ services:
         container_name: motuz_database
         network_mode: host
         image: postgres:11.3
-        ports:
-            - 5432:5432
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
 
 
     database_init:
