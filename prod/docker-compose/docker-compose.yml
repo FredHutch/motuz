@@ -4,29 +4,19 @@ services:
 
     nginx:
         container_name: motuz_nginx
+        image: fredhutch/motuz_nginx
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/nginx/Dockerfile
         volumes:
-            - .:/code
-            - /tmp
             - /root/certs:/certs/:ro
         ports:
             - 443:443
             - 80:80
-        logging:
-            driver: syslog
 
     app:
         container_name: motuz_app
+        image: fredhutch/motuz_app
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/app/Dockerfile
         volumes:
-            - .:/code
-
             # Authentication
             # passwd/group should be mounted into any container
             # needing to share the user/group IDs
@@ -50,7 +40,6 @@ services:
             - /fh/secure:/fh/secure:shared
             - /fh/scratch/:/fh/scratch/
             - /fh/silver:/fh/silver:shared
-
             - /shared:/shared:shared
         ports:
             - 5000:5000
