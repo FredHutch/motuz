@@ -5,6 +5,11 @@ version: '3.4'
 
 x-shared-volumes: &shared-volumes
     volumes:
+        # Using system users for authentication
+        - /etc/passwd:/etc/passwd:ro
+        - /etc/group:/etc/group:ro
+        - /etc/shadow:/etc/shadow:ro
+
         # Authentication
         # passwd/group should be mounted into any container
         # needing to share the user/group IDs
@@ -17,16 +22,6 @@ x-shared-volumes: &shared-volumes
         # Authentication cannot mount individual files, because the mapping is
         # based on the inode
         - /etc:/etc:ro
-
-        # These mounts are specific to Fred Hutch:
-        - /home:/home:shared
-        - /efs/:/efs/
-        - /fh/economy:/fh/economy:shared
-        - /fh/fast:/fh/fast:shared
-        - /fh/scratch/:/fh/scratch/
-        - /fh/secure:/fh/secure:shared
-        - /fh/silver:/fh/silver:shared
-        - /shared:/shared:shared
 
 
 services:

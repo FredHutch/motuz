@@ -1,0 +1,22 @@
+version: '3.4'
+
+# https://docs.docker.com/compose/extends/
+
+x-shared-volumes: &shared-volumes
+    volumes:
+        # These mounts are specific to Fred Hutch:
+        - /home:/home:shared
+        - /efs/:/efs/
+        - /fh/economy:/fh/economy:shared
+        - /fh/fast:/fh/fast:shared
+        - /fh/scratch/:/fh/scratch/
+        - /fh/secure:/fh/secure:shared
+        - /fh/silver:/fh/silver:shared
+        - /shared:/shared:shared
+
+services:
+    app:
+        <<: *shared-volumes
+    celery:
+        <<: *shared-volumes
+
