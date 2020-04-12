@@ -58,10 +58,8 @@ services:
 
     celery:
         container_name: motuz_celery
+        image: fredhutch/motuz_celery
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/celery/Dockerfile
         volumes:
             - .:/code
 
@@ -133,10 +131,8 @@ services:
 
     database_init:
         container_name: motuz_database_init
+        image: fredhutch/motuz_database_init
         network_mode: host
-        build:
-            context: .
-            dockerfile: ./prod/docker/database_init/Dockerfile
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
         environment:
