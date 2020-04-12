@@ -7,7 +7,7 @@ services:
         network_mode: host
         build:
             context: .
-            dockerfile: ./docker/nginx/Dockerfile
+            dockerfile: ./prod/docker/nginx/Dockerfile
         volumes:
             - .:/code
             - /tmp
@@ -24,7 +24,7 @@ services:
         network_mode: host
         build:
             context: .
-            dockerfile: ./docker/app/Dockerfile
+            dockerfile: ./prod/docker/app/Dockerfile
         volumes:
             - .:/code
 
@@ -74,7 +74,7 @@ services:
         network_mode: host
         build:
             context: .
-            dockerfile: ./docker/celery/Dockerfile
+            dockerfile: ./prod/docker/celery/Dockerfile
         volumes:
             - .:/code
 
@@ -149,7 +149,7 @@ services:
         network_mode: host
         build:
             context: .
-            dockerfile: ./docker/database_init/Dockerfile
+            dockerfile: ./prod/docker/database_init/Dockerfile
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
         environment:
