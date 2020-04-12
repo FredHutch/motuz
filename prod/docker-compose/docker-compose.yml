@@ -2,6 +2,7 @@ version: '3.1'
 
 services:
 
+
     nginx:
         container_name: motuz_nginx
         image: fredhutch/motuz_nginx
@@ -11,6 +12,7 @@ services:
         ports:
             - 443:443
             - 80:80
+
 
     app:
         container_name: motuz_app
@@ -31,7 +33,6 @@ services:
             - /etc:/etc:ro
 
             - /home:/home:shared
-            - /tmp
 
             # These mounts are specific to Fred Hutch:
             - /efs/:/efs/
@@ -55,14 +56,11 @@ services:
             - MOTUZ_FLASK_SECRET_KEY
 
 
-
     celery:
         container_name: motuz_celery
         image: fredhutch/motuz_celery
         network_mode: host
         volumes:
-            - .:/code
-
             # # Authentication
             # # passwd/group should be mounted into any container
             # # needing to share the user/group IDs
@@ -75,7 +73,6 @@ services:
             - /etc:/etc:ro
 
             - /home:/home:shared
-
 
             # Fred Hutch speciic mounts
             - /efs/:/efs/
