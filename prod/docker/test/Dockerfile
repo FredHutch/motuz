@@ -5,8 +5,8 @@
 
 FROM ubuntu:16.04
 
-RUN apt-get update -y
-RUN apt-get install -y curl net-tools netcat nmap sudo
+# RUN apt-get update -y
+# RUN apt-get install -y curl net-tools netcat nmap sudo
 
 CMD /bin/bash
 
