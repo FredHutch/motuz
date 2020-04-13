@@ -4,15 +4,13 @@ set -e
 
 THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
-cd ..
+cd ../..
 
 
 # In order to check that it all works well
 # docker run -it --entrypoint='bash' --net='host' postgres:11.3
-# psql -h 0.0.0.0 -U postgres -d postgres
-# password: docker
-#
-# Alternative
+# psql postgresql://motuz_user:motuz_password@0.0.0.0:5432/motuz
+# Or
 # psql ${MOTUZ_DATABASE_PROTOCOL}://${MOTUZ_DATABASE_USER}:${MOTUZ_DATABASE_PASSWORD}@${MOTUZ_DATABASE_HOST}/${MOTUZ_DATABASE_NAME}
 
 docker run --rm \
