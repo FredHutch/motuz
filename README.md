@@ -60,6 +60,13 @@
 
 An alternative to the one-button script is the [Beyond quickstart section](#beyond-quickstart)
 
+---
+
+![Motuz main page ](docs/img/image_root.png)
+
+---
+
+
 ## Beyond Quickstart
 
 Let's have a look at the steps that the quickstart script performed
@@ -103,12 +110,6 @@ docker-compose up -d
 - Change passwords by editing the files inside `/docker/secrets`
 - Change the files that are visible to motuz inside `docker-compose.override.yml`
 
-
----
-
-![Motuz main page ](docs/img/image_root.png)
-
----
 
 
 ## Setting up production
