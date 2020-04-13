@@ -48,7 +48,7 @@ secrets:
 services:
     nginx:
         container_name: motuz_nginx
-        image: fredhutch/motuz_nginx
+        image: fredhutch/motuz_nginx:latest
         network_mode: host
         volumes:
             - /root/certs:/certs/:ro
@@ -59,7 +59,7 @@ services:
 
     app:
         container_name: motuz_app
-        image: fredhutch/motuz_app
+        image: fredhutch/motuz_app:latest
         network_mode: host
         <<: *shared-volumes
         ports:
@@ -73,7 +73,7 @@ services:
 
     celery:
         container_name: motuz_celery
-        image: fredhutch/motuz_celery
+        image: fredhutch/motuz_celery:latest
         network_mode: host
         <<: *shared-volumes
         environment:
@@ -89,8 +89,8 @@ services:
 
     rabbitmq:
         container_name: motuz_rabbitmq
-        network_mode: host
         image: rabbitmq:3.7.16
+        network_mode: host
         ports:
             - 5672:5672
             - 15672:15672
@@ -98,8 +98,8 @@ services:
 
     database:
         container_name: motuz_database
-        network_mode: host
         image: postgres:11.3
+        network_mode: host
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
         ports:
@@ -108,7 +108,7 @@ services:
 
     database_init:
         container_name: motuz_database_init
-        image: fredhutch/motuz_database_init
+        image: fredhutch/motuz_database_init:latest
         network_mode: host
         volumes:
             - /docker/volumes/postgres:/var/lib/postgresql/data
