@@ -48,17 +48,14 @@
 
 ## Quickstart
 
-**Prerequisites:**
+- Install [`docker` and `docker-compose`](https://docs.docker.com/install/linux/docker-ce/ubuntu/) installed
+- Run the following command
 
-- Linux machine
-- [docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+```bash
+make quickstart
+```
 
-**One-button deployment**
-
-- From your terminal, run `make quickstart`
 - Open browser at http://localhost/ and accept self-signed certificates
-
-An alternative to the one-button script is the [Beyond quickstart section](#beyond-quickstart)
 
 ---
 
