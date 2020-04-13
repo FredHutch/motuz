@@ -10,7 +10,7 @@ cd ..
 docker-compose down
 
 # Initialize Database
-./bin/utils/database_install.sh
+./bin/_utils/database_install.sh
 
 # Start the application
 docker-compose up -d
