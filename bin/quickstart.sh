@@ -83,7 +83,7 @@ generate_certificates() {
             exit 1
         fi
         _confirm "Generate self-signed certificates inside /docker/certs ?"
-        openssl req -x509 -newkey rsa:4096 -keyout /docker/certs/cert.key -out /docker/certs/cert.crt -days 365 -subj '/CN=localhost'
+        openssl req -x509 -newkey rsa:4096 -keyout /docker/certs/cert.key -out /docker/certs/cert.crt -days 365 -subj '/CN=localhost' -nodes
     else
         _color_yellow "/docker/certs exist. Skipping"
     fi
