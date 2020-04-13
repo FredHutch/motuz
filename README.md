@@ -57,12 +57,13 @@ On a Linux machine, do the following:
 1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 2. Create a folder called docker in your root directory `sudo install -d -o $USER -m 755 /docker`.
 3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
-4. Create the following two secret files and remember the passwords
+4. Create the following secret files and remember the passwords
 
 ```bash
 mkdir -p /docker/secrets
 head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
 head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_SMTP_PASSWORD
 ```
 
 5. Run the start script

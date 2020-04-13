@@ -7,7 +7,7 @@ cd ${THIS_DIR}
 cd ..
 
 # Pick up latest changes. Add `--no-cache` if this turns out to be unreliable
-docker-compose build
+docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.build.yml build
 
 # Shut down anything that might still be running
 docker-compose down
@@ -16,7 +16,7 @@ docker-compose down
 ./bin/utils/database_install.sh
 
 # Start the application
-docker-compose up --scale database_init=0 -d
+docker-compose up -d
 
 echo "
 Application is building, initializing and starting...
