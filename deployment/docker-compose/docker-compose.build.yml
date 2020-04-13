@@ -21,6 +21,7 @@ services:
             dockerfile: deployment/docker/celery/Dockerfile
 
     database_init:
+        image: fredhutch/motuz_database_init:latest
         build:
             context: .
             dockerfile: deployment/docker/database_init/Dockerfile
