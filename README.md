@@ -50,6 +50,7 @@
 
 *Prerequisites:*
 
+    - Linux machine
     - [docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 *One-button deployment*
@@ -57,19 +58,21 @@
     - From your terminal, run `make quickstart`
     - Open browser at http://localhost/ and accept self-signed certificates
 
+An alternative to the one-button script is the [Beyond quickstart section](#beyond-quickstart)
 
 ## Beyond Quickstart
 
-Quickly get Motuz up and running so you
-can explore it. To set up a production instance,
-see [Setting up production](#setting-up-production).
+Let's have a look at the steps that the quickstart script performed
 
-On a Linux machine, do the following:
+1. Create a folder called `docker` in your root directory using `sudo install -d -o $USER -m 755 /docker`. Inside the folder, create the following subfolders
 
-1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. Create a folder called docker in your root directory `sudo install -d -o $USER -m 755 /docker`.
-3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
-4. Create the following secret files and remember the passwords
+- `mkdir -p /docker/certs`
+- `mkdir -p /docker/secrets`
+- `mkdir -p /docker/volumes/postgres`
+
+2. Add SSL certificates inside `/docker/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
+
+3. Create the following secret files and remember the passwords
 
 ```bash
 mkdir -p /docker/secrets
@@ -78,13 +81,27 @@ head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECR
 head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_SMTP_PASSWORD
 ```
 
-5. Run the start script
+4. Initialize the database
 
 ```bash
-./start.sh
+./bin/_utils/database_install.sh
 ```
 
-5. See result at http://localhost/.
+5. Pull and Start all containers
+
+```bash
+docker-compose up -d
+```
+
+6. See result at http://localhost/.
+
+
+## Customizing your deployment
+
+- Add certificates inside `/docker/certs/`
+- Change the environment variables inside `.env`
+- Change passwords by editing the files inside `/docker/secrets`
+- Change the files that are visible to motuz inside `docker-compose.override.yml`
 
 
 ---
