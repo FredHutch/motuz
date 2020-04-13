@@ -71,7 +71,7 @@ create_folders() {
         _color_yellow "/docker exists. Skipping..."
     fi
 
-    mkdir -p /docker/volumes
+    mkdir -p /docker/volumes/postgres
     mkdir -p /docker/secrets
     mkdir -p /docker/certs
 }
