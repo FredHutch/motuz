@@ -48,7 +48,7 @@
 
 ## Quickstart
 
-- Install [`docker` and `docker-compose`](https://docs.docker.com/install/linux/docker-ce/ubuntu/) installed
+- Install [`docker` and `docker-compose`](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 - Run the following command
 
 ```bash
@@ -313,7 +313,7 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 2. Initialize app
 
 ```bash
-./bin/init_dev.sh
+./bin/dev/init_dev.sh
 ```
 
 ### Start
@@ -321,31 +321,31 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 1. Start Database
 
 ```bash
-./bin/database_start.sh
+./bin/dev/database_start.sh
 ```
 
 2. Start RabbitMQ (in a new terminal window/tab)
 
 ```bash
-./bin/rabbitmq_start.sh
+./bin/dev/rabbitmq_start.sh
 ```
 
 3. Start Celery (in a new terminal window/tab)
 
 ```bash
-./bin/celery_start.sh
+./bin/dev/celery_start.sh
 ```
 
 4. Start Backend (in a new terminal window/tab)
 
 ```bash
-./bin/backend_start.sh
+./bin/dev/backend_start.sh
 ```
 
 5. Start Frontend (in a new terminal window/tab)
 
 ```bash
-./bin/frontend_start.sh
+./bin/dev/frontend_start.sh
 ```
 
 6. See result at http://localhost:8080/
@@ -406,9 +406,8 @@ curl -X POST "https://example.com/api/auth/login/" \
 | Folder | Description |
 | --- | --- |
 | `bin/` | Scripts for starting / installing / testing the application |
-| `docker/` | Container definition for production |
+| `deployment/` | Container definition for production |
 | `docs/` | Documentation |
-| `sandbox/` | Temporary place for Proof of Concept code |
 | `src/` | All source code in one place |
 | `src/frontend/` | Frontend code |
 | `src/backend/` | Backend code |
