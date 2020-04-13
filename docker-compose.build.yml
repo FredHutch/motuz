@@ -8,19 +8,19 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: prod/docker/nginx/Dockerfile
+            dockerfile: deployment/docker/nginx/Dockerfile
 
     app:
         build:
             context: .
-            dockerfile: prod/docker/app/Dockerfile
+            dockerfile: deployment/docker/app/Dockerfile
 
     celery:
         build:
             context: .
-            dockerfile: prod/docker/celery/Dockerfile
+            dockerfile: deployment/docker/celery/Dockerfile
 
     database_init:
         build:
             context: .
-            dockerfile: prod/docker/database_init/Dockerfile
+            dockerfile: deployment/docker/database_init/Dockerfile
