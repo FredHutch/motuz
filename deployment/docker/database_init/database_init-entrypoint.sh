@@ -7,6 +7,7 @@ readonly REQUIRED_ENV_VARS=(
   "MOTUZ_DATABASE_PROTOCOL"
   "MOTUZ_DATABASE_USER"
   "MOTUZ_DATABASE_PASSWORD"
+  "MOTUZ_DATABASE_HOST"
   "MOTUZ_DATABASE_NAME"
 )
 
@@ -42,6 +43,12 @@ EOSQL
 source ./load-secrets.sh
 
 check_env_vars_set
+
+if [ "$MOTUZ_DATABASE_HOST" != "0.0.0.0:5432" ]; then
+  echo "Custom database set. Can only initialize 0.0.0.0:5432. Found $MOTUZ_DATABASE_HOST"
+  echo "Skipping initialization..."
+  exit 0
+fi
 
 # Entrypoint in the official docker image for postgres
 docker-entrypoint.sh postgres &
