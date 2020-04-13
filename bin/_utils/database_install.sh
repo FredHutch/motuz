@@ -6,5 +6,7 @@ THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 cd ../..
 
-docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.build.yml build --no-cache database_init
-docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.init.yml up database_init
+composeFileArgs="-f docker-compose.yml -f docker-compose.override.yml"
+
+docker-compose $composeFileArgs -f deployment/docker-compose/docker-compose.build.yml build --no-cache database_init
+docker-compose composeFileArgs -f deployment/docker-compose/docker-compose.init.yml up database_init
