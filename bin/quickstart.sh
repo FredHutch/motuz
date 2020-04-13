@@ -65,7 +65,7 @@ create_folders() {
     if ! [ -d "/docker" ]; then
         _confirm "Create directory /docker ?"
         set -x
-        sudo install -d -o $USER -m 755 /docker
+        sudo install -d -o $USER -g $(id -gn) -m 755 /docker
         set +x
     else
         _color_yellow "/docker exists. Skipping..."
