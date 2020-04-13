@@ -5,4 +5,4 @@ set -e
 THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
 
-./bin/start.sh
+./bin/prod/start.sh

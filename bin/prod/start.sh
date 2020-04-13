@@ -4,7 +4,7 @@ set -e
 
 THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
-cd ..
+cd ../..
 
 # Shut down anything that might still be running
 docker-compose down
