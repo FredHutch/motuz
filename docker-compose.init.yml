@@ -15,11 +15,12 @@ x-variables:
 
 
 services:
-    database:
+    database_init:
         container_name: motuz_database_init
         image: fredhutch/motuz_database_init:latest
         network_mode: host
-        # Same volumes as the database
+        volumes:
+            - /docker/volumes/postgres:/var/lib/postgresql/data
         environment:
             <<: *database-environment
         secrets:
