@@ -48,37 +48,65 @@
 
 ## Quickstart
 
-Quickly get Motuz up and running so you
-can explore it. To set up a production instance,
-see [Setting up production](#setting-up-production).
-
-On a Linux machine, do the following:
-
-1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. Create a folder called docker in your root directory `sudo install -d -o $USER -m 755 /docker`.
-3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
-4. Create the following two secret files and remember the passwords
+- Install [`docker` and `docker-compose`](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- Run the following command
 
 ```bash
-mkdir -p /docker/secrets
-head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
-head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+make quickstart
 ```
 
-5. Run the start script
-
-```bash
-./start.sh
-```
-
-5. See result at http://localhost/.
-
+- Open browser at http://localhost/ and accept self-signed certificates
 
 ---
 
 ![Motuz main page ](docs/img/image_root.png)
 
 ---
+
+
+## Beyond Quickstart
+
+Let's have a look at the steps that the quickstart script performed
+
+1. Create a folder called `docker` in your root directory using `sudo install -d -o $USER -m 755 /docker`. Inside the folder, create the following subfolders
+
+- `mkdir -p /docker/certs`
+- `mkdir -p /docker/secrets`
+- `mkdir -p /docker/volumes/postgres`
+
+2. Add SSL certificates inside `/docker/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
+
+3. Create the following secret files and remember the passwords
+
+```bash
+mkdir -p /docker/secrets
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_SMTP_PASSWORD
+```
+
+4. Initialize the database
+
+```bash
+./bin/_utils/database_install.sh
+```
+
+5. Pull and Start all containers
+
+```bash
+docker-compose up -d
+```
+
+6. See result at http://localhost/.
+
+
+## Customizing your deployment
+
+- Add certificates inside `/docker/certs/`
+- Change the environment variables inside `.env`
+- Change passwords by editing the files inside `/docker/secrets`
+- Change the files that are visible to motuz inside `docker-compose.override.yml`
+
 
 
 ## Setting up production
@@ -285,7 +313,7 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 2. Initialize app
 
 ```bash
-./bin/init_dev.sh
+./bin/dev/init_dev.sh
 ```
 
 ### Start
@@ -293,31 +321,31 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 1. Start Database
 
 ```bash
-./bin/database_start.sh
+./bin/dev/database_start.sh
 ```
 
 2. Start RabbitMQ (in a new terminal window/tab)
 
 ```bash
-./bin/rabbitmq_start.sh
+./bin/dev/rabbitmq_start.sh
 ```
 
 3. Start Celery (in a new terminal window/tab)
 
 ```bash
-./bin/celery_start.sh
+./bin/dev/celery_start.sh
 ```
 
 4. Start Backend (in a new terminal window/tab)
 
 ```bash
-./bin/backend_start.sh
+./bin/dev/backend_start.sh
 ```
 
 5. Start Frontend (in a new terminal window/tab)
 
 ```bash
-./bin/frontend_start.sh
+./bin/dev/frontend_start.sh
 ```
 
 6. See result at http://localhost:8080/
@@ -378,9 +406,8 @@ curl -X POST "https://example.com/api/auth/login/" \
 | Folder | Description |
 | --- | --- |
 | `bin/` | Scripts for starting / installing / testing the application |
-| `docker/` | Container definition for production |
+| `deployment/` | Container definition for production |
 | `docs/` | Documentation |
-| `sandbox/` | Temporary place for Proof of Concept code |
 | `src/` | All source code in one place |
 | `src/frontend/` | Frontend code |
 | `src/backend/` | Backend code |

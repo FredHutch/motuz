@@ -1,0 +1,27 @@
+version: '3.4'
+
+# Add this file to force rebuilding the containers
+# Example:
+# docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.dev.yml build
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: deployment/docker/nginx/Dockerfile
+
+    app:
+        build:
+            context: .
+            dockerfile: deployment/docker/app/Dockerfile
+
+    celery:
+        build:
+            context: .
+            dockerfile: deployment/docker/celery/Dockerfile
+
+    database_init:
+        image: fredhutch/motuz_database_init:latest
+        build:
+            context: .
+            dockerfile: deployment/docker/database_init/Dockerfile
