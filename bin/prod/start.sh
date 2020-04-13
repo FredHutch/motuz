@@ -18,6 +18,10 @@ docker-compose up -d
 echo "
 Application is building, initializing and starting...
 This can take up to 5 minutes
+
+Once complete, you should be able to visit your service using
+curl -k https://0.0.0.0/
+
 Use \`docker ps -a\` to check the status
 You should see the following services running:
     - motuz_app
