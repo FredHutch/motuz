@@ -51,7 +51,7 @@ services:
         image: fredhutch/motuz_nginx:latest
         network_mode: host
         volumes:
-            - /root/certs:/certs/:ro
+            - /docker/certs:/certs/:ro
         ports:
             - 443:443
             - 80:80
