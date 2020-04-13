@@ -48,6 +48,18 @@
 
 ## Quickstart
 
+*Prerequisites:*
+
+    - [docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+*One-button deployment*
+
+    - From your terminal, run `make quickstart`
+    - Open browser at http://localhost/ and accept self-signed certificates
+
+
+## Beyond Quickstart
+
 Quickly get Motuz up and running so you
 can explore it. To set up a production instance,
 see [Setting up production](#setting-up-production).
