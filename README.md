@@ -1,5 +1,4 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="200" height="200">
     <h1>Motuz</h1>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
@@ -8,6 +7,9 @@
 </div>
 
 ![Motuz transfer and checksum validation](docs/img/mov-copy-check.gif)
+
+![Motuz settings and features](docs/img/mov-settings.gif)
+
 
 <!--  The TOC below is created/maintained by
       the `Markdown TOC` extension to the
