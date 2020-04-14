@@ -7,7 +7,7 @@
     <br>
 </div>
 
-![Motuz transfer in progress](docs/img/image_transfer.png)
+![Motuz transfer and checksum validation](docs/img/mov-copy-check.gif)
 
 <!--  The TOC below is created/maintained by
       the `Markdown TOC` extension to the
