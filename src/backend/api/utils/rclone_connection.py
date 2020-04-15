@@ -40,6 +40,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--config=/dev/null',
             'lsjson',
             'current:{}'.format(bucket),
         ]
@@ -69,6 +70,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--config=/dev/null',
             'lsjson',
             'current:{}'.format(path),
         ]
@@ -95,6 +97,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--config=/dev/null',
             'touch',
             'current:{}/.motuz_keep'.format(path),
         ]
@@ -144,6 +147,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--config=/dev/null',
             'copyto',
             src,
             dst,
@@ -204,6 +208,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--config=/dev/null',
             'md5sum',
             src,
         ]
