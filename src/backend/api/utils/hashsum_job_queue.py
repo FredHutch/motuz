@@ -123,6 +123,7 @@ class HashsumJobQueue:
                     '-E',
                     '-u', user,
                     '/usr/local/bin/rclone',
+                    '--config=/dev/null',
                     'cat',
                     'src:{}'.format(os.path.join(os.path.dirname(base), file['Name'])),
                 ]
