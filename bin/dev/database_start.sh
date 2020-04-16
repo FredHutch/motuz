@@ -7,6 +7,8 @@ cd ${THIS_DIR}
 cd ../..
 
 
+MOTUZ_DOCKER_ROOT=${MOTUZ_DOCKER_ROOT:-/docker}
+
 # In order to check that it all works well
 # docker run -it --entrypoint='bash' --net='host' postgres:11.3
 # psql postgresql://motuz_user:motuz_password@0.0.0.0:5432/motuz
@@ -19,5 +21,5 @@ docker run --rm \
     --name local_motuz_database \
     -e POSTGRES_PASSWORD=docker \
     -p 5432:5432 \
-    -v /docker/volumes/postgres:/var/lib/postgresql/data \
+    -v ${MOTUZ_DOCKER_ROOT}/volumes/postgres:/var/lib/postgresql/data \
     postgres:11.3
