@@ -22,14 +22,17 @@ x-variables:
             - /etc/group:/etc/group:ro
             - /etc/shadow:/etc/shadow:ro
 
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            # This is the setup for Fred Hutch where we use Ubuntu; for Red Hat you would
-            # want to use SSSD.
+            # Authentication:
+            # passwd/group should be mounted into any container needing to share the user/group IDs
             - /var/run/nscd/socket:/var/run/nscd/socket
             - /etc/krb5.conf:/etc/krb5.conf
             - /etc/pam.d:/etc/pam.d
+
+            # Volumes to enable SSSD authentication via PAM in the app container sharing configuration on
+            # host to support remote authenticaion backends such as Active Directory, LDAP, and FreeIPA
+            - /var/lib/sss/pipes:/var/lib/sss/pipes
+            - /var/lib/sss/mc:/var/lib/sss/mc:ro
+            - /etc/sssd/sssd.conf:/etc/sssd/sssd.conf
 
             # Authentication cannot mount individual files, because the mapping is
             # based on the inode

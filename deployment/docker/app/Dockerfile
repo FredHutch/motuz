@@ -32,6 +32,8 @@ RUN set -x \
     && apt-get install -y --no-install-recommends --no-install-suggests \
         krb5-user \
         libpam-krb5 \
+        sssd \
+        libpam-sss \
         sudo \
         curl \
         unzip \
