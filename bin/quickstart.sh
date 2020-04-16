@@ -14,6 +14,7 @@ cd ${THIS_DIR}
 cd ..
 
 
+source .env
 MOTUZ_DOCKER_ROOT=${MOTUZ_DOCKER_ROOT:-/docker}
 
 
