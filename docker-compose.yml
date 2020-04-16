@@ -89,7 +89,7 @@ services:
 
     rabbitmq:
         container_name: motuz_rabbitmq
-        image: rabbitmq:3.7.16
+        image: rabbitmq:3.7.16-alpine
         network_mode: host
         ports:
             - 5672:5672
@@ -98,7 +98,7 @@ services:
 
     database:
         container_name: motuz_database
-        image: postgres:11.3
+        image: postgres:11.3-alpine
         network_mode: host
         volumes:
             - ${MOTUZ_DOCKER_ROOT:-/docker}/volumes/postgres:/var/lib/postgresql/data
