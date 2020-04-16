@@ -5,13 +5,18 @@ FROM python:3.7.3
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y
-
-RUN apt-get install -y build-essential man-db vim curl unzip wget krb5-user libpam-krb5 sudo
-
-# pin to a specific version of rclone.
-# if we decide to update, do it here:
 RUN set -x \
+    && apt-get update -y \
+    && apt-get install -y \
+        build-essential \
+        man-db \
+        vim \
+        curl \
+        unzip \
+        wget \
+        krb5-user \
+        libpam-krb5 \
+        sudo \
     && curl -LO https://downloads.rclone.org/v1.47.0/rclone-v1.47.0-linux-amd64.zip \
     && unzip rclone-v1.47.0-linux-amd64.zip \
     && cp rclone-v1.47.0-linux-amd64/rclone /usr/local/bin/ \
