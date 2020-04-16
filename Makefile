@@ -4,7 +4,7 @@ quickstart:
 
 .PHONY: build
 build:
-	./bin/prod/build.sh
+	./bin/prod/build.sh --no-cache
 
 .PHONY: start
 start:
