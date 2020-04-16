@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN set -x \
     && apt-get update -y \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
         build-essential \
         man-db \
         vim \
@@ -20,7 +20,9 @@ RUN set -x \
     && curl -LO https://downloads.rclone.org/v1.47.0/rclone-v1.47.0-linux-amd64.zip \
     && unzip rclone-v1.47.0-linux-amd64.zip \
     && cp rclone-v1.47.0-linux-amd64/rclone /usr/local/bin/ \
-    && rm -rf rclone-v1.47.0-linux-amd64.zip rclone-v1.47.0-linux-amd64/
+    && rm -rf rclone-v1.47.0-linux-amd64.zip rclone-v1.47.0-linux-amd64/ \
+    && apt-get remove --purge --auto-remove -y \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED 1
 ENV DOCKER_CONTAINER 1
