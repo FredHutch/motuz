@@ -22,22 +22,17 @@ x-variables:
             - /etc/group:/etc/group:ro
             - /etc/shadow:/etc/shadow:ro
 
-            # Authentication
-            # passwd/group should be mounted into any container
-            # needing to share the user/group IDs
-            # This is the setup for Fred Hutch where we use Ubuntu; for Red Hat you would
-            # want to use SSSD.
+            # Authentication:
+            # passwd/group should be mounted into any container needing to share the user/group IDs
             - /var/run/nscd/socket:/var/run/nscd/socket
             - /etc/krb5.conf:/etc/krb5.conf
             - /etc/pam.d:/etc/pam.d
 
-            # Volumes to enable SSSD authentication via PAM in the app container sharing configuration on 
+            # Volumes to enable SSSD authentication via PAM in the app container sharing configuration on
             # host to support remote authenticaion backends such as Active Directory, LDAP, and FreeIPA
             - /var/lib/sss/pipes:/var/lib/sss/pipes
             - /var/lib/sss/mc:/var/lib/sss/mc:ro
-            - /etc/sssd/sssd.conf:/etc/sssd/sssd.conf  
-
-
+            - /etc/sssd/sssd.conf:/etc/sssd/sssd.conf
 
             # Authentication cannot mount individual files, because the mapping is
             # based on the inode
@@ -46,11 +41,11 @@ x-variables:
 
 secrets:
     MOTUZ_DATABASE_PASSWORD:
-        file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_DATABASE_PASSWORD
     MOTUZ_FLASK_SECRET_KEY:
-        file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_FLASK_SECRET_KEY
     MOTUZ_SMTP_PASSWORD:
-        file: /docker/secrets/MOTUZ_SMTP_PASSWORD
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_SMTP_PASSWORD
 
 
 services:
@@ -59,7 +54,7 @@ services:
         image: fredhutch/motuz_nginx:latest
         network_mode: host
         volumes:
-            - /docker/certs:/certs/:ro
+            - ${MOTUZ_DOCKER_ROOT:-/docker}/certs:/certs/:ro
         ports:
             - 443:443
             - 80:80
@@ -97,7 +92,7 @@ services:
 
     rabbitmq:
         container_name: motuz_rabbitmq
-        image: rabbitmq:3.7.16
+        image: rabbitmq:3.7.16-alpine
         network_mode: host
         ports:
             - 5672:5672
@@ -106,9 +101,9 @@ services:
 
     database:
         container_name: motuz_database
-        image: postgres:11.3
+        image: postgres:11.3-alpine
         network_mode: host
         volumes:
-            - /docker/volumes/postgres:/var/lib/postgresql/data
+            - ${MOTUZ_DOCKER_ROOT:-/docker}/volumes/postgres:/var/lib/postgresql/data
         ports:
             - 5432:5432

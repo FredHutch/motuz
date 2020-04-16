@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="200" height="200">
+    <img src="src/frontend/img/logo.png" width="100" height="100">
     <h1>Motuz</h1>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
@@ -7,7 +7,10 @@
     <br>
 </div>
 
-![Motuz transfer in progress](docs/img/image_transfer.png)
+![Motuz transfer and checksum validation](docs/img/mov-copy-check.gif)
+
+![Motuz settings and features](docs/img/mov-settings.gif)
+
 
 <!--  The TOC below is created/maintained by
       the `Markdown TOC` extension to the
@@ -17,7 +20,9 @@
 <!-- TOC -->
 
 1. [Quickstart](#quickstart)
-2. [Setting up production](#setting-up-production)
+2. [Beyond quickstart](#beyond-quickstart)
+3. [Customizing your deployment](#customizing-your-deployment)
+4. [Setting up production](#setting-up-production)
     1. [Authentication](#authentication)
         1. [Local Authentication](#local-authentication)
         2. [Authenticate against Active Directory](#authenticate-against-active-directory)
@@ -28,20 +33,20 @@
     6. [Set up HTTPS certificate](#set-up-https-certificate)
     7. [Running Motuz the first time](#running-motuz-the-first-time)
     8. [Redeploying](#redeploying)
-3. [Developer Installation](#developer-installation)
+5. [Developer Installation](#developer-installation)
     1. [Initialize](#initialize)
     2. [Start](#start)
-4. [Development Options](#development-options)
-5. [Examples](#examples)
+6. [Development Options](#development-options)
+7. [Examples](#examples)
     1. [How to use the API](#how-to-use-the-api)
         1. [API Endpoint](#api-endpoint)
     2. [Authentication](#authentication-1)
-6. [Folder structure](#folder-structure)
+8. [Folder structure](#folder-structure)
     1. [Overview](#overview)
     2. [Frontend folder structure (inside `/src/frontend/`)](#frontend-folder-structure-inside-srcfrontend)
     3. [Backend folder structure (inside `/src/backend/`)](#backend-folder-structure-inside-srcbackend)
     4. [Temp folders](#temp-folders)
-7. [Other resources](#other-resources)
+9. [Other resources](#other-resources)
 
 <!-- /TOC -->
 
@@ -52,7 +57,9 @@
 - Run the following command
 
 ```bash
-make quickstart
+git clone https://github.com/FredHutch/motuz.git
+cd motuz
+./bin/quickstart.sh
 ```
 
 - Open browser at http://localhost/ and accept self-signed certificates
@@ -64,9 +71,9 @@ make quickstart
 ---
 
 
-## Beyond Quickstart
+## Beyond quickstart
 
-Let's have a look at the steps that the quickstart script performed
+In this section we will explain what each step of quickstart does. We will also see how to customize some of these steps.
 
 1. Create a folder called `docker` in your root directory using `sudo install -d -o $USER -m 755 /docker`. Inside the folder, create the following subfolders
 
@@ -102,11 +109,11 @@ docker-compose up -d
 
 ## Customizing your deployment
 
-- Add certificates inside `/docker/certs/`
-- Change the environment variables inside `.env`
-- Change passwords by editing the files inside `/docker/secrets`
-- Change the files that are visible to motuz inside `docker-compose.override.yml`
-
+- Add your SSL certificates - `/docker/certs/`
+- Change the environment variables - `.env`
+- Change passwords by editing the files - `/docker/secrets`
+- Change the files that are visible to motuz - `docker-compose.override.yml`
+- Use a different root (instead of `/docker`) by changing the MOTUZ_DOCKER_ROOT variable in `.env`
 
 
 ## Setting up production
@@ -280,12 +287,12 @@ The [.env](/.env) file provides a set of default variables that can be overwritt
 ```bash
 export MOTUZ_DATABASE_PROTOCOL=postgresql
 export MOTUZ_DATABASE_NAME=your_database_name
-export MOTUZ_DATABASE_HOST=your-host.com:5432
+export MOTUZ_DATABASE_HOST=your_host.com:5432
 export MOTUZ_DATABASE_USER=your_user
 echo -n "your_password" > /docker/secrets/MOTUZ_DATABASE_PASSWORD
 
-export MOTUZ_SMTP_SERVER='0.0.0.0:25'
-export MOTUZ_SMTP_USER='admin'
+export MOTUZ_SMTP_SERVER=0.0.0.0:25
+export MOTUZ_SMTP_USER=admin
 echo -n "your_password" > /docker/secrets/MOTUZ_SMTP_PASSWORD
 
 ./start.sh
@@ -294,7 +301,7 @@ echo -n "your_password" > /docker/secrets/MOTUZ_SMTP_PASSWORD
 The config above is the equivalent of connecting to
 
 ```
-postgresql://your_user:your_password@your-host.com:5432/your_database_name
+postgresql://your_user:your_password@your_host.com:5432/your_database_name
 ```
 
 

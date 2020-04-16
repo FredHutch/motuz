@@ -21,22 +21,22 @@ fi
 read -r -p "Want to rebuild all images (recommended)? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY])
-        docker-compose build --no-cache
+        ./bin/prod/build.sh --no-cache
         ;;
     *)
         ;;
 esac
 
 tag="$1"
-containers="motuz_app motuz_celery motuz_database_init motuz_nginx"
+containers="fredhutch/motuz_app fredhutch/motuz_celery fredhutch/motuz_database_init fredhutch/motuz_nginx"
 
 for container in $containers; do
-    docker tag "${container}:latest" "fredhutch/${container}:${tag}"
+    docker tag "${container}:latest" "${container}:${tag}"
 done
 
 echo "Ready to publish the following containers"
 for container in $containers; do
-    echo "fredhutch/${container}:${tag}"
+    echo "${container}:${tag}"
 done
 
 echo "To publish, press ENTER. To abort, press Ctrl+C"
@@ -46,5 +46,5 @@ read
 docker login
 
 for container in $containers; do
-    docker push "fredhutch/${container}:${tag}"
+    docker push "${container}:${tag}"
 done
