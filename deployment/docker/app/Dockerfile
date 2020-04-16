@@ -1,13 +1,14 @@
 # Build as
 # docker build -t fredhutch/motuz_app:latest -f deployment/docker/app/Dockerfile .
 
-FROM python:3.7.3
+FROM python:3.7.3-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
+        build-essential \
         curl \
         unzip \
         krb5-user \
