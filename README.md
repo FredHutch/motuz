@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="50" height="50">    
+    <img src="src/frontend/img/logo.png" width="100" height="100">    
     <h1>Motuz</h1>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
