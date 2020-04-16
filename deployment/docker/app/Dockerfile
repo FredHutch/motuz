@@ -18,6 +18,8 @@ RUN set -x \
     && cp rclone-v1.47.0-linux-amd64/rclone /usr/local/bin/ \
     && rm -rf rclone-v1.47.0-linux-amd64.zip rclone-v1.47.0-linux-amd64/ \
     && apt-get remove --purge --auto-remove -y \
+        unzip \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED 1
@@ -31,9 +33,9 @@ ENV LD_LIBRARY_PATH /usr/local/lib
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r /code/requirements.txt
 
-RUN mkdir -p /root/.config/rclone/
-RUN touch /root/.config/rclone/rclone.conf
-RUN chmod 755 /root
+RUN set -x \
+    && install -d -m 755 /root/.config/rclone/ \
+    && touch /root/.config/rclone/rclone.conf
 
 COPY ./src/backend /app/src/backend
 COPY \
