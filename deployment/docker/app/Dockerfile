@@ -8,12 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-        build-essential \
-        man-db \
-        vim \
         curl \
         unzip \
-        wget \
         krb5-user \
         libpam-krb5 \
         sudo \
