@@ -4,9 +4,9 @@ quickstart:
 
 .PHONY: build
 build:
-	./bin/build.sh
+	./bin/prod/build.sh
 
 .PHONY: start
 start:
-	./bin/start.sh
+	./bin/prod/start.sh
 
