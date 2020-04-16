@@ -21,7 +21,7 @@ fi
 read -r -p "Want to rebuild all images (recommended)? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY])
-        docker-compose build --no-cache
+        ./bin/prod/build.sh --no-cache
         ;;
     *)
         ;;
