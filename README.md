@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="100" height="100">    
+    <img src="src/frontend/img/logo.png" width="100" height="100">
     <h1>Motuz</h1>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
@@ -113,7 +113,7 @@ docker-compose up -d
 - Change the environment variables - `.env`
 - Change passwords by editing the files - `/docker/secrets`
 - Change the files that are visible to motuz - `docker-compose.override.yml`
-
+- Use a different root (instead of `/docker`) by changing the MOTUZ_DOCKER_ROOT variable in `.env`
 
 
 ## Setting up production

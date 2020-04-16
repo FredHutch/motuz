@@ -38,11 +38,11 @@ x-variables:
 
 secrets:
     MOTUZ_DATABASE_PASSWORD:
-        file: /docker/secrets/MOTUZ_DATABASE_PASSWORD
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_DATABASE_PASSWORD
     MOTUZ_FLASK_SECRET_KEY:
-        file: /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_FLASK_SECRET_KEY
     MOTUZ_SMTP_PASSWORD:
-        file: /docker/secrets/MOTUZ_SMTP_PASSWORD
+        file: ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_SMTP_PASSWORD
 
 
 services:
@@ -51,7 +51,7 @@ services:
         image: fredhutch/motuz_nginx:latest
         network_mode: host
         volumes:
-            - /docker/certs:/certs/:ro
+            - ${MOTUZ_DOCKER_ROOT:-/docker}/certs:/certs/:ro
         ports:
             - 443:443
             - 80:80
@@ -101,6 +101,6 @@ services:
         image: postgres:11.3
         network_mode: host
         volumes:
-            - /docker/volumes/postgres:/var/lib/postgresql/data
+            - ${MOTUZ_DOCKER_ROOT:-/docker}/volumes/postgres:/var/lib/postgresql/data
         ports:
             - 5432:5432

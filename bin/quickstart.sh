@@ -14,6 +14,9 @@ cd ${THIS_DIR}
 cd ..
 
 
+MOTUZ_DOCKER_ROOT=${MOTUZ_DOCKER_ROOT:-/docker}
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -62,35 +65,35 @@ install_docker_compose() {
 }
 
 create_folders() {
-    if ! [ -d "/docker" ]; then
-        _confirm "Create directory /docker ?"
+    if ! [ -d "${MOTUZ_DOCKER_ROOT}" ]; then
+        _confirm "Create directory ${MOTUZ_DOCKER_ROOT} ?"
         set -x
-        sudo install -d -o $USER -g $(id -gn) -m 755 /docker
+        sudo install -d -o $USER -g $(id -gn) -m 755 ${MOTUZ_DOCKER_ROOT}
         set +x
     else
-        _color_yellow "/docker exists. Skipping..."
+        _color_yellow "${MOTUZ_DOCKER_ROOT} exists. Skipping..."
     fi
 
-    mkdir -p /docker/volumes/postgres
-    mkdir -p /docker/secrets
-    mkdir -p /docker/certs
+    mkdir -p ${MOTUZ_DOCKER_ROOT}/volumes/postgres
+    mkdir -p ${MOTUZ_DOCKER_ROOT}/secrets
+    mkdir -p ${MOTUZ_DOCKER_ROOT}/certs
 }
 
 generate_certificates() {
-    if [ ! -f "/docker/certs/cert.crt" ] || [ ! -f "/docker/certs/cert.key" ]; then
-        if [ -f "/docker/certs/cert.crt" ] || [ -f "/docker/certs/cert.key" ]; then
-            _color_red "Only one of '/docker/certs/cert.crt', '/docker/certs/cert.key' found. Need both or none"
+    if [ ! -f "${MOTUZ_DOCKER_ROOT}/certs/cert.crt" ] || [ ! -f "${MOTUZ_DOCKER_ROOT}/certs/cert.key" ]; then
+        if [ -f "${MOTUZ_DOCKER_ROOT}/certs/cert.crt" ] || [ -f "${MOTUZ_DOCKER_ROOT}/certs/cert.key" ]; then
+            _color_red "Only one of '${MOTUZ_DOCKER_ROOT}/certs/cert.crt', '${MOTUZ_DOCKER_ROOT}/certs/cert.key' found. Need both or none"
             exit 1
         fi
-        _confirm "Generate self-signed certificates inside /docker/certs ?"
-        openssl req -x509 -newkey rsa:4096 -keyout /docker/certs/cert.key -out /docker/certs/cert.crt -days 365 -subj '/CN=localhost' -nodes
+        _confirm "Generate self-signed certificates inside ${MOTUZ_DOCKER_ROOT}/certs ?"
+        openssl req -x509 -newkey rsa:4096 -keyout ${MOTUZ_DOCKER_ROOT}/certs/cert.key -out ${MOTUZ_DOCKER_ROOT}/certs/cert.crt -days 365 -subj '/CN=localhost' -nodes
     else
-        _color_yellow "/docker/certs exist. Skipping"
+        _color_yellow "${MOTUZ_DOCKER_ROOT}/certs exist. Skipping"
     fi
 }
 
 generate_secrets() {
-    secrets="/docker/secrets/MOTUZ_DATABASE_PASSWORD /docker/secrets/MOTUZ_FLASK_SECRET_KEY /docker/secrets/MOTUZ_SMTP_PASSWORD"
+    secrets="${MOTUZ_DOCKER_ROOT}/secrets/MOTUZ_DATABASE_PASSWORD ${MOTUZ_DOCKER_ROOT}/secrets/MOTUZ_FLASK_SECRET_KEY ${MOTUZ_DOCKER_ROOT}/secrets/MOTUZ_SMTP_PASSWORD"
     for secret in $secrets; do
         if [ ! -f "$secret" ]; then
             _confirm "Generate random value for secret ${secret} ?"
