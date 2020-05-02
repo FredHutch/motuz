@@ -69,7 +69,7 @@ create_folders() {
     if ! [ -d "${MOTUZ_DOCKER_ROOT}" ]; then
         _confirm "Create directory ${MOTUZ_DOCKER_ROOT} ?"
         set -x
-        sudo install -d -o $USER -g $(id -gn) -m 755 ${MOTUZ_DOCKER_ROOT}
+        sudo install -d -o $USER -g "$(id -gn)" -m 755 ${MOTUZ_DOCKER_ROOT}
         set +x
     else
         _color_yellow "${MOTUZ_DOCKER_ROOT} exists. Skipping..."
