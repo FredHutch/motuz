@@ -147,6 +147,7 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
+            '--exclude "\.snapshot/"',
             '--config=/dev/null',
             'copyto',
             src,
