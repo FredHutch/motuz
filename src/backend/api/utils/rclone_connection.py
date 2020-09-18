@@ -147,8 +147,6 @@ class RcloneConnection(AbstractConnection):
             '-E',
             '-u', user,
             '/usr/local/bin/rclone',
-            '--exclude "\.snapshot/"', # .snapshot directory contains lots of stuff
-                                       # and may never copy, see issue #332
             '--config=/dev/null',
             'copyto',
             src,
