@@ -23,6 +23,7 @@ def copy_job(self, task_id=None):
         db.session.commit()
 
         connection = RcloneConnection()
+        copy_job.src_resource_path += "s"
         connection.copy(
             src_data=copy_job.src_cloud,
             src_resource_path=copy_job.src_resource_path,
