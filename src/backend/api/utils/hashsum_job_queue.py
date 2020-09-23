@@ -150,6 +150,9 @@ class HashsumJobQueue:
             line = line.strip()
             self._job_error_text[job_id] += line
             self._job_error_text[job_id] += '\n'
+            # Restrict size to 10000 characters
+            self._job_error_text[job_id] = self._job_error_text[job_id][-10000:]
+
 
         logging.info("Hashsum process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case
