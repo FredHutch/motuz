@@ -56,7 +56,6 @@ class EditHashsumJobDialog extends React.Component {
         }
 
         const description = data.description ? ` - ${data.description}` : ''
-        const progressErrorText = data.progress_error_text;
         const progress = Math.floor(data.progress_current / data.progress_total * 100);
         const executionTime = parseTime(data.progress_execution_time);
 
