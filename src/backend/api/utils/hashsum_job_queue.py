@@ -54,6 +54,9 @@ class HashsumJobQueue:
     def hashsum_exitstatus(self, job_id):
         return self._job_exitstatus.get(job_id, -1)
 
+    def hashsum_delete(self, job_id):
+        self.hashsum_stop(job_id)
+        del self._job_status[job_id]
 
 
     def _job_id_exists(self, job_id):

@@ -238,13 +238,15 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
 
         time.sleep(1)
 
+    result = {}
+
     exitstatus = connection.hashsum_exitstatus(rclone_connection_id)
     if exitstatus == -1:
         logging.error("Hashsum Job did not set its status")
 
         hashsum_job.progress_state = 'UNSET'
         hashsum_job.progress_current = 100
-        return {
+        result = {
             "success": False,
             "payload": {
                 f'progress_{side}_tree': get_hashsum_tree(),
@@ -254,18 +256,21 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
     elif exitstatus != 0:
         hashsum_job.progress_state = 'FAILED'
         hashsum_job.progress_current = 100
-        return {
+        result = {
             "success": False,
             "payload": {
                 f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
         }
-
-    return {
-        "success": True,
-        "payload": {
-            f'progress_{side}_tree': get_hashsum_tree(),
-            f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+    else:
+        result = {
+            "success": True,
+            "payload": {
+                f'progress_{side}_tree': get_hashsum_tree(),
+                f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+            }
         }
-    }
+
+    connection.hashsum_delete(rclone_connection_id)
+    return result
