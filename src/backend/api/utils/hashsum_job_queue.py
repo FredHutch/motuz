@@ -108,8 +108,6 @@ class HashsumJobQueue:
                 'Name': groups[2],
                 'md5chksum': groups[1].strip() or None,
             })
-            # import time
-            # time.sleep(1)
             self.__process_copy_status(job_id)
 
 

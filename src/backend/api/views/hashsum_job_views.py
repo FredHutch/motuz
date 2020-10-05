@@ -11,16 +11,6 @@ from ..exceptions import HTTP_EXCEPTION
 
 api = Namespace('hashsum-jobs', description='CheckJob related operations')
 
-job_output = api.model('hashsum-job-output', {
-    'Name': fields.String(example='docker-compose.yml'),
-    'md5chksum': fields.String(example='cea965d0c05b29b2adc970a79d408b67'),
-})
-
-new_job_output = api.model('hashsum-job-output', {
-    'title': fields.String(example='folder_name'),
-    'children': fields.String(example='job_output_recursion'),
-})
-
 dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
     'src_cloud_id': fields.Integer(required=False, example=1),

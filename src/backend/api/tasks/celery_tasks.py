@@ -1,5 +1,4 @@
 import functools
-import json
 import logging
 from os import path as os_path
 import re
@@ -108,9 +107,9 @@ def copy_job(self, task_id=None):
 def hashsum_job(self, task_id):
     """
     @return : dict {
-        "progress_src_text",
+        "progress_src_tree",
         "progress_src_error_text",
-        "progress_dst_text",
+        "progress_dst_tree",
         "progress_dst_error_text",
     }
     """
@@ -212,8 +211,7 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         # Using closure to capture all parameters
         files = connection.hashsum_text(rclone_connection_id)
         tree = generate_file_tree(files)
-        output = tree
-        return output
+        return tree
 
     result = connection.md5sum(
         data=getattr(hashsum_job, f'{side}_cloud'),

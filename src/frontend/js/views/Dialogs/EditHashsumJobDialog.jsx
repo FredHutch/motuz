@@ -109,8 +109,7 @@ class EditHashsumJobDialog extends React.Component {
                     <form action="#">
                         <Modal.Header closeButton>
                             <Modal.Title>
-                                <span>Integrity Check #{data.id}</span>
-                                <span> - </span>
+                                <span>Integrity Check #{data.id} - </span>
                                 <b className={`text-${statusColor}`}>{statusText}</b>
                             </Modal.Title>
                         </Modal.Header>
