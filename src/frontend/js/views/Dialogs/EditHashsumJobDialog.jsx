@@ -17,6 +17,7 @@ class EditHashsumJobDialog extends React.Component {
 
     render() {
         const { data } = this.props;
+        const isInProgress = data.progress_state === 'PROGRESS'
 
         const cloudMapping = {
             0: {
@@ -46,10 +47,16 @@ class EditHashsumJobDialog extends React.Component {
             data.dst_cloud_type = dst_cloud.type;
         }
 
-        const left = data.progress_src_text || [];
-        const right = data.progress_dst_text || [];
+        const left = data.progress_src_tree || '[]';
+        const right = data.progress_dst_tree || '[]';
 
-        let {treeLeft, treeRight, diff} = this._processData(left, right)
+        const treeLeft = JSON.parse(left)
+        const treeRight = JSON.parse(right)
+
+        let diff = NodeType.LOADING
+        if (!isInProgress) {
+            diff = this._compareTrees(treeLeft, treeRight)
+        }
 
         if (!data.progress_src_text || !data.progress_dst_text) {
             diff = NodeType.LOADING
@@ -61,12 +68,10 @@ class EditHashsumJobDialog extends React.Component {
 
         let statusText = '';
         let statusColor = 'default';
-        let isInProgress = false;
 
         if (data.progress_state === 'PROGRESS') {
             statusText = data.progress_state;
             statusColor = 'primary';
-            isInProgress = true;
         } else if (data.progress_state === 'FAILED' || data.progress_state === 'STOPPED') {
             statusText = data.progress_state;
             statusColor = 'danger';
@@ -93,10 +98,11 @@ class EditHashsumJobDialog extends React.Component {
                 >
                     <form action="#">
                         <Modal.Header closeButton>
-                        <Modal.Title>
-                            <span>Integrity Check #{data.id} - </span>
-                            <b className={`text-${statusColor}`}>{statusText}</b>
-                        </Modal.Title>
+                            <Modal.Title>
+                                <span>Integrity Check #{data.id}</span>
+                                <span> - </span>
+                                <b className={`text-${statusColor}`}>{statusText}</b>
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="container">
@@ -119,7 +125,6 @@ class EditHashsumJobDialog extends React.Component {
                                             path={data.src_resource_path}
                                         />
                                     </div>
-
                                     <div className="col-6 overflow-hidden text-center">
                                         <UriResource
                                             protocol={data.dst_cloud_type}
@@ -194,6 +199,15 @@ class EditHashsumJobDialog extends React.Component {
                                         </i>
                                     </div>
                                 </div>
+                                {!isInProgress && (
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <i>
+                                                <b>*** Showing only the difference</b>
+                                            </i>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -260,56 +274,6 @@ class EditHashsumJobDialog extends React.Component {
         }
     }
 
-    _processData(left, right) {
-        left.sort((a, b) => sortComparator(a.Name, b.Name))
-        right.sort((a, b) => sortComparator(a.Name, b.Name))
-
-        const treeLeft = this._generateTree(left)
-        const treeRight = this._generateTree(right)
-        const diff = this._compareTrees(treeLeft, treeRight)
-
-        return {
-            treeLeft,
-            treeRight,
-            diff,
-        }
-    }
-
-    /**
-     * Trees are of the form
-     * [
-     *     { title: 'user1', children: [
-     *         { title: 'file1.txt', hash: 'd621730bdf867a3453fb6b51a4ba0faa', type: 'modify' },
-     *     },
-     * ]
-     */
-    _generateTree(data) {
-        const tree = []
-        for (let entry of data) {
-            // TODO: Figure out why this is sometimes failing
-            const parts = entry && entry.Name ? entry.Name.split('/') : []
-            this._generateTreeLeaf(tree, parts, entry.md5chksum)
-        }
-        return tree;
-    }
-
-    _generateTreeLeaf(branches, parts, md5chksum) {
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            let branch = branches.find(d => d.title === part)
-            if (!branch) {
-                branch = {title: part, children: []}
-                branches.push(branch)
-            }
-            if (i === parts.length - 1) {
-                branch.hash = md5chksum
-                delete branch.children
-            } else {
-                branches = branch.children
-            }
-        }
-    }
-
     _compareTrees(treeLeft, treeRight) {
         treeLeft = treeLeft || []
         treeRight = treeRight || []
@@ -333,7 +297,7 @@ class EditHashsumJobDialog extends React.Component {
                 } else if (this._isLeaf(treeLeft[i]) || this._isLeaf(treeRight[j])) {
                     treeLeft[i].type = treeRight[j].type = 'modify';
                     diff = Math.max(diff, NodeType.MODIFY)
-                } else {
+                } else { // Both non leafs
                     const subtreeDiff = this._compareTrees(treeLeft[i].children, treeRight[j].children)
                     if (subtreeDiff === NodeType.MODIFY) {
                         treeLeft[i].type = treeRight[j].type = 'modify';
@@ -358,20 +322,20 @@ class EditHashsumJobDialog extends React.Component {
             treeLeft[i].type = 'insert'
             treeRight.splice(i, 0, {type: 'hidden'})
             diff = Math.max(diff, NodeType.MODIFY)
-            i++;
+            i++; j++;
         }
 
         while (j < treeRight.length) {
             treeRight[j].type = 'insert'
             treeLeft.splice(j, 0, {type: 'hidden'})
             diff = Math.max(diff, NodeType.MODIFY)
-            j++;
+            i++; j++;
         }
         return diff;
     }
 
     _isLeaf(treeNode) {
-        return !treeNode.children || !treeNode.children.length
+        return treeNode.isLeaf
     }
 
     _scheduleRefresh() {

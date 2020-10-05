@@ -71,6 +71,9 @@ def retrieve(id):
             hashsum_job.progress_dst_text = task.info.get('progress_dst_text', '')
             hashsum_job.progress_src_error_text = task.info.get('progress_src_error_text', '')
             hashsum_job.progress_dst_error_text = task.info.get('progress_dst_error_text', '')
+
+            hashsum_job.progress_src_tree = task.info.get('progress_src_tree', '')
+            hashsum_job.progress_dst_tree = task.info.get('progress_dst_tree', '')
             break
         except Exception:
             pass

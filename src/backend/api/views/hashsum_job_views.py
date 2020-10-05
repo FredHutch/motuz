@@ -16,6 +16,11 @@ job_output = api.model('hashsum-job-output', {
     'md5chksum': fields.String(example='cea965d0c05b29b2adc970a79d408b67'),
 })
 
+new_job_output = api.model('hashsum-job-output', {
+    'title': fields.String(example='folder_name'),
+    'children': fields.String(example='job_output_recursion'),
+})
+
 dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
     'src_cloud_id': fields.Integer(required=False, example=1),
@@ -37,6 +42,9 @@ dto = api.model('hashsum-job', {
     'progress_src_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
     'progress_dst_text': fields.List(fields.Nested(job_output), readonly=True),
     'progress_dst_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
+
+    'progress_src_tree': fields.String(readonly=True, example='[{title, children}]'),
+    'progress_dst_tree': fields.String(readonly=True, example='[{title, children}]'),
 })
 
 

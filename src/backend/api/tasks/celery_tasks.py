@@ -1,9 +1,9 @@
-import time
-import random
 import functools
+import json
 import logging
-import re
 from os import path as os_path
+import re
+import time
 
 from .. import celery
 from ..models import CopyJob, HashsumJob, CloudConnection
@@ -11,6 +11,7 @@ from ..application import db
 
 from ..utils.rclone_connection import RcloneConnection
 from ..utils.email_utils import Email
+from ..utils.file_utils import generate_file_tree, remove_identical_branches
 
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
@@ -105,6 +106,14 @@ def copy_job(self, task_id=None):
 
 @celery.task(name='motuz.api.tasks.hashsum_job', bind=True)
 def hashsum_job(self, task_id):
+    """
+    @return : dict {
+        "progress_src_text",
+        "progress_src_error_text",
+        "progress_dst_text",
+        "progress_dst_error_text",
+    }
+    """
     try:
         start_time = time.time()
 
@@ -129,15 +138,38 @@ def hashsum_job(self, task_id):
         hashsum_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
+        progress_src_text = result_src["payload"].get("progress_src_text", [])
+        progress_dst_text = result_dst["payload"].get("progress_dst_text", [])
+
+        progress_src_tree = generate_file_tree(progress_src_text)
+        progress_dst_tree = generate_file_tree(progress_dst_text)
+
+        print(progress_src_tree)
+        progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
+        print(progress_src_tree)
+
+        # progress_src_text, progress_dst_text = _removeIdenticalFiles(
+        #     progress_src_text,
+        #     progress_dst_text,
+        # )
+        result = {
+            "progress_src_text": progress_src_text,
+            "progress_dst_text": progress_dst_text,
+
+            "progress_src_tree": json.dumps(progress_src_tree),
+            "progress_dst_tree": json.dumps(progress_dst_tree),
+
+            "progress_src_error_text": result_src["payload"].get("progress_src_error_text", ""),
+            "progress_dst_error_text": result_dst["payload"].get("progress_dst_error_text", ""),
+        }
+        self.update_state(state='PROGRESS', meta=result)
+
         Email.send_notification(
             to=hashsum_job.notification_email,
             subject=f'Motuz Hashsum Job with ID {task_id} completed!'
         )
 
-        return {
-            **result_src["payload"],
-            **result_dst["payload"],
-        }
+        return result
 
     except Exception as e:
         logging.exception(e)
@@ -186,8 +218,20 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         raise ValueError("_hashsum_job_single side should be either 'src' or 'dst'")
 
     rclone_connection_id = f"{hashsum_job.id}_{side}"
-
     connection = RcloneConnection()
+
+    def get_hashsum_text():
+        # Using closure to capture all parameters
+        files = connection.hashsum_text(rclone_connection_id)
+        return files
+
+    def get_hashsum_tree():
+        # Using closure to capture all parameters
+        files = connection.hashsum_text(rclone_connection_id)
+        tree = generate_file_tree(files)
+        output = json.dumps(tree)
+        return output
+
     result = connection.md5sum(
         data=getattr(hashsum_job, f'{side}_cloud'),
         resource_path=getattr(hashsum_job, f'{side}_resource_path'),
@@ -205,7 +249,8 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         db.session.commit()
 
         self.update_state(state='PROGRESS', meta={
-            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+            f'progress_{side}_text': get_hashsum_text(),
+            f'progress_{side}_tree': get_hashsum_tree(),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         })
 
@@ -220,7 +265,8 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         return {
             "success": False,
             "payload": {
-                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_text': get_hashsum_text(),
+                f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
         }
@@ -230,7 +276,8 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         return {
             "success": False,
             "payload": {
-                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_text': get_hashsum_text(),
+                f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
         }
@@ -238,7 +285,66 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
     return {
         "success": True,
         "payload": {
-            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+            f'progress_{side}_text': get_hashsum_text(),
+            f'progress_{side}_tree': get_hashsum_tree(),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         }
     }
+
+
+def _removeIdenticalFiles(src_files, dst_files):
+    """
+    Optimizes result for checksum by removing similar entities
+    Because the files are going to be identical in the majority of the cases,
+    it is a waste and a security issue to leave all checksums for all files twice in the
+    database (or rabbitmq)
+
+    @param src_files dict {
+            Name,
+            md5chksum,
+    }
+
+    @param dst_files dict {
+            Name,
+            md5chksum,
+    }
+
+    @return src_files, dst_files
+    """
+
+    src_result = []
+    dst_result = []
+
+    src_files.sort(key=lambda d: d["Name"])
+    dst_files.sort(key=lambda d: d["Name"])
+
+    i = 0
+    j = 0
+
+    while i < len(src_files) and j < len(dst_files):
+        a = src_files[i]
+        b = dst_files[j]
+
+        if a["Name"] == b["Name"]:
+            if a["md5chksum"] != b["md5chksum"]:
+                src_result.append(a)
+                dst_result.append(b)
+            i += 1
+            j += 1
+        elif a["Name"] < b["Name"]:
+            src_result.append(a)
+            i += 1
+        else: # if a["Name"] > b["Name"]
+            dst_result.append(b)
+            j += 1
+
+
+    while i < len(src_files):
+        src_result.append(src_files[i])
+        i += 1
+
+    while j < len(dst_files):
+        dst_result.append(dst_files[j])
+        j += 1
+
+    return src_result, dst_result
