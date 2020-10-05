@@ -138,17 +138,14 @@ def hashsum_job(self, task_id):
         hashsum_job.progress_execution_time = int(time.time() - start_time)
         db.session.commit()
 
-        progress_src_text = result_src["payload"].get("progress_src_text", [])
-        progress_dst_text = result_dst["payload"].get("progress_dst_text", [])
-
-        progress_src_tree = generate_file_tree(progress_src_text)
-        progress_dst_tree = generate_file_tree(progress_dst_text)
+        progress_src_tree = result_src["payload"].get("progress_src_tree", [])
+        progress_dst_tree = result_dst["payload"].get("progress_dst_tree", [])
 
         progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
 
         result = {
-            "progress_src_tree": json.dumps(progress_src_tree),
-            "progress_dst_tree": json.dumps(progress_dst_tree),
+            "progress_src_tree": progress_src_tree,
+            "progress_dst_tree": progress_dst_tree,
 
             "progress_src_error_text": result_src["payload"].get("progress_src_error_text", ""),
             "progress_dst_error_text": result_dst["payload"].get("progress_dst_error_text", ""),
@@ -215,7 +212,7 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         # Using closure to capture all parameters
         files = connection.hashsum_text(rclone_connection_id)
         tree = generate_file_tree(files)
-        output = json.dumps(tree)
+        output = tree
         return output
 
     result = connection.md5sum(
@@ -272,61 +269,3 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         }
     }
-
-
-def _removeIdenticalFiles(src_files, dst_files):
-    """
-    Optimizes result for checksum by removing similar entities
-    Because the files are going to be identical in the majority of the cases,
-    it is a waste and a security issue to leave all checksums for all files twice in the
-    database (or rabbitmq)
-
-    @param src_files dict {
-            Name,
-            md5chksum,
-    }
-
-    @param dst_files dict {
-            Name,
-            md5chksum,
-    }
-
-    @return src_files, dst_files
-    """
-
-    src_result = []
-    dst_result = []
-
-    src_files.sort(key=lambda d: d["Name"])
-    dst_files.sort(key=lambda d: d["Name"])
-
-    i = 0
-    j = 0
-
-    while i < len(src_files) and j < len(dst_files):
-        a = src_files[i]
-        b = dst_files[j]
-
-        if a["Name"] == b["Name"]:
-            if a["md5chksum"] != b["md5chksum"]:
-                src_result.append(a)
-                dst_result.append(b)
-            i += 1
-            j += 1
-        elif a["Name"] < b["Name"]:
-            src_result.append(a)
-            i += 1
-        else: # if a["Name"] > b["Name"]
-            dst_result.append(b)
-            j += 1
-
-
-    while i < len(src_files):
-        src_result.append(src_files[i])
-        i += 1
-
-    while j < len(dst_files):
-        dst_result.append(dst_files[j])
-        j += 1
-
-    return src_result, dst_result
