@@ -16,7 +16,8 @@ def generate_file_tree(data):
     @return list(dict({
         title : str,
         children : list,
-        hash: str,
+        hash : str,
+        isLeaf : bool,
     }))
     """
 
@@ -42,6 +43,7 @@ def _generate_tree_leaf(branches, parts, md5chksum):
         title,
         children,
         hash,
+        isLeaf,
     }))
     @param parts: list(str)
     @param md5chksum: str
@@ -69,12 +71,14 @@ def remove_identical_branches(left, right):
     @param left list(dict({
         title,
         children,
-        hash
+        hash,
+        isLeaf,
     }))
     @param right list(dict({
         title,
         children,
-        hash
+        hash,
+        isLeaf,
     }))
 
     @return new_left
