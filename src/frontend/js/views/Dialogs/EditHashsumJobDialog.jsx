@@ -47,18 +47,28 @@ class EditHashsumJobDialog extends React.Component {
             data.dst_cloud_type = dst_cloud.type;
         }
 
-        const left = data.progress_src_tree || '[]';
-        const right = data.progress_dst_tree || '[]';
+        let treeLeft;
+        try {
+            treeLeft = JSON.parse(data.progress_src_tree || '[]')
+        } catch (e) {
+            console.error(e, data.progress_src_tree)
+            treeLeft = []
+        }
 
-        const treeLeft = JSON.parse(left)
-        const treeRight = JSON.parse(right)
+        let treeRight;
+        try {
+            treeRight = JSON.parse(data.progress_dst_tree || '[]')
+        } catch (e) {
+            console.error(e, data.progress_dst_tree)
+            treeRight = []
+        }
 
         let diff = NodeType.LOADING
         if (!isInProgress) {
             diff = this._compareTrees(treeLeft, treeRight)
         }
 
-        if (!data.progress_src_text || !data.progress_dst_text) {
+        if (!data.progress_src_tree || !data.progress_dst_tree) {
             diff = NodeType.LOADING
         }
 

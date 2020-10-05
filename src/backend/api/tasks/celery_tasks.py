@@ -144,18 +144,9 @@ def hashsum_job(self, task_id):
         progress_src_tree = generate_file_tree(progress_src_text)
         progress_dst_tree = generate_file_tree(progress_dst_text)
 
-        print(progress_src_tree)
         progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
-        print(progress_src_tree)
 
-        # progress_src_text, progress_dst_text = _removeIdenticalFiles(
-        #     progress_src_text,
-        #     progress_dst_text,
-        # )
         result = {
-            "progress_src_text": progress_src_text,
-            "progress_dst_text": progress_dst_text,
-
             "progress_src_tree": json.dumps(progress_src_tree),
             "progress_dst_tree": json.dumps(progress_dst_tree),
 
@@ -220,11 +211,6 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
     rclone_connection_id = f"{hashsum_job.id}_{side}"
     connection = RcloneConnection()
 
-    def get_hashsum_text():
-        # Using closure to capture all parameters
-        files = connection.hashsum_text(rclone_connection_id)
-        return files
-
     def get_hashsum_tree():
         # Using closure to capture all parameters
         files = connection.hashsum_text(rclone_connection_id)
@@ -249,7 +235,6 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         db.session.commit()
 
         self.update_state(state='PROGRESS', meta={
-            f'progress_{side}_text': get_hashsum_text(),
             f'progress_{side}_tree': get_hashsum_tree(),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         })
@@ -265,7 +250,6 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         return {
             "success": False,
             "payload": {
-                f'progress_{side}_text': get_hashsum_text(),
                 f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
@@ -276,7 +260,6 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         return {
             "success": False,
             "payload": {
-                f'progress_{side}_text': get_hashsum_text(),
                 f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
@@ -285,7 +268,6 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
     return {
         "success": True,
         "payload": {
-            f'progress_{side}_text': get_hashsum_text(),
             f'progress_{side}_tree': get_hashsum_tree(),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         }

@@ -38,13 +38,10 @@ dto = api.model('hashsum-job', {
     'progress_execution_time': fields.Integer(readonly=True, example=3600),
 
     # Rabbitmq fields
-    'progress_src_text': fields.List(fields.Nested(job_output), readonly=True),
-    'progress_src_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
-    'progress_dst_text': fields.List(fields.Nested(job_output), readonly=True),
-    'progress_dst_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
-
     'progress_src_tree': fields.String(readonly=True, example='[{title, children}]'),
+    'progress_src_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
     'progress_dst_tree': fields.String(readonly=True, example='[{title, children}]'),
+    'progress_dst_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
 })
 
 
