@@ -241,6 +241,9 @@ class RcloneConnection(AbstractConnection):
     def hashsum_exitstatus(self, job_id):
         return self._hashsum_job_queue.hashsum_exitstatus(job_id)
 
+    def hashsum_delete(self, job_id):
+        return self._hashsum_job_queue.hashsum_delete(job_id)
+
 
     def _logCommand(self, command, credentials):
         bash_command = "{} {}".format(
