@@ -133,10 +133,6 @@ def hashsum_job(self, task_id):
             db.session.commit()
             return result_dst["payload"]
 
-        hashsum_job.progress_state = 'SUCCESS'
-        hashsum_job.progress_current = 100
-        hashsum_job.progress_execution_time = int(time.time() - start_time)
-        db.session.commit()
 
         progress_src_tree = result_src["payload"].get("progress_src_tree", [])
         progress_dst_tree = result_dst["payload"].get("progress_dst_tree", [])
@@ -144,6 +140,14 @@ def hashsum_job(self, task_id):
         progress_dst_error = result_dst["payload"].get("progress_dst_error", None)
 
         progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
+
+        self.update_state(state='PROGRESS', meta={}) # Clearing rabbitmq
+
+        hashsum_job.progress_state = 'SUCCESS'
+        hashsum_job.progress_current = 100
+        hashsum_job.progress_execution_time = int(time.time() - start_time)
+        hashsum_job.progress_src_error = progress_src_error
+        hashsum_job.progress_dst_error = progress_dst_error
 
         try:
             hashsum_job.progress_src_tree = json.dumps(progress_src_tree)
@@ -157,19 +161,14 @@ def hashsum_job(self, task_id):
             logging.error("Could not save progress_src_tree to DB")
             logging.exception(e)
 
-        hashsum_job.progress_src_error = progress_src_error
-        hashsum_job.progress_dst_error = progress_dst_error
         db.session.commit()
-
-        result = {} # Clearing rabbitmq
-        self.update_state(state='PROGRESS', meta=result)
 
         Email.send_notification(
             to=hashsum_job.notification_email,
             subject=f'Motuz Hashsum Job with ID {task_id} completed!'
         )
 
-        return result
+        return {}
 
     except Exception as e:
         logging.exception(e)
