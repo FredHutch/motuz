@@ -4,7 +4,7 @@ set -e
 
 THIS_DIR=$(dirname "$0")
 cd ${THIS_DIR}
-cd ..
+cd ../..
 
 source venv/bin/activate
 cd src/backend/
