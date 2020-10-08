@@ -153,7 +153,7 @@ def hashsum_job(self, task_id):
             hashsum_job.progress_src_tree = json.dumps(progress_src_tree)
         except Exception as e:
             logging.error("Could not save progress_src_tree to DB")
-            logging.exceptiona(e)
+            logging.exception(e)
 
         try:
             hashsum_job.progress_dst_tree = json.dumps(progress_dst_tree)
