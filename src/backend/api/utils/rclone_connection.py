@@ -124,9 +124,12 @@ class RcloneConnection(AbstractConnection):
             job_id
     ):
         credentials = {}
+        option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
 
         if src_data is None: # Local
             src = src_resource_path
+            if os.path.isdir(src):
+                option_exclude_dot_snapshot = '--exclude=\\.snapshot/'
         else:
             credentials.update(self._formatCredentials(src_data, name='src'))
             src = 'src:{}'.format(src_resource_path)
@@ -148,6 +151,7 @@ class RcloneConnection(AbstractConnection):
             '-u', user,
             '/usr/local/bin/rclone',
             '--config=/dev/null',
+            option_exclude_dot_snapshot,
             'copyto',
             src,
             dst,
@@ -196,9 +200,13 @@ class RcloneConnection(AbstractConnection):
     ):
         credentials = {}
 
+        option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
+
         if data is None: # Local
             src = resource_path
             download = False
+            if os.path.isdir(src):
+                option_exclude_dot_snapshot = '--exclude=\\.snapshot/'
         else:
             credentials.update(self._formatCredentials(data, name='src'))
             src = 'src:{}'.format(resource_path)
@@ -211,7 +219,10 @@ class RcloneConnection(AbstractConnection):
             '--config=/dev/null',
             'md5sum',
             src,
+            option_exclude_dot_snapshot,
         ]
+
+        command = [cmd for cmd in command if len(cmd) > 0]
 
         self._logCommand(command, credentials)
 
