@@ -17,6 +17,7 @@ class EditHashsumJobDialog extends React.Component {
 
     render() {
         const { data } = this.props;
+
         const isInProgress = data.progress_state === 'PROGRESS'
 
         const cloudMapping = {
@@ -66,9 +67,7 @@ class EditHashsumJobDialog extends React.Component {
         let diff = NodeType.LOADING
         if (!isInProgress) {
             diff = this._compareTrees(treeLeft, treeRight)
-        }
-
-        if (!data.progress_src_tree || !data.progress_dst_tree) {
+        } else {
             diff = NodeType.LOADING
         }
 

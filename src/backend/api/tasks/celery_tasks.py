@@ -3,6 +3,7 @@ import logging
 from os import path as os_path
 import re
 import time
+import json
 
 from .. import celery
 from ..models import CopyJob, HashsumJob, CloudConnection
@@ -132,31 +133,42 @@ def hashsum_job(self, task_id):
             db.session.commit()
             return result_dst["payload"]
 
-        hashsum_job.progress_state = 'SUCCESS'
-        hashsum_job.progress_current = 100
-        hashsum_job.progress_execution_time = int(time.time() - start_time)
-        db.session.commit()
 
         progress_src_tree = result_src["payload"].get("progress_src_tree", [])
         progress_dst_tree = result_dst["payload"].get("progress_dst_tree", [])
+        progress_src_error = result_src["payload"].get("progress_src_error", None)
+        progress_dst_error = result_dst["payload"].get("progress_dst_error", None)
 
         progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
 
-        result = {
-            "progress_src_tree": progress_src_tree,
-            "progress_dst_tree": progress_dst_tree,
+        self.update_state(state='PROGRESS', meta={}) # Clearing rabbitmq
 
-            "progress_src_error_text": result_src["payload"].get("progress_src_error_text", ""),
-            "progress_dst_error_text": result_dst["payload"].get("progress_dst_error_text", ""),
-        }
-        self.update_state(state='PROGRESS', meta=result)
+        hashsum_job.progress_state = 'SUCCESS'
+        hashsum_job.progress_current = 100
+        hashsum_job.progress_execution_time = int(time.time() - start_time)
+        hashsum_job.progress_src_error = progress_src_error
+        hashsum_job.progress_dst_error = progress_dst_error
+
+        try:
+            hashsum_job.progress_src_tree = json.dumps(progress_src_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exception(e)
+
+        try:
+            hashsum_job.progress_dst_tree = json.dumps(progress_dst_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exception(e)
+
+        db.session.commit()
 
         Email.send_notification(
             to=hashsum_job.notification_email,
             subject=f'Motuz Hashsum Job with ID {task_id} completed!'
         )
 
-        return result
+        return {}
 
     except Exception as e:
         logging.exception(e)
