@@ -78,8 +78,6 @@ class EditHashsumJobDialog extends React.Component {
         let statusText = '';
         let statusColor = 'default';
 
-        console.log(data.progress_state)
-
         if (data.progress_state === 'PROGRESS') {
             statusText = data.progress_state;
             statusColor = 'primary';

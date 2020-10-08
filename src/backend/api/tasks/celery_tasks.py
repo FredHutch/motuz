@@ -3,6 +3,7 @@ import logging
 from os import path as os_path
 import re
 import time
+import json
 
 from .. import celery
 from ..models import CopyJob, HashsumJob, CloudConnection
@@ -139,16 +140,28 @@ def hashsum_job(self, task_id):
 
         progress_src_tree = result_src["payload"].get("progress_src_tree", [])
         progress_dst_tree = result_dst["payload"].get("progress_dst_tree", [])
+        progress_src_error = result_src["payload"].get("progress_src_error", None)
+        progress_dst_error = result_dst["payload"].get("progress_dst_error", None)
 
         progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
 
-        result = {
-            "progress_src_tree": progress_src_tree,
-            "progress_dst_tree": progress_dst_tree,
+        try:
+            hashsum_job.progress_src_tree = json.dumps(progress_src_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exceptiona(e)
 
-            "progress_src_error_text": result_src["payload"].get("progress_src_error_text", ""),
-            "progress_dst_error_text": result_dst["payload"].get("progress_dst_error_text", ""),
-        }
+        try:
+            hashsum_job.progress_dst_tree = json.dumps(progress_dst_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exception(e)
+
+        hashsum_job.progress_src_error = progress_src_error
+        hashsum_job.progress_dst_error = progress_dst_error
+        db.session.commit()
+
+        result = {} # Clearing rabbitmq
         self.update_state(state='PROGRESS', meta=result)
 
         Email.send_notification(
