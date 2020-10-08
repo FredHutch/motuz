@@ -199,7 +199,6 @@ class RcloneConnection(AbstractConnection):
             download=False,
     ):
         credentials = {}
-
         option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
 
         if data is None: # Local

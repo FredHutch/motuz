@@ -207,11 +207,18 @@ class EditHashsumJobDialog extends React.Component {
                                         </i>
                                     </div>
                                 </div>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <i>
+                                            <b>***</b> The .snapshot (sub)directory is always ignored
+                                        </i>
+                                    </div>
+                                </div>
                                 {!isInProgress && (
                                     <div className="row">
                                         <div className="col-12">
                                             <i>
-                                                <b>*** Showing only the difference</b>
+                                                <b>**** Showing only the difference</b>
                                             </i>
                                         </div>
                                     </div>
