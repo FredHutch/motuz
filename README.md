@@ -259,15 +259,22 @@ browser will warn you that proceeding is not secure.
 
 ### Redeploying
 
+We typically deploy on the `prod` branch. If everything in `master` is ok to 
+be synced with `prod`, we do not merge master into prod, but rather sync it up as follows:
+
+```
+git pull
+git checkout prod
+git reset --hard master # or the commit that you prefer
+git push -f
+```
+
 If you want to stop and restart motuz, for example
 to deploy new code, use the `bin/redeploy.sh` script.
 
 For example, if you want to deploy recent changes
-to the Motuz code base, first grab the latest code:
+to the Motuz code base, sync the code as above.
 
-```bash
-git pull
-```
 
 Then run the redeployment script:
 
