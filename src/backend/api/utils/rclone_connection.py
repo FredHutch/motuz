@@ -257,7 +257,7 @@ class RcloneConnection(AbstractConnection):
 
     def _logCommand(self, command, credentials):
         bash_command = "{} {}".format(
-            ' '.join("{}='{}'".format(key, value) for key, value in credentials.items()),
+            ' '.join("{}='{}'".format(key, '+++') for key, value in credentials.items()),
             ' '.join(command),
         )
         logging.info(sanitize(bash_command))
