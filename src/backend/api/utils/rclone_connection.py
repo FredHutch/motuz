@@ -257,7 +257,7 @@ class RcloneConnection(AbstractConnection):
 
     def _logCommand(self, command, credentials):
         bash_command = "{} {}".format(
-            ' '.join("{}='{}'".format(key, '+++') for key, value in credentials.items()),
+            ' '.join("{}='{}'".format(key, value) for key, value in sanitize_credentials(credentials).items()),
             ' '.join(command),
         )
         logging.info(sanitize(bash_command))
@@ -455,6 +455,29 @@ class RcloneConnection(AbstractConnection):
                 raise
             raise RcloneException(stderr)
 
+
+def sanitize_credentials(credentials_dict):
+    "sanitize values for certain keys"
+    sensitive_keys_src = [
+        "ACCESS_KEY_ID",
+        "SECRET_ACCESS_KEY",
+        "KEY",
+        "SAS_URL",
+        "CLIENT_ID",
+        "SERVICE_ACCOUNT_CREDENTIALS",
+        "PASS",
+        "TOKEN",
+    ]
+    sensitive_keys = []
+    for key in sensitive_keys_src:
+        for srcdst in ["SRC", "DST"]:
+            sensitive_keys.append("RCLONE_CONFIG_{}_{}".format(srcdst, key))
+    for key, value in credentials_dict.items():
+        if key in sensitive_keys:
+            credentials_dict[key] = ''.join('*' * len(value))
+
+
+    return credentials_dict
 
 def sanitize(string):
     sanitizations_regs = [
