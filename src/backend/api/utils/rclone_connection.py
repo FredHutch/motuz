@@ -456,8 +456,9 @@ class RcloneConnection(AbstractConnection):
             raise RcloneException(stderr)
 
 
-def sanitize_credentials(credentials_dict):
+def sanitize_credentials(credentials_dict_orig):
     "sanitize values for certain keys"
+    credentials_dict = credentials_dict_orig.copy()
     sensitive_keys_src = [
         "ACCESS_KEY_ID",
         "SECRET_ACCESS_KEY",
