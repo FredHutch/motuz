@@ -151,7 +151,7 @@ class NewHashsumJobDialog extends React.Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => this.handleClose()}>
-                                Cancel
+                                Close
                             </Button>
                             <Button variant="primary" type='submit' disabled={isLoading}>
                                 { isLoading ? "Checking..." : "Check hashes" }

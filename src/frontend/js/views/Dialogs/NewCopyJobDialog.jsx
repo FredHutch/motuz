@@ -170,7 +170,7 @@ class NewCopyJobDialog extends React.Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => this.handleClose()}>
-                                Cancel
+                                Close
                             </Button>
                             <Button variant="primary" type='submit' disabled={isLoading}>
                                 { isLoading ? "Submitting..." : "Submit Copy Job" }
