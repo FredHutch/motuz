@@ -5,6 +5,7 @@ import { withAuth } from 'reducers/reducers.jsx';
 import * as pane from 'actions/paneActions.jsx'
 import * as dialog from 'actions/dialogActions.jsx'
 import { getCurrentPane, getCurrentFiles, fileExists } from 'managers/paneManager.jsx'
+import { getJobsInProgressForDestination } from 'managers/apiManager.jsx'
 
 export const LIST_FILES_REQUEST = '@@api/LIST_FILES_REQUEST';
 export const LIST_FILES_SUCCESS = '@@api/LIST_FILES_SUCCESS';
@@ -175,6 +176,16 @@ export const createCopyJob = (data) => {
             `${basename} already exists at destination. Overwrite?`
         )) {
             return;
+        }
+        const jobsInProgress = getJobsInProgressForDestination(state.api, data);
+        if (jobsInProgress.length !== 0) {
+            const jobIds = jobsInProgress.map(d => d.id).join(',')
+            if (!confirm(
+                `The following jobs already write to the same destination: ${jobIds}. ` +
+                `Concurrent writes may be destructive. Continue?`
+            )) {
+                return;
+            }
         }
         dispatch(_createCopyJob(data));
         await dispatch(dialog.hideNewCopyJobDialog())
