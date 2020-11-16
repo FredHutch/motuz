@@ -152,6 +152,7 @@ class RcloneConnection(AbstractConnection):
             '/usr/local/bin/rclone',
             '--config=/dev/null',
             option_exclude_dot_snapshot,
+            '--contimeout=5m',
             'copyto',
             src,
             dst,
