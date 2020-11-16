@@ -64,7 +64,7 @@ def copy_job(self, task_id=None):
 
         Email.send_notification(
             to=copy_job.notification_email,
-            subject=f'Motuz Copy Job with ID {task_id} completed!'
+            subject=f'Motuz Copy Job with ID {task_id} COMPLETED successfully!'
         )
 
         return {
@@ -93,7 +93,7 @@ def copy_job(self, task_id=None):
         try:
             Email.send_notification(
                 to=copy_job.notification_email,
-                subject=f'Motuz Copy Job with ID {task_id} failed!'
+                subject=f'Motuz Copy Job with ID {task_id} FAILED!'
             )
         except:
             pass
@@ -163,9 +163,14 @@ def hashsum_job(self, task_id):
 
         db.session.commit()
 
+        if len(progress_src_tree) == 0 and len(progress_dst_tree) == 0:
+            integrity_outcome_message = "Files are IDENTICAL!"
+        else:
+            integrity_outcome_message = "Files are DIFFERENT!"
+
         Email.send_notification(
             to=hashsum_job.notification_email,
-            subject=f'Motuz Hashsum Job with ID {task_id} completed!'
+            subject=f'Motuz Integrity Check Job with ID {task_id} completed! {integrity_outcome_message}'
         )
 
         return {}
@@ -192,7 +197,7 @@ def hashsum_job(self, task_id):
         try:
             Email.send_notification(
                 to=hashsum_job.notification_email,
-                subject=f'Motuz Hashsum Job with ID {task_id} failed!'
+                subject=f'Motuz Integrity Check Job with ID {task_id} FAILED!'
             )
         except:
             pass
