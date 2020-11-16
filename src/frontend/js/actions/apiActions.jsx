@@ -187,7 +187,7 @@ export const createCopyJob = (data) => {
                 return;
             }
         }
-        dispatch(_createCopyJob(data));
+        await dispatch(_createCopyJob(data));
         await dispatch(dialog.hideNewCopyJobDialog())
     }
 }
@@ -233,8 +233,8 @@ export const retrieveHashsumJob = (id) => ({
 
 export const createHashsumJob = (data) => {
     return async (dispatch, getState) => {
-        dispatch(_createHashsumJob(data));
-        await dispatch(dialog.hideNewHashsumJobDialog)
+        await dispatch(_createHashsumJob(data));
+        await dispatch(dialog.hideNewHashsumJobDialog())
     }
 }
 

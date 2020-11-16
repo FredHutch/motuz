@@ -15,7 +15,7 @@ class NewHashsumJobDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, isLoading } = this.props;
 
         return (
             <div className='dialog-integrity'>
@@ -153,8 +153,8 @@ class NewHashsumJobDialog extends React.Component {
                             <Button variant="secondary" onClick={() => this.handleClose()}>
                                 Cancel
                             </Button>
-                            <Button variant="primary" type='submit'>
-                                Check hashes
+                            <Button variant="primary" type='submit' disabled={isLoading}>
+                                { isLoading ? "Checking..." : "Check hashes" }
                             </Button>
                         </Modal.Footer>
                     </form>
@@ -206,6 +206,8 @@ class NewHashsumJobDialog extends React.Component {
 NewHashsumJobDialog.defaultProps = {
     data: {},
 
+    isLoading: false,
+
     followSymlinksDefault: false,
     doubleCheckDefault: false,
     emailNotificationsDefault: false,
@@ -223,16 +225,15 @@ import {createHashsumJob} from 'actions/apiActions.jsx'
 const mapStateToProps = state => ({
     data: state.dialog.newHashsumJobDialogData,
 
+    isLoading: state.loaders.createHashsumJobLoading,
+
     emailNotificationsDefault: state.settings.emailNotifications,
     emailAddressDefault: state.settings.emailAddress,
 });
 
 const mapDispatchToProps = dispatch => ({
     onClose: () => dispatch(hideNewHashsumJobDialog()),
-    onSubmit: data => {
-        dispatch(hideNewHashsumJobDialog())
-        dispatch(createHashsumJob(data))
-    }
+    onSubmit: data => dispatch(createHashsumJob(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewHashsumJobDialog);
