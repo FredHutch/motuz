@@ -5,7 +5,7 @@ import os
 from api.utils.local_connection import _parse_ls
 
 
-class TestLocalConnection(unittest.TestCase):
+class TestLs(unittest.TestCase):
 
     def test_parse_ls_base_case(self):
         result = _parse_ls("drwxr-xr-x 7 4096 Dec 20 05:51 hello")
