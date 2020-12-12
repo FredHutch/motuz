@@ -36,6 +36,12 @@ def create_app(config_name='dev'):
     global app
     app.config.from_object(config_by_name[config_name])
 
+    register_api(app)
+
+    return app
+
+
+def register_api(app):
     bp = Blueprint('api', __name__, url_prefix='/api')
 
     api = Api(bp,
@@ -74,4 +80,3 @@ def create_app(config_name='dev'):
 
     app.register_blueprint(bp)
 
-    return app
