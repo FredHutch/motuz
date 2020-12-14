@@ -1,25 +1,54 @@
 import unittest
 import sys
 import os
+import logging
 
-from api.utils.rclone_connection import sanitize
+from api.utils.rclone_connection import RcloneConnection
 
 
-class TestSanitize(unittest.TestCase):
+class TestLogCommand(unittest.TestCase):
 
-    def test_base_case(self):
-        payload = (
-            "RCLONE_CONFIG_TEST_ACCESS_KEY_ID='thisIsAPassword' "
-            "RCLONE_CONFIG_SRC='here' "
-            "rclone ls"
-        )
+    def setUp(self):
+        self.rclone_connection = RcloneConnection()
 
-        expected = (
-            "RCLONE_CONFIG_TEST_ACCESS_KEY_ID='***word' "
-            "RCLONE_CONFIG_SRC='here' "
-            "rclone ls"
-        )
 
-        actual = sanitize(payload)
+    @classmethod
+    def setUpClass(cls):
+        logging.disable(logging.INFO)
 
-        self.assertEqual(expected, actual)
+
+    @classmethod
+    def tearDownClass(cls):
+        logging.disable(logging.NOTSET)
+
+
+    def test_allowlist(self):
+        credentials = {
+            "RCLONE_CONFIG_SRC_REGION": "one"
+        }
+        expected = "RCLONE_CONFIG_SRC_REGION='one' foo"
+        self.assertEqual(self.rclone_connection._log_command(["foo"], credentials), expected)
+
+
+    def test_blocklist(self):
+        credentials = {
+            "SECRET_ACCESS_KEY": "one two three"
+        }
+        expected = "SECRET_ACCESS_KEY='***' foo"
+        self.assertEqual(self.rclone_connection._log_command(["foo"], credentials), expected)
+
+
+    def test_no_list(self):
+        credentials = {
+            "SECRET_ACCESS_KEY": "one two three"
+        }
+        expected = "SECRET_ACCESS_KEY='***' foo"
+        self.assertEqual(self.rclone_connection._log_command(["foo"], credentials), expected)
+
+
+    def test_partial_allow(self):
+        credentials = {
+            "RCLONE_CONFIG_SRC_ACCESS_KEY_ID": "KHSNRYQPOFYN"
+        }
+        expected = "RCLONE_CONFIG_SRC_ACCESS_KEY_ID='***OFYN' foo"
+        self.assertEqual(self.rclone_connection._log_command(["foo"], credentials), expected)
