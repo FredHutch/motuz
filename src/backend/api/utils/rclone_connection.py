@@ -475,6 +475,9 @@ def should_log_full_credential(key):
     """
 
     suffix_allowlist = [
+        # generic
+        '_TYPE',
+
         # s3
         '_REGION',
         '_ENDPOINT',
