@@ -2,7 +2,6 @@ from collections import defaultdict
 import functools
 import json
 import logging
-import re
 import subprocess
 import threading
 import time
@@ -45,7 +44,7 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(bucket),
         ]
 
-        self._logCommand(command, credentials)
+        self._log_command(command, credentials)
 
         try:
             result = self._execute(command, credentials)
@@ -75,7 +74,7 @@ class RcloneConnection(AbstractConnection):
             'current:{}'.format(path),
         ]
 
-        self._logCommand(command, credentials)
+        self._log_command(command, credentials)
 
         try:
             result = self._execute(command, credentials)
@@ -85,7 +84,7 @@ class RcloneConnection(AbstractConnection):
                 'path': path,
             }
         except subprocess.CalledProcessError as e:
-            raise RcloneException(sanitize(str(e)))
+            raise RcloneException(str(e))
 
 
 
@@ -102,7 +101,7 @@ class RcloneConnection(AbstractConnection):
             'current:{}/.motuz_keep'.format(path),
         ]
 
-        self._logCommand(command, credentials)
+        self._log_command(command, credentials)
 
         try:
             result = self._execute(command, credentials)
@@ -110,7 +109,7 @@ class RcloneConnection(AbstractConnection):
                 'message': 'Success',
             }
         except subprocess.CalledProcessError as e:
-            raise RcloneException(sanitize(str(e)))
+            raise RcloneException(str(e))
 
 
 
@@ -162,12 +161,12 @@ class RcloneConnection(AbstractConnection):
 
         command = [cmd for cmd in command if len(cmd) > 0]
 
-        self._logCommand(command, credentials)
+        self._log_command(command, credentials)
 
         try:
             self._copy_job_queue.push(command, credentials, job_id)
         except RcloneException as e:
-            raise RcloneException(sanitize(str(e)))
+            raise RcloneException(str(e))
 
         return job_id
 
@@ -223,12 +222,12 @@ class RcloneConnection(AbstractConnection):
 
         command = [cmd for cmd in command if len(cmd) > 0]
 
-        self._logCommand(command, credentials)
+        self._log_command(command, credentials)
 
         try:
             self._hashsum_job_queue.push(command, credentials, job_id, download)
         except RcloneException as e:
-            raise RcloneException(sanitize(str(e)))
+            raise RcloneException(str(e))
 
         return job_id
 
@@ -255,12 +254,22 @@ class RcloneConnection(AbstractConnection):
         return self._hashsum_job_queue.hashsum_delete(job_id)
 
 
-    def _logCommand(self, command, credentials):
+    def _log_command(self, command, credentials):
+        sanitized_credentials = {}
+        for key, value in credentials.items():
+            if should_log_full_credential(key):
+                sanitized_credentials[key] = value
+            elif should_log_partial_credential(key):
+                sanitized_credentials[key] = '***' + value[-4:]
+            else:
+                sanitized_credentials[key] = '***'
+
         bash_command = "{} {}".format(
-            ' '.join("{}='{}'".format(key, value) for key, value in sanitize_credentials(credentials).items()),
+            ' '.join("{}='{}'".format(key, value) for key, value in sanitized_credentials.items()),
             ' '.join(command),
         )
-        logging.info(sanitize(bash_command))
+        logging.info(bash_command)
+        return bash_command
 
 
     def _formatCredentials(self, data, name):
@@ -436,7 +445,10 @@ class RcloneConnection(AbstractConnection):
         return self._execute(["rclone", "obscure", password])
 
 
-    def _execute(self, command, env={}):
+    def _execute(self, command, env=None):
+        if env is None:
+            env = {}
+
         full_env = os.environ.copy()
         full_env.update(env)
         try:
@@ -456,58 +468,67 @@ class RcloneConnection(AbstractConnection):
             raise RcloneException(stderr)
 
 
-def sanitize_credentials(credentials_dict_orig):
-    "sanitize values for certain keys"
-    credentials_dict = credentials_dict_orig.copy()
-    sensitive_keys_src = [
-        "ACCESS_KEY_ID",
-        "SECRET_ACCESS_KEY",
-        "KEY",
-        "SAS_URL",
-        "CLIENT_ID",
-        "SERVICE_ACCOUNT_CREDENTIALS",
-        "PASS",
-        "TOKEN",
-    ]
-    sensitive_keys = []
-    for key in sensitive_keys_src:
-        for srcdst in ["SRC", "DST"]:
-            sensitive_keys.append("RCLONE_CONFIG_{}_{}".format(srcdst, key))
-    for key, value in credentials_dict.items():
-        if key in sensitive_keys:
-            credentials_dict[key] = ''.join('*' * len(value))
+def should_log_full_credential(key):
+    """
+    Returns true if we should log the value of the credential given the key (name) of the credential
+    For robustness, prefer an allowlist over a blocklist
+    """
 
-
-    return credentials_dict
-
-def sanitize(string):
-    sanitizations_regs = [
+    suffix_allowlist = [
         # s3
-        (r"(RCLONE_CONFIG_\S*_ACCESS_KEY_ID=')(\S*)(\S\S\S\S')", r"\1***\3"),
-        (r"(RCLONE_CONFIG_\S*_SECRET_ACCESS_KEY=')(\S*)(')", r"\1***\3"),
+        '_REGION',
+        '_ENDPOINT',
+        '_V2_AUTH',
 
-        # Azure
-        (r"(RCLONE_CONFIG_\S*_KEY=')(\S*)(')", r"\1***\3"),
-        (r"(RCLONE_CONFIG_\S*_SAS_URL=')(\S*)(')", r"\1***\3"),
+        # azureblob
+        '_ACCOUNT',
 
-        # Swift
-        (r"(RCLONE_CONFIG_\S*_KEY=')(\S*)(')", r"\1***\3"),
+        # swift
+        '_USER',
+        '_AUTH',
+        '_TENANT',
 
-        # GCP
-        (r"(RCLONE_CONFIG_\S*_CLIENT_ID=')(\S*)(\S\S\S\S')", r"\1***\3"),
-        (r"(RCLONE_CONFIG_\S*_SERVICE_ACCOUNT_CREDENTIALS=')([^']*)(')", r"\1{***}\3"),
+        # google cloud storage
+        '_PROJECT_NUMBER',
+        '_OBJECT_ACL',
+        '_BUCKET_ACL',
 
-        # SFTP / WebDAV
-        (r"(RCLONE_CONFIG_\S*_PASS=')([^']*)(')", r"\1***\3"),
+        # sftp
+        '_HOST',
+        '_PORT',
+        '_USER',
+        '_KEY_FILE',
 
-        # Dropbox / Onedrive
-        (r"(RCLONE_CONFIG_\S*_TOKEN=')([^']*)(')", r"\1***\3"),
+        # dropbox
+
+        # onedrive
+        '_DRIVE_ID',
+        '_DRIVE_TYPE',
+
+        # webdav
+        '_URL',
+        '_USER',
     ]
 
-    for regex, replace in sanitizations_regs:
-        string = re.sub(regex, replace, string)
+    return any(key.endswith(suffix) for suffix in suffix_allowlist)
 
-    return string
+
+def should_log_partial_credential(key):
+    """
+    Returns true if we should log the last 4 characters the value of the credential
+    given the key (name) of the credential.
+    For robustness, prefer an allowlist over a blocklist
+    """
+
+    suffix_allowlist = [
+        # s3
+        '_ACCESS_KEY_ID',
+
+        # google cloud storage
+        '_CLIENT_ID',
+    ]
+
+    return any(key.endswith(suffix) for suffix in suffix_allowlist)
 
 
 
