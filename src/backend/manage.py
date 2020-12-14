@@ -22,7 +22,7 @@ def run():
     app.run(host=os.getenv('MOTUZ_HOST', 'localhost'))
 
 @manager.command
-def test(run=""):
+def test():
     """Runs the unit tests."""
     tests = unittest.TestLoader().discover('../../test/backend', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
