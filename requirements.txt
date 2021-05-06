@@ -27,7 +27,7 @@ more-itertools==8.0.2
 packaging==19.2
 pluggy==0.13.1
 psycopg2-binary==2.8.3
-py==1.8.0
+py==1.10.0
 PyJWT==1.7.1
 pylint==2.3.1
 pyparsing==2.4.5
