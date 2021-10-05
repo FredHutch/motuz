@@ -44,9 +44,13 @@ EOSQL
 
   if [ "$rc" != "0" ]; then
     # The database may already be initialized
+    # hack - setting +e to disable error from command
+    set +e
     psql -v ON_ERROR_STOP=1 "${MOTUZ_DATABASE_PROTOCOL}://${MOTUZ_DATABASE_USER}:${MOTUZ_DATABASE_PASSWORD}@${MOTUZ_DATABASE_HOST}/${MOTUZ_DATABASE_NAME}" <<-EOSQL
     SELECT 1 as "DATABASE ALREADY INITIALIZED" WHERE 1 = 0
 EOSQL
+    # end hack - going back to -e
+    set -e
   fi
 }
 

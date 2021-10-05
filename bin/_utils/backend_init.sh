@@ -12,4 +12,10 @@ source venv/bin/activate
 
 cd src/backend
 
+# begin hack
+oldwd=$(pwd)
+cd ../../
+. fakeenv
+cd $oldwd
+# end hack
 FLASK_ENV=development python manage.py db upgrade

@@ -1,0 +1,14 @@
+
+# this script is only needed by devs, to get the init_dev script to work
+
+export MOTUZ_FLASK_SECRET_KEY=$(cat docker/secrets/MOTUZ_FLASK_SECRET_KEY )
+export MOTUZ_DATABASE_PASSWORD=$(cat docker/secrets/MOTUZ_DATABASE_PASSWORD)
+export MOTUZ_SMTP_PASSWORD=$(cat docker/secrets/MOTUZ_SMTP_PASSWORD)
+
+
+cat .env |sed s"/MOTUZ_/export MOTUZ_/"|grep -v "bin/env"|grep -v "^#" > env.tmp
+
+
+. env.tmp
+rm env.tmp
+
