@@ -18,6 +18,7 @@ class CloudConnection(db.Model):
     # S3 fields
     s3_access_key_id = db.Column(db.String, nullable=True)
     s3_secret_access_key = db.Column(db.String, nullable=True)
+    s3_session_token = db.Column(db.String, nullable=True)
     s3_region = db.Column(db.String, nullable=True)
 
     # S3 compatible fields

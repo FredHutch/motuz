@@ -32,6 +32,7 @@ dto = api.model('connection', {
 
     's3_access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
     's3_secret_access_key': PrivateString(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
+    's3_session_token': PrivateString(required=False, example='IQoJdlc3QtMiJHMEUCIH8EUqB/Qk2OEYpzejW6g9gi/'),
     's3_region': OptionalString(required=False, example='us-west-2'),
 
     's3_endpoint': OptionalString(required=False, example='https://hello.swiftstack.com'),

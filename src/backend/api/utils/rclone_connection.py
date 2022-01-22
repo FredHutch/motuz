@@ -309,6 +309,10 @@ class RcloneConnection(AbstractConnection):
                 '{}_SECRET_ACCESS_KEY'.format(prefix),
                 's3_secret_access_key'
             )
+            _addCredential(
+                '{}_SESSION_TOKEN'.format(prefix),
+                's3_session_token'
+            )
 
             _addCredential(
                 '{}_ENDPOINT'.format(prefix),
