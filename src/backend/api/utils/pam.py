@@ -6,7 +6,7 @@
 # for security reasons.
 #
 # Audited by Andrei Cioara <andrei@cioara.me> on 2019-06-14
-# for integartion into Motuz.
+# for integration into Motuz.
 
 # (c) 2007 Chris AtLee <chris@atlee.ca>
 # Licensed under the MIT license:
@@ -106,6 +106,10 @@ pam_authenticate          = libpam.pam_authenticate
 pam_authenticate.restype  = c_int
 pam_authenticate.argtypes = [PamHandle, c_int]
 
+pam_acct_mgmt          = libpam.pam_acct_mgmt
+pam_acct_mgmt.restype  = c_int
+pam_acct_mgmt.argtypes = [PamHandle, c_int]
+
 class pam():
     code   = 0
     reason = None
@@ -184,6 +188,8 @@ class pam():
             return False
 
         retval = pam_authenticate(handle, 0)
+        if retval == 0:
+            retval = pam_acct_mgmt(handle, 0)
         auth_success = retval == 0
 
         if auth_success and resetcreds:
