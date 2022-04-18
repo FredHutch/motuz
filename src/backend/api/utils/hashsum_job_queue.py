@@ -54,6 +54,9 @@ class HashsumJobQueue:
     def hashsum_exitstatus(self, job_id):
         return self._job_exitstatus.get(job_id, -1)
 
+    def hashsum_delete(self, job_id):
+        self.hashsum_stop(job_id)
+        del self._job_status[job_id]
 
 
     def _job_id_exists(self, job_id):
@@ -123,6 +126,7 @@ class HashsumJobQueue:
                     '-E',
                     '-u', user,
                     '/usr/local/bin/rclone',
+                    '--config=/dev/null',
                     'cat',
                     'src:{}'.format(os.path.join(os.path.dirname(base), file['Name'])),
                 ]
@@ -149,6 +153,9 @@ class HashsumJobQueue:
             line = line.strip()
             self._job_error_text[job_id] += line
             self._job_error_text[job_id] += '\n'
+            # Restrict size to 10000 characters
+            self._job_error_text[job_id] = self._job_error_text[job_id][-10000:]
+
 
         logging.info("Hashsum process exited with exit status {}".format(exitstatus))
         stop_event.set() # Just in case

@@ -11,11 +11,6 @@ from ..exceptions import HTTP_EXCEPTION
 
 api = Namespace('hashsum-jobs', description='CheckJob related operations')
 
-job_output = api.model('hashsum-job-output', {
-    'Name': fields.String(example='docker-compose.yml'),
-    'md5chksum': fields.String(example='cea965d0c05b29b2adc970a79d408b67'),
-})
-
 dto = api.model('hashsum-job', {
     'id': fields.String(readonly=True, example='a6cac16a63d05672555c884d38b8a3'),
     'src_cloud_id': fields.Integer(required=False, example=1),
@@ -29,11 +24,14 @@ dto = api.model('hashsum-job', {
     'progress_state': fields.String(readonly=True, example='PENDING'),
     'progress_current': fields.Integer(readonly=True, example=45),
     'progress_total': fields.Integer(readonly=True, example=100),
-    'progress_error': fields.String(readonly=True),
     'progress_execution_time': fields.Integer(readonly=True, example=3600),
-    'progress_src_text': fields.List(fields.Nested(job_output), readonly=True),
+    'progress_error': fields.String(readonly=True),
+
+    'progress_src_tree': fields.String(readonly=True, example='[{title, children}]'),
+    'progress_dst_tree': fields.String(readonly=True, example='[{title, children}]'),
+
+    # Rabbitmq fields
     'progress_src_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
-    'progress_dst_text': fields.List(fields.Nested(job_output), readonly=True),
     'progress_dst_error_text': fields.String(readonly=True, example='Multi\nLine\nText'),
 })
 

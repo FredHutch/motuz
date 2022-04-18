@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="src/frontend/img/logo.png" width="200" height="200">
+    <img src="src/frontend/img/logo.png" width="100" height="100">
     <h1>Motuz</h1>
     <p>
         <b>A web based infrastructure for large scale data movements between on-premise and cloud</b>
@@ -7,7 +7,10 @@
     <br>
 </div>
 
-![Motuz transfer in progress](docs/img/image_transfer.png)
+![Motuz transfer and checksum validation](docs/img/mov-copy-check.gif)
+
+![Motuz settings and features](docs/img/mov-settings.gif)
+
 
 <!--  The TOC below is created/maintained by
       the `Markdown TOC` extension to the
@@ -17,7 +20,9 @@
 <!-- TOC -->
 
 1. [Quickstart](#quickstart)
-2. [Setting up production](#setting-up-production)
+2. [Beyond quickstart](#beyond-quickstart)
+3. [Customizing your deployment](#customizing-your-deployment)
+4. [Setting up production](#setting-up-production)
     1. [Authentication](#authentication)
         1. [Local Authentication](#local-authentication)
         2. [Authenticate against Active Directory](#authenticate-against-active-directory)
@@ -28,57 +33,87 @@
     6. [Set up HTTPS certificate](#set-up-https-certificate)
     7. [Running Motuz the first time](#running-motuz-the-first-time)
     8. [Redeploying](#redeploying)
-3. [Developer Installation](#developer-installation)
+5. [Developer Installation](#developer-installation)
     1. [Initialize](#initialize)
     2. [Start](#start)
-4. [Development Options](#development-options)
-5. [Examples](#examples)
+6. [Development Options](#development-options)
+7. [Examples](#examples)
     1. [How to use the API](#how-to-use-the-api)
         1. [API Endpoint](#api-endpoint)
     2. [Authentication](#authentication-1)
-6. [Folder structure](#folder-structure)
+8. [Folder structure](#folder-structure)
     1. [Overview](#overview)
     2. [Frontend folder structure (inside `/src/frontend/`)](#frontend-folder-structure-inside-srcfrontend)
     3. [Backend folder structure (inside `/src/backend/`)](#backend-folder-structure-inside-srcbackend)
     4. [Temp folders](#temp-folders)
-7. [Other resources](#other-resources)
+9. [Other resources](#other-resources)
 
 <!-- /TOC -->
 
 
 ## Quickstart
 
-Quickly get Motuz up and running so you
-can explore it. To set up a production instance,
-see [Setting up production](#setting-up-production).
-
-On a Linux machine, do the following:
-
-1. [Install docker and docker-compose](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. Create a folder called docker in your root directory `sudo install -d -o $USER -m 755 /docker`.
-3. Add SSL certificates inside `/root/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
-4. Create the following two secret files and remember the passwords
+- Install [`docker` and `docker-compose`](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- Run the following command
 
 ```bash
-mkdir -p /docker/secrets
-head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
-head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+git clone https://github.com/FredHutch/motuz.git
+cd motuz
+./bin/quickstart.sh
 ```
 
-5. Run the start script
-
-```bash
-./start.sh
-```
-
-5. See result at http://localhost/.
-
+- Open browser at http://localhost/ and accept self-signed certificates
 
 ---
 
 ![Motuz main page ](docs/img/image_root.png)
 
 ---
+
+
+## Beyond quickstart
+
+In this section we will explain what each step of quickstart does. We will also see how to customize some of these steps.
+
+1. Create a folder called `docker` in your root directory using `sudo install -d -o $USER -m 755 /docker`. Inside the folder, create the following subfolders
+
+- `mkdir -p /docker/certs`
+- `mkdir -p /docker/secrets`
+- `mkdir -p /docker/volumes/postgres`
+
+2. Add SSL certificates inside `/docker/certs` (with names `cert.crt` and `cert.key`). If you don't have SSL certificates, you can temporarily use [self-signed certificates](https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl#10176685).
+
+3. Create the following secret files and remember the passwords
+
+```bash
+mkdir -p /docker/secrets
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_DATABASE_PASSWORD
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_FLASK_SECRET_KEY
+head /dev/urandom | md5sum | awk '{print $1}' > /docker/secrets/MOTUZ_SMTP_PASSWORD
+```
+
+4. Initialize the database
+
+```bash
+./bin/_utils/database_install.sh
+```
+
+5. Pull and Start all containers
+
+```bash
+docker-compose up -d
+```
+
+6. See result at http://localhost/.
+
+
+## Customizing your deployment
+
+- Add your SSL certificates - `/docker/certs/`
+- Change the environment variables - `.env`
+- Change passwords by editing the files - `/docker/secrets`
+- Change the files that are visible to motuz - `docker-compose.override.yml`
+- Use a different root (instead of `/docker`) by changing the MOTUZ_DOCKER_ROOT variable in `.env`
 
 
 ## Setting up production
@@ -224,15 +259,22 @@ browser will warn you that proceeding is not secure.
 
 ### Redeploying
 
+We typically deploy on the `prod` branch. If everything in `master` is ok to 
+be synced with `prod`, we do not merge master into prod, but rather sync it up as follows:
+
+```
+git pull
+git checkout prod
+git reset --hard master # or the commit that you prefer
+git push -f
+```
+
 If you want to stop and restart motuz, for example
 to deploy new code, use the `bin/redeploy.sh` script.
 
 For example, if you want to deploy recent changes
-to the Motuz code base, first grab the latest code:
+to the Motuz code base, sync the code as above.
 
-```bash
-git pull
-```
 
 Then run the redeployment script:
 
@@ -252,12 +294,12 @@ The [.env](/.env) file provides a set of default variables that can be overwritt
 ```bash
 export MOTUZ_DATABASE_PROTOCOL=postgresql
 export MOTUZ_DATABASE_NAME=your_database_name
-export MOTUZ_DATABASE_HOST=your-host.com:5432
+export MOTUZ_DATABASE_HOST=your_host.com:5432
 export MOTUZ_DATABASE_USER=your_user
 echo -n "your_password" > /docker/secrets/MOTUZ_DATABASE_PASSWORD
 
-export MOTUZ_SMTP_SERVER='0.0.0.0:25'
-export MOTUZ_SMTP_USER='admin'
+export MOTUZ_SMTP_SERVER=0.0.0.0:25
+export MOTUZ_SMTP_USER=admin
 echo -n "your_password" > /docker/secrets/MOTUZ_SMTP_PASSWORD
 
 ./start.sh
@@ -266,7 +308,7 @@ echo -n "your_password" > /docker/secrets/MOTUZ_SMTP_PASSWORD
 The config above is the equivalent of connecting to
 
 ```
-postgresql://your_user:your_password@your-host.com:5432/your_database_name
+postgresql://your_user:your_password@your_host.com:5432/your_database_name
 ```
 
 
@@ -285,7 +327,7 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 2. Initialize app
 
 ```bash
-./bin/init_dev.sh
+./bin/dev/init_dev.sh
 ```
 
 ### Start
@@ -293,31 +335,31 @@ postgresql://your_user:your_password@your-host.com:5432/your_database_name
 1. Start Database
 
 ```bash
-./bin/database_start.sh
+./bin/dev/database_start.sh
 ```
 
 2. Start RabbitMQ (in a new terminal window/tab)
 
 ```bash
-./bin/rabbitmq_start.sh
+./bin/dev/rabbitmq_start.sh
 ```
 
 3. Start Celery (in a new terminal window/tab)
 
 ```bash
-./bin/celery_start.sh
+./bin/dev/celery_start.sh
 ```
 
 4. Start Backend (in a new terminal window/tab)
 
 ```bash
-./bin/backend_start.sh
+./bin/dev/backend_start.sh
 ```
 
 5. Start Frontend (in a new terminal window/tab)
 
 ```bash
-./bin/frontend_start.sh
+./bin/dev/frontend_start.sh
 ```
 
 6. See result at http://localhost:8080/
@@ -378,9 +420,8 @@ curl -X POST "https://example.com/api/auth/login/" \
 | Folder | Description |
 | --- | --- |
 | `bin/` | Scripts for starting / installing / testing the application |
-| `docker/` | Container definition for production |
+| `deployment/` | Container definition for production |
 | `docs/` | Documentation |
-| `sandbox/` | Temporary place for Proof of Concept code |
 | `src/` | All source code in one place |
 | `src/frontend/` | Frontend code |
 | `src/backend/` | Backend code |

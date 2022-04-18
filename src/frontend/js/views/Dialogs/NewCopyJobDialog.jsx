@@ -14,7 +14,7 @@ class NewCopyJobDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, isLoading } = this.props;
 
         return (
             <div className='dialog-copy-job'>
@@ -170,10 +170,10 @@ class NewCopyJobDialog extends React.Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => this.handleClose()}>
-                                Cancel
+                                Close
                             </Button>
-                            <Button variant="primary" type='submit'>
-                                Submit Copy Job
+                            <Button variant="primary" type='submit' disabled={isLoading}>
+                                { isLoading ? "Submitting..." : "Submit Copy Job" }
                             </Button>
                         </Modal.Footer>
                     </form>
@@ -225,6 +225,8 @@ NewCopyJobDialog.defaultProps = {
     data: {},
     username: 'ERROR',
 
+    isLoading: false,
+
     followSymlinksDefault: false,
     emailNotificationsDefault: false,
     emailAddressDefault: "",
@@ -241,6 +243,8 @@ import { getCurrentUser } from 'reducers/authReducer.jsx';
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
     username: getCurrentUser(state.auth),
+
+    isLoading: state.loaders.createCopyJobLoading,
 
     followSymlinksDefault: state.settings.followSymlinks,
     emailNotificationsDefault: state.settings.emailNotifications,

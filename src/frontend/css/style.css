@@ -49,15 +49,15 @@ pre {
 }
 
 .rc-node-color-modify > .rc-tree-node-content-wrapper {
-    background-color: rgba(0, 0, 255, 0.1);
+    background-color: rgba(255, 193, 7, 0.1);
 }
 
 .rc-node-color-insert > .rc-tree-node-content-wrapper {
-    background-color: rgba(0, 255, 0, 0.1);
+    background-color: rgba(40, 167, 29, 0.1);
 }
 
 .rc-node-color-missing > .rc-tree-node-content-wrapper {
-    background-color: rgba(255, 0, 0, 0.1);
+    background-color: rgba(220, 53, 69, 0.1);
 }
 
 .rc-node-color-hidden > .rc-tree-node-content-wrapper {

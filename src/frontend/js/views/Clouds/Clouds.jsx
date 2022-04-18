@@ -20,7 +20,7 @@ class Clouds extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Navbar />
+                <Navbar brandIsBackArrow={true}/>
                 <div className="container-fluid mt-4">
                     <div className="row">
                         <div className="col-12">

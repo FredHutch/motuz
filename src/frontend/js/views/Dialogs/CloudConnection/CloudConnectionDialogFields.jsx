@@ -131,6 +131,8 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 'bucket',
                         defaultValue: this.props.data.bucket,
+                        title: "Must be a valid AWS S3 bucket name (or left blank)",
+                        pattern: "^(?=^.{3,63}$)(?!xn--)([a-z0-9](?:[a-z0-9-]*)[a-z0-9])$",
                     }}
                     error={this.props.errors.bucket}
                     isValid={this.props.verifySuccess}
@@ -140,6 +142,9 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 's3_region',
                         defaultValue: this.props.data.s3_region,
+                        title: "Must be a valid AWS region",
+                        // this regex works in python but not js, and it's not futureproof....
+                        // pattern: "^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d$",
                     }}
                     error={this.props.errors.s3_region}
                     isValid={this.props.verifySuccess}
@@ -152,7 +157,12 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 's3_access_key_id',
                         defaultValue: this.props.data.s3_access_key_id,
+                        title: "Must be a valid AWS Access Key ID (20 characters, usually starts with 'AKIA').",
                         required: true,
+                        maxLength: 20,
+                        pattern: "^(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])$",
+                        minLength: 20,
+
                     }}
                     error={this.props.errors.s3_access_key_id}
                     isValid={this.props.verifySuccess}
@@ -163,7 +173,13 @@ class CloudConnectionDialogFields extends React.Component {
                     input={{
                         name: 's3_secret_access_key',
                         defaultValue: this.props.data.s3_secret_access_key,
+                        title: "Must be a valid AWS Secret Access Key (40 characters: letters, numbers and '/')",
                         required: true,
+                        type: 'password',
+                        minLength: 40,
+                        maxLength: 40,
+                        // could probably trim this regex:
+                        pattern: "^(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])$"
                     }}
                     error={this.props.errors.s3_secret_access_key}
                     isValid={this.props.verifySuccess}
@@ -252,6 +268,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'azure_key',
                         defaultValue: this.props.data.azure_key,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.azure_key}
                     isValid={this.props.verifySuccess}
@@ -382,6 +399,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'gcp_service_account_credentials',
                         defaultValue: this.props.data.gcp_service_account_credentials,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.gcp_service_account_credentials}
                     isValid={this.props.verifySuccess}
@@ -530,6 +548,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'dropbox_token',
                         defaultValue: this.props.data.dropbox_token,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.dropbox_token}
                     isValid={this.props.verifySuccess}
@@ -604,6 +623,7 @@ class CloudConnectionDialogFields extends React.Component {
                         name: 'onedrive_token',
                         defaultValue: this.props.data.onedrive_token,
                         required: true,
+                        type: 'password',
                     }}
                     error={this.props.errors.onedrive_token}
                     isValid={this.props.verifySuccess}

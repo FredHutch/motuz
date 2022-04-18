@@ -22,8 +22,13 @@ class HashsumJob(db.Model, TimestampMixin):
     progress_state = db.Column(db.String, nullable=True)
     progress_current = db.Column(db.Integer, nullable=True)
     progress_total = db.Column(db.Integer, nullable=True)
-    progress_error = db.Column(db.String, nullable=True)
     progress_execution_time = db.Column(db.Integer, nullable=False, server_default="0")
+    progress_error = db.Column(db.String, nullable=True)
+
+    progress_src_tree = db.Column(db.String, nullable=True, server_default="[]")
+    progress_dst_tree = db.Column(db.String, nullable=True, server_default="[]")
+    progress_src_error = db.Column(db.String, nullable=True)
+    progress_dst_error = db.Column(db.String, nullable=True)
 
     src_cloud = relationship(
         "CloudConnection",

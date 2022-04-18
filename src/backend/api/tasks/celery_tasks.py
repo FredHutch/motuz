@@ -1,9 +1,9 @@
-import time
-import random
 import functools
 import logging
-import re
 from os import path as os_path
+import re
+import time
+import json
 
 from .. import celery
 from ..models import CopyJob, HashsumJob, CloudConnection
@@ -11,6 +11,7 @@ from ..application import db
 
 from ..utils.rclone_connection import RcloneConnection
 from ..utils.email_utils import Email
+from ..utils.file_utils import generate_file_tree, remove_identical_branches
 
 
 @celery.task(name='motuz.api.tasks.copy_job', bind=True)
@@ -63,7 +64,7 @@ def copy_job(self, task_id=None):
 
         Email.send_notification(
             to=copy_job.notification_email,
-            subject=f'Motuz Copy Job with ID {task_id} completed!'
+            subject=f'Motuz Copy Job with ID {task_id} COMPLETED successfully!'
         )
 
         return {
@@ -92,7 +93,7 @@ def copy_job(self, task_id=None):
         try:
             Email.send_notification(
                 to=copy_job.notification_email,
-                subject=f'Motuz Copy Job with ID {task_id} failed!'
+                subject=f'Motuz Copy Job with ID {task_id} FAILED!'
             )
         except:
             pass
@@ -105,6 +106,14 @@ def copy_job(self, task_id=None):
 
 @celery.task(name='motuz.api.tasks.hashsum_job', bind=True)
 def hashsum_job(self, task_id):
+    """
+    @return : dict {
+        "progress_src_tree",
+        "progress_src_error_text",
+        "progress_dst_tree",
+        "progress_dst_error_text",
+    }
+    """
     try:
         start_time = time.time()
 
@@ -124,20 +133,47 @@ def hashsum_job(self, task_id):
             db.session.commit()
             return result_dst["payload"]
 
+
+        progress_src_tree = result_src["payload"].get("progress_src_tree", [])
+        progress_dst_tree = result_dst["payload"].get("progress_dst_tree", [])
+        progress_src_error = result_src["payload"].get("progress_src_error", None)
+        progress_dst_error = result_dst["payload"].get("progress_dst_error", None)
+
+        progress_src_tree, progress_dst_tree = remove_identical_branches(progress_src_tree, progress_dst_tree)
+
+        self.update_state(state='PROGRESS', meta={}) # Clearing rabbitmq
+
         hashsum_job.progress_state = 'SUCCESS'
         hashsum_job.progress_current = 100
         hashsum_job.progress_execution_time = int(time.time() - start_time)
+        hashsum_job.progress_src_error = progress_src_error
+        hashsum_job.progress_dst_error = progress_dst_error
+
+        try:
+            hashsum_job.progress_src_tree = json.dumps(progress_src_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exception(e)
+
+        try:
+            hashsum_job.progress_dst_tree = json.dumps(progress_dst_tree)
+        except Exception as e:
+            logging.error("Could not save progress_src_tree to DB")
+            logging.exception(e)
+
         db.session.commit()
+
+        if len(progress_src_tree) == 0 and len(progress_dst_tree) == 0:
+            integrity_outcome_message = "Files are IDENTICAL!"
+        else:
+            integrity_outcome_message = "Files are DIFFERENT!"
 
         Email.send_notification(
             to=hashsum_job.notification_email,
-            subject=f'Motuz Hashsum Job with ID {task_id} completed!'
+            subject=f'Motuz Integrity Check Job with ID {task_id} completed! {integrity_outcome_message}'
         )
 
-        return {
-            **result_src["payload"],
-            **result_dst["payload"],
-        }
+        return {}
 
     except Exception as e:
         logging.exception(e)
@@ -161,7 +197,7 @@ def hashsum_job(self, task_id):
         try:
             Email.send_notification(
                 to=hashsum_job.notification_email,
-                subject=f'Motuz Hashsum Job with ID {task_id} failed!'
+                subject=f'Motuz Integrity Check Job with ID {task_id} FAILED!'
             )
         except:
             pass
@@ -186,8 +222,14 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         raise ValueError("_hashsum_job_single side should be either 'src' or 'dst'")
 
     rclone_connection_id = f"{hashsum_job.id}_{side}"
-
     connection = RcloneConnection()
+
+    def get_hashsum_tree():
+        # Using closure to capture all parameters
+        files = connection.hashsum_text(rclone_connection_id)
+        tree = generate_file_tree(files)
+        return tree
+
     result = connection.md5sum(
         data=getattr(hashsum_job, f'{side}_cloud'),
         resource_path=getattr(hashsum_job, f'{side}_resource_path'),
@@ -205,11 +247,13 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
         db.session.commit()
 
         self.update_state(state='PROGRESS', meta={
-            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+            f'progress_{side}_tree': get_hashsum_tree(),
             f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
         })
 
         time.sleep(1)
+
+    result = {}
 
     exitstatus = connection.hashsum_exitstatus(rclone_connection_id)
     if exitstatus == -1:
@@ -217,28 +261,31 @@ def _hashsum_job_single(self, hashsum_job, *, start_time, side):
 
         hashsum_job.progress_state = 'UNSET'
         hashsum_job.progress_current = 100
-        return {
+        result = {
             "success": False,
             "payload": {
-                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
         }
     elif exitstatus != 0:
         hashsum_job.progress_state = 'FAILED'
         hashsum_job.progress_current = 100
-        return {
+        result = {
             "success": False,
             "payload": {
-                f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
+                f'progress_{side}_tree': get_hashsum_tree(),
                 f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
             },
         }
-
-    return {
-        "success": True,
-        "payload": {
-            f'progress_{side}_text': connection.hashsum_text(rclone_connection_id),
-            f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+    else:
+        result = {
+            "success": True,
+            "payload": {
+                f'progress_{side}_tree': get_hashsum_tree(),
+                f'progress_{side}_error_text': connection.hashsum_error_text(rclone_connection_id)
+            }
         }
-    }
+
+    connection.hashsum_delete(rclone_connection_id)
+    return result

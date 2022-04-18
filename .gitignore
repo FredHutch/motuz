@@ -109,7 +109,6 @@ venv.bak/
 
 # Javascript
 node_modules/
-package-lock.json
 
 # certs
 certs/

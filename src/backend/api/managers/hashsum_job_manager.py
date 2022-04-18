@@ -1,3 +1,4 @@
+import json
 import logging
 
 from flask import request
@@ -67,11 +68,31 @@ def retrieve(id):
     for _ in range(2): # Sometimes Rabbitmq closes the connection, just retry
         try:
             task = tasks.hashsum_job.AsyncResult(str(hashsum_job.id))
-            hashsum_job.progress_src_text = task.info.get('progress_src_text', '')
-            hashsum_job.progress_dst_text = task.info.get('progress_dst_text', '')
-            hashsum_job.progress_src_error_text = task.info.get('progress_src_error_text', '')
-            hashsum_job.progress_dst_error_text = task.info.get('progress_dst_error_text', '')
-            hashsum_job.progress_error_text = task.info.get('progress_error_text', '')
+
+            for field in (
+                'progress_src_tree',
+                'progress_dst_tree',
+            ):
+                value = task.info.get(field, None)
+                if value is not None:
+                    try:
+                        value = json.dumps(value)
+                    except:
+                        logging.error("Could not parse {} as json".format(value))
+
+                    setattr(hashsum_job, field, value)
+
+                if getattr(hashsum_job, field, None) is None:
+                    setattr(hashsum_job, field, '[]')
+
+            for field in (
+                'progress_src_error_text',
+                'progress_dst_error_text',
+            ):
+                value = task.info.get(field, None)
+                if value is not None:
+                    setattr(hashsum_job, field, value)
+
             break
         except Exception:
             pass

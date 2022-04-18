@@ -6,6 +6,7 @@ import apiReducer from 'reducers/apiReducer.jsx'
 import dialogReducer from 'reducers/dialogReducer.jsx'
 import paneReducer from 'reducers/paneReducer.jsx'
 import settingsReducer from 'reducers/settingsReducer.jsx'
+import loadersReducer from 'reducers/loadersReducer.jsx'
 
 export default (history) => combineReducers({
     alert: alertReducer,
@@ -14,8 +15,8 @@ export default (history) => combineReducers({
     dialog: dialogReducer,
     pane: paneReducer,
     settings: settingsReducer,
+    loaders: loadersReducer,
 });
-
 
 
 export function withAuth(headers={}) {

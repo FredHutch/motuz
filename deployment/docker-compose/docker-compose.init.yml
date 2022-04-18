@@ -1,0 +1,27 @@
+version: '3.4'
+
+# Add this file to initialize everything
+# Example:
+# docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.dev.yml build
+
+
+x-variables:
+    - &database-environment
+        MOTUZ_DATABASE_PROTOCOL:    # from ./.env
+        MOTUZ_DATABASE_USER:        # from ./.env
+        MOTUZ_DATABASE_HOST:        # from ./.env
+        MOTUZ_DATABASE_NAME:        # from ./.env
+        MOTUZ_DATABASE_REQUIRE_SSL: # from ./.env
+
+
+services:
+    database_init:
+        container_name: motuz_database_init
+        image: fredhutch/motuz_database_init:latest
+        network_mode: host
+        volumes:
+            - ${MOTUZ_DOCKER_ROOT-:/docker}/volumes/postgres:/var/lib/postgresql/data
+        environment:
+            <<: *database-environment
+        secrets:
+            - MOTUZ_DATABASE_PASSWORD
