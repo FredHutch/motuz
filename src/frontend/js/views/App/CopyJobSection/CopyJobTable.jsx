@@ -190,7 +190,7 @@ class CopyJobTable extends React.Component {
     }
 
     setPage(page) {
-        this.props.page(page);
+        this.props.page = page;
         this.props.fetchData(this.props.page);
     }
 
