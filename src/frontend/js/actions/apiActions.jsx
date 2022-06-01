@@ -147,9 +147,9 @@ export const _makeDirectory = (data) => ({
 });
 
 
-export const listCopyJobs = () => ({
+export const listCopyJobs = (page) => ({
     [RSAA]: {
-        endpoint: `/api/copy-jobs/`,
+        endpoint: `/api/copy-jobs/?page=${page}`,
         method: 'GET',
         headers: withAuth({ 'Content-Type': 'application/json' }),
         types: [ LIST_COPY_JOBS_REQUEST, LIST_COPY_JOBS_SUCCESS, LIST_COPY_JOBS_FAILURE ],

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProgressBar } from 'react-bootstrap';
+import {Pagination, ProgressBar, Table} from 'react-bootstrap';
 
 import UriResource from 'components/UriResource.jsx'
 import parseTime from 'utils/parseTime.jsx'
@@ -9,7 +9,8 @@ class CopyJobTable extends React.Component {
     constructor(props) {
         super(props);
         this.timeout = null;
-        this.previousJobsInProgress = new Set()
+        this.previousJobsInProgress = new Set();
+        this.page = 1;
     }
 
     render() {
@@ -51,7 +52,7 @@ class CopyJobTable extends React.Component {
             cloudMapping[connection.id] = connection
         })
 
-        const tableRows = this.props.jobs.map((job, i) => {
+        const tableRows = this.props.jobs.data.map((job, i) => {
             const progressValue = Math.round(job.progress_current / job.progress_total * 100);
 
             const src_cloud_id = job['src_cloud_id'] || 0
@@ -123,7 +124,7 @@ class CopyJobTable extends React.Component {
             );
         })
 
-        const currentJobsInProgress = new Set(this.props.jobs
+        const currentJobsInProgress = new Set(this.props.jobs.data
             .filter(d => d.progress_state === 'PROGRESS')
             .map(d => d.id)
         )
@@ -143,20 +144,37 @@ class CopyJobTable extends React.Component {
             this.scheduleRefresh(currentJobsInProgress);
         }
 
+        const pageItems = [];
+        for (const page of this.props.jobs.pages) {
+            pageItems.push(
+                <Pagination.Item
+                    key={page}
+                    active={page === this.props.page}
+                    onClick={() => this.setPage(page)}
+                >
+                    {page}
+                </Pagination.Item>
+            )
+        }
+
+
         return (
-            <table className='table table-sm table-striped table-hover text-left'>
-                <thead>
+            <>
+                <Table striped hover size="sm" className='text-left'>
+                    <thead>
                     <tr>{tableHeaders}</tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {tableRows}
-                </tbody>
-            </table>
+                    </tbody>
+                </Table>
+                <Pagination size="sm">{pageItems}</Pagination>
+            </>
         );
     }
 
     componentDidMount() {
-        this.props.fetchData();
+        this.props.fetchData(this.props.page);
     }
 
     componentWillUnmount() {
@@ -167,8 +185,13 @@ class CopyJobTable extends React.Component {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
         this.timeout = setTimeout(() => {
-            this.props.fetchData();
+            this.props.fetchData(this.props.page);
         }, refreshDelay)
+    }
+
+    setPage(page) {
+        this.props.page(page);
+        this.props.fetchData(this.props.page);
     }
 
     _onSelectJob(selectedJob) {
@@ -185,9 +208,10 @@ class CopyJobTable extends React.Component {
 
 CopyJobTable.defaultProps = {
     id: '',
+    page: 1,
     jobs: [],
     connections: [],
-    fetchData: () => {},
+    fetchData: (page) => {},
     refreshPanes: () => {},
     onShowDetails: (copyJob) => {},
 }
@@ -203,7 +227,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: () => dispatch(listCopyJobs()),
+    fetchData: (page) => dispatch(listCopyJobs(page)),
     refreshPanes: () => dispatch(refreshPanes()),
     onShowDetails: (copyJob) => dispatch(showEditCopyJobDialog(copyJob)),
 });
