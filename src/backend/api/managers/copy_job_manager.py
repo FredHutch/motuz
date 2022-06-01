@@ -10,16 +10,20 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 
 
 @token_required
-def list(page_size=50, offset=0):
+def list(page_size=50, page=1):
     owner = get_logged_in_user(request)
 
-    copy_jobs = (CopyJob.query
+    query = (CopyJob.query
         .filter_by(owner=owner)
         .order_by(CopyJob.id.desc())
-        .limit(page_size)
-        .all()
+        .paginate(page, page_size, error_out=False)
     )
-    return copy_jobs
+    return {
+        'data': query.items,
+        'total': query.total,
+        'page': query.page,
+        'pages': query.pages
+    }
 
 
 @token_required
