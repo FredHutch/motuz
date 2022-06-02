@@ -43,7 +43,7 @@ const S3_CONNECTION_TYPES = [
     },
     {
         label: 'Temporary Security Credentials (STS)',
-        key: 'sts'
+        value: 'sts'
     }
 ]
 
