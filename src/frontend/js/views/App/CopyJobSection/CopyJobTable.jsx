@@ -52,7 +52,7 @@ class CopyJobTable extends React.Component {
             cloudMapping[connection.id] = connection
         })
 
-        const tableRows = this.props.jobs.data.map((job, i) => {
+        const tableRows = this.props.jobs.map((job, i) => {
             const progressValue = Math.round(job.progress_current / job.progress_total * 100);
 
             const src_cloud_id = job['src_cloud_id'] || 0
@@ -124,7 +124,7 @@ class CopyJobTable extends React.Component {
             );
         })
 
-        const currentJobsInProgress = new Set(this.props.jobs.data
+        const currentJobsInProgress = new Set(this.props.jobs
             .filter(d => d.progress_state === 'PROGRESS')
             .map(d => d.id)
         )
@@ -145,36 +145,63 @@ class CopyJobTable extends React.Component {
         }
 
         const pageItems = [];
-        for (const page of this.props.jobs.pages) {
+        const pages = this.props.jobPages;
+        const cutoff = 3;
+        const endCutoff = pages - cutoff;
+        const maxPages = 5;
+        const showEllipses = pages > maxPages;
+
+        if (showEllipses && this.page > cutoff) {
+            pageItems.push(
+                <Pagination.First onClick={() => this.onPageClick(1)} />,
+                <Pagination.Prev onClick={() => this.onPageClick(this.page - 1)} />,
+                <Pagination.Ellipsis disabled />,
+            )
+        }
+
+        const startPage = showEllipses ? Math.max(1, this.page - 2) : 1;
+        const endPage = showEllipses ? Math.min(pages, this.page + 2) : pages;
+        for (let page = startPage; page <= endPage; page++) {
             pageItems.push(
                 <Pagination.Item
                     key={page}
-                    active={page === this.props.page}
-                    onClick={() => this.setPage(page)}
+                    active={page === this.page}
+                    onClick={() => this.onPageClick(page)}
                 >
                     {page}
                 </Pagination.Item>
             )
         }
 
+        if (showEllipses && this.page <= endCutoff) {
+            pageItems.push(
+                <Pagination.Ellipsis disabled />,
+                <Pagination.Next onClick={() => this.onPageClick(this.page + 1)} />,
+                <Pagination.Last onClick={() => this.onPageClick(pages)} />,
+            )
+        }
 
         return (
             <>
+                {pages > 1 && (
+                    <Pagination size="sm" className='justify-content-end mr-3'>
+                        {React.Children.toArray(pageItems)}
+                    </Pagination>
+                )}
                 <Table striped hover size="sm" className='text-left'>
                     <thead>
-                    <tr>{tableHeaders}</tr>
+                        <tr>{tableHeaders}</tr>
                     </thead>
                     <tbody>
-                    {tableRows}
+                        {tableRows}
                     </tbody>
                 </Table>
-                <Pagination size="sm">{pageItems}</Pagination>
             </>
         );
     }
 
     componentDidMount() {
-        this.props.fetchData(this.props.page);
+        this.props.fetchData(this.page);
     }
 
     componentWillUnmount() {
@@ -185,13 +212,13 @@ class CopyJobTable extends React.Component {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
         this.timeout = setTimeout(() => {
-            this.props.fetchData(this.props.page);
+            this.props.fetchData(this.page);
         }, refreshDelay)
     }
 
-    setPage(page) {
-        this.props.page = page;
-        this.props.fetchData(this.props.page);
+    onPageClick(page) {
+        this.page = page;
+        this.props.fetchData(this.page);
     }
 
     _onSelectJob(selectedJob) {
@@ -208,8 +235,8 @@ class CopyJobTable extends React.Component {
 
 CopyJobTable.defaultProps = {
     id: '',
-    page: 1,
     jobs: [],
+    jobPages: 1,
     connections: [],
     fetchData: (page) => {},
     refreshPanes: () => {},
@@ -223,6 +250,7 @@ import { refreshPanes } from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
+    jobPages: state.api.jobPages,
     connections: state.api.clouds,
 });
 

@@ -51,11 +51,9 @@ class CopyJobList(Resource):
         List all Copy Jobs
         """
         try:
-            args = list_arg_parser.parse_args()
-
             return copy_job_manager.list(
-                page_size=args.get('page_size'),
-                page=args.get('page')
+                page_size=int(request.args.get('page_size', 50)),
+                page=int(request.args.get('page', 1))
             )
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)

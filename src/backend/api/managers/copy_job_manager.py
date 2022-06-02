@@ -16,7 +16,9 @@ def list(page_size=50, page=1):
     query = (CopyJob.query
         .filter_by(owner=owner)
         .order_by(CopyJob.id.desc())
-        .paginate(page, page_size, error_out=False)
+        .paginate(page=page,
+                  per_page=page_size,
+                  error_out=False)
     )
     return {
         'data': query.items,
