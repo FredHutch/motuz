@@ -32,14 +32,14 @@ job_dto = api.model('copy-job', {
 
 list_dto = api.model('copy-job-list', {
     'data': fields.List(fields.Nested(job_dto)),
-    'total': fields.Integer(),
-    'page': fields.Integer(),
-    'pages': fields.Integer()
+    'total': fields.Integer(example=100),
+    'page': fields.Integer(example=1),
+    'pages': fields.Integer(example=10)
 })
 
 list_arg_parser = reqparse.RequestParser()
 list_arg_parser.add_argument('page', help='Current page', type=int, default=1)
-list_arg_parser.add_argument('page_size', help='Number of records', type=int, default=50)
+list_arg_parser.add_argument('page_size', help='Maximum number of records to return per page', type=int, default=50)
 
 
 @api.route('/')
