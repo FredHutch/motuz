@@ -78,6 +78,7 @@ class CloudConnectionDialogFields extends React.Component {
     render() {
         const { data, errors } = this.props;
         const type = this.state.type || this.props.data.type || 's3';
+        const subtype = this.state.subtype || this.props.data.subtype;
 
         return (
             <div className="container">
@@ -117,11 +118,11 @@ class CloudConnectionDialogFields extends React.Component {
                     isValid={this.props.verifySuccess}
                 />
 
-                {type === 's3' && this._renderS3Section()}
-                {type === 'azureblob' && this._renderAzureSection()}
+                {type === 's3' && this._renderS3Section(subtype)}
+                {type === 'azureblob' && this._renderAzureSection(subtype)}
                 {type === 'swift' && this._renderSwiftSection()}
                 {type === 'google cloud storage' && this._renderGCPSection()}
-                {type === 'sftp' && this._renderSFTPSection()}
+                {type === 'sftp' && this._renderSFTPSection(subtype)}
                 {type === 'dropbox' && this._renderDropboxSection()}
                 {type === 'onedrive' && this._renderOnedriveSection()}
                 {type === 'webdav' && this._renderWebdavSection()}
@@ -133,7 +134,7 @@ class CloudConnectionDialogFields extends React.Component {
 
     }
 
-    _renderS3Section() {
+    _renderS3Section(subtype) {
         return (
             <React.Fragment>
                 <CloudConnectionField
@@ -161,13 +162,13 @@ class CloudConnectionDialogFields extends React.Component {
                 />
                 <div className="row form-group required">
                     <div className="col-4 text-right control-label">
-                        <b className='form-label'>Connection Type</b>
+                        <b className='form-label'>S3 Connection Type</b>
                     </div>
                     <div className="col-8">
                         <select
                             className="form-control"
-                            // Do not specify "name", we do not want this in the request
-                            value={this.state.subtype}
+                            name="subtype"
+                            value={subtype}
                             onChange={(event => this.setState({subtype: event.target.value}))}
                         >
                             {S3_CONNECTION_TYPES.map(d => (
@@ -216,7 +217,7 @@ class CloudConnectionDialogFields extends React.Component {
                     isSanitized={this.props.isSanitized}
                 />
 
-                {this.state.subtype === 'sts' &&
+                {subtype === 'sts' &&
                     <CloudConnectionField
                         label='Session Token'
                         input={{
@@ -254,7 +255,7 @@ class CloudConnectionDialogFields extends React.Component {
         )
     }
 
-    _renderAzureSection() {
+    _renderAzureSection(subtype) {
         return (
             <React.Fragment>
                 <div className="row form-group required">
@@ -264,8 +265,8 @@ class CloudConnectionDialogFields extends React.Component {
                     <div className="col-8">
                         <select
                             className="form-control"
-                            // Do not specify "name", we do not want this in the request
-                            value={this.state.subtype}
+                            name="subtype"
+                            value={subtype}
                             onChange={(event => this.setState({subtype: event.target.value}))}
                         >
                             {AZURE_CONNECTION_TYPES.map(d => (
@@ -278,8 +279,8 @@ class CloudConnectionDialogFields extends React.Component {
                     </div>
                 </div>
 
-                {this.state.subtype === 'key' && this._renderAzureKeySubsection()}
-                {this.state.subtype === 'sas' && this._renderAzureSasSubsection()}
+                {subtype === 'key' && this._renderAzureKeySubsection()}
+                {subtype === 'sas' && this._renderAzureSasSubsection()}
             </React.Fragment>
         )
     }
@@ -469,7 +470,7 @@ class CloudConnectionDialogFields extends React.Component {
         )
     }
 
-    _renderSFTPSection() {
+    _renderSFTPSection(subtype) {
         return (
             <React.Fragment>
                 <CloudConnectionField
@@ -525,8 +526,8 @@ class CloudConnectionDialogFields extends React.Component {
                     <div className="col-8">
                         <select
                             className="form-control"
-                            // Do not specify "name", we do not want this in the request
-                            value={this.state.subtype}
+                            name="subtype"
+                            value={subtype}
                             onChange={(event => this.setState({subtype: event.target.value}))}
                         >
                             {SFTP_CONNECTION_TYPES.map(d => (
@@ -539,8 +540,8 @@ class CloudConnectionDialogFields extends React.Component {
                     </div>
                 </div>
 
-                {this.state.subtype === 'password' && this._renderSFTPPasswordSubsection()}
-                {this.state.subtype === 'key' && this._renderSFTPKeySubsection()}
+                {subtype === 'password' && this._renderSFTPPasswordSubsection()}
+                {subtype === 'key' && this._renderSFTPKeySubsection()}
 
 
             </React.Fragment>
@@ -783,7 +784,7 @@ CloudConnectionDialogFields.defaultProps = {
 
 CloudConnectionDialogFields.initialState = {
     type: '',
-    subtype: 'key',
+    subtype: '',
 }
 
 
