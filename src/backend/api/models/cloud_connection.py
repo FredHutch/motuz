@@ -13,6 +13,7 @@ class CloudConnection(db.Model):
     owner = db.Column(db.String)
 
     type = db.Column(db.String)
+    subtype = db.Column(db.String, nullable=True)
     bucket = db.Column(db.String, nullable=True)
 
     # S3 fields

@@ -17,8 +17,10 @@ depends_on = None
 
 
 def upgrade():
+    op.add_column('cloud_connection', sa.Column('subtype', sa.String(), nullable=True))
     op.add_column('cloud_connection', sa.Column('s3_session_token', sa.String(), nullable=True))
 
 
 def downgrade():
+    op.drop_column('cloud_connection', 'subtype')
     op.drop_column('cloud_connection', 's3_session_token')
