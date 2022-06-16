@@ -110,37 +110,6 @@ class HashsumJobQueue:
             })
             self.__process_copy_status(job_id)
 
-
-        if download:
-            user = command[command.index('-u') + 1]
-            base = command[-1]
-            if base[:4] != 'src:':
-                raise RuntimeError("Could not perform download of file. Incorrect base `{}`".format(base))
-            base = '/' + base[4:]
-
-            for file in self._job_status[job_id]:
-                stored_checksum = file['md5chksum']
-                file['md5chksum'] = 'CHECKING_VALUE..._______________'
-                file_path_clean = shlex.quote(os.path.join(os.path.dirname(base), file['Name']))
-                command = [
-                    'sudo',
-                    '-E',
-                    '-u', shlex.quote(user),
-                    '/usr/local/bin/rclone',
-                    '--config=/dev/null',
-                    'cat',
-                    'src:{}'.format(file_path_clean),
-                ]
-                command = ' '.join(command) + " | md5sum"
-                # TODO: Remove this hack once https://github.com/rclone/rclone/issues/3923 is addressed
-                md5sum = subprocess.check_output(command, env=full_env, shell=True).decode('utf-8')[:32]
-                if stored_checksum and md5sum != stored_checksum:
-                    file['md5chksum'] = 'FILE_IS_CORRUPTED!!!____________'
-                else:
-                    file['md5chksum'] = md5sum
-                self.__process_copy_status(job_id)
-
-
         self._job_percent[job_id] = 100
         self.__process_copy_status(job_id)
 

@@ -202,6 +202,7 @@ class RcloneConnection(AbstractConnection):
     ):
         credentials = {}
         option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
+        option_download = ''
 
         if data is None: # Local
             src = resource_path
@@ -212,6 +213,9 @@ class RcloneConnection(AbstractConnection):
             credentials.update(self._formatCredentials(data, name='src'))
             src = 'src:{}'.format(resource_path)
 
+        if download:
+            option_download = '--download'
+
         command = [
             'sudo',
             '-E',
@@ -221,6 +225,7 @@ class RcloneConnection(AbstractConnection):
             'md5sum',
             src,
             option_exclude_dot_snapshot,
+            option_download
         ]
 
         command = [cmd for cmd in command if len(cmd) > 0]
