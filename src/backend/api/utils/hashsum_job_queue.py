@@ -1,14 +1,14 @@
-from collections import defaultdict
-import functools
-import json
 import logging
+import os
 import re
+import shlex
 import subprocess
 import threading
 import time
-import os
+from collections import defaultdict
 
-from .abstract_connection import AbstractConnection, RcloneException
+from .abstract_connection import RcloneException
+
 
 class HashsumJobQueue:
     def __init__(self):
@@ -121,14 +121,15 @@ class HashsumJobQueue:
             for file in self._job_status[job_id]:
                 stored_checksum = file['md5chksum']
                 file['md5chksum'] = 'CHECKING_VALUE..._______________'
+                file_path_clean = shlex.quote(os.path.join(os.path.dirname(base), file['Name']))
                 command = [
                     'sudo',
                     '-E',
-                    '-u', user,
+                    '-u', shlex.quote(user),
                     '/usr/local/bin/rclone',
                     '--config=/dev/null',
                     'cat',
-                    'src:{}'.format(os.path.join(os.path.dirname(base), file['Name'])),
+                    'src:{}'.format(file_path_clean),
                 ]
                 command = ' '.join(command) + " | md5sum"
                 # TODO: Remove this hack once https://github.com/rclone/rclone/issues/3923 is addressed
