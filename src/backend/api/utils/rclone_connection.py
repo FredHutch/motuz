@@ -1,15 +1,14 @@
-from collections import defaultdict
 import functools
 import json
 import logging
-import subprocess
-import threading
-import time
 import os
+import subprocess
+from collections import defaultdict
 
 from .abstract_connection import AbstractConnection, RcloneException
-from .hashsum_job_queue import HashsumJobQueue
 from .copy_job_queue import CopyJobQueue
+from .hashsum_job_queue import HashsumJobQueue
+
 
 class RcloneConnection(AbstractConnection):
     def __init__(self):
