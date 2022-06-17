@@ -232,7 +232,7 @@ class RcloneConnection(AbstractConnection):
         self._log_command(command, credentials)
 
         try:
-            self._hashsum_job_queue.push(command, credentials, job_id, download)
+            self._hashsum_job_queue.push(command, credentials, job_id)
         except RcloneException as e:
             raise RcloneException(str(e))
 

@@ -21,14 +21,14 @@ class HashsumJobQueue:
         self._stop_events = {} # Mapping from id to threading.Event
 
 
-    def push(self, command, env, job_id, download):
+    def push(self, command, env, job_id):
         if self._job_id_exists(job_id):
             raise KeyError("Job with ID {} already submitted to {}".format(job_id, self.__class__))
 
         self._stop_events[job_id] = threading.Event()
 
         try:
-            self._execute_interactive(command, env, job_id, download)
+            self._execute_interactive(command, env, job_id)
         except subprocess.CalledProcessError as e:
             raise RcloneException(e)
 
@@ -62,12 +62,11 @@ class HashsumJobQueue:
         return job_id in self._job_status
 
 
-    def _execute_interactive(self, command, env, job_id, download):
+    def _execute_interactive(self, command, env, job_id):
         thread = threading.Thread(target=self.__execute_interactive, kwargs={
             'command': command,
             'env': env,
-            'job_id': job_id,
-            'download': download,
+            'job_id': job_id
         })
         thread.daemon = True
         thread.start()
