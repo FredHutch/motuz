@@ -73,7 +73,7 @@ class HashsumJobQueue:
         thread.start()
 
 
-    def __execute_interactive(self, command, env, job_id, download):
+    def __execute_interactive(self, command, env, job_id):
         stop_event = self._stop_events[job_id]
         full_env = os.environ.copy()
         full_env.update(env)
