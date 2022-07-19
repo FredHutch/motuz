@@ -150,6 +150,7 @@ class RcloneConnection(AbstractConnection):
             '/usr/local/bin/rclone',
             '--config=/dev/null',
             '--s3-acl',
+            '--s3-no-check-bucket',
             'bucket-owner-full-control',
             option_exclude_dot_snapshot,
             '--contimeout=5m',
