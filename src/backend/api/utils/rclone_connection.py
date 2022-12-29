@@ -11,6 +11,9 @@ from .abstract_connection import AbstractConnection, RcloneException
 from .hashsum_job_queue import HashsumJobQueue
 from .copy_job_queue import CopyJobQueue
 
+from ..utils.ssh_utils import get_ssh_key_path
+
+
 class RcloneConnection(AbstractConnection):
     def __init__(self):
         self._hashsum_job_queue = HashsumJobQueue()
@@ -38,7 +41,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            '/usr/local/bin/rclone',
+            '/app/bin/rclone',
             '--config=/dev/null',
             'lsjson',
             'current:{}'.format(bucket),
@@ -68,7 +71,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            '/usr/local/bin/rclone',
+            '/app/bin/rclone',
             '--config=/dev/null',
             'lsjson',
             'current:{}'.format(path),
@@ -95,7 +98,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            '/usr/local/bin/rclone',
+            '/app/bin/rclone',
             '--config=/dev/null',
             'touch',
             'current:{}/.motuz_keep'.format(path),
@@ -145,10 +148,10 @@ class RcloneConnection(AbstractConnection):
             option_copy_links = ''
 
         command = [
-            'sudo',
-            '-E',
-            '-u', user,
-            '/usr/local/bin/rclone',
+            # 'sudo',
+            # '-E',
+            # '-u', user,
+            '/app/bin/rclone',
             '--config=/dev/null',
             '--s3-acl',
             'bucket-owner-full-control',
@@ -166,12 +169,15 @@ class RcloneConnection(AbstractConnection):
 
         self._log_command(command, credentials)
 
-        try:
-            self._copy_job_queue.push(command, credentials, job_id)
-        except RcloneException as e:
-            raise RcloneException(str(e))
 
-        return job_id
+
+        # for now do not submit to celery
+        # try:
+        #     self._copy_job_queue.push(command, credentials, job_id) # celerything
+        # except RcloneException as e:
+        #     raise RcloneException(str(e))
+
+        return(command, credentials)
 
 
     def copy_text(self, job_id):
@@ -216,7 +222,7 @@ class RcloneConnection(AbstractConnection):
             'sudo',
             '-E',
             '-u', user,
-            '/usr/local/bin/rclone',
+            '/app/bin/rclone',
             '--config=/dev/null',
             'md5sum',
             src,

@@ -13,6 +13,7 @@ class CopyJob(db.Model, TimestampMixin):
     src_resource_path = db.Column(db.String)
     dst_cloud_id = db.Column(db.Integer, db.ForeignKey('cloud_connection.id'))
     dst_resource_path = db.Column(db.String)
+    hpc_job_id = db.Column(db.String)
 
     # Options
     copy_links = db.Column(db.Boolean)

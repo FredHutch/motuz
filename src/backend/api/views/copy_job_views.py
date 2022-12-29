@@ -14,6 +14,7 @@ api = Namespace('copy-jobs', description='CopyJob related operations')
 
 dto = api.model('copy-job', {
     'id': fields.Integer(readonly=True, example=1234),
+    'hpc_job_id': fields.String(reqiured=False, example='12345'),
     'description': fields.String(required=True, example='Task Description'),
     'src_cloud_id': fields.Integer(required=False, example=1),
     'src_resource_path': fields.String(required=True, example='/tmp'),

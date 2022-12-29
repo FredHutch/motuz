@@ -125,7 +125,7 @@ class HashsumJobQueue:
                     'sudo',
                     '-E',
                     '-u', user,
-                    '/usr/local/bin/rclone',
+                    '/app/bin/rclone',
                     '--config=/dev/null',
                     'cat',
                     'src:{}'.format(os.path.join(os.path.dirname(base), file['Name'])),

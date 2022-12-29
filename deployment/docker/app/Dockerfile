@@ -34,6 +34,7 @@ RUN set -x \
         libpam-krb5 \
         sssd \
         libpam-sss \
+        ssh \
         sudo \
         curl \
         unzip \

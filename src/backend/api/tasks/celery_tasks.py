@@ -14,7 +14,7 @@ from ..utils.email_utils import Email
 from ..utils.file_utils import generate_file_tree, remove_identical_branches
 
 
-@celery.task(name='motuz.api.tasks.copy_job', bind=True)
+@celery.task(name='motuz.api.tasks.copy_job', bind=True) # celerything
 def copy_job(self, task_id=None):
     try:
         start_time = time.time()

@@ -6,6 +6,7 @@ import subprocess
 from ..exceptions import *
 from .abstract_connection import AbstractConnection, RcloneException
 
+from .ssh_utils import get_ssh_key_path
 
 class LocalConnection(AbstractConnection):
     """
@@ -66,12 +67,18 @@ class LocalConnection(AbstractConnection):
 
 def _homepath_with_impersonation(user):
     command = [
+        'ssh',
+        '-i',
+        get_ssh_key_path(),
+        '-o',
+        'StrictHostKeyChecking=no',
+        'root@rhino', # TODO parameterize user and host
         'sudo',
         '-n',
         '-u', user,
-        '-i', 'eval',
-        'echo $HOME'
+        '-i', 'pwd',
     ]
+
 
     byteOutput = subprocess.check_output(command)
     output = byteOutput.decode('UTF-8').rstrip()
@@ -150,6 +157,12 @@ def _parse_ls(output):
 
 def _ls_with_impersonation(path, user):
     command = [
+        'ssh',
+        '-i',
+        get_ssh_key_path(),
+        '-o',
+        'StrictHostKeyChecking=no',
+        'root@rhino', # TODO parameterize user and host
         'sudo',
         '-n',
         '-u', user,
@@ -161,6 +174,7 @@ def _ls_with_impersonation(path, user):
         '-o', # Exclude group user info (if needed consider -n)
         path,
     ]
+
 
     try:
         byteOutput = subprocess.check_output(command)
@@ -180,6 +194,12 @@ def _ls_with_impersonation(path, user):
 
 def _mkdir_with_impersonation(path, user):
     command = [
+        'ssh',
+        '-i',
+        get_ssh_key_path(),
+        '-o',
+        'StrictHostKeyChecking=no',
+        'root@rhino', # TODO parameterize
         'sudo',
         '-n',
         '-u', user,

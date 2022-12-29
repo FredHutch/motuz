@@ -7,7 +7,7 @@ from ..application import db
 from ..exceptions import *
 from ..models import CopyJob
 from ..managers.auth_manager import token_required, get_logged_in_user
-
+from ..managers.hpc_manager import submit_copy_job
 
 @token_required
 def list(page_size=50, offset=0):
@@ -46,9 +46,15 @@ def create(data):
     db.session.commit()
 
     task_id = copy_job.id
-    tasks.copy_job.apply_async(task_id=str(task_id), kwargs={
-        'task_id': task_id,
-    })
+
+    # TODO submit to slurm here
+
+    submit_copy_job(copy_job)
+
+
+    # tasks.copy_job.apply_async(task_id=str(task_id), kwargs={
+    #     'task_id': task_id,
+    # })
 
     return copy_job
 

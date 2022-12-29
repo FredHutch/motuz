@@ -8,13 +8,14 @@ x-variables:
         volumes:
             # These mounts are specific to Fred Hutch:
             - /home:/home:shared
-            - /efs/:/efs/
+            # - /efs/:/efs/
             - /fh/economy:/fh/economy:shared
             - /fh/fast:/fh/fast:shared
             - /fh/scratch/:/fh/scratch/
             - /fh/secure:/fh/secure:shared
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
+            - ${MOTUZ_DOCKER_ROOT:-/docker}/secrets/MOTUZ_SSH_KEY:/MOTUZ_SSH_KEY:ro
 
 services:
     app:
