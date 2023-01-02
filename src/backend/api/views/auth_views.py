@@ -15,6 +15,19 @@ dto = api.model('auth', {
     'password': fields.String(required=True, description='The user password'),
 })
 
+# TODO how do we get this to show up in swagger?
+@api.route("/get_current_user/")
+class GetCurrentUser(Resource):
+    def get(self):
+        """Get the current user"""
+        try:
+            return auth_manager.get_logged_in_user(), 200
+        except HTTP_EXCEPTION as e:
+            api.abort(e.code, e.payload)
+        except Exception as e:
+            logging.exception(e, exc_info=True)
+            api.abort(500, str(e))
+
 
 @api.route('/login/')
 class UserLogin(Resource):

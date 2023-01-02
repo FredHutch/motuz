@@ -5,6 +5,7 @@ from functools import wraps
 
 from sqlalchemy.exc import IntegrityError
 import flask_jwt_extended as flask_jwt
+import sh
 
 from ..models import RevokedToken
 from ..application import db, jwt
@@ -49,9 +50,10 @@ def _check_if_token_in_blacklist(token):
 
 
 
-@token_required
+
 def get_logged_in_user(*args, **kwargs):
-    return flask_jwt.get_jwt_identity()
+    return sh.whoami().strip()
+    # return flask_jwt.get_jwt_identity()
 
 
 

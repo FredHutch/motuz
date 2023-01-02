@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import PrivateRoute from 'components/PrivateRoute.jsx';
 import Dialogs from 'views/Dialogs/Dialogs.jsx';
 import PageNotFound from 'views/PageNotFound.jsx'
-import Login from 'views/Login.jsx'
-import Logout from 'views/Logout.jsx'
+// import Login from 'views/Login.jsx'
+// import Logout from 'views/Logout.jsx'
 import Clouds from 'views/Clouds/Clouds.jsx'
 import App from 'views/App/App.jsx'
 import Alerts from 'views/Alerts/Alerts.jsx'
@@ -24,8 +24,8 @@ class Root extends React.PureComponent {
                 <Switch>
                     <PrivateRoute exact path="/" component={App} display={isAuthenticated} redirect='/login' />
                     <PrivateRoute exact path="/clouds" component={Clouds} display={isAuthenticated} redirect='/login' />
-                    <PrivateRoute exact path="/login" component={Login} display={!isAuthenticated} redirect='/' />
-                    <PrivateRoute exact path="/logout" component={Logout} display={isAuthenticated} redirect='/' />
+                    {/* <PrivateRoute exact path="/login" component={Login} display={!isAuthenticated} redirect='/' />
+                    <PrivateRoute exact path="/logout" component={Logout} display={isAuthenticated} redirect='/' /> */}
                     <Route component={PageNotFound}/>
                 </Switch>
                 <Dialogs />

@@ -11,7 +11,7 @@ from ..utils.rclone_connection import RcloneConnection
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 
-@token_required
+
 def list():
     owner = get_logged_in_user(request)
 
@@ -23,7 +23,7 @@ def list():
     return cloud_connections
 
 
-@token_required
+
 def create(data):
     owner = get_logged_in_user(request)
 
@@ -37,7 +37,7 @@ def create(data):
 
 
 
-@token_required
+
 def retrieve(id):
     cloud_connection = CloudConnection.query.get(id)
 
@@ -52,7 +52,7 @@ def retrieve(id):
     return cloud_connection
 
 
-@token_required
+
 def update(id, data):
     cloud_connection = retrieve(id)
 
@@ -63,7 +63,7 @@ def update(id, data):
     return cloud_connection
 
 
-@token_required
+
 def delete(id):
     cloud_connection = retrieve(id)
 
@@ -74,7 +74,7 @@ def delete(id):
 
 
 
-@token_required
+
 def verify(data):
     owner = get_logged_in_user(request)
     cloud_connection = CloudConnection(**data)

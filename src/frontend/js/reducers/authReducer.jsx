@@ -94,14 +94,29 @@ export function isRefreshTokenExpired(state) {
 }
 
 export function isAuthenticated(state) {
-    return !isRefreshTokenExpired(state);
+    // return !isRefreshTokenExpired(state);
+    return true;
 }
 
 export function errors(state) {
     return  state.errors;
 }
 
+export function _getCurrentUser() {
+    return fetch("/api/auth/get_current_user/")
+        .then(response => response.json())
+}
+
+// no longer called - I think
 export function getCurrentUser(state) {
+    var request = new XMLHttpRequest();
+    // bad synchronous ajax request - deprecated 
+    // TODO FIXME
+    request.open('GET', '/api/auth/get_current_user/', false);
+    request.send(null);
+    if (request.status === 200) {
+        return JSON.parse(request.responseText);
+    } 
     if (!state) {
         return 'ERROR STATE';
     }

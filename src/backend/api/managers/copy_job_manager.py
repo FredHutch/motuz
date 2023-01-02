@@ -9,7 +9,7 @@ from ..models import CopyJob
 from ..managers.auth_manager import token_required, get_logged_in_user
 
 
-@token_required
+
 def list(page_size=50, offset=0):
     owner = get_logged_in_user(request)
 
@@ -22,7 +22,7 @@ def list(page_size=50, offset=0):
     return copy_jobs
 
 
-@token_required
+
 def create(data):
     owner = get_logged_in_user(request)
 
@@ -53,7 +53,7 @@ def create(data):
     return copy_job
 
 
-@token_required
+
 def retrieve(id):
     copy_job = CopyJob.query.get(id)
 
@@ -78,7 +78,7 @@ def retrieve(id):
     return copy_job
 
 
-@token_required
+
 def stop(id):
     copy_job = retrieve(id)
 

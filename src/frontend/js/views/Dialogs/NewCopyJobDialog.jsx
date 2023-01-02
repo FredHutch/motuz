@@ -238,11 +238,22 @@ NewCopyJobDialog.defaultProps = {
 import {connect} from 'react-redux';
 import {hideNewCopyJobDialog} from 'actions/dialogActions.jsx'
 import {createCopyJob} from 'actions/apiActions.jsx'
-import { getCurrentUser } from 'reducers/authReducer.jsx';
+// import { getCurrentUser } from 'reducers/authReducer.jsx';
+import { _getCurrentUser } from 'reducers/authReducer.jsx';
+
+function setUserName() {
+    let p = _getCurrentUser();
+    p.then(x => {
+        NewCopyJobDialog.defaultProps['username'] = x;
+    });
+
+}
+setUserName();
+
 
 const mapStateToProps = state => ({
     data: state.dialog.newCopyJobDialogData,
-    username: getCurrentUser(state.auth),
+    username: NewCopyJobDialog.defaultProps['username'],
 
     isLoading: state.loaders.createCopyJobLoading,
 

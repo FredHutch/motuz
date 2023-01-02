@@ -17,7 +17,7 @@ from ..utils.local_connection import LocalConnection
 from ..utils.abstract_connection import RcloneException
 
 
-@token_required
+
 def get_uid():
     uid = os.getuid()
     return {
@@ -61,7 +61,7 @@ def get_info():
 
 
 
-@token_required
+
 def ls(data):
     user = get_logged_in_user(request)
     path = data['path']
@@ -85,7 +85,7 @@ def ls(data):
         raise HTTP_400_BAD_REQUEST(str(e))
 
 
-@token_required
+
 def lshome():
     user = get_logged_in_user(request)
 
@@ -100,7 +100,7 @@ def lshome():
 
 
 
-@token_required
+
 def mkdir(data):
     user = get_logged_in_user(request)
     path = data['path']
