@@ -12,13 +12,33 @@ from ..managers.auth_manager import token_required, get_logged_in_user
 @token_required
 def list(page_size=50, offset=0):
     owner = get_logged_in_user(request)
-
-    copy_jobs = (CopyJob.query
-        .filter_by(owner=owner)
-        .order_by(CopyJob.id.desc())
-        .limit(page_size)
-        .all()
-    )
+    try:
+        copy_jobs = (CopyJob.query
+            .filter_by(owner=owner)
+            .order_by(CopyJob.id.desc())
+            .limit(page_size)
+            .all()
+        )
+    except Exception as e:
+        import envelopes
+        import os
+        server, port = os.environ.get('MOTUZ_SMTP_SERVER').split(':')
+        if port:
+            port = int(port)
+        use_ssl = os.environ.get('MOTUZ_SMTP_REQUIRE_SSL', 'false').lower() == 'true'
+        recipients = os.environ.get('MOTUZ_ALERT_ADDRESS', '').split(',')
+        recipients = [x.strip() for x in recipients]
+        envelope = envelopes.Envelope(
+            from_addr=u'motuz-noreply@fredhutch.org',
+            to_addr=recipients,
+            subject=u'Motuz: Error listing copy jobs',
+            body=str(e)
+        )
+        envelope.send(server, port,
+          login=os.getenv("MOTUZ_SMTP_USER"),
+          password=os.getenv("MOTUZ_SMTP_PASSWORD"), tls=use_ssl)
+        logging.exception(e, exc_info=True)
+        raise HTTP_500_INTERNAL_SERVER_ERROR(str(e))
     return copy_jobs
 
 
