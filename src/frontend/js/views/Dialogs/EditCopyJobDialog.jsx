@@ -115,9 +115,11 @@ class EditCopyJobDialog extends React.Component {
                                         onClick={() => this.showNewHashsumJobDialog()}>
                                     Check Integrity
                                 </Button>
-                                <div className="text-left pl-1">
-                                    Integrity check not needed for S3 destinations
-                                </div>
+                                {checkIntegrityDisabled && (
+                                    <div className="text-left pl-1">
+                                        Integrity check not needed for S3 destinations
+                                    </div>
+                                )}
                             </Fragment>
                         )}
                         {!isInProgress && !isSuccess && (
