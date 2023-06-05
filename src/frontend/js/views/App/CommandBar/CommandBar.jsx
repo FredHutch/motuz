@@ -6,6 +6,7 @@ import upath from 'upath';
 
 import Icon from 'components/Icon.jsx';
 import constants from 'constants.jsx'
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 
 const LOCALHOST = {
@@ -102,7 +103,19 @@ class CommandBar extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <label className="col-2 col-form-label">Path</label>
+                            <div className="col-2 pr-0">
+                                <label className="col-form-label">Path</label>
+                                <OverlayTrigger overlay={<Tooltip id='copy-tooltip'>Click to copy path</Tooltip>}>
+                                    <button
+                                        type='button'
+                                        className="btn btn-link px-0 ml-3 pb-3"
+                                        onClick={() => navigator.clipboard.writeText(this.props.path)}
+                                        aria-label='Press to copy to clipboard'
+                                    >
+                                        <Icon name="clippy" />
+                                    </button>
+                                </OverlayTrigger>
+                            </div>
                             <div className="col-10">
                                 <Creatable
                                     options={pathOptions}
