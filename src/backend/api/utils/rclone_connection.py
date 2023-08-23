@@ -11,7 +11,7 @@ from .abstract_connection import AbstractConnection, RcloneException
 from .hashsum_job_queue import HashsumJobQueue
 from .copy_job_queue import CopyJobQueue
 
-from ..utils.ssh_utils import get_ssh_key_path
+from ..utils.ssh_utils import ssh_prefix
 
 
 class RcloneConnection(AbstractConnection):
@@ -80,7 +80,7 @@ class RcloneConnection(AbstractConnection):
         self._log_command(command, credentials)
 
         try:
-            result = self._execute(command, credentials)
+            result = self._execute_with_ssh(command, credentials)
             files = json.loads(result)
             return {
                 'files': files,
@@ -148,9 +148,9 @@ class RcloneConnection(AbstractConnection):
             option_copy_links = ''
 
         command = [
-            # 'sudo',
-            # '-E',
-            # '-u', user,
+            'sudo',
+            '-E',
+            '-u', user,
             '/app/bin/rclone',
             '--config=/dev/null',
             '--s3-acl',
@@ -172,10 +172,10 @@ class RcloneConnection(AbstractConnection):
 
 
         # for now do not submit to celery
-        # try:
-        #     self._copy_job_queue.push(command, credentials, job_id) # celerything
-        # except RcloneException as e:
-        #     raise RcloneException(str(e))
+        try:
+            self._copy_job_queue.push(command, credentials, job_id) # celerything
+        except RcloneException as e:
+            raise RcloneException(str(e))
 
         return(command, credentials)
 
@@ -460,6 +460,39 @@ class RcloneConnection(AbstractConnection):
 
         full_env = os.environ.copy()
         full_env.update(env)
+        try:
+            byteOutput = subprocess.check_output(
+                command,
+                stderr=subprocess.PIPE,
+                env=full_env
+            )
+            output = byteOutput.decode('UTF-8').rstrip()
+            return output
+        except subprocess.CalledProcessError as err:
+            if (err.stderr is None):
+                raise
+            stderr = err.stderr.decode('UTF-8').strip()
+            if len(stderr) == 0:
+                raise
+            raise RcloneException(stderr)
+
+
+    def _execute_with_ssh(self, command, env=None, ssh=False):
+        if env is None:
+            env = {}
+
+        full_env = os.environ.copy()
+        full_env.update(env)
+
+        env_list = []
+        for key, value in env.items():
+            env_list.append("{}='{}'".format(key, value))
+
+        command = ssh_prefix() + env_list +  command
+        
+        # for debugging only, insecure:
+        # logging.info(f"ssh command is:\n{command}")
+
         try:
             byteOutput = subprocess.check_output(
                 command,

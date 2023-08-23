@@ -11,3 +11,8 @@ def get_ssh_key_path():
         return "docker/secrets/MOTUZ_SSH_KEY"
     raise Exception("Could not find SSH key")
 
+def ssh_prefix():
+    if os.getenv("MOTUZ_SSH_HOST"):
+        return ["ssh", "-i", get_ssh_key_path(), "-o", "StrictHostKeyChecking=no",
+                "-o", "UserKnownHostsFile=/dev/null", f'root@{os.getenv("MOTUZ_SSH_HOST")}']
+    raise Exception("Could not find SSH host, is MOTUZ_SSH_HOST defined?")

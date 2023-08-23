@@ -6,7 +6,7 @@ import subprocess
 from ..exceptions import *
 from .abstract_connection import AbstractConnection, RcloneException
 
-from .ssh_utils import get_ssh_key_path
+from .ssh_utils import ssh_prefix
 
 class LocalConnection(AbstractConnection):
     """
@@ -37,7 +37,6 @@ class LocalConnection(AbstractConnection):
 
     def lshome(self, data):
         user = data.owner
-
         try:
             homePath = _homepath_with_impersonation(user)
             return self.ls(data, homePath)
@@ -66,18 +65,13 @@ class LocalConnection(AbstractConnection):
 
 
 def _homepath_with_impersonation(user):
-    command = [
-        'ssh',
-        '-i',
-        get_ssh_key_path(),
-        '-o',
-        'StrictHostKeyChecking=no',
-        'root@rhino', # TODO parameterize user and host
+    command = ssh_prefix().copy()
+    command.extend([
         'sudo',
         '-n',
         '-u', user,
         '-i', 'pwd',
-    ]
+    ])
 
 
     byteOutput = subprocess.check_output(command)
@@ -156,13 +150,8 @@ def _parse_ls(output):
 
 
 def _ls_with_impersonation(path, user):
-    command = [
-        'ssh',
-        '-i',
-        get_ssh_key_path(),
-        '-o',
-        'StrictHostKeyChecking=no',
-        'root@rhino', # TODO parameterize user and host
+    command = ssh_prefix().copy()
+    command.extend([
         'sudo',
         '-n',
         '-u', user,
@@ -173,7 +162,7 @@ def _ls_with_impersonation(path, user):
         '-g', # Exclude owner user info (if needed, consider -n)
         '-o', # Exclude group user info (if needed consider -n)
         path,
-    ]
+    ])
 
 
     try:
@@ -193,20 +182,15 @@ def _ls_with_impersonation(path, user):
 
 
 def _mkdir_with_impersonation(path, user):
-    command = [
-        'ssh',
-        '-i',
-        get_ssh_key_path(),
-        '-o',
-        'StrictHostKeyChecking=no',
-        'root@rhino', # TODO parameterize
+    command = ssh_prefix().copy()
+    command.extend([
         'sudo',
         '-n',
         '-u', user,
         'mkdir',
         '-p',
         path,
-    ]
+    ])
 
     byteOutput = subprocess.check_output(command)
     output = byteOutput.decode('UTF-8').rstrip()

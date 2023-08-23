@@ -52,9 +52,9 @@ def create(data):
     submit_copy_job(copy_job)
 
 
-    # tasks.copy_job.apply_async(task_id=str(task_id), kwargs={
-    #     'task_id': task_id,
-    # })
+    tasks.copy_job.apply_async(task_id=str(task_id), kwargs={
+        'task_id': task_id,
+    })
 
     return copy_job
 

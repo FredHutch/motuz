@@ -12,7 +12,8 @@ echo "Setting up the database..."
 echo "DONE - Setting up the database"
 
 echo "Installing backend dependencies"
-./bin/_utils/backend_install.sh
+# DO NOT CHECK IN - remove this
+#./bin/_utils/backend_install.sh
 echo "DONE - Installing backend dependencies"
 
 echo "Initializing backend..."
