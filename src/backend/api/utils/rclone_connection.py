@@ -1,15 +1,14 @@
-from collections import defaultdict
 import functools
 import json
 import logging
-import subprocess
-import threading
-import time
 import os
+import subprocess
+from collections import defaultdict
 
 from .abstract_connection import AbstractConnection, RcloneException
-from .hashsum_job_queue import HashsumJobQueue
 from .copy_job_queue import CopyJobQueue
+from .hashsum_job_queue import HashsumJobQueue
+
 
 class RcloneConnection(AbstractConnection):
     def __init__(self):
@@ -152,6 +151,7 @@ class RcloneConnection(AbstractConnection):
             '--config=/dev/null',
             '--s3-disable-checksum',
             '--s3-acl',
+            '--s3-no-check-bucket',
             'bucket-owner-full-control',
             option_exclude_dot_snapshot,
             '--contimeout=5m',
@@ -203,6 +203,7 @@ class RcloneConnection(AbstractConnection):
     ):
         credentials = {}
         option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
+        option_download = ''
 
         if data is None: # Local
             src = resource_path
@@ -213,6 +214,9 @@ class RcloneConnection(AbstractConnection):
             credentials.update(self._formatCredentials(data, name='src'))
             src = 'src:{}'.format(resource_path)
 
+        if download:
+            option_download = '--download'
+
         command = [
             'sudo',
             '-E',
@@ -222,6 +226,7 @@ class RcloneConnection(AbstractConnection):
             'md5sum',
             src,
             option_exclude_dot_snapshot,
+            option_download
         ]
 
         command = [cmd for cmd in command if len(cmd) > 0]
@@ -229,7 +234,7 @@ class RcloneConnection(AbstractConnection):
         self._log_command(command, credentials)
 
         try:
-            self._hashsum_job_queue.push(command, credentials, job_id, download)
+            self._hashsum_job_queue.push(command, credentials, job_id)
         except RcloneException as e:
             raise RcloneException(str(e))
 
