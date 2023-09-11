@@ -5,6 +5,11 @@ FROM python:3.7.3-slim as build-image
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.old
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
@@ -26,6 +31,12 @@ COPY --from=build-image /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.old
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+
 
 RUN set -x \
     && apt-get update -y \
