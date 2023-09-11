@@ -14,12 +14,12 @@ def list(page_size=50, page=1):
     owner = get_logged_in_user(request)
     try:
         query = (CopyJob.query
-            .filter_by(owner=owner)
-            .order_by(CopyJob.id.desc())
-            .paginate(page=page,
-                      per_page=page_size,
-                      error_out=False)
-        )
+                 .filter_by(owner=owner)
+                 .order_by(CopyJob.id.desc())
+                 .paginate(page=page,
+                           per_page=page_size,
+                           error_out=False)
+                 )
     except Exception as e:
         import envelopes
         import os
@@ -92,7 +92,7 @@ def retrieve(id):
     if copy_job.owner != owner:
         raise HTTP_404_NOT_FOUND('Copy Job with id {} not found'.format(id))
 
-    for _ in range(2): # Sometimes rabbitmq closes the connection!
+    for _ in range(2):  # Sometimes rabbitmq closes the connection!
         try:
             task = tasks.copy_job.AsyncResult(str(copy_job.id))
             copy_job.progress_text = task.info.get('text', '')
@@ -112,7 +112,7 @@ def stop(id):
     task = tasks.copy_job.AsyncResult(str(copy_job.id))
     task.revoke(terminate=True)
 
-    copy_job = CopyJob.query.get(id) # Avoid race conditions
+    copy_job = CopyJob.query.get(id)  # Avoid race conditions
     if copy_job.progress_state == 'PROGRESS':
         copy_job.progress_state = 'STOPPED'
         db.session.commit()
