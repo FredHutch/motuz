@@ -329,6 +329,10 @@ class RcloneConnection(AbstractConnection):
                 '{}_V2_AUTH'.format(prefix),
                 's3_v2_auth'
             )
+            if data.s3_endpoint is None:
+                credentials['{}_PROVIDER'.format(prefix)] = 'AWS'
+            else:
+                credentials['{}_PROVIDER'.format(prefix)] = 'Other'
 
         elif data.type == 'azureblob':
             if data.subtype == 'sas':
