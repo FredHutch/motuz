@@ -11,6 +11,10 @@
     color: red;
 }
 
+.btn:disabled {
+    cursor: not-allowed;
+}
+
 /* General styling */
 
 pre {
