@@ -1,15 +1,14 @@
-from collections import defaultdict
 import functools
 import json
 import logging
-import subprocess
-import threading
-import time
 import os
+import subprocess
+from collections import defaultdict
 
 from .abstract_connection import AbstractConnection, RcloneException
-from .hashsum_job_queue import HashsumJobQueue
 from .copy_job_queue import CopyJobQueue
+from .hashsum_job_queue import HashsumJobQueue
+
 
 class RcloneConnection(AbstractConnection):
     def __init__(self):
@@ -150,6 +149,8 @@ class RcloneConnection(AbstractConnection):
             '-u', user,
             '/usr/local/bin/rclone',
             '--config=/dev/null',
+            '--s3-disable-checksum',
+            '--s3-no-check-bucket',
             '--s3-acl',
             'bucket-owner-full-control',
             option_exclude_dot_snapshot,
@@ -202,6 +203,7 @@ class RcloneConnection(AbstractConnection):
     ):
         credentials = {}
         option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
+        option_download = ''
 
         if data is None: # Local
             src = resource_path
@@ -212,6 +214,9 @@ class RcloneConnection(AbstractConnection):
             credentials.update(self._formatCredentials(data, name='src'))
             src = 'src:{}'.format(resource_path)
 
+        if download:
+            option_download = '--download'
+
         command = [
             'sudo',
             '-E',
@@ -221,6 +226,7 @@ class RcloneConnection(AbstractConnection):
             'md5sum',
             src,
             option_exclude_dot_snapshot,
+            option_download
         ]
 
         command = [cmd for cmd in command if len(cmd) > 0]
@@ -228,7 +234,7 @@ class RcloneConnection(AbstractConnection):
         self._log_command(command, credentials)
 
         try:
-            self._hashsum_job_queue.push(command, credentials, job_id, download)
+            self._hashsum_job_queue.push(command, credentials, job_id)
         except RcloneException as e:
             raise RcloneException(str(e))
 
@@ -309,6 +315,11 @@ class RcloneConnection(AbstractConnection):
                 '{}_SECRET_ACCESS_KEY'.format(prefix),
                 's3_secret_access_key'
             )
+            if data.subtype == 'sts':
+                _addCredential(
+                    '{}_SESSION_TOKEN'.format(prefix),
+                    's3_session_token'
+                )
 
             _addCredential(
                 '{}_ENDPOINT'.format(prefix),
@@ -320,18 +331,20 @@ class RcloneConnection(AbstractConnection):
             )
 
         elif data.type == 'azureblob':
-            _addCredential(
-                '{}_ACCOUNT'.format(prefix),
-                'azure_account'
-            )
-            _addCredential(
-                '{}_KEY'.format(prefix),
-                'azure_key'
-            )
-            _addCredential(
-                '{}_SAS_URL'.format(prefix),
-                'azure_sas_url'
-            )
+            if data.subtype == 'sas':
+                _addCredential(
+                    '{}_SAS_URL'.format(prefix),
+                    'azure_sas_url'
+                )
+            else:
+                _addCredential(
+                    '{}_ACCOUNT'.format(prefix),
+                    'azure_account'
+                )
+                _addCredential(
+                    '{}_KEY'.format(prefix),
+                    'azure_key'
+                )
 
         elif data.type == 'swift':
             _addCredential(

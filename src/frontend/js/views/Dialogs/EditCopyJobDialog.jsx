@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { Modal, Button, ProgressBar } from 'react-bootstrap'
 
 import UriResource from 'components/UriResource.jsx';
@@ -12,7 +12,11 @@ class EditCopyJobDialog extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, cloudMapping } = this.props;
+
+        this.props.clouds.forEach(connection => {
+            cloudMapping[connection.id] = connection
+        })
 
         const description = data.description ? ` - ${data.description}` : ''
         const progressErrorText = data.progress_error_text;
@@ -22,6 +26,8 @@ class EditCopyJobDialog extends React.Component {
         const isSuccess = data.progress_state === 'SUCCESS'
         const isInProgress = data.progress_state === 'PROGRESS'
         const isIncomplete = data.progress_state === 'FAILED' || data.progress_state === 'STOPPED'
+        const dst_cloud = cloudMapping[this.props.data['dst_cloud_id'] || 0]
+        const checkIntegrityDisabled = dst_cloud.type === 's3'
 
         let color = 'default';
         if (isSuccess) {
@@ -98,21 +104,30 @@ class EditCopyJobDialog extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         {isInProgress && (
-                            <Button className='mr-auto' variant="danger" onClick={() => this.stopJob()}>
+                            <Button variant="danger" onClick={() => this.stopJob()}>
                                 Stop Job
                             </Button>
                         )}
                         {!isInProgress && isSuccess && (
-                            <Button className='mr-auto' variant="info" onClick={() => this.showNewHashsumJobDialog()}>
-                                Check Integrity
-                            </Button>
+                            <Fragment>
+                                <Button variant="info"
+                                        aria-disabled={checkIntegrityDisabled} disabled={checkIntegrityDisabled}
+                                        onClick={() => this.showNewHashsumJobDialog()}>
+                                    Check Integrity
+                                </Button>
+                                {checkIntegrityDisabled && (
+                                    <div className="text-left pl-1">
+                                        Integrity check not needed for S3 destinations
+                                    </div>
+                                )}
+                            </Fragment>
                         )}
                         {!isInProgress && !isSuccess && (
-                            <Button className='mr-auto' variant="success" onClick={() => this.showNewCopyJobDialog()}>
+                            <Button variant="success" onClick={() => this.showNewCopyJobDialog()}>
                                 Retry
                             </Button>
                         )}
-                        <Button variant="secondary" onClick={() => this.handleClose()}>
+                        <Button className="ml-auto" variant="secondary" onClick={() => this.handleClose()}>
                             Close
                         </Button>
                     </Modal.Footer>
@@ -193,13 +208,7 @@ class EditCopyJobDialog extends React.Component {
     }
 
     _generateDialogData() {
-        const cloudMapping = {
-            0: { name: 'rhino' },
-        }
-
-        this.props.clouds.forEach(connection => {
-            cloudMapping[connection.id] = connection
-        })
+        const { cloudMapping } = this.props;
 
         const src_cloud_id = this.props.data['src_cloud_id'] || 0
         const src_cloud = cloudMapping[src_cloud_id]
@@ -245,6 +254,9 @@ class EditCopyJobDialog extends React.Component {
 EditCopyJobDialog.defaultProps = {
     data: {},
     clouds: [],
+    cloudMapping: {
+        0: { name: 'rhino' },
+    },
     fetchData: (id) => {},
     onClose: () => {},
     onStopJob: id => {},

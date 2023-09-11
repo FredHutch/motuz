@@ -28,10 +28,12 @@ dto = api.model('connection', {
     'name': fields.String(required=True, example='arbitrary-unique-name'),
 
     'type': fields.String(required=True, example='s3'),
+    'subtype': fields.String(required=False, example='key'),
     'bucket': OptionalString(required=False, example='my-bucket-name'),
 
     's3_access_key_id': fields.String(required=False, example='KJRHJKHWEIUJDSJKDC2J'),
     's3_secret_access_key': PrivateString(required=False, example='jksldASDLASdak+asdSDASDKjasldkjadASDAasd'),
+    's3_session_token': PrivateString(required=False, example='IQoJdlc3QtMiJHMEUCIH8EUqB/Qk2OEYpzejW6g9gi/'),
     's3_region': OptionalString(required=False, example='us-west-2'),
 
     's3_endpoint': OptionalString(required=False, example='https://hello.swiftstack.com'),

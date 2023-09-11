@@ -5,6 +5,11 @@ FROM python:3.7.3-slim as build-image
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.old
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
@@ -27,6 +32,12 @@ ENV PATH=/root/.local/bin:$PATH
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.old
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+
+
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
@@ -37,10 +48,10 @@ RUN set -x \
         sudo \
         curl \
         unzip \
-    && curl -LO https://downloads.rclone.org/v1.47.0/rclone-v1.47.0-linux-amd64.zip \
-    && unzip rclone-v1.47.0-linux-amd64.zip \
-    && cp rclone-v1.47.0-linux-amd64/rclone /usr/local/bin/ \
-    && rm -rf rclone-v1.47.0-linux-amd64.zip rclone-v1.47.0-linux-amd64/ \
+    && curl -LO https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip \
+    && unzip rclone-v1.58.1-linux-amd64.zip \
+    && cp rclone-v1.58.1-linux-amd64/rclone /usr/local/bin/ \
+    && rm -rf rclone-v1.58.1-linux-amd64.zip rclone-v1.58.1-linux-amd64/ \
     && apt-get remove --purge --auto-remove -y \
         unzip \
         curl \
