@@ -6,6 +6,7 @@ const initialState = {
     clouds: [],
     cloudErrors: {},
     jobs: [],
+    jobPages: 1,
     hashsumJobs: [],
     jobErrors: {},
     cloudConnectionVerification: {
@@ -21,11 +22,13 @@ export default (state=initialState, action) => {
         return state;
     }
     case api.LIST_COPY_JOBS_SUCCESS: {
-        const jobs = action.payload;
+        const jobs = action.payload.data;
+        const jobPages = action.payload.pages;
         jobs.sort((a, b) => b.id - a.id)
         return {
             ...state,
             jobs,
+            jobPages,
         }
     }
     case api.LIST_COPY_JOBS_FAILURE: {

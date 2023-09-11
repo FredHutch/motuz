@@ -1,18 +1,14 @@
 import logging
-import random
 
 from flask import request
-from flask_restplus import Resource, Namespace, fields
+from flask_restplus import Resource, Namespace, fields, reqparse
 
-from ..managers import copy_job_manager
-from .. import tasks
 from ..exceptions import HTTP_EXCEPTION
-
-
+from ..managers import copy_job_manager
 
 api = Namespace('copy-jobs', description='CopyJob related operations')
 
-dto = api.model('copy-job', {
+job_dto = api.model('copy-job', {
     'id': fields.Integer(readonly=True, example=1234),
     'description': fields.String(required=True, example='Task Description'),
     'src_cloud_id': fields.Integer(required=False, example=1),
@@ -34,27 +30,39 @@ dto = api.model('copy-job', {
     'progress_execution_time': fields.Integer(readonly=True, example=3600),
 })
 
+list_dto = api.model('copy-job-list', {
+    'data': fields.List(fields.Nested(job_dto)),
+    'total': fields.Integer(example=100),
+    'page': fields.Integer(example=1),
+    'pages': fields.Integer(example=10)
+})
+
+list_arg_parser = reqparse.RequestParser()
+list_arg_parser.add_argument('page', help='Current page', type=int, default=1)
+list_arg_parser.add_argument('page_size', help='Maximum number of records to return per page', type=int, default=50)
+
 
 @api.route('/')
 class CopyJobList(Resource):
-
-    @api.marshal_list_with(dto)
+    @api.marshal_list_with(list_dto)
+    @api.expect(list_arg_parser)
     def get(self):
         """
         List all Copy Jobs
         """
         try:
-            return copy_job_manager.list()
+            return copy_job_manager.list(
+                page_size=int(request.args.get('page_size', 50)),
+                page=int(request.args.get('page', 1))
+            )
         except HTTP_EXCEPTION as e:
             api.abort(e.code, e.payload)
         except Exception as e:
             logging.exception(e, exc_info=True)
             api.abort(500, str(e))
 
-
-
-    @api.expect(dto, validate=True)
-    @api.marshal_with(dto, code=201)
+    @api.expect(job_dto, validate=True)
+    @api.marshal_with(job_dto, code=201)
     def post(self):
         """
         Create a new Copy Job
@@ -68,13 +76,11 @@ class CopyJobList(Resource):
             api.abort(500, str(e))
 
 
-
 @api.route('/<id>')
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
-
-    @api.marshal_with(dto, code=200)
+    @api.marshal_with(job_dto, code=200)
     def get(self, id):
         """
         Get a specific Copy Job
@@ -88,13 +94,11 @@ class CopyJob(Resource):
             api.abort(500, str(e))
 
 
-
 @api.route('/<id>/stop/')
 @api.param('id', 'The Copy Job Identifier')
 @api.response(404, 'Copy Job not found.')
 class CopyJob(Resource):
-
-    @api.marshal_with(dto, code=202)
+    @api.marshal_with(job_dto, code=202)
     def put(self, id):
         """
         Stop the Copy Job
