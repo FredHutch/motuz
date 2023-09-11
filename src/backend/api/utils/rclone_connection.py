@@ -315,6 +315,11 @@ class RcloneConnection(AbstractConnection):
                 '{}_SECRET_ACCESS_KEY'.format(prefix),
                 's3_secret_access_key'
             )
+            if data.subtype == 'sts':
+                _addCredential(
+                    '{}_SESSION_TOKEN'.format(prefix),
+                    's3_session_token'
+                )
 
             _addCredential(
                 '{}_ENDPOINT'.format(prefix),
@@ -326,18 +331,20 @@ class RcloneConnection(AbstractConnection):
             )
 
         elif data.type == 'azureblob':
-            _addCredential(
-                '{}_ACCOUNT'.format(prefix),
-                'azure_account'
-            )
-            _addCredential(
-                '{}_KEY'.format(prefix),
-                'azure_key'
-            )
-            _addCredential(
-                '{}_SAS_URL'.format(prefix),
-                'azure_sas_url'
-            )
+            if data.subtype == 'sas':
+                _addCredential(
+                    '{}_SAS_URL'.format(prefix),
+                    'azure_sas_url'
+                )
+            else:
+                _addCredential(
+                    '{}_ACCOUNT'.format(prefix),
+                    'azure_account'
+                )
+                _addCredential(
+                    '{}_KEY'.format(prefix),
+                    'azure_key'
+                )
 
         elif data.type == 'swift':
             _addCredential(
