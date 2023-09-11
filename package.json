@@ -5,8 +5,8 @@
   "main": "src/frontend/js/main.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production webpack --config src/frontend/webpack/webpack.prod.js",
-    "watch": "NODE_ENV=development webpack-dev-server --config src/frontend/webpack/webpack.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --config src/frontend/webpack/webpack.prod.js",
+    "watch": "cross-env NODE_ENV=development webpack-dev-server --config src/frontend/webpack/webpack.dev.js",
     "start": "npm run watch"
   },
   "repository": {
@@ -48,6 +48,7 @@
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.6",
     "css-loader": "2.1.1",
+    "cross-env": "^7.0.3",
     "eslint": "5.16.0",
     "eslint-plugin-react": "7.13.0",
     "file-loader": "3.0.1",
