@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProgressBar } from 'react-bootstrap';
+import {Pagination, ProgressBar, Table} from 'react-bootstrap';
 
 import UriResource from 'components/UriResource.jsx'
 import parseTime from 'utils/parseTime.jsx'
@@ -9,7 +9,8 @@ class CopyJobTable extends React.Component {
     constructor(props) {
         super(props);
         this.timeout = null;
-        this.previousJobsInProgress = new Set()
+        this.previousJobsInProgress = new Set();
+        this.page = 1;
     }
 
     render() {
@@ -143,20 +144,64 @@ class CopyJobTable extends React.Component {
             this.scheduleRefresh(currentJobsInProgress);
         }
 
+        const pageItems = [];
+        const pages = this.props.jobPages;
+        const cutoff = 3;
+        const endCutoff = pages - cutoff;
+        const maxPages = 5;
+        const showEllipses = pages > maxPages;
+
+        if (showEllipses && this.page > cutoff) {
+            pageItems.push(
+                <Pagination.First onClick={() => this.onPageClick(1)} />,
+                <Pagination.Prev onClick={() => this.onPageClick(this.page - 1)} />,
+                <Pagination.Ellipsis disabled />,
+            )
+        }
+
+        const startPage = showEllipses ? Math.max(1, this.page - 2) : 1;
+        const endPage = showEllipses ? Math.min(pages, this.page + 2) : pages;
+        for (let page = startPage; page <= endPage; page++) {
+            pageItems.push(
+                <Pagination.Item
+                    key={page}
+                    active={page === this.page}
+                    onClick={() => this.onPageClick(page)}
+                >
+                    {page}
+                </Pagination.Item>
+            )
+        }
+
+        if (showEllipses && this.page <= endCutoff) {
+            pageItems.push(
+                <Pagination.Ellipsis disabled />,
+                <Pagination.Next onClick={() => this.onPageClick(this.page + 1)} />,
+                <Pagination.Last onClick={() => this.onPageClick(pages)} />,
+            )
+        }
+
         return (
-            <table className='table table-sm table-striped table-hover text-left'>
-                <thead>
-                    <tr>{tableHeaders}</tr>
-                </thead>
-                <tbody>
-                    {tableRows}
-                </tbody>
-            </table>
+            <>
+                {pages > 1 && (
+                    <Pagination size="sm" className='justify-content-end mr-3'>
+                        {React.Children.toArray(pageItems)}
+                    </Pagination>
+                )}
+                <Table striped hover size="sm" className='text-left'>
+                    <thead>
+                        <tr>{tableHeaders}</tr>
+                    </thead>
+                    <tbody>
+                        {tableRows}
+                    </tbody>
+                </Table>
+            </>
         );
     }
 
     componentDidMount() {
-        this.props.fetchData();
+        this.props.fetchData(this.page);
     }
 
     componentWillUnmount() {
@@ -167,8 +212,13 @@ class CopyJobTable extends React.Component {
         const refreshDelay = 1000; // 1s
         this._clearTimeout();
         this.timeout = setTimeout(() => {
-            this.props.fetchData();
+            this.props.fetchData(this.page);
         }, refreshDelay)
+    }
+
+    onPageClick(page) {
+        this.page = page;
+        this.props.fetchData(this.page);
     }
 
     _onSelectJob(selectedJob) {
@@ -186,8 +236,9 @@ class CopyJobTable extends React.Component {
 CopyJobTable.defaultProps = {
     id: '',
     jobs: [],
+    jobPages: 1,
     connections: [],
-    fetchData: () => {},
+    fetchData: (page) => {},
     refreshPanes: () => {},
     onShowDetails: (copyJob) => {},
 }
@@ -199,11 +250,12 @@ import { refreshPanes } from 'actions/paneActions.jsx';
 
 const mapStateToProps = state => ({
     jobs: state.api.jobs,
+    jobPages: state.api.jobPages,
     connections: state.api.clouds,
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchData: () => dispatch(listCopyJobs()),
+    fetchData: (page) => dispatch(listCopyJobs(page)),
     refreshPanes: () => dispatch(refreshPanes()),
     onShowDetails: (copyJob) => dispatch(showEditCopyJobDialog(copyJob)),
 });

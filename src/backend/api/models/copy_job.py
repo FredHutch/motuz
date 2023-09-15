@@ -18,7 +18,7 @@ class CopyJob(db.Model, TimestampMixin):
     copy_links = db.Column(db.Boolean)
     notification_email = db.Column(db.String)
 
-    owner = db.Column(db.String)
+    owner = db.Column(db.String, index=True)
 
     progress_state = db.Column(db.String, nullable=True)
     progress_current = db.Column(db.Integer, nullable=True)
