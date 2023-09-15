@@ -97,6 +97,8 @@ class RcloneConnection(AbstractConnection):
             '-u', user,
             '/usr/local/bin/rclone',
             '--config=/dev/null',
+            '--s3-acl',
+            'bucket-owner-full-control',
             'touch',
             'current:{}/.motuz_keep'.format(path),
         ]
