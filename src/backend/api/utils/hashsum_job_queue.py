@@ -1,14 +1,13 @@
-from collections import defaultdict
-import functools
-import json
 import logging
+import os
 import re
 import subprocess
 import threading
 import time
-import os
+from collections import defaultdict
 
-from .abstract_connection import AbstractConnection, RcloneException
+from .abstract_connection import RcloneException
+
 
 class HashsumJobQueue:
     def __init__(self):
@@ -22,14 +21,14 @@ class HashsumJobQueue:
         self._stop_events = {} # Mapping from id to threading.Event
 
 
-    def push(self, command, env, job_id, download):
+    def push(self, command, env, job_id):
         if self._job_id_exists(job_id):
             raise KeyError("Job with ID {} already submitted to {}".format(job_id, self.__class__))
 
         self._stop_events[job_id] = threading.Event()
 
         try:
-            self._execute_interactive(command, env, job_id, download)
+            self._execute_interactive(command, env, job_id)
         except subprocess.CalledProcessError as e:
             raise RcloneException(e)
 
@@ -63,18 +62,17 @@ class HashsumJobQueue:
         return job_id in self._job_status
 
 
-    def _execute_interactive(self, command, env, job_id, download):
+    def _execute_interactive(self, command, env, job_id):
         thread = threading.Thread(target=self.__execute_interactive, kwargs={
             'command': command,
             'env': env,
-            'job_id': job_id,
-            'download': download,
+            'job_id': job_id
         })
         thread.daemon = True
         thread.start()
 
 
-    def __execute_interactive(self, command, env, job_id, download):
+    def __execute_interactive(self, command, env, job_id):
         stop_event = self._stop_events[job_id]
         full_env = os.environ.copy()
         full_env.update(env)
@@ -109,36 +107,6 @@ class HashsumJobQueue:
                 'md5chksum': groups[1].strip() or None,
             })
             self.__process_copy_status(job_id)
-
-
-        if download:
-            user = command[command.index('-u') + 1]
-            base = command[-1]
-            if base[:4] != 'src:':
-                raise RuntimeError("Could not perform download of file. Incorrect base `{}`".format(base))
-            base = '/' + base[4:]
-
-            for file in self._job_status[job_id]:
-                stored_checksum = file['md5chksum']
-                file['md5chksum'] = 'CHECKING_VALUE..._______________'
-                command = [
-                    'sudo',
-                    '-E',
-                    '-u', user,
-                    '/usr/local/bin/rclone',
-                    '--config=/dev/null',
-                    'cat',
-                    'src:{}'.format(os.path.join(os.path.dirname(base), file['Name'])),
-                ]
-                command = ' '.join(command) + " | md5sum"
-                # TODO: Remove this hack once https://github.com/rclone/rclone/issues/3923 is addressed
-                md5sum = subprocess.check_output(command, env=full_env, shell=True).decode('utf-8')[:32]
-                if stored_checksum and md5sum != stored_checksum:
-                    file['md5chksum'] = 'FILE_IS_CORRUPTED!!!____________'
-                else:
-                    file['md5chksum'] = md5sum
-                self.__process_copy_status(job_id)
-
 
         self._job_percent[job_id] = 100
         self.__process_copy_status(job_id)
