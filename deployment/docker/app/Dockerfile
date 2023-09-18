@@ -48,10 +48,10 @@ RUN set -x \
         sudo \
         curl \
         unzip \
-    && curl -LO https://downloads.rclone.org/v1.47.0/rclone-v1.47.0-linux-amd64.zip \
-    && unzip rclone-v1.47.0-linux-amd64.zip \
-    && cp rclone-v1.47.0-linux-amd64/rclone /usr/local/bin/ \
-    && rm -rf rclone-v1.47.0-linux-amd64.zip rclone-v1.47.0-linux-amd64/ \
+    && curl -LO https://downloads.rclone.org/v1.64.0/rclone-v1.64.0-linux-amd64.zip \
+    && unzip rclone-v1.64.0-linux-amd64.zip \
+    && cp rclone-v1.64.0-linux-amd64/rclone /usr/local/bin/ \
+    && rm -rf rclone-v1.64.0-linux-amd64.zip rclone-v1.64.0-linux-amd64/ \
     && apt-get remove --purge --auto-remove -y \
         unzip \
         curl \
