@@ -57,6 +57,9 @@ def copy_job(self, task_id=None):
         else:
             copy_job.progress_state = 'FAILED'
 
+        # save copy stdout and stderr  to DB #ZR
+        output_text = connection.copy_text(task_id) + "|^|" + connection.copy_error_text(task_id)
+        copy_job.progress_error = output_text
 
         copy_job.progress_current = 100
         copy_job.progress_execution_time = int(time.time() - start_time)
