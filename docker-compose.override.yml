@@ -16,6 +16,7 @@ x-variables:
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
             - /hpc/temp:/hpc/temp:shared
+            - /fh/working:/fh/working:shared
 
 services:
     app:
