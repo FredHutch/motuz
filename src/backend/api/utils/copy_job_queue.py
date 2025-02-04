@@ -161,6 +161,7 @@ class CopyJobQueue:
             'GTransferred',
             'Errors',
             'Checks',
+            'Transferred0',
             'Transferred',
             'Elapsed time',
             'Transferring',
@@ -168,10 +169,37 @@ class CopyJobQueue:
 
         status = self._job_status[job_id]
 
+        outliers = []
+        for key in status.keys():
+            if key not in headers:
+                outliers.append(key)
+
+        if len(outliers) == 1:
+            value = status[outliers[0]]
+            try:
+                pos = value.index("Transferred:")
+                transferring, transferred = value[:pos], value[pos:]
+                transferring.replace("Transferring:", "")
+                transferred.replace("Transferred:", "")
+                transferring = transferring.strip()
+                transferred = transferred.strip()
+                status['Transferred0'] = transferred
+                status['Transferring'] = transferring
+                del status[outliers[0]]
+            except ValueError:
+                pass
+
+            status['Transferred0'] = status['Transferred0'].replace("Transferred:", "").strip()
+
+        if status['Transferred'] == "1 / 1, 100%":
+            del status['Transferring']
+
+
         text = '\n'.join(
             '{:>12}: {}'.format(header, status[header])
             for header in headers
         )
+        text = text.replace("Transferred0", " Transferred")
         self._job_text[job_id] = text
 
 
@@ -184,7 +212,7 @@ class CopyJobQueue:
             self._job_percent[job_id] = match[1]
             return
 
-        match = re.search(r'(\d+)\%', status['Transferred'])
+        match = re.search(r'(\d+)\%', status['Transferred0'])
         if match is not None:
             self._job_percent[job_id] = match[1]
             return
