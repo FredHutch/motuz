@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# this sets things the same as .env but is meant to be sourced
+# this seems to be necessary to get a dev environment working
+
+# Default values used by docker-compose.yml
+# https://docs.docker.com/compose/environment-variables/
+# Run `docker-compose config` to see substitutions
+
+export MOTUZ_DATABASE_PROTOCOL=postgresql
+export MOTUZ_DATABASE_NAME=motuz
+export MOTUZ_DATABASE_HOST=0.0.0.0:5432
+export MOTUZ_DATABASE_USER=motuz_user
+export MOTUZ_DATABASE_REQUIRE_SSL=false
+
+export MOTUZ_SMTP_SERVER=0.0.0.0:465
+export MOTUZ_SMTP_REQUIRE_SSL=true
+export MOTUZ_SMTP_USER=
+
+export MOTUZ_DOCKER_ROOT=/home/ubuntu/dev/motuz/docker
+
+# comma-delimited:
+export MOTUZ_ALERT_ADDRESS=admin@motuz-admin.com
+
+export MOTUZ_DATABASE_PASSWORD=$(cat $MOTUZ_DOCKER_ROOT/secrets/MOTUZ_DATABASE_PASSWORD)
+export MOTUZ_FLASK_SECRET_KEY=$(cat $MOTUZ_DOCKER_ROOT/secrets/MOTUZ_FLASK_SECRET_KEY)
+export MOTUZ_SMTP_PASSWORD=$(cat $MOTUZ_DOCKER_ROOT/secrets/MOTUZ_SMTP_PASSWORD)
