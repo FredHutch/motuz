@@ -4,6 +4,7 @@ aniso8601==6.0.0
 astroid==2.2.5
 attrs==19.1.0
 billiard==3.6.0.0
+boto3==1.33.13
 celery==4.3.0
 Click==7.0
 Envelopes==0.4
