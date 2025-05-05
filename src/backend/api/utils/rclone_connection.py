@@ -149,6 +149,8 @@ class RcloneConnection(AbstractConnection):
 
         bucket = bucket_raw.split("/")[1]
 
+        if not 'RCLONE_CONFIG_DST_TYPE' in credentials:
+            return False
         if credentials['RCLONE_CONFIG_DST_TYPE'] != 's3':
             # If we are not copying to S3, we can bail.
             return False
