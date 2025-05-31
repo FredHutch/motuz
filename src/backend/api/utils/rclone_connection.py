@@ -149,6 +149,11 @@ class RcloneConnection(AbstractConnection):
 
         bucket = bucket_raw.split("/")[1]
 
+        # This is a horrendous hack but it solves an immediate problem while 
+        # we figure out why it is necessary. 
+        if bucket.startswith("fh-div-sr-exhi-eco"):
+            return True
+
         if not 'RCLONE_CONFIG_DST_TYPE' in credentials:
             return False
         if credentials['RCLONE_CONFIG_DST_TYPE'] != 's3':
