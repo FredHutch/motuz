@@ -151,7 +151,9 @@ class RcloneConnection(AbstractConnection):
 
         # This is a horrendous hack but it solves an immediate problem while 
         # we figure out why it is necessary. 
-        if bucket.startswith("fh-div-sr-exhi-eco"):
+        # New buckets that will be used with Halo will always have '-eco-halo'
+        # in the name and will all use KMS encryption.
+        if bucket.startswith("fh-div-sr-exhi-eco") or "-eco-halo" in bucket:
             return True
 
         if not 'RCLONE_CONFIG_DST_TYPE' in credentials:
