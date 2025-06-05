@@ -102,6 +102,18 @@ def retrieve(id):
     else:
         logging.error("Rabbitmq closed the connection. Failing silently")
 
+    try:
+        textFromDB = copy_job.progress_error.split("|^|")
+        try:
+            copy_job.progress_text
+        except:
+            if len(textFromDB) > 0:
+                copy_job.progress_text = textFromDB[0]
+            if len(textFromDB) > 1:
+                copy_job.progress_error_text = textFromDB[1]
+    except:
+        logging.error("no task output found in DB. Failing silently")
+
     return copy_job
 
 
