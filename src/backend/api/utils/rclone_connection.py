@@ -116,76 +116,6 @@ class RcloneConnection(AbstractConnection):
         except subprocess.CalledProcessError as e:
             raise RcloneException(str(e))
 
-    # TODO move this to a utility module (along w/its imports)
-    # it does not need to be a class method.
-    def check_kms_encryption(self, credentials, bucket_raw):
-        """
-        Check if kms encryption is used on destination bucket.
-
-        See issue #443.
-
-        In rclone if you are copying to a bucket that is encrypted with a KMS key,
-        as opposed to one that has AWS managed encryption (SSE, the default),
-        then you have to pass `--s3-server-side-encryption=aws:kms` in your rclone
-        copy command. But if the bucket is *not* KMS-encrypted, you must NOT pass that
-        flag. (The AWS CLI does not have this issue.)
-
-        This function will detect whether or not the bucket is KMS-encrypted.
-        rclone apparently has no way to determine this, so we have to use boto3,
-        which is not ideal.
-
-        This seems to work, but a potential issue is if the user has permission
-        to list and upload, but not to call GetBucketEncryption.
-        I saw this happen once but could not reproduce it.
-        So we need to return False instead of re-raising the exception
-        below, and hope that that was a good guess. Maybe there's a better way?
-
-        NOTE: Oddly, it seems like we do not need the `--s3-server-side-encryption=aws:kms`
-        when using `rclone touch` to create an empty file (in order to create a
-        "folder"), even when the bucket uses KMS encryption.
-        So I have not modified mkdir() at all.
-
-        """
-
-        bucket = bucket_raw.split("/")[1]
-
-        # This is a horrendous hack but it solves an immediate problem while 
-        # we figure out why it is necessary. 
-        # New buckets that will be used with Halo will always have '-eco-halo'
-        # in the name and will all use KMS encryption.
-        if bucket.startswith("fh-div-sr-exhi-eco") or "-eco-halo" in bucket:
-            return True
-
-        if not 'RCLONE_CONFIG_DST_TYPE' in credentials:
-            return False
-        if credentials['RCLONE_CONFIG_DST_TYPE'] != 's3':
-            # If we are not copying to S3, we can bail.
-            return False
-        # boto3 uses different environment variables; set them here:
-        os.environ['AWS_ACCESS_KEY_ID'] = credentials['RCLONE_CONFIG_DST_ACCESS_KEY_ID']
-        os.environ['AWS_SECRET_ACCESS_KEY'] = credentials['RCLONE_CONFIG_DST_SECRET_ACCESS_KEY']
-        os.environ['AWS_DEFAULT_REGION'] = credentials['RCLONE_CONFIG_DST_REGION']
-        if "RCLONE_CONFIG_DST_SESSION_TOKEN" in credentials:
-            os.environ['AWS_SESSION_TOKEN'] = credentials['RCLONE_CONFIG_DST_SESSION_TOKEN']
-        s3 = boto3.client("s3")
-        try:
-            resp = s3.get_bucket_encryption(Bucket=bucket)
-        except ClientError as e:
-            if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
-                return False          # no default encryption at all
-            elif e.response["Error"]["Code"] == "AccessDenied":
-                # User does not have permission to know about the bucket's encryption.
-                # Most newer buckets are encrypted by default and I am not sure
-                # you can remove encryption from a bucket, so fingers crossed.
-                # This might be an incorrect guess, but we have to do something.
-                logging.warning("No access to get_bucket_encryption; guessing kms not used.")
-                return False
-            raise  # genuine failure — re‑raise. Or should we return False?
-        rules = resp["ServerSideEncryptionConfiguration"]["Rules"]
-        return any(
-            r.get("ApplyServerSideEncryptionByDefault", {}).get("SSEAlgorithm") == "aws:kms"
-            for r in rules
-        )
 
     def copy(self,
             src_data,
@@ -198,7 +128,6 @@ class RcloneConnection(AbstractConnection):
     ):
         credentials = {}
         option_exclude_dot_snapshot = '' # HACKHACK: remove once https://github.com/rclone/rclone/issues/2425 is addressed
-        kms_encryption = ''
 
         if src_data is None: # Local
             src = src_resource_path
@@ -214,9 +143,6 @@ class RcloneConnection(AbstractConnection):
             credentials.update(self._formatCredentials(dst_data, name='dst'))
             dst = 'dst:{}'.format(dst_resource_path)
 
-        if self.check_kms_encryption(credentials, dst):
-            kms_encryption = "--s3-server-side-encryption=aws:kms"
-
         if copy_links:
             option_copy_links = '--copy-links'
         else:
@@ -230,7 +156,6 @@ class RcloneConnection(AbstractConnection):
             '--config=/dev/null',
             '--s3-disable-checksum',
             '--s3-no-check-bucket',
-            kms_encryption,
             '--s3-acl',
             'bucket-owner-full-control',
             option_exclude_dot_snapshot,
@@ -400,7 +325,12 @@ class RcloneConnection(AbstractConnection):
                     '{}_SESSION_TOKEN'.format(prefix),
                     's3_session_token'
                 )
-
+            if data.kms_encryption_key_arn:
+                credentials['{}_SERVER_SIDE_ENCRYPTION'.format(prefix)] = "aws:kms"
+                _addCredential(
+                    '{}_SSE_KMS_KEY_ID'.format(prefix),
+                    'kms_encryption_key_arn'
+                )
             _addCredential(
                 '{}_ENDPOINT'.format(prefix),
                 's3_endpoint'
@@ -536,7 +466,6 @@ class RcloneConnection(AbstractConnection):
 
     def _job_id_exists(self, job_id):
         return job_id in self._job_status
-
 
     def _obscure(self, password):
         """

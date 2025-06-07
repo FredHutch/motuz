@@ -21,6 +21,7 @@ class CloudConnection(db.Model):
     s3_secret_access_key = db.Column(db.String, nullable=True)
     s3_session_token = db.Column(db.String, nullable=True)
     s3_region = db.Column(db.String, nullable=True)
+    kms_encryption_key_arn = db.Column(db.String, nullable=True)
 
     # S3 compatible fields
     s3_endpoint = db.Column(db.String, nullable=True)
