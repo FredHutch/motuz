@@ -160,6 +160,18 @@ class CloudConnectionDialogFields extends React.Component {
                     error={this.props.errors.s3_region}
                     isValid={this.props.verifySuccess}
                 />
+                <CloudConnectionField
+                    label='KMS Encryption key ARN'
+                    input={{
+                        name: 'kms_encryption_key_arn',
+                        defaultValue: this.props.data.kms_encryption_key_arn,
+                        title: "If you are not sure what this is, leave it blank.\nIf you run into errors, search for\n`motuz KMS` on sciwiki.fredhutch.org,\nand email `scicomp` if you still have issues.",
+                    }}
+                    error={this.props.errors.kms_encryption_key_arn}
+                    isValid={this.props.verifySuccess}
+                />
+
+
                 <div className="row form-group required">
                     <div className="col-4 text-right control-label">
                         <b className='form-label'>S3 Connection Type</b>
