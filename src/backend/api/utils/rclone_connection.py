@@ -401,6 +401,10 @@ class RcloneConnection(AbstractConnection):
             )
 
         elif data.type == 'sftp':
+            # Apparently AWS SFTP buckets (really an SFTP interface to an S3 bucket)
+            # do not support setting modification times after an upload.
+            # So we are disabling this for all SFTP uploads.
+            credentials['{}_SFTP_SET_MODTIME'.format(prefix)] = "false"
             _addCredential(
                 '{}_HOST'.format(prefix),
                 'sftp_host',
