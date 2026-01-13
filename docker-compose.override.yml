@@ -11,7 +11,6 @@ x-variables:
             - /efs/:/efs/
             - /fh/economy:/fh/economy:shared
             - /fh/fast:/fh/fast:shared
-            - /fh/scratch/:/fh/scratch/
             - /fh/secure:/fh/secure:shared
             - /fh/silver:/fh/silver:shared
             - /shared:/shared:shared
