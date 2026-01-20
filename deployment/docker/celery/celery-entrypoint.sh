@@ -7,4 +7,8 @@ set -e
 
 source ./load-secrets.sh
 
-celery -A api.tasks worker -l info
+CPU_COUNT=$(grep processor /proc/cpuinfo | wc -l)
+CONCURRENCY=$(($CPU_COUNT*3))
+
+celery -A api.tasks worker -l info --concurrency $CONCURRENCY
+
